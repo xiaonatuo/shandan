@@ -10,7 +10,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>shandan-browse</artifactId>
+    <artifactId>shandan-browser</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
