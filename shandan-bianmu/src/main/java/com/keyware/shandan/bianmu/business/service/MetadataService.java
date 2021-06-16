@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.business.entity.MetadataBasicVo;
 import com.keyware.shandan.common.service.IBaseService;
 
+import java.util.HashMap;
+
 /**
  * <p>
  * 元数据详情表 服务类
@@ -28,4 +30,6 @@ public interface MetadataService extends IBaseService<MetadataBasicVo, String> {
      * @return
      */
     Page<MetadataBasicVo> pageListByDirectory(Page<MetadataBasicVo> page, String directoryId, String metadataName);
+
+    public Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, String sourceId);
 }

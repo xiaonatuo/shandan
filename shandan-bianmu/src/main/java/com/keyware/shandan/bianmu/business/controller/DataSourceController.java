@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.datasource.entity.DBUserTableVo;
 import com.keyware.shandan.datasource.entity.DataSourceVo;
 import com.keyware.shandan.datasource.service.DataSourceService;
-import com.keyware.shandan.bianmu.business.service.DynamicDataSourceService;
+import com.keyware.shandan.datasource.service.DynamicDataSourceService;
 import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.StringUtils;

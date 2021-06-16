@@ -1,12 +1,14 @@
 package com.keyware.shandan.bianmu.business.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.business.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.business.entity.MetadataDetailsVo;
 import com.keyware.shandan.bianmu.business.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.business.mapper.MetadataBasicMapper;
-import com.keyware.shandan.bianmu.business.service.DynamicDataSourceService;
+import com.keyware.shandan.datasource.mapper.DynamicDatasourceMapper;
+import com.keyware.shandan.datasource.service.DynamicDataSourceService;
 import com.keyware.shandan.bianmu.business.service.MetadataService;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.service.BaseServiceImpl;
@@ -17,7 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +45,9 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
 
     @Autowired
     private DynamicDataSourceService dynamicDataSourceService;
+
+    @Autowired
+    private DynamicDatasourceMapper dynamicDatasourceMapper;
 
     @Override
     @DataPermissions
@@ -95,6 +104,39 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
             metadataName = "%" + metadataName + "%";
         }
         return metadataBasicMapper.pageListByDirectoryId(page, directoryId, metadataName);
+    }
+
+    /**
+     * 获取元数据表的示例数据
+     *
+     * @param metadataBasic
+     * @param sourceId
+     * @return
+     */
+    @Override
+    @DS("#sourceId")
+    public Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, String sourceId) {
+        Optional<MetadataDetailsVo> optional = metadataBasic.getMetadataDetailsList().stream().filter(MetadataDetailsVo::getMaster).findFirst();
+        if(!optional.isPresent()){
+            return new Page<>();
+        }
+        MetadataDetailsVo master = optional.get();
+        List<HashMap<String, Object>> list = dynamicDatasourceMapper.list(master.getTableName());
+        Page<HashMap<String, Object>> page = new Page<>(1, 10);
+
+        // 处理Clob类型
+        page.setRecords(list.stream().peek(data -> {
+            data.entrySet().stream().peek(entry -> {
+                if (entry.getValue() instanceof Clob) {
+                    Clob clob = (Clob) entry.getValue();
+                    try {
+                        entry.setValue(clob.getSubString(1, (int) clob.length()));
+                    } catch (SQLException ignored) { }
+                }
+            }).collect(Collectors.toSet());
+        }).collect(Collectors.toList()));
+        page.setTotal(list.size());
+        return page;
     }
 
     /**

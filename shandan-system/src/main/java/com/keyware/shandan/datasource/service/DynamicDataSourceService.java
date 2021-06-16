@@ -1,12 +1,10 @@
-package com.keyware.shandan.bianmu.business.service;
+package com.keyware.shandan.datasource.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.keyware.shandan.datasource.entity.DBTableColumnVo;
 import com.keyware.shandan.datasource.entity.DBUserTableVo;
-import com.keyware.shandan.bianmu.business.entity.MetadataBasicVo;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,13 +34,4 @@ public interface DynamicDataSourceService extends IService<DBUserTableVo> {
      */
     List<DBTableColumnVo> getColumnListByTable(String tableName, String sourceId);
 
-
-    /**
-     * 获取元数据表的示例数据
-     *
-     * @param metadataBasic
-     * @param sourceId
-     * @return
-     */
-    Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, String sourceId);
 }

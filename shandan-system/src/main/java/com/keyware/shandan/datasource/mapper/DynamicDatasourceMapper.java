@@ -1,4 +1,4 @@
-package com.keyware.shandan.bianmu.business.mapper;
+package com.keyware.shandan.datasource.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 

@@ -6,7 +6,7 @@ import com.keyware.shandan.bianmu.business.entity.DirectoryMetadataVo;
 import com.keyware.shandan.bianmu.business.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.business.entity.MetadataDetailsVo;
 import com.keyware.shandan.bianmu.business.service.DirectoryMetadataService;
-import com.keyware.shandan.bianmu.business.service.DynamicDataSourceService;
+import com.keyware.shandan.datasource.service.DynamicDataSourceService;
 import com.keyware.shandan.bianmu.business.service.MetadataService;
 import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
@@ -93,7 +93,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     @GetMapping("/example/data")
     public Result<Page<HashMap<String, Object>>> exampleData(String metadataId){
         MetadataBasicVo metadata = metadataService.getById(metadataId);
-        Page<HashMap<String, Object>> result = dynamicDataSourceService.getExampleData(metadata, metadata.getDataSourceId());
+        Page<HashMap<String, Object>> result = metadataService.getExampleData(metadata, metadata.getDataSourceId());
         return Result.of(result);
     }
 
