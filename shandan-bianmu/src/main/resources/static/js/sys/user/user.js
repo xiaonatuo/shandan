@@ -85,7 +85,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             }
         }
     };
-    gtable.init(opstions);
+    userTable = gtable.init(opstions);
 
     /**
      * 选择角色弹框

@@ -37,11 +37,8 @@ public class SafetyAspect {
     private final ObjectMapper mapper = new ObjectMapper();
     /**
      * Pointcut 切入点
-     * 匹配
-     * cn.huanzi.qch.baseadmin.system.*.controller、
-     * cn.huanzi.qch.baseadmin.*.controller包下面的所有方法
      */
-    @Pointcut(value = "execution(public * com.keyware.shandan.bianmu.*.controller.*.*(..))" )
+    @Pointcut(value = "execution(public * com.keyware.shandan.*.controller.*.*(..))" )
     public void safetyAspect() {
     }
 
