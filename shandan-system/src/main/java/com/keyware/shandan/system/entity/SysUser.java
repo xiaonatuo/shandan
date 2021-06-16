@@ -32,13 +32,13 @@ public class SysUser extends BaseEntity implements Serializable {
     /**
      * 登录名
      */
-    @TableField("LOGIN_NAME")
+    @TableField(value="LOGIN_NAME", condition = SqlCondition.LIKE)
     private String loginName;
 
     /**
      * 用户名称
      */
-    @TableField("USER_NAME")
+    @TableField(value = "USER_NAME", condition = SqlCondition.LIKE)
     private String userName;
 
     /**

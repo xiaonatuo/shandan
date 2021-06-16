@@ -44,7 +44,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
                     let queryByLoginName = $("#queryByLoginName").val();
                     let query = {
                         page: {
-                            curr: 1 //重新从第 1 页开始
+                            current: 1 //重新从第 1 页开始
                         }
                         , done: function (res, curr, count) {
                             //完成后重置where，解决下一次请求携带旧数据

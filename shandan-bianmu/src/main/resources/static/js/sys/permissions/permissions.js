@@ -65,7 +65,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
                 break;
             case 'query':
                 searchText = $('#searchKeyInput').val().trim();
-                let queryOps = {page: {page: 1}}
+                let queryOps = {page: {current: 1}}
                 if (searchText) {
                     queryOps.where = {permisName: searchText}
                 }
