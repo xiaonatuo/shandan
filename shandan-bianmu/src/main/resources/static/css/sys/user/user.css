@@ -1,0 +1,17 @@
+.layui-form-label {
+    width: 280px !important;
+}
+
+.layui-input-block {
+    display: -webkit-box !important;
+}
+
+.layui-table-tool-temp {
+    padding-right: 0;
+}
+
+#queryByLoginName {
+    display: unset;
+    width: 350px;
+    margin-left: 10px;
+}

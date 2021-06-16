@@ -1,0 +1,4 @@
+# Project exclude paths
+/shandan-bianmu/target/
+/shandan-common/target/
+/shandan-system/target/

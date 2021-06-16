@@ -1,0 +1,24 @@
+body {
+    padding: 20px;
+    background-color: #efefef;
+}
+/*.layui-card-body{overflow-y: auto}*/
+.layui-form-item input{margin-right: 10px !important;}
+.layui-form-pane .layui-form-label {width: 150px}
+.layui-form-pane .layui-input-block {margin-left: 150px;}
+.layui-input {
+    display: unset;
+    margin-right: 10px;
+}
+.layui-form-select dl dd, .layui-form-select dl dt {
+    padding: 0 10px;
+    line-height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#searchKeyInput {width: 330px}
+.layui-form-item .layui-inline {margin-right: 0}
+.layui-form-item .layui-inline .layui-input-inline{margin-right: 0}
+.layui-btn-container {color:#666666; font-size: 14px}
+.layui-form-label{width: auto}

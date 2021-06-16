@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.system.mapper.SysOrgMapper">
+
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.system.entity.SysOrg">
+        <id column="ID" property="id" />
+        <result column="ORG_NUMBER" property="orgNumber" />
+        <result column="ORG_NAME" property="orgName" />
+        <result column="ORG_SHORT_NAME" property="orgShortName" />
+        <result column="ORG_PARENT_ID" property="orgParentId" />
+        <result column="ORG_PARENT_NAME" property="orgParentName" />
+        <result column="ORG_PATH" property="orgPath" />
+        <result column="LEADER" property="leader" />
+        <result column="LEADER_NAME" property="leaderName" />
+        <result column="REMARK" property="remark" />
+        <result column="SORT" property="sort" />
+        <result column="IS_DELETE" property="deleted" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="MODIFY_TIME" property="modifyTime" />
+        <result column="MODIFY_USER" property="modifyUser" />
+    </resultMap>
+
+    <resultMap id="treeResultMap" extends="BaseResultMap" type="com.keyware.shandan.system.entity.SysOrg">
+        <collection property="children" column="ID" select="getChildren" />
+    </resultMap>
+
+    <select id="getOrgTree" resultMap="treeResultMap" parameterType="string">
+        select * from SYS_ORG o where o.IS_DELETE = 0
+        <if test="parentId == null or parentId == ''">
+            and o.ID = 'ROOT'
+        </if>
+        <if test="parentId != null and parentId != ''">
+            and o.ID = #{id}
+        </if>
+        order by o.SORT asc
+    </select>
+
+    <select id="getChildren" resultMap="treeResultMap" parameterType="string">
+        select * from SYS_ORG o where o.IS_DELETE = 0
+        <if test="parentId == null or parentId == ''">
+            and o.ORG_PARENT_ID = 'ROOT'
+        </if>
+        <if test="parentId != null and parentId != ''">
+            and o.ORG_PARENT_ID = #{id}
+        </if>
+        order by o.SORT asc
+    </select>
+
+    <select id="selectOrgAdmins" resultType="com.keyware.shandan.system.entity.SysUser">
+        select U.* from SYS_USER U
+            left join SYS_USER_ROLE UR on U.USER_ID = UR.USER_ID
+            left join SYS_ROLE R on UR.ROLE_ID = R.ROLE_ID
+        where R.ROLE_NAME = 'ROLE_ADMIN' and U.ORG_ID = #{orgId}
+    </select>
+</mapper>

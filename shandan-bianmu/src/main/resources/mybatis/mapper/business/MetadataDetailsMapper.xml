@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.bianmu.business.mapper.MetadataDetailsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.bianmu.business.entity.MetadataDetailsVo">
+        <id column="ID" property="id" />
+        <result column="METADATA_ID" property="metadataId" />
+        <result column="TABLE_NAME" property="tableName" />
+        <result column="MASTER" property="master" />
+        <result column="TABLE_COMMENT" property="tableComment" />
+        <result column="TABLE_PRIMARY_COLUMN" property="tablePrimaryColumn" />
+        <result column="TABLE_COLUMNS" property="tableColumns" />
+        <result column="FOREIGN_TABLE" property="foreignTable" />
+        <result column="FOREIGN_COLUMN" property="foreignColumn" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="MODIFY_USER" property="modifyUser" />
+        <result column="MODIFY_TIME" property="modifyTime" />
+        <!--<association property="basic"
+                     column="METADATA_ID"
+                     select="com.keyware.shandan.bianmu.business.mapper.MetadataBasicMapper.selectById"/>-->
+    </resultMap>
+</mapper>

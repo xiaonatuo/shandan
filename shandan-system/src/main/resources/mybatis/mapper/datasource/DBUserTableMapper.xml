@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.datasource.mapper.DBUserTableMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.datasource.entity.DBUserTableVo">
+        <result column="TABLE_NAME" property="tableName"/>
+        <result column="TABLESPACE_NAME" property="tablespaceName"/>
+        <result column="STATUS" property="status"/>
+        <result column="BACKED_UP" property="backedUp"/>
+        <result column="NUM_ROWS" property="numRows"/>
+        <result column="PARTITIONED" property="partitioned"/>
+        <result column="NESTED" property="nested"/>
+        <association property="primaryColumn" column="TABLE_NAME" select="selectPrimaryColumn" />
+        <association property="comment" column="TABLE_NAME" select="selectComment"/>
+        <collection property="columnList" column="TABLE_NAME" select="selectColumns" />
+    </resultMap>
+
+    <!-- 查询表的所有列 -->
+    <select id="selectColumns" resultType="com.keyware.shandan.datasource.entity.DBTableColumnVo">
+        select * from USER_TAB_COLS where TABLE_NAME = #{tableName}
+    </select>
+
+    <!-- 查询主键列 -->
+    <select id="selectPrimaryColumn" resultType="string">
+        select top 1 col.COLUMN_NAME
+        from USER_CONSTRAINTS con
+            left join USER_CONS_COLUMNS col on con.CONSTRAINT_NAME = col.CONSTRAINT_NAME
+        where con.CONSTRAINT_TYPE = 'P'
+          and con.TABLE_NAME = #{tableName};
+    </select>
+
+    <!-- 查询表注释 -->
+    <select id="selectComment" resultType="string">
+        select top 1 COMMENTS from USER_TAB_COMMENTS where TABLE_NAME = #{tableName}
+    </select>
+</mapper>

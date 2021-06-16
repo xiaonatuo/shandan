@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <!--<div class="layui-card-header">操作表单</div>-->
+            <div class="layui-card-body">
+                <form id="orgForm" class="layui-form layui-form-pane" lay-filter="orgForm">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上级组织</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="orgParentName" autocomplete="off" placeholder="上级组织"
+                                   class="layui-input" readonly="readonly" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">组织编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="orgNumber" autocomplete="off" placeholder="组织编号"
+                                   class="layui-input" lay-verify="required|number|orgNumber" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">组织名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="orgName" autocomplete="off" placeholder="组织名称"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">组织简称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="orgShortName" autocomplete="off" placeholder="组织简称"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">同级排序权重</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sort" autocomplete="off" placeholder="同级排序权重"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <!-- 隐藏域 -->
+                    <input type="text" name="id" hidden="hidden"/>
+                    <input type="text" name="orgParentId" hidden="hidden"/>
+                    <!-- treeId，用于更新HTML-->
+                    <input type="text" name="treeId" hidden="hidden"/>
+                    <button id="btn_submit" lay-submit lay-filter="*" style="position: absolute; left: -100px"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/org/edit.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    const org = /*[[${org}]]*/ {};
+</script>
+</html>

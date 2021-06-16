@@ -1,0 +1,22 @@
+<!--此页面用于放置页面的公共片段（fragment）-->
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="sideMenus(menuList)">
+    <li className="layui-nav-item" th:each="menu,iterStat : ${menuList}">
+        <a th:text="${menu.menuName}"
+           th:data-url="${#request.getContextPath() + menu.menuPath}"
+           th:data-id="${menu.menuId}" className="huanzi-menu" href="javascript:;">XXX菜单</a>
+        <dl className="layui-nav-child" th:if="${#lists.size(menu.children)} > 0">
+            <th:block th:include="this::sysMenu(${menu.children})"></th:block>
+        </dl>
+    </li>
+</th:block>
+
+<div th:fragment="layer">
+    <div>
+
+    </div>
+</div>
+</html>

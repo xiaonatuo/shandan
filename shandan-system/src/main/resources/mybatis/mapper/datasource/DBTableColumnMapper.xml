@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.datasource.mapper.DBTableColumnMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.datasource.entity.DBTableColumnVo">
+        <result column="TABLE_NAME" property="tableName"/>
+        <result column="COLUMN_NAME" property="columnName"/>
+        <result column="DATA_TYPE" property="dataType"/>
+        <result column="DATA_LENGTH" property="dataLength"/>
+        <result column="DATA_PRECISION" property="dataPrecision"/>
+        <result column="DATA_SCALE" property="dataScale"/>
+        <result column="NULLABLE" property="nullAble"/>
+        <result column="DEFAULT_LENGTH" property="defaultLength"/>
+        <result column="DATA_DEFAULT" property="dataDefault"/>
+        <result column="DENSITY" property="density"/>
+        <result column="AVG_COL_LEN" property="avgColLen"/>
+        <result column="CHAR_LENGTH" property="charLength"/>
+        <result column="QUALIFIED_COL_NAME" property="qualifiedColName"/>
+        <association property="comment" column="COLUMN_NAME" select="selectComment"/>
+    </resultMap>
+
+    <select id="selectComment" resultType="string">
+        select top 1 COMMENTS from USER_COL_COMMENTS where COLUMN_NAME = #{tableName}
+    </select>
+</mapper>

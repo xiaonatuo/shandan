@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <!--<div class="layui-card-header">操作表单</div>-->
+            <div class="layui-card-body">
+                <form id="datasourceForm" class="layui-form layui-form-pane" lay-filter="datasourceForm">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">数据源名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" autocomplete="off" placeholder="数据源名称"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">数据源类型</label>
+                            <div class="layui-input-inline">
+                                <select name="type" lay-verify="required">
+                                    <option value="0" selected>关系型数据库</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">数据库类型</label>
+                            <div class="layui-input-inline">
+                                <select name="dbType" lay-verify="required">
+                                    <option value="DM" selected>达梦</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="layui-form-item">
+                            <label class="layui-form-label">数据库版本</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="dbVersion" autocomplete="off" placeholder="数据库版本"
+                                           class="layui-input">
+                                </div>
+                        </div>-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">数据库驱动</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="jdbcDriverClass" autocomplete="off" placeholder="JDBC数据库驱动"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">数据库连接</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jdbcUrl" autocomplete="off"
+                                       placeholder="jdbc:**://127.0.0.1:0000"
+                                       class="layui-input" lay-verify="required">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">模式</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jdbcSchema" autocomplete="off"
+                                       placeholder="JDBC数据库模式/数据库名称"
+                                       class="layui-input" lay-verify="required">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">数据库用户名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jdbcUserName" autocomplete="off" placeholder="JDBC数据库用户名"
+                                       class="layui-input" lay-verify="required">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">密码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jdbcPassword" autocomplete="off" placeholder="JDBC数据库密码"
+                                       class="layui-input" lay-verify="required">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">描述</label>
+                        <div class="layui-input-block">
+                            <textarea  name="remark" autocomplete="off" placeholder="描述"
+                                       class="layui-textarea"> </textarea>
+                        </div>
+                    </div>
+                    <!-- 隐藏域 -->
+                    <input type="text" name="id" hidden="hidden"/>
+                    <button id="btn_submit" lay-submit lay-filter="*"
+                            style="position: absolute; left: -100px"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/business/datasource/edit.js}"></script>
+</html>

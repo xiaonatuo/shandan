@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        body {padding: 0px}
+        .layui-table-tool-temp {padding-right: 0px;}
+    </style>
+</head>
+<body>
+<div class="layui-row">
+        <!-- 表格主体 -->
+        <table class="layui-hide" id="dbTablesTable" lay-filter="dbTablesTable"></table>
+        <!-- 模板 -->
+        <script type="text/html" id="tableToolBar">
+            <div class="layui-btn-container">
+                <input type="text" id="searchKeyInput" name="searchKeyInput" autocomplete="off"
+                       placeholder="请输入数据源名称" class="layui-input layui-btn-sm">
+                <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
+            </div>
+        </script>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/business/datasource/selectTableLayer.js}"></script>
+
+</html>

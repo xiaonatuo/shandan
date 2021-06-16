@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.bianmu.business.mapper.MetadataBasicMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.bianmu.business.entity.MetadataBasicVo">
+        <id column="ID" property="id" />
+        <result column="DATA_SOURCE_ID" property="dataSourceId" />
+        <result column="METADATA_NAME" property="metadataName" />
+        <result column="METADATA_COMMENT" property="metadataComment" />
+        <result column="DATA_FROM" property="dataFrom" />
+        <result column="DATA_TYPE" property="dataType" />
+        <result column="SECRET_LEVEL" property="secretLevel" />
+        <result column="COLLECTION_TIME" property="collectionTime" />
+        <result column="THEME_TASK" property="themeTask" />
+        <result column="REVIEW_STATUS" property="reviewStatus" />
+        <result column="ORG_ID" property="orgId" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="MODIFY_USER" property="modifyUser" />
+        <result column="MODIFY_TIME" property="modifyTime" />
+        <collection property="metadataDetailsList" column="ID" ofType="com.keyware.shandan.bianmu.business.entity.MetadataDetailsVo" select="selectDetailsList">
+        </collection>
+    </resultMap>
+
+    <select id="selectDetailsList" resultMap="com.keyware.shandan.bianmu.business.mapper.MetadataDetailsMapper.BaseResultMap" parameterType="string">
+        select * from B_METADATA_DETAILS where METADATA_ID = #{metadataId}
+    </select>
+
+    <select id="pageListByDirectoryId" resultType="com.keyware.shandan.bianmu.business.entity.MetadataBasicVo">
+        select mb.* from B_DIRECTORY dir
+            inner join B_DIRECTORY_METADATA bm on dir.ID = bm.DIRECTORY_ID
+            inner join B_METADATA_BASIC mb on bm.METADATA_ID = mb.ID
+        where dir.ID = #{directoryId}
+          <if test="metadataName != null and metadataName != ''">
+              and mb.METADATA_NAME like #{metadataName}
+          </if>
+    </select>
+
+</mapper>

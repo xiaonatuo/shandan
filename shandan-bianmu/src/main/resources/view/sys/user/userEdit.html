@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/sys/user/user.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <!--<div class="layui-card-header">操作表单</div>-->
+            <div class="layui-card-body">
+                <form id="userForm" class="layui-form layui-form-pane" lay-filter="userForm">
+                    <label class="layui-form-item" th:text="${message}"></label>
+                    <!-- 隐藏域 -->
+                    <input type="text" name="userId" hidden="hidden" th:value="${user.userId}"/>
+                    <input type="hidden" name="orgId" th:value="${user.orgId}">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">组织机构</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="orgName" autocomplete="off" th:value="${orgName}" disabled
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="userName" th:value="${user.userName}" autocomplete="off" placeholder="用户名" lay-verify="required"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">登录名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="loginName" th:value="${user.loginName}" autocomplete="off" placeholder="登录名" lay-verify="required"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否允许登录系统</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="valid" th:checked="${user.valid}" value="true" title="是" checked>
+                            <input type="radio" name="valid" th:checked="${!user.valid}" value="false" title="否">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否允许多人在线</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="limitMultiLogin" th:checked="${user.limitMultiLogin}" value="true" title="是">
+                            <input type="radio" name="limitMultiLogin" th:checked="${!user.limitMultiLogin}" value="false" title="否" checked>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">限制允许登录的IP集合（用,隔开）</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="limitedIp" th:value="${user.limitedIp}" autocomplete="off" placeholder="限制允许登录的IP集合（多个IP用英文逗号隔开）"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">账号失效时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="expiredTime" th:value="${user.expiredTime}" id="expiredTimeDate" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btn_submit" lay-submit lay-filter="*" style="position: absolute; left: -100px"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/user/edit.js}"></script>
+</html>

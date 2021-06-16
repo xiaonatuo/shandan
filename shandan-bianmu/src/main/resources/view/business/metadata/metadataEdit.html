@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/business/metadata/metadata.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <!--<div class="layui-card-header">操作表单</div>-->
+            <div class="layui-card-body">
+                <form id="metadataForm" class="layui-form layui-form-pane" lay-filter="metadataForm">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">数据源</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="dataFrom" >
+                            <select id="dataSourcesSelect" name="dataSourceId" lay-verify="required" lay-filter="dataSourcesSelect"></select>
+                            <button id="btn_selectTable" type="button" class="layui-btn layui-btn-sm"
+                                    style="float: left; margin: 4px">选择元数据表
+                            </button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div id="metadataTablesTab"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">元数据表名</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="metadataComment">
+                            <input type="text" name="metadataName" autocomplete="off" placeholder="元数据表名"
+                                   class="layui-input" lay-verify="required" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">采集时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="collectionTime" name="collectionTime" placeholder="采集时间"
+                                   class="layui-input" lay-verify="required" readonly>
+                        </div>
+                    </div>
+                    <!--<div class="layui-form-item">
+                        <label class="layui-form-label">数据来源</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="dataFrom" autocomplete="off" placeholder="数据来源"
+                                   class="layui-input">
+                        </div>
+                    </div>-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">数据类型</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="dataType" autocomplete="off" placeholder="数据类型"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <!--<div class="layui-form-item">
+                        <label class="layui-form-label">数据密级</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="secretLevel" autocomplete="off" placeholder="数据密级"
+                                   class="layui-input">
+                        </div>
+                    </div>-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">主题任务</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="themeTask" autocomplete="off" placeholder="主题任务"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <!-- 隐藏域 -->
+                    <input type="text" name="id" hidden="hidden"/>
+                    <button id="btn_submit" lay-submit lay-filter="*"
+                            style="position: absolute; left: -100px"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<!-- 已选择的元数据表标签模板 -->
+<script id="checkedTableTemplate" type="text/html">
+    <ul class="metadata-table-list">
+        {{# for(let [index, item] of d){ }}
+        <li class="metadata-table-list-item">
+            <div class="table-tab">
+                <input type="hidden" name="tableName" value="{{item.tableName}}">
+                <div class="tab-text">{{item.tableName}}</div>
+                <i class="layui-icon layui-icon-close" data-id="{{item.tableName}}"></i>
+            </div>
+            <select id="selectForginColumn_{{item.tableName}}" lay-filter="selectForeignColumn_{{item.tableName}}">
+                <option>选择外键</option>
+                {{# layui.each(item.columnList,function(idx, col){ }}
+                <option value="{{col.columnName}}" {{col.selected}}>{{col.columnName}}</option>
+                {{# }); }}
+            </select>
+            <select id="selectForeignTable_{{item.tableName}}" lay-filter="selectForeignTable_{{item.tableName}}">
+                <option>选择外表</option>
+                {{#
+                for(let [i, o] of d){
+                if(index == i ){continue;}
+                let selected = o.tableName == item.foreignTable ? 'selected' : '';
+                }}
+                <option value="{{ i }}" {{selected}} >{{ i }}</option>
+                {{# } }}
+            </select>
+            <input type="radio" name="master" value="{{item.tableName}}" lay-skin="primary" title="主表">
+        </li>
+
+        {{# } }}
+    </ul>
+</script>
+<!-- js -->
+<script th:src="@{/js/business/metadata/edit.js}"></script>
+</html>

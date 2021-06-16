@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.system.mapper.SysRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.system.entity.SysRole">
+        <id column="ROLE_ID" property="roleId" />
+        <result column="ROLE_NAME" property="roleName" />
+        <result column="ROLE_REMARK" property="roleRemark" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="MODIFY_TIME" property="modifyTime" />
+        <result column="ROLE_CONTENT" property="roleContent" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="MODIFY_USER" property="modifyUser" />
+        <collection property="menuList" column="ROLE_ID" select="queryMenuList"/>
+        <collection property="permissionsList" column="ROLE_ID" select="queryPermisList"/>
+    </resultMap>
+
+    <select id="queryMenuList" resultMap="com.keyware.shandan.system.mapper.SysMenuMapper.BaseResultMap">
+        select m.* from SYS_ROLE r
+        left join SYS_ROLE_MENU rm on r.ROLE_ID = rm.ROLE_ID
+        right join SYS_MENU m on rm.MENU_ID = m.MENU_ID
+        where r.ROLE_ID = #{roleId}
+    </select>
+
+    <select id="queryPermisList" resultMap="com.keyware.shandan.system.mapper.SysPermissionsMapper.BaseResultMap">
+        select * from SYS_PERMISSIONS p
+            left join SYS_ROLE_PERMISSIONS rp on p.PERMIS_ID = rp.PERMIS_ID
+            left join SYS_ROLE r on rp.ROLE_ID = r.ROLE_ID
+        where r.ROLE_ID = #{roleId}
+    </select>
+</mapper>

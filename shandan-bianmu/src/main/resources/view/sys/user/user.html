@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/sys/user/user.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 树 -->
+    <div class="layui-col-md4">
+        <div class="layui-card">
+            <div class="layui-card-header">组织机构树</div>
+            <div class="layui-card-body">
+                <ul id="orgTree" class="dtree" data-id="ROOT" data-value="ROOT"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md8">
+        <div class="layui-card">
+            <div class="layui-card-header">用户列表</div>
+            <div class="layui-card-body">
+                <!-- 表格主体 -->
+                <table class="layui-hide" id="userTable" lay-filter="userTable"></table>
+                <!-- 模板 -->
+                <script type="text/html" id="tableToolBar">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="addData">新增<i
+                                class="layui-icon layui-icon-add-1"></i></button>
+                        <input type="text" id="queryByLoginName" name="queryByLoginName" autocomplete="off"
+                               placeholder="输入登陆名" class="layui-input layui-btn-sm">
+                        <button class="layui-btn layui-btn-sm" lay-event="query">查询<i
+                                class="layui-icon layui-icon-search"></i></button>
+                    </div>
+                </script>
+                <script type="text/html" id="userTableBarDemo">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑<i class="layui-icon layui-icon-edit"></i></a>
+                    <a class="layui-btn layui-btn-xs" lay-event="role">角色<i class="layui-icon layui-icon-group"></i></a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除<i
+                            class="layui-icon layui-icon-close"></i></a>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/user/user.js}"></script>
+<script type="text/javascript">
+    const sizeInit = ()=> $(".layui-card-body").height(window.innerHeight - 43 - 40 - 20);
+    window.onresize = sizeInit;
+    sizeInit();
+</script>
+</html>

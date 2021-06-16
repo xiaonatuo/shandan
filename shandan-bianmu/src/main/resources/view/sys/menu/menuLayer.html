@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <ul id="menuTree" class="dtree"></ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/menu/menuLayer.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    const userId = /*[[${userId}]]*/ '';
+    const userMenuIds = /*[[${userMenuIds}]]*/ [];
+    $(".layui-card-body").height(window.innerHeight - 60)
+</script>
+</html>

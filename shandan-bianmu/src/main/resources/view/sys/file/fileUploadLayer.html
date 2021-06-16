@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">文件选择</div>
+            <div class="layui-card-body">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-sm  layui-btn-normal" id="chooseFile"><i
+                            class="layui-icon layui-icon-file"></i>选择文件
+                    </button>
+                    <div class="layui-upload-list" style="max-width: 1000px; height: 200px; overflow-y: auto">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col>
+                                <col width="80">
+                                <col width="260">
+                                <col width="120">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>大小</th>
+                                <th>上传进度</th>
+                                <th style="text-align: right">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="fileList"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card">
+            <div class="layui-card-header">元数据表单</div>
+            <div class="layui-card-body">
+                <form id="metadataForm" class="layui-form layui-form-pane" lay-filter="metadataForm">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">元数据名称</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="metadataComment">
+                            <input type="text" name="metadataName" autocomplete="off" placeholder="元数据名称"
+                                   class="layui-input" lay-verify="required" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">采集时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="collectionTime" name="collectionTime" placeholder="采集时间"
+                                   class="layui-input" lay-verify="required" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">数据类型</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="dataType" autocomplete="off" placeholder="数据类型"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">主题任务</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="themeTask" autocomplete="off" placeholder="主题任务"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <button type="button" class="layui-btn layui-btn-sm" id="fileUploadAction" style="position: absolute; left: -50px; height: 0; border:0">
+        </button>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/file/fileUpload.js}"></script>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 树 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">元数据管理</div>
+            <div class="layui-card-body">
+                <!-- 表格主体 -->
+                <table class="layui-hide" id="metadataTable" lay-filter="metadataTable"></table>
+                <!-- 模板 -->
+                <script type="text/html" id="tableToolBar">
+                    <div class="layui-btn-container layui-form" lay-filter="metadataSearchForm">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <button class="layui-btn layui-btn-sm" lay-event="add">新增</button>
+                                <input type="text" id="searchKeyInput" name="searchKeyInput" autocomplete="off"
+                                       placeholder="请输入关键字查询" class="layui-input layui-btn-sm">
+                                <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">审核状态</label>
+                                <div class="layui-input-inline">
+                                    <select name="reviewStatusSelect" lay-filter="reviewStatusSelect">
+                                        <option value="">不限</option>
+                                        <option value="UN_SUBMIT">未提交</option>
+                                        <option value="SUBMITTED">待审核</option>
+                                        <option value="PASS">通过审核</option>
+                                        <option value="FAIL">未通过审核</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+                <script type="text/html" id="rowToolBar">
+                    {{#
+                    let isHide = (d.reviewStatus == ReviewStatus.UN_SUBMIT || d.reviewStatus == ReviewStatus.FAIL) ? '' : 'layui-hide';
+                    }}
+                    <button class="layui-btn layui-btn-xs {{isHide}}" lay-event="submitReview" title="提交审核"><i
+                            class="layui-icon layui-icon-release"></i></button>
+                    <button class="layui-btn layui-btn-xs {{isHide}}" lay-event="edit" title="编辑"><i
+                            class="layui-icon layui-icon-edit"></i></button>
+                    <button class="layui-btn layui-btn-xs layui-btn-danger {{isHide}}" lay-event="delete" title="删除"><i
+                            class="layui-icon layui-icon-delete"></i></button>
+                    <button class="layui-btn layui-btn-xs layui-btn-primary " lay-event="exampleData" title="示例数据"><i
+                            class="layui-icon layui-icon-cols"></i></button>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/business/metadata/metadata.js}"></script>
+<script>
+    const sizeInit = () => {
+        $(".layui-card-body").height(window.innerHeight -  43 - 40 - 20);
+    }
+    window.onresize = sizeInit;
+    sizeInit();
+</script>
+</html>

@@ -1,0 +1,11 @@
+.layui-form-label {
+    width: 230px !important;
+}
+
+.layui-input-block {
+    display: -webkit-box !important;
+}
+
+.layui-table-tool-temp {
+    padding-right: 0;
+}

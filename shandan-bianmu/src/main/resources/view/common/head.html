@@ -1,0 +1,80 @@
+<!--此页面用于放置页面的公共片段（fragment）-->
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- 通用头部模板 -->
+<head th:fragment="static">
+    <!-- thymeleaf内联js-->
+    <head>
+        <script th:inline="javascript">
+            //项目根路径
+            // ctx = /*[[@{/}]]*/'';
+            ctx = [[${#request.getContextPath()}]];//应用路径
+        </script>
+    </head>
+
+    <!-- 引入公用库 -->
+    <head>
+        <!-- Jquery -->
+        <script th:src="@{/js/common/jquery/jquery.js}"></script>
+
+        <!-- Layui -->
+        <link th:href="@{/js/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/js/common/layui/extend/dtree/dtree.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/js/common/layui/extend/dtree/font/dtreefont.css}" rel="stylesheet" type="text/css"/>
+        <script th:src="@{/js/common/layui/layui.js}"></script>
+
+        <!-- video-js -->
+        <link th:href="@{/js/common/video-js/video-js.css}" rel="stylesheet" type="text/css"/>
+        <script th:src="@{/js/common/video-js/video.js}"></script>
+
+        <!--CryptoJS jsencrypt -->
+        <script th:src="@{/js/common/encrypt/cryptojs.js}"></script>
+        <script th:src="@{/js/common/encrypt/jsencrypt.js}"></script>
+    </head>
+
+    <!-- 最后引入common.js、common.css -->
+    <head>
+        <link th:href="@{/css/common/common.css}" rel="stylesheet" type="text/css"/>
+        <script th:src="@{/js/common/Store.js}"></script>
+        <script th:src="@{/js/common/common.js}"></script>
+    </head>
+</head>
+
+<!-- 递归用户系统菜单模板 -->
+<th:block th:fragment="sysMenu(menuList)">
+    <dd class="layui-nav-item" th:each="menu,iterStat : ${menuList}">
+        <a th:text="${menu.menuName}"
+           th:data-url="${#request.getContextPath() + menu.menuPath}"
+           th:data-id="${menu.menuId}" class="huanzi-menu" href="javascript:;">XXX菜单</a>
+        <dl class="layui-nav-child" th:if="${#lists.size(menu.children)} > 0">
+            <th:block th:include="this::sysMenu(${menu.children})"></th:block>
+        </dl>
+    </dd>
+</th:block>
+
+<!-- 递归用户个性菜单模板 -->
+<th:block th:fragment="shortcutMenu(menuList)">
+    <dd th:each="menu,iterStat : ${menuList}">
+        <a th:text="${menu.shortcutMenuName}"
+           th:data-url="${menu.shortcutMenuPath.indexOf('http') == -1 ? #request.getContextPath() + menu.shortcutMenuPath : menu.shortcutMenuPath}"
+           th:data-id="${menu.shortcutMenuId}" class="huanzi-menu" href="javascript:;">XXX菜单</a>
+        <dl class="layui-nav-child" style="position:unset;" th:if="${#lists.size(menu.children)} > 0">
+            <th:block th:include="this::shortcutMenu(${menu.children})"></th:block>
+        </dl>
+    </dd>
+</th:block>
+
+<th:block th:fragment="sideMenus(menuList)">
+    <li className="layui-nav-item" th:each="menu,iterStat : ${menuList}">
+        <a th:text="${menu.menuName}"
+           th:data-url="${#request.getContextPath() + menu.menuPath}"
+           th:data-id="${menu.menuId}" className="huanzi-menu" href="javascript:;">XXX菜单</a>
+        <dl className="layui-nav-child" th:if="${#lists.size(menu.children)} > 0">
+            <th:block th:include="this::sysMenu(${menu.children})"></th:block>
+        </dl>
+    </li>
+</th:block>
+</html>

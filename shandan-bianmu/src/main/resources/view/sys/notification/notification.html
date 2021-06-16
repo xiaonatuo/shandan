@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <script th:src="@{/js/sys/notification/notification.js}"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .layui-breadcrumb a{padding: 0 90px}
+        .layui-breadcrumb a.active{color:#5FB878 !important}
+        li.notification-item {text-align: right}
+    </style>
+</head>
+<body  style="background-color: #FFF">
+<div id="notification_layer">
+    <div style="width: 500px;">
+        <span class="layui-breadcrumb" lay-separator="|" id="n_lay_tab">
+          <a class="active" href="javascript:void(0);" data-type="unread">未读通知</a>
+          <a href="javascript:void(0);" data-type="all">全部通知</a>
+        </span>
+        <ul id="unread_flow" style="padding-top: 20px; border-top: 1px solid #eee;margin-top: 20px"></ul>
+        <ul id="all_flow" style="padding-top: 20px; border-top: 1px solid #eee;margin-top: 20px"></ul>
+    </div>
+</div>
+</body>
+<!-- js -->
+<!--<script th:src="@{/js/business/review/review.js}"></script>-->
+<script>
+    const sizeInit = () => {
+        $("#notification_layer div:first").height(window.innerHeight - 40 - 20);
+    }
+    window.onresize = sizeInit;
+    sizeInit();
+
+    layui.use(['flow', 'util'], function(){
+        let flow = layui.flow;
+        let util = layui.util;
+
+        // 系统通知侧边栏流加载
+        loadFlow('unread_flow', NotificationUtil.urls.unreadPageList);
+        loadFlow('all_flow', NotificationUtil.urls.allPageList);
+        $('#all_flow').addClass('layui-hide');
+
+        //  tab标签点击事件
+        $('#n_lay_tab a').on('click', function (elem) {
+            $('#n_lay_tab a').removeClass('active');
+            $(elem.target).addClass('active');
+            const type = $(elem.target).data('type')
+            if (type === 'unread') {
+                $('#all_flow').addClass('layui-hide');
+                $('#unread_flow').removeClass('layui-hide');
+                loadFlow('unread_flow', NotificationUtil.urls.unreadPageList);
+            } else {
+                $('#unread_flow').addClass('layui-hide');
+                $('#all_flow').removeClass('layui-hide');
+                loadFlow('all_flow', NotificationUtil.urls.allPageList);
+            }
+        });
+
+        /**
+         * 流加载通知数据
+         * @param id
+         * @param url
+         */
+        function loadFlow(id, url) {
+            $(`#${id}`).html('');
+            flow.load({
+                elem: `#${id}`,
+                // isAuto: false,
+                done: function (page, next) {
+                    $.get(url, {current: page, size:30}, function (res) {
+
+                        if (res.flag) {
+                            let htm = '';
+                            const records = res.data.records;
+                            layui.each(records, function (index, item) {
+                                const timeAgo = util.timeAgo(new Date(item.createTime).getTime());
+                                htm += `<li class="notification-item">
+                                    <p style="text-align: left;">【${item.title}】${item.content}<a href="javascript:void(0);" data-id="${item.id}" data-type="${id}" style="color: #01AAED; margin-left: 10px;">查看</a></p>
+                                    <span style="padding-left: 10px; color: #BBB;">${timeAgo}</span>
+                                </li><hr>`;
+                            });
+
+                            //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                            //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                            next(htm, page < res.data.pages);
+
+                            //绑定查看点击事件
+                            $('.notification-item p a').on('click', function (elem) {
+                                const id = $(elem.target).data('id');
+                                const type = $(elem.target).data('type');
+                                let data;
+                                if(type === 'unread_flow'){
+                                    data = NotificationUtil.getUnreadByID(id);
+                                    NotificationUtil.setRead(data.id, function () {
+                                        loadFlow('unread_flow', NotificationUtil.urls.unreadPageList);
+                                    });
+                                }else{
+                                    data = records.filter(item => item.id == id)[0];
+                                }
+                                if (data.type === 'METADATA_REVIEW') {
+                                    parent.open(`${ctx}/business/metadata/`);
+                                } else {
+                                    parent.open(`${ctx}/business/directory/`)
+
+                                }
+                            });
+                        }
+                    })
+                }
+            });
+        }
+    })
+</script>
+</html>

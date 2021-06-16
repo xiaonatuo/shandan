@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.system.mapper.SysUserRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.system.entity.SysUserRole">
+        <id column="USER_ROLE_ID" property="userRoleId" />
+        <result column="USER_ID" property="userId" />
+        <result column="ROLE_ID" property="roleId" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="MODIFY_TIME" property="modifyTime" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="MODIFY_USER" property="modifyUser" />
+    </resultMap>
+
+    <resultMap id="fullResultMap" type="com.keyware.shandan.system.entity.SysUserRole" extends="BaseResultMap">
+        <association property="user" resultMap="com.keyware.shandan.system.mapper.SysUserMapper.BaseResultMap"/>
+        <association property="role" resultMap="com.keyware.shandan.system.mapper.SysRoleMapper.BaseResultMap"/>
+    </resultMap>
+
+    <select id="listByUserId" resultMap="fullResultMap">
+        select * from SYS_USER_ROLE ur
+        left join SYS_USER u on ur.USER_ID = u.USER_ID
+        left join SYS_ROLE r on ur.ROLE_ID = r.ROLE_ID
+        where ur.USER_ID = #{userId}
+    </select>
+</mapper>

@@ -1,0 +1,16 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+.layui-layout-admin .layui-logo {
+    max-width: 300px;
+    width: auto;
+    font-weight: bold;
+}
+.layui-nav-img {
+    height: 50px;
+    width: auto
+}
+.layui-body-width-max {
+    left: 0;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <form id="permissionsForm" class="layui-form layui-form-pane" lay-filter="permissionsForm">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">权限标识</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="permisId" autocomplete="off" placeholder="权限标识,PERMIS_开头"
+                                   class="layui-input" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">权限名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="permisName" autocomplete="off" placeholder="权限名称"
+                                   class="layui-input" lay-verify="required" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">权限描述</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="permisRemark" autocomplete="off" placeholder="权限描述"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">数据权限范围</label>
+                        <div class="layui-input-block">
+                            <select name="permisScope" lay-verify="permisScope">
+                                <option th:each="ps, iterStat:${permisScopes}" th:value="${ps.name}" th:text="${ps.remark}" />
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">权限配置</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="hasSelect" title="查询" value="true">
+                            <input type="checkbox" name="hasAdd" title="新增"  value="true">
+                            <input type="checkbox" name="hasEdit" title="编辑" value="true">
+                            <input type="checkbox" name="hasDelete" title="删除" value="true">
+                        </div>
+                    </div>
+                    <button id="btn_submit" lay-submit lay-filter="*" style="position: absolute; left: -100px"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/permissions/edit.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    const permisVo = /*[[${permis}]]*/ {};
+</script>
+</html>

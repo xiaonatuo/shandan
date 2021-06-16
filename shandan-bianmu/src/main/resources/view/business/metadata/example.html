@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 树 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <!--<div class="layui-card-header">示例数据</div>-->
+            <div class="layui-card-body" style="overflow-x: auto">
+                <!-- 表格主体 -->
+                <table class="layui-hide" id="metadataExampleTable" lay-filter="metadataExampleTable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<!--<script th:src="@{/js/business/metadata/metadata.js}"></script>-->
+<script type="text/javascript">
+    layui.use(['layer', 'listPage'], function () {
+        const requestParam = layui.url().search;
+
+        // 请求查询元数据表字段
+        $.get(`${ctx}/business/metadata/columns?id=${requestParam.metadataId}`, function (res) {
+            if (res.flag) {
+                let columns = [];
+                for (let {columnName} of res.data) {
+                    columns.push({field: columnName, title: columnName});
+                }
+                const tableOptions = {
+                    id: 'metadataExampleTable',
+                    url: `${ctx}/business/metadata/example/data?metadataId=${requestParam.metadataId}`,
+                    method: 'get',
+                    width: 829,
+                    cols: [columns],
+                    page: false,
+                    toolbar: false,
+                }
+                layui.listPage.init({
+                    table: tableOptions
+                })
+            }
+        });
+    });
+</script>
+</html>

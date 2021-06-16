@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.system.mapper.SysNotificationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.system.entity.SysNotification">
+        <id column="ID" property="id" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="MODIFY_USER" property="modifyUser" />
+        <result column="MODIFY_TIME" property="modifyTime" />
+        <result column="FROM_ID" property="fromId" />
+        <result column="RECEIVE_ID" property="receiveId" />
+        <result column="TITLE" property="title" />
+        <result column="CONTENT" property="content" />
+        <result column="TYPE" property="type" />
+        <result column="ALL_READ" property="allRead" />
+        <association property="from" column="FROM_ID" javaType="com.keyware.shandan.system.entity.SysUser" />
+    </resultMap>
+
+    <!-- 查询未读通知分页列表 -->
+    <select id="selectUnreadNotificationPageByUserId" resultType="com.keyware.shandan.system.entity.SysNotification">
+        select n.* from SYS_NOTIFICATION n
+            left join SYS_NOTIFICATION_UNREAD nu on n.ID = nu.NOTIFICATION_ID
+        where nu.USER_ID = #{userId}
+    </select>
+</mapper>

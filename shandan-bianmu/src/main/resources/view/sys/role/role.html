@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/sys/role/role.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 树 -->
+    <div class="layui-col-md6">
+        <div class="layui-card">
+            <div class="layui-card-header">角色列表</div>
+            <div class="layui-card-body simple-table">
+                <!-- 表格主体 -->
+                <table class="layui-hide" id="roleTable" lay-filter="roleTable"></table>
+                <!-- 模板 -->
+                <script type="text/html" id="tableToolBar">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="add">新增</button>
+                        <input type="text" id="searchKeyInput" name="searchKeyInput" autocomplete="off"
+                               placeholder="请输入角色名称" class="layui-input layui-btn-sm">
+                        <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
+                    </div>
+                </script>
+                <script type="text/html" id="rowToolBar">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+    <!-- 操作表单 -->
+    <div class="layui-col-md6">
+        <div class="layui-row">
+            <div class="layui-card from-card">
+                <div class="layui-card-header">操作表单</div>
+                <div class="layui-card-body">
+                    <form id="roleForm" class="layui-form layui-form-pane" lay-filter="roleForm">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">权限名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="roleName" autocomplete="off" placeholder="权限名称，ROLE_开头，全大写"
+                                       class="layui-input" lay-verify="required">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">权限描述</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="roleRemark" autocomplete="off" placeholder="权限描述"
+                                       class="layui-input" lay-verify="required">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="text-align: center;">
+                            <button class="layui-btn layui-btn-sm" lay-submit lay-filter="roleForm">保存</button>
+                        </div>
+                        <!-- 隐藏域 -->
+                        <input type="text" name="roleId" hidden="hidden"/>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space10 config-row" style="margin-top:10px">
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">菜单配置</div>
+                    <div class="layui-card-body" style="overflow: auto;">
+                        <ul id="menuTree" data-id="ROOT" data-value="ROOT" class="dtree"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">权限配置</div>
+                        <div class="layui-card-body" style="overflow: auto;">
+                            <div class="layui-form-item layui-form" th:each="permis, iteStat:${permisList}">
+                                <input type="checkbox" th:id="${permis.permisId}" name="permis" th:title="${permis.permisName}" lay-filter="permisConfigForm"
+                                       th:value="${permis.permisId}">
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/role/role.js}"></script>
+<script type="text/javascript">
+    const sizeInit = function () {
+        let leftColHeight = window.innerHeight - 43 - 40 - 20
+        $(".simple-table").height(leftColHeight);
+
+        let rightTopRowHeiht = $(".from-card").height();
+        $(".config-row .layui-card-body").height(leftColHeight - rightTopRowHeiht - 18)
+    }
+    window.onresize = sizeInit;
+    sizeInit();
+</script>
+</html>

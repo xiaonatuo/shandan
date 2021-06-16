@@ -1,0 +1,14 @@
+##### 生产环境配置 #######
+spring:
+#  profiles:
+#    active: prod
+
+  datasource:
+    url: jdbc:dm://localhost:5236
+    username: BIANMU
+    password: 123456789
+    driver-class-name: dm.jdbc.driver.DmDriver
+
+bianmu:
+  #是否需要输入验证码
+  captcha-enable: false

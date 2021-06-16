@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/sys/menu/menu.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 树 -->
+    <div class="layui-col-md4">
+        <div class="layui-card">
+            <div class="layui-card-header">菜单树</div>
+            <div class="layui-card-body">
+                <ul id="menuTree" class="dtree" data-id="ROOT" data-value="ROOT"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据表格 -->
+    <div class="layui-col-md8">
+        <div class="layui-card">
+            <div class="layui-card-header">菜单列表</div>
+            <div class="layui-card-body">
+                <!-- 表格主体 -->
+                <table class="layui-hide" id="menuTable" lay-filter="menuTable"></table>
+                <!-- 模板 -->
+                <script type="text/html" id="tableToolBar">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="add">新增<i
+                                class="layui-icon layui-icon-add-1"></i></button>
+                        <input type="text" id="searchKeyInput" name="searchKeyInput" autocomplete="off"
+                               placeholder="请输入菜单名称" class="layui-input layui-btn-sm" style="width: 350px">
+                        <button class="layui-btn layui-btn-sm" lay-event="query">查询<i
+                                class="layui-icon layui-icon-search"></i></button>
+                    </div>
+                </script>
+                <script type="text/html" id="rowToolBar">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑<i class="layui-icon layui-icon-edit"></i></a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除<i
+                            class="layui-icon layui-icon-delete"></i></a>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/menu/menu.js}"></script>
+<script type="text/javascript">
+    const sizeInit = ()=> $(".layui-card-body").height(window.innerHeight - 43 - 40 - 20);
+    window.onresize = sizeInit;
+    sizeInit();
+</script>
+</html>

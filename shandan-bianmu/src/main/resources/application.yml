@@ -1,0 +1,90 @@
+##### 公共 配置 #######
+
+#内置Tomcat容器配置
+server:
+  port: 8080
+  servlet:
+    #应用路径，配置应用路径，可方便进行反向代理
+    context-path:
+  # 修改tomact吞吐量，这里不限制
+  tomcat:
+    max-swallow-size: -1
+
+#基础配置
+spring:
+  profiles:
+    active: dev #选择配置分支，先读取系统环境变量，如果没有则默认值为 dev
+  application:
+    name: bianmu
+
+  # 文件上传
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 500MB
+
+  #修改thymeleaf访问根路径
+  thymeleaf:
+    prefix: classpath:/view/
+
+  #mvc接收参数时对日期进行格式化
+  mvc:
+    format:
+      date: yyyy-MM-dd
+      date-time: yyyy-MM-dd HH:mm:ss
+
+  #jackson对响应回去的日期参数进行格式化
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
+  datasource:
+    druid:
+      stat-view-servlet:
+        allow: 127.0.0.1,172.16.36.134
+        enabled: true
+        loginUsername: admin
+        loginPassword: 123456
+      initial-size: 5
+      min-idle: 5
+      maxActive: 100
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      #validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,log4j   #排除防火墙,wall
+      connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+      web-stat-filter:
+        enabled: true
+        url-pattern: "/*"
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+
+
+
+bianmu:
+  #是否需要输入验证码
+  captcha-enable: false
+  #文件上传资源映射
+  file-upload-resource: /upload/**
+  # 配置文件存储方式
+  file-storage:
+    # 存储位置，local：本地，nas：NAS存储服务
+    location: local
+    # 存储路径
+    path: D:/BIANMU/
+
+#mybatis-plus 配置项
+mybatis-plus:
+  mapper-locations: classpath*:/mybatis/mapper/**/*.xml
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.system.mapper.SysPermissionsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.system.entity.SysPermissions">
+        <id column="PERMIS_ID" property="permisId" />
+        <result column="PERMIS_NAME" property="permisName" />
+        <result column="PERMIS_REMARK" property="permisRemark" />
+        <result column="PERMIS_SCOPE" property="permisScope" />
+        <result column="HAS_SELECT" property="hasSelect" />
+        <result column="HAS_ADD" property="hasAdd" />
+        <result column="HAS_EDIT" property="hasEdit" />
+        <result column="HAS_DELETE" property="hasDelete" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="MODIFY_TIME" property="modifyTime" />
+        <result column="MODIFY_USER" property="modifyUser" />
+    </resultMap>
+</mapper>

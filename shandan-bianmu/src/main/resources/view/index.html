@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${sys.sysName}"></title>
+    <link rel="shortcut icon" th:href='${sys.sysLogo}' th:mce_href='${sys.sysLogo}' type="image/x-icon">
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <script th:src="@{/js/sys/notification/notification.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <!-- 头部区域（可配合layui已有的水平导航）组织 -->
+    <div class="layui-header">
+        <div class="layui-logo"><img th:src='${sys.sysLogo}' class="layui-nav-img"/> <span
+                th:text="${sys.sysName}"></span></div>
+        <ul class="layui-nav layui-layout-left" lay-filter="navbar-top" id="navbar-top">
+            <li class="layui-nav-item" th:each="menu,iterStat : ${menuList}">
+                <a th:text="${menu.menuName}" th:data-id="${menu.menuId}"
+                   th:data-url="${#request.getContextPath() + menu.menuPath}"
+                   th:data-children-length="${#lists.size(menu.children)}"
+                   class="huanzi-menu" href="javascript:void(0);">XXX菜单</a>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right" lay-filter="user-nav" id="user-nav">
+            <li class="layui-nav-item">
+                <a href="javascript:;" style="padding:0 10px">
+                    <i class="layui-icon layui-icon-username"></i>
+                    <span th:text="${loginUser.userName}">XXX</span>
+                </a>
+                <!--<dl class="layui-nav-child">
+                    <dd><a class="huanzi-menu" th:data-url="${#request.getContextPath()} + '/user/userinfo'"
+                           data-id="userinfo" href="javascript:;">基本资料</a></dd>
+                    <dd><a class="huanzi-menu" th:data-url="${#request.getContextPath()} + '/user/shortcMenu'"
+                           data-id="shortcMenu" href="javascript:;">个性菜单</a></dd>
+                </dl>-->
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;" style="padding:0 10px" data-id="unread">
+                    <i class="layui-icon layui-icon-notice"></i>
+                    <span class="layui-badge-dot layui-hide" id="unread-mark" style="margin: -10px -4px 0; height:6px; width: 6px"></span>
+                </a>
+            </li>
+            <li class="layui-nav-item"><a th:href="@{/logout}" style="padding:0 10px"><i
+                    class="layui-icon layui-icon-logout"></i></a></li>
+        </ul>
+    </div>
+
+    <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+    <div class="layui-side layui-bg-black" id="nav-col">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="navbar-side" lay-shrink="all"
+                id="navbar-side"></ul>
+        </div>
+    </div>
+
+    <!-- 内容主体区域 -->
+    <div class="layui-body" style="overflow-y: hidden;" id="container-body">
+        <iframe id="containerFrame" class='tab-content-div'
+                onload='if(this.contentWindow.location.pathname === ctx+"loginPage"){window.location.href = +ctx+"loginPage"}'
+                width='100%' frameborder='0' scrolling='auto'></iframe>
+    </div>
+</div>
+<!-- th:inLine="javascript" 声明以下javascript代码可处理Thymeleaf脚本 -->
+<script th:inline="javascript">
+    //获取后端RSA公钥并存到sessionStorage
+    sessionStorage.setItem('javaPublicKey', [[${publicKey}]]);
+
+    //获取api加密开关并存到sessionStorage
+    sessionStorage.setItem('sysApiEncrypt', [[${sys.sysApiEncrypt}]]);
+
+    //重写jq的ajax加密
+    jQueryExtend.ajaxExtend();
+    const menuList = [[${menuList}]];
+    const frameHeight = $(".layui-body")[0].offsetHeight;
+    $("#containerFrame").attr("height", frameHeight + "px")
+    $('#notification_layer div:first').css('height', frameHeight - 51 + 'px');
+</script>
+</body>
+</html>
