@@ -1,29 +1,22 @@
-package com.keyware.shandan;
+package com.keyware.shandan.system.controller;
 
+import com.keyware.shandan.common.util.ErrorUtil;
+import com.keyware.shandan.common.util.RsaUtil;
+import com.keyware.shandan.common.util.VerifyCodeImageUtil;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
-import com.keyware.shandan.system.utils.MenuUtil;
-import com.keyware.shandan.system.utils.SysSettingUtil;
-import com.keyware.shandan.common.util.*;
 import com.keyware.shandan.system.entity.*;
 import com.keyware.shandan.system.service.SysRoleService;
 import com.keyware.shandan.system.service.SysSettingService;
 import com.keyware.shandan.system.service.SysShortcutMenuService;
 import com.keyware.shandan.system.service.SysUserService;
+import com.keyware.shandan.system.utils.MenuUtil;
+import com.keyware.shandan.system.utils.SysSettingUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.annotation.MapperScan;
-import org.mybatis.spring.annotation.MapperScans;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,34 +33,20 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-@EnableAsync//开启异步调用
-@SpringBootApplication
-public class BianmuApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(BianmuApplication.class, args);
-    }
-
-    /**
-     * 解决不能注入session注册表问题
-     */
-    @Bean
-    SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
-}
-
+/**
+ * <p>
+ * 前端控制器
+ * </p>
+ *
+ * @author Administrator
+ * @since 2021/6/17
+ */
 @Slf4j
 @Controller
 @RequestMapping("/")
-@Configuration
-class IndexController {
-
+public class SystemController {
     @Autowired
     private SysUserService sysUserService;
-
-    @Autowired
-    private SysSettingService sysSettingService;
 
     @Autowired
     private SysRoleService sysRoleService;
@@ -75,38 +54,15 @@ class IndexController {
     @Autowired
     private SysShortcutMenuService sysShortcutMenuService;
 
-    @Value("${server.servlet.context-path:}")
-    private String contextPath;
 
     @Value("${bianmu.captcha-enable}")
     private Boolean captchaEnable;
-
 
     /**
      * 端口
      */
     @Value("${server.port}")
     private String port;
-
-    /**
-     * 启动成功
-     */
-    @Bean
-    public ApplicationRunner applicationRunner() {
-        return applicationArguments -> {
-            try {
-                //系统启动时获取数据库数据，设置到公用静态集合sysSettingMap
-                SysSetting setting = sysSettingService.list().get(0);
-                SysSettingUtil.setSysSettingMap(setting);
-
-                //获取本机内网IP
-                log.info("启动成功：" + "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port + contextPath);
-            } catch (UnknownHostException e) {
-                //输出到日志文件中
-                log.error(ErrorUtil.errorInfoToString(e));
-            }
-        };
-    }
 
     /**
      * 跳转登录页面
@@ -140,37 +96,6 @@ class IndexController {
             //输出到日志文件中
             log.error(ErrorUtil.errorInfoToString(e));
         }
-    }
-    @GetMapping("index")
-    public ModelAndView index(){
-        ModelAndView modelAndView = new ModelAndView("index");
-
-        //系统信息
-        modelAndView.addObject("sys", SysSettingUtil.getSysSetting());
-
-        //登录用户
-        SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
-        user.setPassword(null);//隐藏部分属性
-        modelAndView.addObject( "loginUser", user);
-
-        //登录用户系统菜单
-        List<SysRole> roles = sysRoleService.getUserRoles(user.getUserId());
-        List<SysMenu> menuList = new ArrayList<>();
-        for(SysRole role : roles){
-            menuList.addAll(role.getMenuList());
-        }
-
-        modelAndView.addObject("menuList", MenuUtil.getChildBySysMenuVo("", menuList));
-
-        //登录用户快捷菜单
-        List<SysShortcutMenu> shortcutMenuList = sysShortcutMenuService.findByUserId(user.getUserId()).getData();
-        modelAndView.addObject("shortcutMenuList",shortcutMenuList);
-
-        //后端公钥
-        String publicKey = RsaUtil.getPublicKey();
-        modelAndView.addObject("publicKey", publicKey);
-
-        return modelAndView;
     }
 
     /**

@@ -17,4 +17,12 @@ public class BrowserApplication {
     public static void main(String[] args) {
         SpringApplication.run(BrowserApplication.class, args);
     }
+
+    /**
+     * 解决不能注入session注册表问题
+     */
+    @Bean
+    SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
 }

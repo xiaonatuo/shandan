@@ -201,8 +201,10 @@
     </dependencyManagement>
 
     <modules>
-        <!-- 数据编目系统业务模块 -->
-        <module>shandan-bianmu</module>
+        <!-- 数据编目系统核心模块 -->
+        <module>shandan-bianmu-core</module>
+        <!-- 数据编目系统服务模块 -->
+        <module>shandan-bianmu-service</module>
         <!-- 综合浏览系统业务模块 -->
         <module>shandan-browser</module>
         <!-- 框架公共模块 -->

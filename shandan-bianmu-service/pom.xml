@@ -10,7 +10,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>shandan-bianmu</artifactId>
+    <artifactId>shandan-bianmu-service</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
@@ -54,6 +54,12 @@
         </dependency>
 
         <!-- 项目模块依赖 -->
+        <dependency>
+            <groupId>com.keyware.shandan</groupId>
+            <artifactId>shandan-bianmu-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <dependency>
             <groupId>com.keyware.shandan</groupId>
             <artifactId>shandan-system</artifactId>
