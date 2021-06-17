@@ -56,12 +56,6 @@
         <!-- 项目模块依赖 -->
         <dependency>
             <groupId>com.keyware.shandan</groupId>
-            <artifactId>shandan-common</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.keyware.shandan</groupId>
             <artifactId>shandan-system</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -70,20 +64,10 @@
 
     <!--构建工具-->
     <build>
-        <!--<resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.4.5</version>
                 <configuration>
                     <fork>true</fork>
                     <addResources>true</addResources>

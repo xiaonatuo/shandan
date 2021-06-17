@@ -1,3 +1,34 @@
+server:
+  port: 8090
+
 spring:
   application:
     name: shandan-browser
+  profiles:
+    active: dev #选择配置分支，先读取系统环境变量，如果没有则默认值为 dev
+
+  #修改thymeleaf访问根路径
+  thymeleaf:
+    prefix: classpath*:/view/
+
+  #mvc接收参数时对日期进行格式化
+  mvc:
+    format:
+      date: yyyy-MM-dd
+      date-time: yyyy-MM-dd HH:mm:ss
+
+  #jackson对响应回去的日期参数进行格式化
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
+#mybatis-plus 配置项
+mybatis-plus:
+  mapper-locations: classpath*:/mybatis/mapper/**/*.xml
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0

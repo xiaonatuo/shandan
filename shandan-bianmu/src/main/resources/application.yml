@@ -82,7 +82,7 @@ bianmu:
 
 #mybatis-plus 配置项
 mybatis-plus:
-  mapper-locations: classpath*:/mybatis/mapper/**/*.xml
+  mapper-locations: classpath*:/mybatis/mapper/**/*Mapper.xml
   global-config:
     db-config:
       logic-delete-field: deleted
