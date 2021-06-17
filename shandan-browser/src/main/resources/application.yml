@@ -9,7 +9,7 @@ spring:
 
   #修改thymeleaf访问根路径
   thymeleaf:
-    prefix: classpath*:/view/
+    prefix: classpath:/view/
 
   #mvc接收参数时对日期进行格式化
   mvc:
@@ -32,3 +32,7 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
+
+bianmu:
+  #文件上传资源映射
+  file-upload-resource: /upload/**

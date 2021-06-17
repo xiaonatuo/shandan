@@ -60,13 +60,12 @@
         <!-- 项目模块依赖 -->
         <dependency>
             <groupId>com.keyware.shandan</groupId>
-            <artifactId>shandan-common</artifactId>
+            <artifactId>shandan-system</artifactId>
             <version>1.0.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.keyware.shandan</groupId>
-            <artifactId>shandan-system</artifactId>
+            <artifactId>shandan-bianmu</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
