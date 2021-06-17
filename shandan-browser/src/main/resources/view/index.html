@@ -1,10 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>综合浏览</title>
+    <script th:replace="common/head::static"></script>
+    <style>
+        .layui-layout-admin .layui-body {
+            left: 0;
+            padding: 15px;
+            background-color: #eee
+        }
+        .layui-form-item .layui-input-inline{width:auto}
+    </style>
 </head>
 <body>
-<h1>综合浏览首页</h1>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><span>大数据综合浏览系统</span></div>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+                <a href="javascript:;">
+                    <i class="layui-icon layui-icon-username"></i>
+                    <span th:text="${user.userName}"></span>
+                </a>
+            </li>
+            <li class="layui-nav-item"><a th:href="@{/logout}" style="padding:0 10px"><i
+                    class="layui-icon layui-icon-logout"></i></a></li>
+        </ul>
+    </div>
+    <div class="layui-body">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md2">
+                <div class="layui-card">
+                    <div class="layui-card-header">目录树</div>
+                    <div class="layui-card-body">
+                        <div id="directory-tree"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md10">
+                <div class="layui-card">
+                    <div class="layui-card-header">数据检索</div>
+                    <div class="layui-card-body">
+                        <div class="layui-form">
+                            <div class="layui-form-item search-line">
+                                <div style="margin: 0 auto">
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="search-input" class="layui-input" placeholder="输入关键词进行搜索。。。"/>
+                                    </div>
+                                    <div class="layui-input-inline">
+                                        <button class="layui-btn">开始搜索</button>
+                                    </div>
+                                    <div class="layui-input-inline">
+                                        <button class="layui-btn layui-btn-primary layui-border-green" style="border: 0" id="condition-btn">条件搜索<i class="layui-icon layui-icon-down"></i></button>
+                                    </div>
+                                </div>
+                                <div class="" style="height: 200px; top:50px; display: none" id="condition-div">
+                                    内容
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="js/index.js"></script>
+<script>
+    const sizeInit = () => {
+        $(".layui-card-body").height(window.innerHeight - 60 - 30 - 15 - 43 - 5);
+
+        const formItemWidth = $('#search-input').parent().parent().innerWidth();
+        $('#search-input').parent().width(formItemWidth - 300);
+        $('#search-input').parent()
+    }
+    window.onresize = sizeInit;
+    sizeInit();
+
+    $('#condition-btn').click(function(){
+        $('#condition-div').slideToggle()
+    });
+</script>
 </body>
 </html>
