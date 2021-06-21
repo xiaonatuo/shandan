@@ -45,7 +45,7 @@
                 <script type="text/html" id="rowToolBar">
                     {{#
                     let isDisabled = (d.reviewStatus == ReviewStatus.UN_SUBMIT || d.reviewStatus == ReviewStatus.FAIL) ? '' : 'disabled';
-                    let disableClass = (d.reviewStatus == ReviewStatus.UN_SUBMIT || d.reviewStatus == ReviewStatus.FAIL) ? '' : 'layui-disabled';
+                    let disableClass = (d.reviewStatus == ReviewStatus.UN_SUBMIT || d.reviewStatus == ReviewStatus.FAIL) ? '' : 'layui-btn-disabled';
                     }}
                     <button class="layui-btn layui-btn-xs {{disableClass}}" lay-event="submitReview" {{isDisabled}} title="提交审核"><i
                             class="layui-icon layui-icon-release"></i></button>
