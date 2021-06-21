@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 /**
  * <p>
  * 审核记录表 前端控制器
@@ -101,5 +103,25 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
         }
 
         return Result.of(reviewRecordService.review(entityId, entityType, status, opinion));
+    }
+
+    /**
+     * 根据数据实体ID获取最后一次审核记录
+     * @param entityId
+     * @return
+     */
+    @GetMapping("/get/entity")
+    public Result<ReviewRecordVo> getLastByEntityId(String entityId){
+        if(StringUtils.isBlank(entityId)){
+            return Result.of(null, false, "参数错误");
+        }
+        QueryWrapper<ReviewRecordVo> query = new QueryWrapper<>();
+        query.eq("ENTITY_ID", entityId);
+        query.orderByDesc("CREATE_TIME");
+        List<ReviewRecordVo> list = reviewRecordService.list(query);
+        if(list.size() > 0){
+            return Result.of(list.get(0));
+        }
+        return Result.of(null, false);
     }
 }

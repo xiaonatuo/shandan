@@ -16,16 +16,17 @@ layui.use(['layer', 'listPage', 'form'], function () {
         deleteUrl: `${ctx}/business/metadata/delete`,
         table: {
             id: 'metadataTable',
-            searchFieldNames:'metadataName',
+            searchFieldNames: 'metadataName',
             url: `${ctx}/business/metadata/page`,
             cols: [[
                 {field: 'id', title: 'ID', hide: true},
                 {field: 'metadataName', title: '元数据表名'},
                 {field: 'metadataComment', title: '中文注释'},
                 {field: 'themeTask', title: '主题任务'},
-                {field: 'dataFrom', title: '数据来源', width:100},
-                {field: 'collectionTime', title: '采集时间', width:180, align: 'center'},
-                {field: 'reviewStatus', title: '状态', width:120, align:'center', templet: (data) => {
+                {field: 'dataFrom', title: '数据来源', width: 100},
+                {field: 'collectionTime', title: '采集时间', width: 180, align: 'center'},
+                {
+                    field: 'reviewStatus', title: '状态', width: 120, align: 'center', templet: (data) => {
                         let colorClass = 'layui-bg-blue';
                         switch (data.reviewStatus) {
                             case ReviewStatus.SUBMITTED:
@@ -37,26 +38,42 @@ layui.use(['layer', 'listPage', 'form'], function () {
                             case ReviewStatus.FAIL:
                                 colorClass = 'layui-bg-badge';
                         }
-                        return `<span class="layui-badge ${colorClass}">${ReviewStatusMsg[data.reviewStatus]}</span>`
-                    }},
-                {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width:300, align:'right'}
+                        return `<span class="review-tips layui-badge ${colorClass}" data-status="${data.reviewStatus}" data-id="${data.id}" id="tips-${data.id}">${ReviewStatusMsg[data.reviewStatus]}</span>`
+                    }
+                },
+                {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 300, align: 'right'}
             ]],
             done: data => {
-                form.val('metadataSearchForm',{reviewStatusSelect:reviewStatusSearch});
-                form.on('select(reviewStatusSelect)', function({elem, othis, value}){
+                console.info(data);
+                form.val('metadataSearchForm', {reviewStatusSelect: reviewStatusSearch});
+                form.on('select(reviewStatusSelect)', function ({elem, othis, value}) {
                     reviewStatusSearch = value;
-                    const table = {where:{current: 1}}
-                    if(value){
+                    const table = {where: {current: 1}}
+                    if (value) {
                         table.where.reviewStatus = value;
                     }
 
                     const searchText = $('#searchKeyInput').val();
-                    if(searchText){
+                    if (searchText) {
                         table.where.metadataName = searchText;
                     }
 
                     listPage.reloadTable({table})
-                })
+                });
+
+                // 审核不通过提示
+                $('.review-tips').on('click', function(_this){
+                    const id = $(_this.target).data('id');
+                    const status = $(_this.target).data('status');
+                    if(status === ReviewStatus.FAIL){
+                        $.get(`${ctx}/business/review/get/entity?entityId=${id}`, {}, function(res){
+                            if(res.flag){
+                                const reviewData = res.data;
+                                layer.tips(reviewData.reviewOpinion, `#tips-${id}`, {tips: [3]});
+                            }
+                        })
+                    }
+                });
             }
         },
         editPage: {
@@ -64,11 +81,11 @@ layui.use(['layer', 'listPage', 'form'], function () {
             area: ['800px', '800px']
         }
     });
-    listPage.addTableRowEvent('exampleData', function(data){
+    listPage.addTableRowEvent('exampleData', function (data) {
         layer.open({
             title: '示例数据',
             type: 2,
-            area:['900px', '600px'],
+            area: ['900px', '600px'],
             content: `${ctx}/business/metadata/example?metadataId=${data.id}`
         })
     });
@@ -78,11 +95,11 @@ layui.use(['layer', 'listPage', 'form'], function () {
             entityType: ReviewEntityType.METADATA,
             status: ReviewStatus.SUBMITTED
         };
-        $.post(`${ctx}/business/review/operate`, param, function(res){
-            if(res.flag){
+        $.post(`${ctx}/business/review/operate`, param, function (res) {
+            if (res.flag) {
                 layer.msg('提交成功');
                 listPage.reloadTable();
-            }else{
+            } else {
                 layer.msg('提交失败,' + res.msg);
             }
         });
