@@ -223,6 +223,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
             tableInfo.columnList.map(col => col.LAY_CHECKED = true);
         }
 
+        console.info(tableInfo.columnList);
         layer.open({
             title: '配置字段',
             type: 1,
@@ -233,6 +234,8 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                 table.render({
                     elem:'#field-config-table',
                     data: tableInfo.columnList,
+                    page:false,
+                    limit: 999,
                     cols:[[
                         {type:'checkbox', width: 50},
                         {field:'columnName', title:'字段名称', width: 300},
