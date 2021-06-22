@@ -8,10 +8,11 @@
  */
 let editPage;
 let layer;
-layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate'], function () {
+layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table'], function () {
     let form = layui.form,
         laytpl = layui.laytpl,
-        laydate = layui.laydate;
+        laydate = layui.laydate,
+        table = layui.table;
     editPage = layui.editPage;
     layer = layui.layer;
     // 获取请求参数
@@ -95,40 +96,11 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate'], function () {
         });
 
         // 添加元数据表的下拉框的事件监听
-        for (let [index, item] of metadataTableMap) {
-            form.on(`select(selectForeignColumn_${index})`, function (data) {
-                let metadata = metadataTableMap.get(index);
-                if (metadata) {
-                    metadata.foreignColumn = data.value;
-                }
-            });
-            form.on(`select(selectForeignTable_${index})`, function (data) {
-                let metadata = metadataTableMap.get(index);
-                if (metadata) {
-                    metadata.foreignTable = data.value;
-                }
-            });
-        }
-
-        // 设置主表
-        form.on('radio', obj => metadataTableMap.forEach((value, key) => {
-            value.master = key == obj.value;
-            form.val('metadataForm', {metadataName: obj.value})
-        }));
-        // 如果有初始化数据，则需要设置回显单选按钮的状态
-        if (initData && initData.metadataDetailsList && initData.metadataDetailsList.length > 0) {
-            initData.metadataDetailsList.forEach(meta => {
-                if (meta.master) {
-                    form.val('metadataForm', {master: meta.tableName})
-                }
-            })
-        } else {
-            const firstValue = metadataTableMap.values().next().value;
-            firstValue.master = true;
-            const metadataName = firstValue.tableName;
-            const metadataComment = firstValue.comment;
-            form.val('metadataForm', {master: metadataName, metadataName, metadataComment})
-        }
+        metadataSelectorEventListener();
+        // 设置主表单选按钮的监听
+        renderMasterTableRadio();
+        // 监听字段配置按钮
+        filedConfigBtnListener();
     }
 
 
@@ -160,6 +132,117 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate'], function () {
             layer.msg('请先选择数据源');
         }
     });
+
+    /**
+     * 元数据下拉框事件监听
+     */
+    function metadataSelectorEventListener(){
+        for (let [index, item] of metadataTableMap) {
+            form.on(`select(selectForeignColumn_${index})`, function (data) {
+                let metadata = metadataTableMap.get(index);
+                if (metadata) {
+                    metadata.foreignColumn = data.value;
+                }
+            });
+            form.on(`select(selectForeignTable_${index})`, function (data) {
+                let metadata = metadataTableMap.get(index);
+                if (metadata) {
+                    metadata.foreignTable = data.value;
+                }
+            });
+        }
+    }
+
+    /**
+     * 初始化主表单选按钮
+     * @param initData
+     */
+    function renderMasterTableRadio(initData){
+        form.on('radio', obj => metadataTableMap.forEach((value, key) => {
+            value.master = key == obj.value;
+            form.val('metadataForm', {metadataName: obj.value})
+        }));
+        // 如果有初始化数据，则需要设置回显单选按钮的状态
+        if (initData && initData.metadataDetailsList && initData.metadataDetailsList.length > 0) {
+            initData.metadataDetailsList.forEach(meta => {
+                if (meta.master) {
+                    form.val('metadataForm', {master: meta.tableName})
+                }
+            })
+        } else {
+            const firstValue = metadataTableMap.values().next().value;
+            firstValue.master = true;
+            const metadataName = firstValue.tableName;
+            const metadataComment = firstValue.comment;
+            form.val('metadataForm', {master: metadataName, metadataName, metadataComment})
+        }
+    }
+
+    /**
+     * 监听字段配置按钮
+     */
+    function filedConfigBtnListener(){
+        $('a.btn-field-config').on('click', function({target}){
+            const tableName = $(target).data('table');
+            const tableInfo = metadataTableMap.get(tableName);
+            openFieldConfigLayer(tableInfo);
+        })
+    }
+
+    /**
+     * 打开字段配置窗口
+     * @param tableInfo
+     */
+    function openFieldConfigLayer(tableInfo){
+        // 设置选中数据
+        if(tableInfo.tableColumns){
+            const checkedCols = JSON.parse(tableInfo.tableColumns);
+            if (Array.isArray(checkedCols)) {
+                for(let item of checkedCols){
+                    for(let col of tableInfo.columnList){
+                        if(item.columnName === col.columnName){
+                            col.LAY_CHECKED = true;
+                        }
+                    }
+                }
+                console.info(tableInfo.columnList);
+            }
+        }
+
+        layer.open({
+            title: '配置字段',
+            type: 1,
+            area:['800px', '600px'],
+            btn:['确定','取消'],
+            content: `<table id="field-config-table" lay-filter="field-config-table"></table>`,
+            success:function(){
+                table.render({
+                    elem:'#field-config-table',
+                    data: tableInfo.columnList,
+                    cols:[[
+                        {type:'checkbox', width: 50},
+                        {field:'columnName', title:'字段名称', width: 300},
+                        {field:'dataType', title:'数据类型', width: 120},
+                        {field:'comment', title:'注释', width: 300},
+                    ]],
+                    done: function(){
+                        console.info(table);
+                    }
+                });
+            },
+            yes: function (index) {
+                const {data, isAll} = table.checkStatus('field-config-table');
+                let tableColumns = [];
+                for(let {columnName, comment} of data){
+                    tableColumns.push({columnName, comment})
+                }
+
+                tableInfo.tableColumns = JSON.stringify(tableColumns);
+                metadataTableMap.set(tableInfo.tableName, tableInfo);
+                layer.close(index);
+            }
+        });
+    }
 
     //日期选择器
     laydate.render({

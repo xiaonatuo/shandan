@@ -48,7 +48,6 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
             }
         },
         edit: function (data, _this) {
-            console.info('edit', data)
             if (_this.table.btnEdit) {
                 _this.table.btnEdit(data);
             } else {

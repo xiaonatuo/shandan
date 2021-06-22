@@ -44,7 +44,6 @@ layui.use(['layer', 'listPage', 'form'], function () {
                 {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 300, align: 'right'}
             ]],
             done: data => {
-                console.info(data);
                 form.val('metadataSearchForm', {reviewStatusSelect: reviewStatusSearch});
                 form.on('select(reviewStatusSelect)', function ({elem, othis, value}) {
                     reviewStatusSearch = value;
@@ -78,7 +77,7 @@ layui.use(['layer', 'listPage', 'form'], function () {
         },
         editPage: {
             content: `${ctx}/business/metadata/edit`,
-            area: ['800px', '800px']
+            area: ['950px', '800px']
         }
     });
     listPage.addTableRowEvent('exampleData', function (data) {
