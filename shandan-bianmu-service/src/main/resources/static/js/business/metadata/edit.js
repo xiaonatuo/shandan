@@ -182,6 +182,19 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
      * 监听字段配置按钮
      */
     function filedConfigBtnListener(){
+        // 设置字段默认全部显示
+        metadataTableMap.forEach((tableInfo, key)=>{
+            if(!tableInfo.tableColumns){
+                const cols = tableInfo.columnList.map(({columnName, comment}) => {
+                    return {columnName, comment}
+                });
+                tableInfo.tableColumns = JSON.stringify(cols);
+                metadataTableMap.set(key, tableInfo);
+            }
+        })
+
+
+        // 绑定按钮事件
         $('a.btn-field-config').on('click', function({target}){
             const tableName = $(target).data('table');
             const tableInfo = metadataTableMap.get(tableName);
@@ -205,8 +218,9 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                         }
                     }
                 }
-                console.info(tableInfo.columnList);
             }
+        }else{
+            tableInfo.columnList.map(col => col.LAY_CHECKED = true);
         }
 
         layer.open({
