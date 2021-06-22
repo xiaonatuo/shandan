@@ -10,6 +10,14 @@ spring:
           username: BIANMU
           password: 123456789
           driver-class-name: dm.jdbc.driver.DmDriver
+  # 页面缓存
+  thymeleaf:
+    cache: false
+  #热部署设置
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/java/main
 
 bianmu:
   #是否需要输入验证码
