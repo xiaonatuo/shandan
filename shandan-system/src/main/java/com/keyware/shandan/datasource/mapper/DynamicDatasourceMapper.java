@@ -16,5 +16,5 @@ import java.util.List;
 @Mapper
 public interface DynamicDatasourceMapper {
 
-    List<HashMap<String, Object>> list(String tableName);
+    List<HashMap<String, Object>> list(String sqlStr);
 }

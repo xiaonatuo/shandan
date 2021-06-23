@@ -1,6 +1,10 @@
 package com.keyware.shandan.bianmu.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.keyware.shandan.bianmu.service.impl.MetadataDetailsService;
 import com.keyware.shandan.datasource.entity.DBTableColumnVo;
 import com.keyware.shandan.bianmu.entity.DirectoryMetadataVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
@@ -43,9 +47,6 @@ public class MetadataController extends BaseController<MetadataService, Metadata
 
     @Autowired
     private DirectoryMetadataService directoryMetadataService;
-
-    @Autowired
-    private DynamicDataSourceService dynamicDataSourceService;
 
     @Autowired
     private SysFileService sysFileService;
@@ -92,27 +93,19 @@ public class MetadataController extends BaseController<MetadataService, Metadata
      */
     @GetMapping("/example/data")
     public Result<Page<HashMap<String, Object>>> exampleData(String metadataId){
-        MetadataBasicVo metadata = metadataService.getById(metadataId);
+        MetadataBasicVo metadata = metadataService.get(metadataId).getData();
         Page<HashMap<String, Object>> result = metadataService.getExampleData(metadata, metadata.getDataSourceId());
         return Result.of(result);
     }
 
     /**
-     * 查询元数据主表字段列表
+     * 查询元数据表字段列表
      * @param id
      * @return
      */
     @GetMapping("/columns")
-    public Result<List<DBTableColumnVo>> columns(String id){
-        MetadataBasicVo metadata = metadataService.get(id).getData();
-        if(metadata !=  null){
-            Optional<MetadataDetailsVo> optional = metadata.getMetadataDetailsList().stream().filter(MetadataDetailsVo::getMaster).findFirst();
-            if(optional.isPresent()){
-                MetadataDetailsVo details = optional.get();
-                return Result.of(details.getColumnList());
-            }
-        }
-        return Result.of(null, false, "没有查询到数据");
+    public Result<JSONArray> columns(String id){
+        return Result.of(metadataService.getColumns(id));
     }
 
     /**

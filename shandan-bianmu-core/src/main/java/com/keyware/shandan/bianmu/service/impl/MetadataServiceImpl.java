@@ -1,5 +1,7 @@
 package com.keyware.shandan.bianmu.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,12 +9,13 @@ import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.entity.MetadataDetailsVo;
 import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.mapper.MetadataBasicMapper;
-import com.keyware.shandan.datasource.mapper.DynamicDatasourceMapper;
-import com.keyware.shandan.datasource.service.DynamicDataSourceService;
 import com.keyware.shandan.bianmu.service.MetadataService;
+import com.keyware.shandan.bianmu.utils.MetadataUtils;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.service.BaseServiceImpl;
 import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.datasource.mapper.DynamicDatasourceMapper;
+import com.keyware.shandan.datasource.service.DynamicDataSourceService;
 import com.keyware.shandan.frame.annotation.DataPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,6 +98,7 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
 
     /**
      * 根据目录ID查询元数据列表
+     *
      * @param directoryId
      * @return
      */
@@ -117,11 +121,11 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     @DS("#sourceId")
     public Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, String sourceId) {
         Optional<MetadataDetailsVo> optional = metadataBasic.getMetadataDetailsList().stream().filter(MetadataDetailsVo::getMaster).findFirst();
-        if(!optional.isPresent()){
+        if (!optional.isPresent()) {
             return new Page<>();
         }
-        MetadataDetailsVo master = optional.get();
-        List<HashMap<String, Object>> list = dynamicDatasourceMapper.list(master.getTableName());
+        String sql = MetadataUtils.generateSql(metadataBasic);
+        List<HashMap<String, Object>> list = dynamicDatasourceMapper.list(sql);
         Page<HashMap<String, Object>> page = new Page<>(1, 10);
 
         // 处理Clob类型
@@ -131,7 +135,8 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
                     Clob clob = (Clob) entry.getValue();
                     try {
                         entry.setValue(clob.getSubString(1, (int) clob.length()));
-                    } catch (SQLException ignored) { }
+                    } catch (SQLException ignored) {
+                    }
                 }
             }).collect(Collectors.toSet());
         }).collect(Collectors.toList()));
@@ -140,7 +145,31 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     }
 
     /**
+     * 获取元数据的列
+     *
+     * @param metadataId
+     * @return
+     */
+    @Override
+    public JSONArray getColumns(String metadataId) {
+        MetadataBasicVo metadata = get(metadataId).getData();
+        if (metadata != null) {
+            if (metadata.getMetadataDetailsList() != null) {
+                JSONArray columns = new JSONArray();
+                metadata.getMetadataDetailsList().forEach(detail -> {
+                    columns.addAll(MetadataUtils.getColumns(detail).stream()
+                            .filter(col -> columns.stream().noneMatch(item -> ((JSONObject) item).getString("columnName").equalsIgnoreCase(((JSONObject) col).getString("columnName")))).collect(Collectors.toList()));
+                });
+
+                return columns;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 根据元数据id获取
+     *
      * @param id
      * @return
      */
@@ -150,8 +179,8 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
         List<MetadataDetailsVo> details = result.getMetadataDetailsList();
 
         // 查询每个详情对象的数据表的列
-        if(!ObjectUtils.isEmpty(details)){
-            result.setMetadataDetailsList(details.stream().peek(detail->{
+        if (!ObjectUtils.isEmpty(details)) {
+            result.setMetadataDetailsList(details.stream().peek(detail -> {
                 detail.setColumnList(dynamicDataSourceService.getColumnListByTable(detail.getTableName(), result.getDataSourceId()));
             }).collect(Collectors.toList()));
         }
@@ -160,6 +189,7 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
 
     /**
      * 根据ID删除，同时删除详情数据
+     *
      * @param id
      * @return
      */
@@ -167,12 +197,12 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     @Transactional
     public Result<Boolean> deleteById(String id) {
         MetadataBasicVo result = getById(id);
-        if(result != null){
-            if(!ObjectUtils.isEmpty(result.getMetadataDetailsList())){
+        if (result != null) {
+            if (!ObjectUtils.isEmpty(result.getMetadataDetailsList())) {
                 metadataDetailsService.removeByIds(result.getMetadataDetailsList().stream().map(MetadataDetailsVo::getId).collect(Collectors.toList()));
             }
             return super.deleteById(id);
-        }else{
+        } else {
             return Result.of(false, false, "删除失败，数据不存在");
         }
     }

@@ -73,7 +73,6 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                     metadataTableMap.set(meta.tableName, meta)
                 });
                 renderMetadataTablesTab(data);
-
             }
         }
     });
@@ -123,9 +122,11 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                 yes: function (index) {
                     layerWin.ok().then((data) => {
                         metadataTableMap = data;
+                        /*metadataTableMap.clear()
+                        data.forEach((value, key)=>metadataTableMap.set(key, value))*/
                         renderMetadataTablesTab();
-                        layer.close(index);
                     })
+                    layer.close(index);
                 }
             });
         } else {
@@ -198,6 +199,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
         $('a.btn-field-config').on('click', function({target}){
             const tableName = $(target).data('table');
             const tableInfo = metadataTableMap.get(tableName);
+            console.info(tableInfo);
             openFieldConfigLayer(tableInfo);
         })
     }
@@ -219,11 +221,10 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                     }
                 }
             }
-        }else{
-            tableInfo.columnList.map(col => col.LAY_CHECKED = true);
         }
 
-        console.info(tableInfo.columnList);
+        console.info(tableInfo)
+        const data = $.extend([],tableInfo.columnList);
         layer.open({
             title: '配置字段',
             type: 1,
@@ -233,7 +234,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
             success:function(){
                 table.render({
                     elem:'#field-config-table',
-                    data: tableInfo.columnList,
+                    data: data,
                     page:false,
                     limit: 999,
                     cols:[[
@@ -241,10 +242,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                         {field:'columnName', title:'字段名称', width: 300},
                         {field:'dataType', title:'数据类型', width: 120},
                         {field:'comment', title:'注释', width: 300},
-                    ]],
-                    done: function(){
-                        console.info(table);
-                    }
+                    ]]
                 });
             },
             yes: function (index) {

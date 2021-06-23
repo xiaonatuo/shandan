@@ -20,7 +20,7 @@ import java.util.List;
  * 动态数据源服务实现类
  * </p>
  *
- * @author Administrator
+ * @author GuoXin
  * @since 2021/5/26
  */
 @Service
@@ -55,8 +55,6 @@ public class DynamicDataSourceServiceImpl extends ServiceImpl<DBUserTableMapper,
     @Override
     @DS("#sourceId")
     public List<DBTableColumnVo> getColumnListByTable(String tableName, String sourceId) {
-        DBTableColumnVo column = new DBTableColumnVo();
-        column.setTableName(tableName);
-        return columnMapper.selectList(new QueryWrapper<>(column));
+        return columnMapper.selectColumnsByTableName(tableName);
     }
 }

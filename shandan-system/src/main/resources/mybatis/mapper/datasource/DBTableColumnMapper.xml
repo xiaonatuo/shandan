@@ -19,4 +19,12 @@
         <result column="QUALIFIED_COL_NAME" property="qualifiedColName"/>
         <result column="COMMENTS" property="comment"/>
     </resultMap>
+
+    <select id="selectColumnsByTableName" resultMap="BaseResultMap">
+        select COLS.*, COMS.COMMENTS
+        from USER_TAB_COLS COLS
+                 left join USER_COL_COMMENTS COMS
+                           on COLS.TABLE_NAME = COMS.TABLE_NAME and COLS.COLUMN_NAME = COMS.COLUMN_NAME
+        where COLS.TABLE_NAME = #{tableName}
+    </select>
 </mapper>

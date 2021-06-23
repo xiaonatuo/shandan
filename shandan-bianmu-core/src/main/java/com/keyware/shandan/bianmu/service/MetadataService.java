@@ -1,5 +1,6 @@
 package com.keyware.shandan.bianmu.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.common.service.IBaseService;
@@ -31,5 +32,18 @@ public interface MetadataService extends IBaseService<MetadataBasicVo, String> {
      */
     Page<MetadataBasicVo> pageListByDirectory(Page<MetadataBasicVo> page, String directoryId, String metadataName);
 
-    public Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, String sourceId);
+    /**
+     * 查询示例数据
+     * @param metadataBasic
+     * @param sourceId
+     * @return
+     */
+    Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, String sourceId);
+
+    /**
+     * 获取元数据的列
+     * @param metadataId
+     * @return
+     */
+    JSONArray getColumns(String metadataId);
 }

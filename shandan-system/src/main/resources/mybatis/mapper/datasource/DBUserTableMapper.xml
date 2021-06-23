@@ -11,29 +11,25 @@
         <result column="NUM_ROWS" property="numRows"/>
         <result column="PARTITIONED" property="partitioned"/>
         <result column="NESTED" property="nested"/>
-        <association property="tablePrimaryColumn" column="TABLE_NAME" select="selectPrimaryColumn" />
+        <association property="tablePrimaryColumn" column="TABLE_NAME" select="selectPrimaryColumn"/>
         <association property="tableComment" column="TABLE_NAME" select="selectComment"/>
-        <collection property="columnList" column="TABLE_NAME" select="selectColumns" />
+        <collection property="columnList" column="TABLE_NAME"
+                    select="com.keyware.shandan.datasource.mapper.DBTableColumnMapper.selectColumnsByTableName"/>
     </resultMap>
-
-    <!-- 查询表的所有列 -->
-    <select id="selectColumns" resultMap="com.keyware.shandan.datasource.mapper.DBTableColumnMapper.BaseResultMap">
-        select COLS.*, COMS.COMMENTS from USER_TAB_COLS COLS
-            left join USER_COL_COMMENTS COMS on COLS.TABLE_NAME = COMS.TABLE_NAME and COLS.COLUMN_NAME = COMS.COLUMN_NAME
-        where COLS.TABLE_NAME = #{tableName}
-    </select>
 
     <!-- 查询主键列 -->
     <select id="selectPrimaryColumn" resultType="string">
         select top 1 col.COLUMN_NAME
         from USER_CONSTRAINTS con
-            left join USER_CONS_COLUMNS col on con.CONSTRAINT_NAME = col.CONSTRAINT_NAME
+                 left join USER_CONS_COLUMNS col on con.CONSTRAINT_NAME = col.CONSTRAINT_NAME
         where con.CONSTRAINT_TYPE = 'P'
           and con.TABLE_NAME = #{tableName};
     </select>
 
     <!-- 查询表注释 -->
     <select id="selectComment" resultType="string">
-        select top 1 COMMENTS from USER_TAB_COMMENTS where TABLE_NAME = #{tableName}
+        select top 1 COMMENTS
+        from USER_TAB_COMMENTS
+        where TABLE_NAME = #{tableName}
     </select>
 </mapper>
