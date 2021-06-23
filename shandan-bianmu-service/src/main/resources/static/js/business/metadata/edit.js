@@ -199,7 +199,6 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
         $('a.btn-field-config').on('click', function({target}){
             const tableName = $(target).data('table');
             const tableInfo = metadataTableMap.get(tableName);
-            console.info(tableInfo);
             openFieldConfigLayer(tableInfo);
         })
     }
@@ -223,7 +222,6 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
             }
         }
 
-        console.info(tableInfo)
         const data = $.extend([],tableInfo.columnList);
         layer.open({
             title: '配置字段',
