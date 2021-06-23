@@ -38,6 +38,7 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
             } else {
                 where.name = searchText
             }
+            console.info(where)
             gtable.reload({where: where, done: _this.table.done});
         },
         add: function (data, _this) {

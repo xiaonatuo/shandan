@@ -14,7 +14,9 @@ layui.use(['layer', 'listPage'], function () {
         deleteUrl: `${ctx}/business/metadata/delete`,
         table: {
             id: 'metadataTable',
+            searchFieldNames: 'metadataName',
             url: `${ctx}/business/metadata/page`,
+            where:{reviewStatus: 'PASS'},
             cols: [[
                 {field: 'id', title: 'ID', hide: true},
                 {field: '',type: 'checkbox'},
