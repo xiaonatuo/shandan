@@ -11,14 +11,16 @@
         <result column="NUM_ROWS" property="numRows"/>
         <result column="PARTITIONED" property="partitioned"/>
         <result column="NESTED" property="nested"/>
-        <association property="primaryColumn" column="TABLE_NAME" select="selectPrimaryColumn" />
-        <association property="comment" column="TABLE_NAME" select="selectComment"/>
+        <association property="tablePrimaryColumn" column="TABLE_NAME" select="selectPrimaryColumn" />
+        <association property="tableComment" column="TABLE_NAME" select="selectComment"/>
         <collection property="columnList" column="TABLE_NAME" select="selectColumns" />
     </resultMap>
 
     <!-- 查询表的所有列 -->
-    <select id="selectColumns" resultType="com.keyware.shandan.datasource.entity.DBTableColumnVo">
-        select * from USER_TAB_COLS where TABLE_NAME = #{tableName}
+    <select id="selectColumns" resultMap="com.keyware.shandan.datasource.mapper.DBTableColumnMapper.BaseResultMap">
+        select COLS.*, COMS.COMMENTS from USER_TAB_COLS COLS
+            left join USER_COL_COMMENTS COMS on COLS.TABLE_NAME = COMS.TABLE_NAME and COLS.COLUMN_NAME = COMS.COLUMN_NAME
+        where COLS.TABLE_NAME = #{tableName}
     </select>
 
     <!-- 查询主键列 -->

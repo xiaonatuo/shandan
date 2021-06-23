@@ -45,10 +45,10 @@ public class DBUserTableVo implements Serializable {
     private String nested; // VARCHAR(1) 是否为嵌套表，YES 是，NO 否
 
     @TableField(exist = false)
-    private String primaryColumn; // 主键列
+    private String tablePrimaryColumn; // 主键列
 
     @TableField(exist = false)
-    private String comment; // 注释
+    private String tableComment; // 注释
 
     /**
      * 表的字段列集合

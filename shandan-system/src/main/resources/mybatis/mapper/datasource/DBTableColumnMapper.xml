@@ -17,10 +17,6 @@
         <result column="AVG_COL_LEN" property="avgColLen"/>
         <result column="CHAR_LENGTH" property="charLength"/>
         <result column="QUALIFIED_COL_NAME" property="qualifiedColName"/>
-        <association property="comment" column="COLUMN_NAME" select="selectComment"/>
+        <result column="COMMENTS" property="comment"/>
     </resultMap>
-
-    <select id="selectComment" resultType="string">
-        select top 1 COMMENTS from USER_COL_COMMENTS where COLUMN_NAME = #{tableName}
-    </select>
 </mapper>
