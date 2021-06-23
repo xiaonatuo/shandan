@@ -510,6 +510,7 @@ layui.define(['jquery','layer','form'], function(exports) {
         this.errDataShow = this.options.errDataShow || OPTIONS.errDataShow || false; //是否在递归数据出现错误后，显示错误信息，默认false
         this.withCredentials = this.options.withCredentials || OPTIONS.withCredentials || false; //是否允许跨域请求，默认false
         this.success = this.options.success || OPTIONS.success || function(data, obj){}; //树加载完毕后执行解析树之前的回调
+        this.sendSuccess = this.options.sendSuccess || OPTIONS.sendSuccess || function(data){}; //异步请求成功后的回调
         this.done = this.options.done || OPTIONS.done || function(data, obj){};	 //树加载完毕后的回调
         this.formatter = $.extend(this.formatter, this.options.formatter || OPTIONS.formatter) || this.formatter; //数据过滤
         this.error = this.options.error || OPTIONS.error || function(XMLHttpRequest, textStatus, errorThrown){}; // 异步加载异常回调
@@ -650,6 +651,7 @@ layui.define(['jquery','layer','form'], function(exports) {
         this.errDataShow = (typeof (this.options.errDataShow) === "boolean") ? this.options.errDataShow : this.errDataShow; //是否在使用list模式递归数据出现错误时，显示错误信息
         this.withCredentials = (typeof (this.options.withCredentials) === "boolean") ? this.options.withCredentials : this.withCredentials; //是否允许跨域请求
         this.success = this.options.success || this.success; //树加载完毕后执行解析树之前的回调
+        this.sendSuccess = this.options.sendSuccess || this.sendSuccess; //异步请求成功后的回调
         this.done = this.options.done || this.done; //树加载完毕后的回调
         this.formatter = $.extend(this.formatter, this.options.formatter)|| this.formatter; //数据过滤
         this.error = this.options.error || this.error; //异步加载异常回调
@@ -1471,6 +1473,7 @@ layui.define(['jquery','layer','form'], function(exports) {
                 withCredentials: _this.withCredentials,
                 data: _this.getFilterRequestParam(_this.getRequestParam()),
                 success: function(result) {
+                    _this.sendSuccess(result);
                     if (typeof result === 'string') {
                         result = $.parseJSON(result);
                     }
@@ -1615,6 +1618,7 @@ layui.define(['jquery','layer','form'], function(exports) {
                 withCredentials: _this.withCredentials,
                 data:  _this.getFilterRequestParam(_this.getRequestParam()),
                 success: function(result) {
+                    _this.sendSuccess(result);
                     if (typeof result === 'string') {
                         result = $.parseJSON(result);
                     }
