@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.bianmu.entity.DirectoryMetadataVo;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
+import com.keyware.shandan.bianmu.enums.DirectoryType;
 import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
 import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.common.controller.BaseController;
@@ -112,6 +113,7 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
                 json.put("id", vo.getId());
                 json.put("title", vo.getMetadataName());
                 json.put("parentId", directory.getParentId());
+                json.put("iconClass", "dtree-icon-sort");
                 return json;
             }).collect(Collectors.toList());
         } else {
@@ -120,6 +122,9 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
                 json.put("id", vo.getId());
                 json.put("title", vo.getDirectoryName());
                 json.put("parentId", vo.getParentId());
+                if(vo.getDirectoryType() == DirectoryType.METADATA){
+                    json.put("iconClass", "dtree-icon-fenzhijigou");
+                }
                 return json;
             }).collect(Collectors.toList());
         }
