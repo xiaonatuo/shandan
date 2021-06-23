@@ -262,6 +262,19 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             currentTreeNode = node.dom;
             const {basicData} = node.param;
             toggleRightCard(basicData && basicData.metadataName, () => loadMetadataDetails(node.param), () => loadMetadataList(node.param));
+
+            // 先移除事件，否则会和节点点击事件重叠
+            $('#directoryTree cite i.icon-fail').off('click');
+            $('#directoryTree cite i.icon-fail').on('click', function({target}){
+                const id = $(target).data('id');
+                const elemId = `tips-rw-${id}`;
+                $.get(`${ctx}/business/review/get/entity?entityId=${id}`, {}, function(res){
+                    if(res.flag){
+                        const reviewData = res.data;
+                        layer.tips(reviewData.reviewOpinion, `#${elemId}`, {tips: [3]});
+                    }
+                })
+            })
         },
         toolbarFun: {
             editTreeLoad: function (node) { // 目录树右键编辑菜单显示弹窗后的回调
@@ -397,7 +410,18 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 icon: "",
                 title: "无可操作选项", handler: function (node) {}
             },
-        ]
+        ],
+        formatter:{
+            title: function(data) { // 文字过滤，返回null,"",undefined之后，都不会改变原有的内容返回。
+                let {title, basicData} = data;
+                if(basicData && basicData.directoryType === ReviewEntityType.METADATA){
+                    const reviewStatus = data.basicData.reviewStatus;
+                    title += ReviewStatusIcon[reviewStatus].replaceAll('##id##', basicData.id);
+                    //title = title.replace('##id##', basicData.id);
+                }
+                return title;
+            }
+        }
     }
     dirTree = globalTree.init(treeOps);
 
