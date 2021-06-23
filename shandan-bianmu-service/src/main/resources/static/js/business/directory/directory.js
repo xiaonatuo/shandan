@@ -6,13 +6,15 @@
  * @author Administrator
  * @since 2021/6/1
  */
+// 目录树数据缓存
+const dirCache = new Map();
 layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], function () {
     const layer = layui.layer,
         listPage = layui.listPage,
         globalTree = layui.globalTree,
         laytpl = layui.laytpl,
         gtable = layui.gtable
-        form = layui.form;
+    form = layui.form;
     // 目录树
     let dirTree;
     let currentTreeNode;
@@ -71,7 +73,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         const {basicData} = directory;
         if (!basicData) return;
         let operate = {}
-        if(basicData.reviewStatus == ReviewStatus.UN_SUBMIT || basicData.reviewStatus == ReviewStatus.FAIL){
+        if (basicData.reviewStatus == ReviewStatus.UN_SUBMIT || basicData.reviewStatus == ReviewStatus.FAIL) {
             operate = {fixed: 'right', title: '操作', toolbar: '#rowToolBar'}
         }
 
@@ -114,14 +116,14 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 })
             })
         })
-        metaListTable.addTableRowEvent('addFile', function(obj){
+        metaListTable.addTableRowEvent('addFile', function (obj) {
             layer.open({
                 id: 'fileUploadLayer',
                 type: 2,
-                area:['800px','762px'],
-                btn:['上传并保存','取消'],
+                area: ['800px', '762px'],
+                btn: ['上传并保存', '取消'],
                 content: `${ctx}/sys/file/layer?directoryId=${basicData.id}`,
-                success: function (layero,index) {
+                success: function (layero, index) {
                     fileUploadLayerWin = window[layero.find('iframe')[0]['name']];
                     layer.iframeAuto(index)
                 },
@@ -141,10 +143,10 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             return
         }
         $('#metadataCardBody ul:first li:first').click();
-        if(!basicData.dataSourceId){
+        if (!basicData.dataSourceId) {
             $('#metadataCardBody ul:first li.db-source').hide()
             $('#metadataCardBody ul:first li.file-source').show()
-        }else{
+        } else {
             $('#metadataCardBody ul:first li.db-source').show()
             $('#metadataCardBody ul:first li.file-source').hide()
         }
@@ -200,32 +202,32 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
 
         // 查询文件列表
         const fileListTable = layui.listPage.init({
-            table:{
+            table: {
                 id: 'fileListTable',
                 url: `${ctx}/sys/file/list`,
-                where:{entityId: basicData.id},
+                where: {entityId: basicData.id},
                 cols: [[
-                    {field:'fileName', title:'文件名称'},
+                    {field: 'fileName', title: '文件名称'},
                     {field: 'fileSize', title: '文件大小(MB)'},
                     {field: 'fileType', title: '文件类型'},
-                    {field: 'right', title:'操作', toolbar:'#fileListTableToolBar', width:150 }
+                    {field: 'right', title: '操作', toolbar: '#fileListTableToolBar', width: 150}
                 ]],
                 page: false,
                 toolbar: false,
                 height: 'full-135'
             },
         });
-        fileListTable.addTableRowEvent('download', function(obj){
+        fileListTable.addTableRowEvent('download', function (obj) {
             window.open(`${ctx}/sys/file/download/${obj.id}`)
         });
         let fileViewLayerWin;
-        fileListTable.addTableRowEvent('file-view', function(){
+        fileListTable.addTableRowEvent('file-view', function () {
             layer.open({
                 id: 'fileviewLayer',
                 title: basicData.metadataName,
                 type: 2,
                 content: `${ctx}/sys/file/view?entityId=${basicData.id}`,
-                success: function (layero,index) {
+                success: function (layero, index) {
                     fileViewLayerWin = window[layero.find('iframe')[0]['name']];
                     layer.full(index);
                 },
@@ -245,6 +247,13 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         toolbarStyle: {title: "目录", area: ["600px", "350px"]},
         toolbarShow: ["add", "edit", "delete"],
         toolbarBtn: [dirAddLayer, dirEditLayer],
+        sendSuccess: function(res){
+            if(res.flag){
+                res.data.forEach(item=>{
+                    dirCache.set(item.id, item);
+                })
+            }
+        },
         done: function (nodes, elem) {
             // 模拟鼠标点击事件展开第一层目录
             $('i.dtree-icon-jia[data-id="-"]').click();
@@ -267,6 +276,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 $.post(`${ctx}/business/directory/save`, data, function (res) {
                     if (res.flag) {
                         dirTree.changeTreeNodeAdd("refresh");
+                        let self = dirCache.get(node.parentId)
+                        self.basicData.hasChild = true;
+                        dirCache.set(node.parentId, self);
                     } else {
                         layer.msg('保存失败');
                     }
@@ -290,7 +302,17 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             delTreeNode: function (node, elem) {  // 目录树右键删除菜单-点击确定后的回调
                 $.delete(`${ctx}/business/directory/delete/${node.id}`, {}, function (res) {
                     if (res.flag) {
+                        dirCache.delete(node.id);
                         dirTree.changeTreeNodeDel(true);
+                        // 需要判断父级目录是否还保存子目录
+                        // 遍历缓存数据，如果数据中不包含parentId为node.parentId的数据，则证明没有子目录，需要更新父目录hasChild字段
+                        let parent = dirCache.get(node.parentId)
+                        let hasChild = false;
+                        dirCache.forEach((value, key)=>{
+                            if(value.parentId === node.parentId){hasChild = true}
+                        })
+                        parent.basicData.hasChild = hasChild;
+                        dirCache.set(node.parentId, parent);
                     } else {
                         layer.msg('删除失败');
                     }
@@ -298,30 +320,45 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             },
             // 显示右键菜单之前的回调，用于设置显示哪些菜单
             loadToolbarBefore: function (buttons, param, $div) {
-                const {basicData, id, parentId, context} = param;
+                const {id, parentId, context} = param;
+                const basicData = dirCache.get(id).basicData;
+                let btns = {};
                 // 根目录只显示添加
-                if (id == '-' || parentId == -1 || context == '根目录') {
-                    return {addToolbar: buttons.addToolbar};
-                }
-                if(basicData){
-                    // 元数据
-                    if(basicData.metadataName){
-                        return {};
-                    }else{ // 目录
-                        const status = basicData.reviewStatus;
+                if (id === '-' || parentId === -1 || context === '根目录') {
+                    btns = {addToolbar: buttons.addToolbar};
+                }else{
+                    if (basicData) {
+                        // 元数据
+                        if (basicData.metadataName) {
+                            btns = {noneToolbar: buttons.noneToolbar};
+                        } else { // 目录
+                            const status = basicData.reviewStatus; // 目录审核状态
 
-                        // 目录类型为结构目录时
-                        if(basicData.directoryType == ReviewEntityType.DIRECTORY ) {
-                            buttons.reviewToolbar = undefined;
-                            buttons.addMetadataToolbar = undefined;
+                            // 目录类型为结构目录时
+                            if (basicData.directoryType == ReviewEntityType.DIRECTORY) {
+                                // 显示新增目录
+                                btns.addToolbar = buttons.addToolbar;
+                                if(!basicData.hasChild){
+                                    btns.editToolbar = buttons.editToolbar;
+                                    btns.delToolbar = buttons.delToolbar;
+                                }
+                            }else{ // 目录类型为元数据时
+                                // 审核状态为已提交或者审核通过时，不显示菜单
+                                if (status == ReviewStatus.SUBMITTED || status == ReviewStatus.PASS) {
+                                    btns = {noneToolbar: buttons.noneToolbar};
+                                }else{
+                                    btns.editToolbar = buttons.editToolbar;
+                                    btns.delToolbar = buttons.delToolbar;
+                                    btns.addMetadataToolbar = buttons.addMetadataToolbar;
+                                    btns.reviewToolbar = buttons.reviewToolbar;
+                                }
+                            }
                         }
-                        // 审核状态为已提交或者审核通过时，不显示菜单
-                        if(status == ReviewStatus.SUBMITTED || status == ReviewStatus.PASS) {
-                            return {};
-                        }
+                    }else{
+                        btns = {noneToolbar: buttons.noneToolbar}
                     }
                 }
-                return buttons;
+                return btns;
             }
         },
         toolbarExt: [
@@ -337,34 +374,40 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 }
             },
             {
-                toolbarId: "reviewToolbar", icon: "dtree-icon-roundcheck", title: "提交审核", handler: function (node) {
+                toolbarId: "reviewToolbar",
+                icon: "dtree-icon-roundcheck",
+                title: "提交审核", handler: function (node) {
                     let param = {
                         entityId: node.id,
                         entityType: ReviewEntityType.DIRECTORY,
                         status: ReviewStatus.SUBMITTED
                     };
-                    $.post(`${ctx}/business/review/operate`, param, function(res){
-                        if(res.flag){
+                    $.post(`${ctx}/business/review/operate`, param, function (res) {
+                        if (res.flag) {
                             layer.msg('提交成功');
                             listPage.reloadTable();
-                        }else{
+                        } else {
                             layer.msg('提交失败,' + res.msg);
                         }
                     });
                 }
+            },
+            {
+                toolbarId: "noneToolbar",
+                icon: "",
+                title: "无可操作选项", handler: function (node) {}
             },
         ]
     }
     dirTree = globalTree.init(treeOps);
 
     // 目录树筛选条件
-    form.on('select(reviewStatusSelect)', function({elem, othis, value}){
+    form.on('select(reviewStatusSelect)', function ({elem, othis, value}) {
         reviewStatusSearch = value;
-        const treeOps = {request:{}}
-        if(value){
+        const treeOps = {request: {}}
+        if (value) {
             treeOps.request = {reviewStatus: value};
         }
-        console.info(treeOps);
         globalTree.reload(treeOps)
     });
 })

@@ -124,6 +124,8 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
                 json.put("parentId", vo.getParentId());
                 if(vo.getDirectoryType() == DirectoryType.METADATA){
                     json.put("iconClass", "dtree-icon-fenzhijigou");
+                }else{
+                    json.put("iconClass", "dtree-icon-wenjianjiazhankai");
                 }
                 return json;
             }).collect(Collectors.toList());

@@ -72,6 +72,12 @@ public class DirectoryVo extends BaseEntity{
     private SysOrg org;
 
     /**
+     * 是否有子级
+     */
+    @TableField(exist = false)
+    private Boolean hasChild;
+
+    /**
      * 子级目录
      */
     @TableField(exist = false)
