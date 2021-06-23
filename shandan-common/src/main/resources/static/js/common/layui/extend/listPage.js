@@ -25,6 +25,7 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
                 where = $.extend(_this.table.where, {page: {current: 1}});
             }
             let fieldNames = _this.table.searchFieldNames;
+            if(!fieldNames){console.error('listPage.table.searchFieldNames is undefined!')}
             if (_this.table.queryParam) {
                 this.table.queryParam(where);
             } else if (fieldNames) {
