@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -106,7 +107,7 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
         List<DirectoryVo> directoryList = directoryService.list(new QueryWrapper<>(directory));
         if (directoryList.size() == 0) {
             List<MetadataBasicVo> metadataBasicVoList = directoryService.directoryMetadata(directory.getParentId());
-            result = metadataBasicVoList.stream().map(vo -> {
+            result = metadataBasicVoList.stream().filter(Objects::nonNull).map(vo -> {
                 JSONObject json = treeJson(vo, "metadata", true);
                 json.put("id", vo.getId());
                 json.put("title", vo.getMetadataName());

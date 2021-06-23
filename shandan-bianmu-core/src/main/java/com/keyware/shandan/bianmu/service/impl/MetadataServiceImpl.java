@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.keyware.shandan.bianmu.entity.DirectoryMetadataVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.entity.MetadataDetailsVo;
 import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.mapper.MetadataBasicMapper;
+import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
 import com.keyware.shandan.bianmu.service.MetadataService;
 import com.keyware.shandan.bianmu.utils.MetadataUtils;
 import com.keyware.shandan.common.entity.Result;
@@ -45,6 +47,9 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
 
     @Autowired
     private MetadataDetailsService metadataDetailsService;
+
+    @Autowired
+    private DirectoryMetadataService directoryMetadataService;
 
     @Autowired
     private DynamicDataSourceService dynamicDataSourceService;
@@ -199,7 +204,11 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
         MetadataBasicVo result = getById(id);
         if (result != null) {
             if (!ObjectUtils.isEmpty(result.getMetadataDetailsList())) {
+                // 删除子表数据
                 metadataDetailsService.removeByIds(result.getMetadataDetailsList().stream().map(MetadataDetailsVo::getId).collect(Collectors.toList()));
+                // 删除目录关系数据
+                DirectoryMetadataVo dmVo = new DirectoryMetadataVo(null, id);
+                directoryMetadataService.remove(new QueryWrapper<>(dmVo));
             }
             return super.deleteById(id);
         } else {
