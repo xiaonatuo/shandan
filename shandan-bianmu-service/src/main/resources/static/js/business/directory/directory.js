@@ -248,6 +248,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         toolbarStyle: {title: "目录", area: ["600px", "350px"]},
         toolbarShow: ["add", "edit", "delete"],
         toolbarBtn: [dirAddLayer, dirEditLayer],
+        onDbClick: function({dom}){
+            dirTree.clickSpread(dom);
+        },
         sendSuccess: function(res){
             if(res.flag){
                 res.data.forEach(item=>{

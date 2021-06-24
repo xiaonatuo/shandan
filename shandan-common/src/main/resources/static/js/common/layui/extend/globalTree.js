@@ -35,6 +35,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         };
         this.done = undefined; // function (nodes, elem) {};
         this.onClick = undefined; // function (node) {}
+        this.onDbClick = undefined;
         this.render(options);
     }
 
@@ -47,8 +48,14 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         _this.request = options.request || {};
         const _done = _this.done;
         _this.done = function (nodes, elem) {
+            // 节点单击事件
             dtree.on(`node('${_this.id}')`, function (node) {
                 _this.onClick && _this.onClick(node);
+
+            });
+            // 节点双击事件
+            dtree.on(`nodedblclick('${_this.id}')` ,function(obj){
+                _this.onDbClick && _this.onDbClick(obj);
             });
             _done && _done(nodes, elem);
         };
@@ -115,6 +122,9 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
 
     GlobalTree.prototype.partialRefreshDel = function (dom) {
         dtreeObj.partialRefreshDel(dom);
+    }
+    GlobalTree.prototype.clickSpread = function(dom){
+        dtreeObj.clickSpread(dom);
     }
 
     // 为了可继承dtree的内部方法，将dtree拷贝到一个新的对象
