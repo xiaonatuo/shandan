@@ -357,23 +357,30 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                     btns = {addToolbar: buttons.addToolbar};
                 }else{
                     if (basicData) {
-                        // 元数据
-                        if (basicData.metadataName) {
-                            btns = {noneToolbar: buttons.noneToolbar};
+                        // 元数据 或者文件
+                        if (basicData.metadataName || basicData.entityId) {
+                            const parent = dirCache.get(parentId).basicData;
+                            let status = parent.reviewStatus;
+                            // 审核状态为已提交或者审核通过时，不显示菜单
+                            if (status === ReviewStatus.SUBMITTED || status === ReviewStatus.PASS) {
+                                btns = {noneToolbar: buttons.noneToolbar};
+                            }else{
+                                btns = {removeLinkToolbar: buttons.removeLinkToolbar};
+                            }
                         } else { // 目录
-                            const status = basicData.reviewStatus; // 目录审核状态
+                            let status = basicData.reviewStatus; // 目录审核状态
 
                             // 目录类型为结构目录时
-                            if (basicData.directoryType == ReviewEntityType.DIRECTORY) {
+                            if (basicData.directoryType === ReviewEntityType.DIRECTORY) {
                                 // 显示新增目录
                                 btns.addToolbar = buttons.addToolbar;
                                 if(!basicData.hasChild){
                                     btns.editToolbar = buttons.editToolbar;
                                     btns.delToolbar = buttons.delToolbar;
                                 }
-                            }else{ // 目录类型为元数据时
+                            }else{ // 目录类型为元数据时， 判断对象为父目录
                                 // 审核状态为已提交或者审核通过时，不显示菜单
-                                if (status == ReviewStatus.SUBMITTED || status == ReviewStatus.PASS) {
+                                if (status === ReviewStatus.SUBMITTED || status === ReviewStatus.PASS) {
                                     btns = {noneToolbar: buttons.noneToolbar};
                                 }else{
                                     btns.editToolbar = buttons.editToolbar;
@@ -393,7 +400,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         toolbarExt: [
             {
                 toolbarId: "addMetadataToolbar",
-                icon: "dtree-icon-roundcheck",
+                icon: "layui-icon layui-icon-link",
                 title: "关联元数据",
                 handler: function (node, elem) {
                     const {basicData, id, parentId, context} = node;
@@ -404,7 +411,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             },
             {
                 toolbarId: "reviewToolbar",
-                icon: "dtree-icon-roundcheck",
+                icon: "layui-icon layui-icon-release",
                 title: "提交审核", handler: function (node) {
                     let param = {
                         entityId: node.id,
@@ -419,6 +426,31 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                             layer.msg('提交失败,' + res.msg);
                         }
                     });
+                }
+            },
+            {
+                toolbarId: "removeLinkToolbar",
+                icon: "layui-icon layui-icon-unlink",
+                title: "解除关联", handler: function (node, dom) {
+                    layer.confirm('是否要解除该条数据的关联？', {}, function (index) {
+                        const {basicData, parentId} = node;
+                        let data, url;
+                        if (basicData.metadataName) {
+                            url = `${ctx}/business/directory/remove/metadata`
+                            data = {directoryId: parentId, metadataId: basicData.id};
+                        }else{
+                            url = `${ctx}/business/directory/remove/file`
+                            data = {fileId: basicData.id};
+                        }
+                        $.post(url, data, function (res) {
+                            if (res.flag) {
+                                dirTree.partialRefreshDel(dom);
+                            } else {
+                                layer.msg('解除关联失败')
+                            }
+                            layer.close(index);
+                        })
+                    })
                 }
             },
             {

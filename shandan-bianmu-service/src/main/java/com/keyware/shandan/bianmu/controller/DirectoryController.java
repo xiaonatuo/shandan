@@ -99,6 +99,15 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
         return Result.of(directoryMetadataService.remove(new QueryWrapper<>(new DirectoryMetadataVo(directoryId, metadataId))));
     }
 
+    @PostMapping("/remove/file")
+    public Result<Boolean> removeFile(String fileId) {
+        if (StringUtils.isBlankAny(fileId)) {
+            return Result.of(null, false, "参数错误");
+        }
+
+        return Result.of(sysFileService.removeById(fileId));
+    }
+
     /**
      * 获取子级目录
      *
