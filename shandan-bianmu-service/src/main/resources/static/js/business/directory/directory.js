@@ -120,15 +120,17 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             layer.open({
                 id: 'fileUploadLayer',
                 type: 2,
-                area: ['800px', '762px'],
-                btn: ['上传并保存', '取消'],
+                area: ['800px', '600px'],
+                btn: ['开始上传', '取消'],
                 content: `${ctx}/sys/file/layer?directoryId=${basicData.id}`,
                 success: function (layero, index) {
                     fileUploadLayerWin = window[layero.find('iframe')[0]['name']];
                     layer.iframeAuto(index)
                 },
                 yes: function (index) {
-                    fileUploadLayerWin.save();
+                    fileUploadLayerWin.save().then(ok=>{
+                        ok && dirTree.partialRefreshAdd(currentTreeNode);
+                    });
                 }
             });
         });

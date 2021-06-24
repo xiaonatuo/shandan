@@ -19,7 +19,7 @@
                     <button type="button" class="layui-btn layui-btn-sm  layui-btn-normal" id="chooseFile"><i
                             class="layui-icon layui-icon-file"></i>选择文件
                     </button>
-                    <div class="layui-upload-list" style="max-width: 1000px; height: 200px; overflow-y: auto">
+                    <div class="layui-upload-list" style="max-width: 1000px; height: 320px; overflow-y: auto">
                         <table class="layui-table">
                             <colgroup>
                                 <col>
@@ -39,43 +39,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="layui-card">
-            <div class="layui-card-header">元数据表单</div>
-            <div class="layui-card-body">
-                <form id="metadataForm" class="layui-form layui-form-pane" lay-filter="metadataForm">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">元数据名称</label>
-                        <div class="layui-input-block">
-                            <input type="hidden" name="metadataComment">
-                            <input type="text" name="metadataName" autocomplete="off" placeholder="元数据名称"
-                                   class="layui-input" lay-verify="required" >
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">采集时间</label>
-                        <div class="layui-input-block">
-                            <input type="text" id="collectionTime" name="collectionTime" placeholder="采集时间"
-                                   class="layui-input" lay-verify="required" readonly>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">数据类型</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="dataType" autocomplete="off" placeholder="数据类型"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">主题任务</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="themeTask" autocomplete="off" placeholder="主题任务"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                </form>
             </div>
         </div>
         <button type="button" class="layui-btn layui-btn-sm" id="fileUploadAction" style="position: absolute; left: -50px; height: 0; border:0">

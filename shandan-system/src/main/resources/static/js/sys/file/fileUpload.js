@@ -7,6 +7,10 @@
  * @since 2021/6/7
  */
 let fileMap = new Map();
+let uploadStatus = {
+    done: false,
+    success: false
+};
 layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
     let upload = layui.upload,
         element = layui.element,
@@ -81,25 +85,23 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
             this.error(index, upload);
         },
         allDone: function (obj) { //多文件上传完毕后的状态回调
-            // 上传完成后保存元数据
-            let formData = form.val('metadataForm');
-            formData.directoryId = param.directoryId;
-            // formData.fileIds
+            // 上传完成后关联目录
             let fileIds = [];
             for(let f of fileMap.values()){
                 fileIds.push(f.id)
             }
-            formData.fileIds = fileIds.join(',');
-            console.info(formData);
 
-            $.post(`${ctx}/business/metadata/save/file`, formData, function(res){
+            const formData = {directoryId: param.directoryId,fileIds:fileIds.join(',')};
+            $.post(`${ctx}/business/directory/save/file`, formData, function(res){
                 if(res.flag){
-                    layer.msg('保存成功');
+                    uploadStatus.success = true;
                     let index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
+                    parent.layer.msg('上传成功');
                 }else{
                     layer.msg('保存失败')
                 }
+                uploadStatus.done = true;
             })
         },
         error: function (index, upload) { //错误回调
@@ -109,16 +111,10 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
             tds.eq(2).find('.success-label').addClass('layui-hide');
             tds.eq(2).find('.fail-label').removeClass('layui-hide');
             element.progress('progress-file-u-' + index, '0%'); // 重置进度条
+            uploadStatus.done = true;
         },
         progress: function (n, elem, e, index) { //注意：index 参数为 layui 2.6.6 新增
             element.progress('progress-file-u-' + index, n + '%'); //执行进度条。n 即为返回的进度百分比
-        },
-        before: function(obj){
-            let formData = form.val('metadataForm');
-            if(!formData.metadataName){
-                layer.msg('元数据名称不能为空')
-                return false;
-            }
         }
     });
 //日期选择器
@@ -129,6 +125,18 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
 });
 
 function save(){
-    console.info('save')
     $('#fileUploadAction').click();
+    return getSaveStatus();
+}
+/**
+ * 每隔100毫秒获取表单保存进度，如果保存请求完成则返回保存状态
+ * @returns {Promise<boolean|boolean|*>}
+ */
+async function getSaveStatus() {
+    await commonUtil.sleep(100);
+    if (uploadStatus.done) {
+        return uploadStatus.success;
+    }
+    return getSaveStatus();
+
 }

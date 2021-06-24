@@ -12,6 +12,8 @@ import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.system.entity.SysFile;
+import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -39,6 +41,9 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
 
     @Autowired
     private DirectoryMetadataService directoryMetadataService;
+
+    @Autowired
+    private SysFileService sysFileService;
 
     @GetMapping("/")
     public ModelAndView index(ModelAndView modelAndView) {
@@ -102,11 +107,14 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
      */
     @GetMapping("/tree/children")
     public Result<Object> treeChildren(DirectoryVo directory) {
-        List<JSONObject> result;
         directory.setParentId(StringUtils.isBlank(directory.getId()) ? "-" : directory.getId());
         directory.setId(null);
+
+        DirectoryVo parentDir = directoryService.getById(directory.getParentId());
+        List<JSONObject> result;
         List<DirectoryVo> directoryList = directoryService.list(new QueryWrapper<>(directory));
-        if (directoryList.size() == 0) {
+        if (parentDir != null && parentDir.getDirectoryType() == DirectoryType.METADATA) {
+            // 查询元数据
             List<MetadataBasicVo> metadataBasicVoList = directoryService.directoryMetadata(directory.getParentId());
             result = metadataBasicVoList.stream().filter(Objects::nonNull).map(vo -> {
                 JSONObject json = treeJson(vo, "metadata", true);
@@ -116,6 +124,19 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
                 json.put("iconClass", "dtree-icon-sort");
                 return json;
             }).collect(Collectors.toList());
+
+            // 查询文件
+            SysFile q = new SysFile();
+            q.setEntityId(parentDir.getId());
+            List<SysFile> files = sysFileService.list(new QueryWrapper<>(q));
+            result.addAll(files.stream().map(vo -> {
+                JSONObject json = treeJson(vo, "metadata", true);
+                json.put("id", vo.getID());
+                json.put("title", vo.getFileName());
+                json.put("parentId", directory.getParentId());
+                json.put("iconClass", "dtree-icon-normal-file");
+                return json;
+            }).collect(Collectors.toList()));
         } else {
             result = directoryList.stream().map(vo -> {
                 JSONObject json = treeJson(vo, "directory", false);
@@ -131,6 +152,28 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
             }).collect(Collectors.toList());
         }
         return Result.of(result);
+    }
+
+    /**
+     * 保存目录文件关系
+     * @param directoryId 目录ID
+     * @param fileIds 文件ID
+     * @return
+     */
+    @PostMapping("/save/file")
+    public Result<Object> saveFile(String directoryId, String fileIds){
+        if(StringUtils.isBlankAny(directoryId, fileIds)){
+            return Result.of(null, false, "参数错误");
+        }
+
+        List<SysFile> files = Arrays.stream(fileIds.split(",")).map(fid -> {
+            SysFile file = new SysFile();
+            file.setEntityId(directoryId);
+            file.setID(fid);
+            return file;
+        }).collect(Collectors.toList());
+
+        return Result.of(sysFileService.updateBatchById(files));
     }
 
     /**
