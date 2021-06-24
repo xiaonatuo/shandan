@@ -192,7 +192,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 method: 'get',
                 cols: [columns],
                 page: false,
-                toolbar: false,
+                toolbar: true,
+                defaultToolbar: ['filter'],
                 height: 'full-135',
             }
             layui.listPage.init({
