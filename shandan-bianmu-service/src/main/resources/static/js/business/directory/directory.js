@@ -514,8 +514,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     function initVideoPlayer(){
         player = videojs('videoPlayer');
         player.ready(function(){
-            let player = this;
-            player.play();
+            //this.play();
         });
     }
 
