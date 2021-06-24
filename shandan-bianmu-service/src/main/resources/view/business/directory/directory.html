@@ -82,7 +82,6 @@
                         <li class="layui-this">基础信息</li>
                         <li class="db-source">字段信息</li>
                         <li class="db-source">示例数据</li>
-                        <li class="file-source">文件列表</li>
                     </ul>
                     <div class="layui-tab-content">
                         <!-- 基础信息 -->
@@ -98,16 +97,40 @@
                             <table class="layui-hide" id="metadataExampleTable"
                                    lay-filter="metadataExampleTable"></table>
                         </div>
-                        <!-- 文件列表 -->
-                        <div class="layui-tab-item">
-                            <table class="layui-hide" id="fileListTable" lay-filter="fileListTable"></table>
-                            <script type="text/html" id="fileListTableToolBar">
-                                <div class="layui-btn-container">
-                                    <button class="layui-btn layui-btn-sm remove-link" lay-event="file-view">预览</button>
-                                    <button class="layui-btn layui-btn-sm remove-link" lay-event="download">下载</button>
-                                    <a class="layui-hide" id="download-a" href=""></a>
-                                </div>
-                            </script>
+                    </div>
+                </div>
+                <div class="layui-tab layui-tab-brief layui-hide" id="fileCardBody" lay-filter="fileCardBody">
+                    <ul class="layui-tab-title">
+                        <li class="file-source layui-this">文件预览</li>
+                    </ul>
+                    <div class="layui-tab-content" id="fileViewer">
+                        <!-- 文件预览 -->
+                        <div class="layui-tab-item layui-show">
+                            <!-- 图片轮播组件 -->
+                            <div id="file-viewer-image" class="file-viewer layui-hide" style="height: 100%;text-align: center;">
+                            </div>
+                            <!-- video-js视频播放器 -->
+                            <div id="file-viewer-video" class="file-viewer layui-hide" style="height: 100%">
+                                <video id="videoPlayer" class="video-js" controls preload="auto" style="width: 100%; height: 100%">
+                                    <p class="vjs-no-js">
+                                        要观看此视频，请启用 JavaScript，并考虑升级到
+                                        <a href="https:videojs.comhtml5-video-support" target="_blank">支持 HTML5 视频</a>
+                                        的网络浏览器
+                                    </p>
+                                </video>
+                            </div>
+                            <!-- pdf浏览组件 -->
+                            <div id="file-viewer-pdf" class="file-viewer layui-hide" style="height: 100%">
+                                <iframe id="pdfViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                            </div>
+                            <!-- 文本文件浏览组件 -->
+                            <div id="file-viewer-text" class="file-viewer layui-hide" style="height: 100%">
+                                <iframe id="txtViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                            </div>
+                            <!-- 不至于预览的文件 -->
+                            <div id="file-viewer-other" class="file-viewer layui-hide" style="height: 100%;text-align: center;">
+                                <p>该文件不支持预览，可下载后查看。</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -164,22 +187,39 @@
 <!-- js -->
 <script th:src="@{/js/business/directory/directory.js}"></script>
 <script type="text/javascript">
-    const toggleRightCard = (showMetadata, loadMetadataDetails, loadMetadataList) => {
-        if (showMetadata) {
-            $("#metadataListCardBody").removeClass('layui-show').addClass('layui-hide');
+    const toggleRightCard = (showType, callback) => {
+        if (showType === 'metadata') {
+            $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
             $("#metadataCardBody").removeClass('layui-hide').addClass('layui-show');
-            loadMetadataDetails && loadMetadataDetails();
-        } else {
-            $("#metadataCardBody").removeClass('layui-show').addClass('layui-hide');
+        } else if(showType === 'directory'){
+            $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
             $("#metadataListCardBody").removeClass('layui-hide').addClass('layui-show');
-            loadMetadataList && loadMetadataList();
+        }else if(showType === 'file'){
+            $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
+            $("#fileCardBody").removeClass('layui-hide').addClass('layui-show');
         }
-
+        callback && callback();
     }
 
+    /**
+     * 切换显示文件展示区域
+     * @param type 展示类型
+     */
+    function showFileViewer(type){
+        $('#fileViewer .file-viewer').addClass('layui-hide');
+        $(`#file-viewer-${type}`).removeClass('layui-hide');
+    }
+
+    let imageWidth;
+    let imageHeight;
     const sizeInit = () => {
         $(".layui-card-body").height(window.innerHeight - 43 - 10 - 43 - 40 - 20);
         $(".layui-card-body.right-card").height(window.innerHeight - 40 - 20);
+        $('#fileCardBody').height(window.innerHeight - 40 - 20)
+        $('#fileViewer .file-viewer').height(window.innerHeight - 40 - 20 - 80)
+        imageWidth = $('.layui-col-md9:first').innerWidth() - 54;
+        console.info(imageWidth)
+        imageHeight = $('#file-viewer-image').innerHeight();
     }
     window.onresize = sizeInit;
     sizeInit();

@@ -30,7 +30,7 @@ public class SysFile extends BaseEntity{
      * 主键ID
      */
     @TableId("ID")
-    private String ID;
+    private String id;
 
     /**
      * 数据实体ID

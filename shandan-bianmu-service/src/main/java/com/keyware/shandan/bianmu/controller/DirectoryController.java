@@ -131,8 +131,8 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
             List<SysFile> files = sysFileService.list(new QueryWrapper<>(q));
             result.addAll(files.stream().map(vo -> {
                 JSONObject json = treeJson(vo, "metadata", true);
-                json.put("id", vo.getID());
-                json.put("title", vo.getFileName());
+                json.put("id", vo.getId());
+                json.put("title", vo.getFileName() + vo.getFileSuffix());
                 json.put("parentId", directory.getParentId());
                 json.put("iconClass", "dtree-icon-normal-file");
                 return json;
@@ -169,7 +169,7 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
         List<SysFile> files = Arrays.stream(fileIds.split(",")).map(fid -> {
             SysFile file = new SysFile();
             file.setEntityId(directoryId);
-            file.setID(fid);
+            file.setId(fid);
             return file;
         }).collect(Collectors.toList());
 

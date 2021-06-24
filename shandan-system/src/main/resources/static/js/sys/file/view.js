@@ -12,16 +12,11 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
         dropdown = layui.dropdown,
         carousel = layui.carousel;
 
-    let imgViewerObj;
-
     const entityId = layui.url().search.entityId || '';
-    // 可预览的文件类型
-    const viewType = {
-        image: ['.avif', '.bmp', '.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png', '.svg', '.webp', '.ico', '.cur'],
-        video: ['.mp4', '.webm', '.ogv'],
-        pdf: ['.pdf'],
-        text: ['.txt']
-    };
+    if(!entityId){
+        console.error('预览文件出错，entityId为空')
+    }
+
     let viewFiles = [];
     let noViewFiles = [];
     let images = [];

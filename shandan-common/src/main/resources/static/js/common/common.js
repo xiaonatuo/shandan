@@ -18,12 +18,22 @@ const ReviewStatusMsg = {
     PASS: '通过审核',
     FAIL: '未通过审核'
 };
+// 审核状态图标
 const ReviewStatusIcon = {
     UN_SUBMIT: `<i class="layui-icon dtree-icon-circle1" title="未提交" id="##id##" data-id="##id##" style="margin-left: 5px;color: #1E9FFF;font-size: 14px;"></i>`,
     SUBMITTED: `<i class="layui-icon dtree-icon-jian1" title="等待审核" id="##id##" data-id="##id##" style="margin-left: 5px;color: orange;font-size: 14px;"></i>`,
     PASS: `<i class="layui-icon dtree-icon-roundcheck" title="审核通过" id="##id##" data-id="##id##" style="margin-left: 5px;color: green;font-size: 14px;"></i>`,
     FAIL: `<i class="layui-icon dtree-icon-roundclose icon-fail" title="审核不通过" id="tips-rw-##id##" data-id="##id##" style="margin-left: 5px;color: red;font-size: 14px;"></i>`,
 }
+
+// 可预览的文件类型
+const viewType = {
+    image: ['.avif', '.bmp', '.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png', '.svg', '.webp', '.ico', '.cur'],
+    video: ['.mp4', '.webm', '.ogv'],
+    pdf: ['.pdf'],
+    text: ['.txt']
+};
+
 
 /**
  * 审核数据实体类型
