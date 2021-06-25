@@ -60,8 +60,9 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser, 
     public Page<SysUser> page(Page<SysUser> page, QueryWrapper<SysUser> wrapper) {
         SysUser user = wrapper.getEntity();
         boolean condition = StringUtils.isNotBlank(user.getLoginName());
-        String sql = "%" + user.getLoginName() + "%";
-        wrapper.eq("IS_DELETE", "0").and(condition, w ->w.like(condition, "LOGIN_NAME", sql).or(condition).like(condition, "USER_NAME", sql));
+        wrapper.eq("IS_DELETE", "0")
+                .and(StringUtils.isNotBlank(user.getOrgId()), w->w.eq("ORG_ID", user.getOrgId()))
+                .and(condition, w -> w.like(condition, "LOGIN_NAME", user.getLoginName()).or(condition).like(condition, "USER_NAME", user.getLoginName()));
         Page<SysUser> userPage = super.page(page, wrapper);
         userPage.setRecords(userPage.getRecords().stream().map(sysUser -> {
             sysUser.setPassword(null);
