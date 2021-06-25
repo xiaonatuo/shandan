@@ -13,7 +13,7 @@ server:
 #基础配置
 spring:
   profiles:
-    active: dev #选择配置分支，先读取系统环境变量，如果没有则默认值为 dev
+    active: prod #选择配置分支，先读取系统环境变量，如果没有则默认值为 dev
   application:
     name: bianmu
 
