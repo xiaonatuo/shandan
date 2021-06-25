@@ -42,14 +42,14 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">验证码</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="captcha" name="captcha" placeholder="请输入验证码" class="layui-input" style="float: left;width: 52%">
+                    <input type="text" id="captcha" name="captcha" placeholder="请输入验证码"  class="layui-input" style="float: left;width: 52%">
                     <img id="captchaImg" th:src="@{/getVerifyCodeImage}" onclick="changeCode()"/><!-- <a href="javascript:changeCode()">看不清换一张</a>-->
                 </div>
             </div>
         </block>
-        <div class="layui-form-item" style="float: right;">
-            <input id="remember-me" type="checkbox" title="七天免登陆" name="rememberMe" checked lay-skin="primary">
-        </div>
+        <!--<div class="layui-form-item" style="float: right;">
+            <input id="remember-me" type="checkbox" title="七天免登陆" name="rememberMe" lay-skin="primary">
+        </div>-->
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <a class="layui-btn" style="margin-left: -50px;margin-right: 50px;" onclick="formSubmit()">登录</a>
@@ -94,9 +94,9 @@
      * 登录
      */
     function formSubmit() {
-        let rememberMe = true;
-        if($("input[name='rememberMe']:checked").length <= 0){
-            rememberMe = false;
+        let rememberMe = false;
+        if($("input[name='rememberMe']:checked").length > 0){
+            rememberMe = true;
         }
         $.post(ctx + "/login", {
             "username": $("#username").val(),
