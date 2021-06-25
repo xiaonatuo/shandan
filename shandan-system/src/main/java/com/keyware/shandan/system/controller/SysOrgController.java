@@ -49,8 +49,8 @@ public class SysOrgController extends BaseController<SysOrgService, SysOrg, Stri
         } else if (StringUtils.isNotBlank(org.getOrgParentId())) {
             SysOrg parent = sysOrgService.getById(org.getOrgParentId());
             if (parent != null) {
-                org.setOrgParentId(org.getId());
-                org.setOrgParentName(org.getOrgName());
+                org.setOrgParentId(parent.getId());
+                org.setOrgParentName(parent.getOrgName());
             }
         }
         modelAndView.addObject("org", org);
