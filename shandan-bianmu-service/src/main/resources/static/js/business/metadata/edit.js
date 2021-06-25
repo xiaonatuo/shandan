@@ -172,9 +172,10 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
             })
         } else {
             const firstValue = metadataTableMap.values().next().value;
+            console.info(firstValue)
             firstValue.master = true;
             const metadataName = firstValue.tableName;
-            const metadataComment = firstValue.comment;
+            const metadataComment = firstValue.tableComment;
             form.val('metadataForm', {master: metadataName, metadataName, metadataComment})
         }
     }
