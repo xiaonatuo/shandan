@@ -70,6 +70,10 @@
     jQueryExtend.ajaxExtend();
 </script>
 <script>
+    if (self!=top) {
+        window.parent.location.reload();
+    }
+
     let layer;
     layui.use(['layer','form'], function () {
         layer = layui.layer;
