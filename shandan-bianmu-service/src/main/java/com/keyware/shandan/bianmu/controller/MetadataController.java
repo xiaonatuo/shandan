@@ -53,17 +53,17 @@ public class MetadataController extends BaseController<MetadataService, Metadata
 
     @GetMapping("/")
     public ModelAndView index() {
-        return new ModelAndView("/business/metadata/metadata");
+        return new ModelAndView("business/metadata/metadata");
     }
 
     @GetMapping("/edit")
     public ModelAndView edit() {
-        return new ModelAndView("/business/metadata/metadataEdit");
+        return new ModelAndView("business/metadata/metadataEdit");
     }
 
     @GetMapping("/example")
     public ModelAndView example() {
-        return new ModelAndView("/business/metadata/example");
+        return new ModelAndView("business/metadata/example");
     }
 
     /**
@@ -72,7 +72,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
      */
     @GetMapping("/layer/choose")
     public ModelAndView chooseLayer() {
-        return new ModelAndView("/business/metadata/chooseLayer");
+        return new ModelAndView("business/metadata/chooseLayer");
     }
 
     /**
