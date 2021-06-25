@@ -17,6 +17,6 @@
     </resultMap>
     <select id="listChildren" resultMap="BaseResultMap">
         select * from SYS_MENU m
-        where m.MENU_PARENT_ID = #{parentId}
+        where m.IS_DELETE = '0' and m.MENU_PARENT_ID = #{parentId}
     </select>
 </mapper>

@@ -20,7 +20,7 @@
         select m.* from SYS_ROLE r
         left join SYS_ROLE_MENU rm on r.ROLE_ID = rm.ROLE_ID
         right join SYS_MENU m on rm.MENU_ID = m.MENU_ID
-        where r.ROLE_ID = #{roleId}
+        where r.ROLE_ID = #{roleId} and m.IS_DELETE = '0'
     </select>
 
     <select id="queryPermisList" resultMap="com.keyware.shandan.system.mapper.SysPermissionsMapper.BaseResultMap">

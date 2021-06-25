@@ -9,18 +9,19 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
 
     /**
      * 检查是否有子菜单
-     * @param menuParentId
+     * @param menuId
      * @returns {boolean}
      */
-    const checkChildMenu = function(menuParentId){
+    const checkChildMenu = async function (menuId) {
+        console.info(menuId);
         let flag = false;
-        $.ajax({
+        await $.ajax({
             url: `${ctx}/sys/menu/list`,
-            data: {menuParentId: menuParentId},
+            data: {menuParentId: menuId},
             type: 'POST',
             async: false,
             success: function (res) {
-                flag = res.data && res.data.length
+                flag = res.data && res.data.length > 0
             }
         });
         return flag;
@@ -31,12 +32,12 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
      * @param id
      * @param callback
      */
-    const deleteMenu = function(id, callback){
+    const deleteMenu = function (id, callback) {
         $.delete(`${ctx}/sys/menu/delete/${id}`, {}, function (res) {
-            res.msg = res.flag ? '删除成功' : res.msg;
+            res.msg = res.flag ? '删除成功' : '删除失败';
             let icon = res.flag ? 1 : 5;
             layer.msg(res.msg, {icon, time: 2000}, function () {
-                if(res.flag){
+                if (res.flag) {
                     menuTree.reload();
                     gtable.reload();
                 }
@@ -56,13 +57,13 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
             id: 'menuEdit',
             type: 2,
             title: '编辑菜单',
-            area:['600px', '380px'],
+            area: ['600px', '380px'],
             content: ctx + `/sys/menu/edit?menuParentId=${parentId}&menuId=${menuId}`,
             btn: ['确定', '取消'],
             success: function (layero, index) {
                 editLayerWin = window[layero.find('iframe')[0]['name']]
             },
-            yes: function(index){
+            yes: function (index) {
                 editLayerWin && editLayerWin.save().then(ok => {
                     if (ok) {
                         menuTree.reload();
@@ -71,7 +72,8 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
                     }
                 });
             },
-            end: function(){}
+            end: function () {
+            }
         });
     }
 
@@ -86,7 +88,7 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
     /**
      * 数据表格点击事件
      */
-    const tableEventCallback = function(obj){
+    const tableEventCallback = function (obj) {
         let rowData = obj.data;
         switch (obj.event) {
             case 'add':
@@ -100,8 +102,8 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
             case 'query':
                 searchText = $('#searchKeyInput').val().trim();
                 let queryOps = {page: {current: 1}}
-                if(searchText){
-                    queryOps.where={menuName: searchText}
+                if (searchText) {
+                    queryOps.where = {menuName: searchText}
                 }
                 gtable.reload(queryOps);
                 break;
@@ -109,14 +111,15 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
                 openEditLayer('', rowData.menuId);
                 break;
             case 'delete':
-                layer.confirm('确定要删除该菜单吗？', function (index) {
-                    if(checkChildMenu(rowData.id)){
-                        layer.close(index);
-                        layer.confirm('该菜单包含子菜单是否确定删除？', function (num) {
-                            deleteMenu(rowData.id, () => layer.close(num));
+                checkChildMenu(rowData.menuId).then(flag => {
+                    if (flag) {
+                        layer.confirm('该菜单包含子菜单是否确定删除？', function (index) {
+                            deleteMenu(rowData.menuId, () => layer.close(index));
                         })
-                    }else{
-                        deleteMenu(rowData.id, () => layer.close(index));
+                    } else {
+                        layer.confirm('确定要删除该菜单吗？', function (index) {
+                            deleteMenu(rowData.menuId, () => layer.close(index));
+                        })
                     }
                 });
                 break;

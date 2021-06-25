@@ -66,6 +66,9 @@ public class SysMenu extends BaseEntity implements Serializable {
     @OrderBy
     private Integer sortWeight;
 
+    @TableField("IS_DELETE")
+    private Boolean deleted;
+
     /**
      * 子级菜单
      */
