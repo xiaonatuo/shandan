@@ -86,8 +86,8 @@ public class AnalysisController {
             category.put("name", vo.getTableName());
             categories.add(category);
 
-            link.put("source", vo.getTableName());
         }
+        link.put("source", vo.getTableName());
         // 目标节点
         if (nodes.stream().noneMatch(n -> n.getString("id").equals(vo.getForeignTable()))) {
             nodes.add(getNode(vo, true));
@@ -96,9 +96,9 @@ public class AnalysisController {
             category.put("name", vo.getForeignTable());
             categories.add(category);
 
-            link.put("target", vo.getForeignTable());
-            link.put("value", 500);
         }
+        link.put("target", vo.getForeignTable());
+        link.put("value", 500);
 
         links.add(link);
     }
