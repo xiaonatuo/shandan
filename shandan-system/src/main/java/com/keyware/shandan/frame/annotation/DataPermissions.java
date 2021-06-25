@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataPermissions {
     /**
-     * 指定要查询的数据表中标识机构ID的列
+     * 指定要查询的数据表中标识部门ID的列
      * @return
      */
     String orgColumn() default "ORG_ID";

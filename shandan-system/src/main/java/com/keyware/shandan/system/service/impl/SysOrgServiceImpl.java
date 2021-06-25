@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * 组织机构表 服务实现类
+ * 部门表 服务实现类
  * </p>
  *
  * @author GuoXin
@@ -49,7 +49,7 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
     }
 
     /**
-     * 获取机构树
+     * 获取部门树
      *
      * @param parentId
      * @return
@@ -68,7 +68,7 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
     }
 
     /**
-     * 获取机构的所有子机构,不包含当前机构
+     * 获取部门的所有子部门,不包含当前部门
      *
      * @param orgId
      * @return
@@ -81,7 +81,7 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
     }
 
     /**
-     * 查询机构管理员
+     * 查询部门管理员
      *
      * @param orgId
      * @return
@@ -92,16 +92,16 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
     }
 
     /**
-     * 重写组织机构的保存方法
+     * 重写部门的保存方法
      *
-     * @param entity 组织机构
+     * @param entity 部门
      * @return
      */
     @Override
     public Result<SysOrg> updateOrSave(SysOrg entity) {
         SysOrg parentOrg = getById(entity.getOrgParentId());
         if (parentOrg == null) {
-            return Result.of(null, false, "未查询到父机构");
+            return Result.of(null, false, "未查询到上级部门");
         }
         // 如果ID为空则表示新增需要验证orgNumber
         if (StringUtils.isBlank(entity.getId())) {
@@ -109,20 +109,20 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
             param.setOrgNumber(entity.getOrgNumber());
             List<SysOrg> list = list(new QueryWrapper<>(param));
             if (list != null && list.size() > 0) {
-                return Result.of(null, false, "组织机构编号已存在");
+                return Result.of(null, false, "部门编号已存在");
             }
             // 使用orgNumber作为主键
             entity.setId(entity.getOrgNumber());
         }
-        // 设置父机构名称
+        // 设置父部门名称
         entity.setOrgParentName(parentOrg.getOrgName());
-        // 设置机构路径
+        // 设置部门路径
         entity.setOrgPath(parentOrg.getOrgPath().concat("|").concat(entity.getOrgNumber()));
-        // 设置机构负责人
+        // 设置部门负责人
         if (StringUtils.isNotBlank(entity.getLeader())) {
             SysUser leader = sysUserService.getById(entity.getLeader());
             if (leader == null) {
-                return Result.of(null, false, "机构负责人不存在");
+                return Result.of(null, false, "部门负责人不存在");
             }
             entity.setLeaderName(leader.getUserName());
         }
@@ -131,7 +131,7 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
     }
 
     /**
-     * 递归删除子机构
+     * 递归删除子部门
      *
      * @param id
      * @return

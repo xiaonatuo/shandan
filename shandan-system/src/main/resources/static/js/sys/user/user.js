@@ -38,7 +38,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
                     if (param && param.id) {
                         openEditLayer(param.id, param.context);
                     } else {
-                        layer.msg("请先在左侧选中要新增的组织机构！");
+                        layer.msg("请先选择所属部门！");
                     }
                     break;
                 case 'query':
@@ -138,7 +138,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
     }
 
     /**
-     * 加载机构树
+     * 加载部门树
      */
     function loadOrgTree() {
         orgTree.init({

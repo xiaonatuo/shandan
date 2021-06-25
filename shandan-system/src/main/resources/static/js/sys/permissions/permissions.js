@@ -10,7 +10,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
 
     /**
      * 打开编辑窗口
-     * @param permisId 当前组织机构
+     * @param permisId 当前部门
      */
     let editLayerWin;
     const openEditLayer = function ( permisId = '') {

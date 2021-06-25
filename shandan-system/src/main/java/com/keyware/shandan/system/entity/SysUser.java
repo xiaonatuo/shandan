@@ -78,7 +78,7 @@ public class SysUser extends BaseEntity implements Serializable {
     private Boolean limitMultiLogin;
 
     /**
-     * 组织机构主键
+     * 部门主键
      */
     @TableField(value = "ORG_ID")
     private String orgId;
@@ -91,7 +91,7 @@ public class SysUser extends BaseEntity implements Serializable {
     private Boolean deleted;
 
     /**
-     * 所属组织机构
+     * 所属部门
      */
     @TableField(exist = false)
     private SysOrg org;

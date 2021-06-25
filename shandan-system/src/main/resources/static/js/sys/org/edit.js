@@ -8,7 +8,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'util', 'dtre
     }
 
     /**
-     * 同步请求验证组织机构编码是否存在
+     * 同步请求验证部门编码是否存在
      * @param orgNumber
      * @returns {boolean}
      */
@@ -36,7 +36,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'util', 'dtre
     form.verify({
         orgNumber: function (value) {
             if (checkOrgNumber(value)) {
-                return '组织机构编码已存在';
+                return '部门编码已存在';
             }
         }
     });

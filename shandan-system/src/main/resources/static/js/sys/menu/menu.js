@@ -96,7 +96,7 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
                 if (treeNodeParam && treeNodeParam.nodeId) {
                     openEditLayer(treeNodeParam.nodeId)
                 } else {
-                    layer.msg('请先选择左侧父机构')
+                    layer.msg('请先选择左侧上级菜单')
                 }
                 break;
             case 'query':
@@ -126,7 +126,7 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
         }
     }
 
-    // 加载组织机构列表
+    // 加载部门列表
     let options = {
         id: 'menuTable',
         url: ctx + '/sys/menu/page',

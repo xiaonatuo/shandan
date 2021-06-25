@@ -379,7 +379,7 @@ layui.config({
 }).extend({
     dtree: 'dtree/dtree',
     globalTree: 'globalTree', // 通用树组件
-    orgTree: 'orgTree', // 组织机构树组件
+    orgTree: 'orgTree', // 部门树组件
     menuTree: 'menuTree', // 菜单树组件
     gtable: 'gtable', // 数据表格组件
     editPage: 'editPage', // 数据表格组件

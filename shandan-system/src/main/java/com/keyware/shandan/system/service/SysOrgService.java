@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * <p>
- * 组织机构表 服务类
+ * 部门表 服务类
  * </p>
  *
  * @author GuoXin
@@ -18,21 +18,21 @@ import java.util.List;
 public interface SysOrgService extends IBaseService<SysOrg, String> {
 
     /**
-     * 获取组织机构树
+     * 获取部门树
      * @param parentId
      * @return
      */
     Result<List<SysOrg>> getOrgTree(String parentId);
 
     /**
-     * 获取机构的所有子机构，不包含当前机构
+     * 获取部门的所有子部门，不包含当前部门
      * @param orgId
      * @return
      */
     List<SysOrg> getOrgAllChildren(String orgId);
 
     /**
-     * 查询机构管理员
+     * 查询部门管理员
      * @param orgId
      * @return
      */

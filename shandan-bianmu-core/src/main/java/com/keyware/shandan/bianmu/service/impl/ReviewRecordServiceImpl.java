@@ -124,7 +124,7 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
         String receiveId = "";
         SysUser currentUser = SecurityUtil.getLoginSysUser();
         if (reviewRecord.getReviewOperate() == ReviewStatus.SUBMITTED) {
-            // 提交操作，接收人应该是当前用户所属机构管理员
+            // 提交操作，接收人应该是当前用户所属部门管理员
             receiveId = orgService.getOrgAdmins(currentUser.getOrgId())
                     .stream().map(SysUser::getUserId)
                     .reduce("", (a, b) -> a + "," + b);

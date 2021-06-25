@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * <p>
- * 组织机构表 Mapper 接口
+ * 部门表 Mapper 接口
  * </p>
  *
  * @author GuoXin
@@ -19,21 +19,21 @@ import java.util.List;
 public interface SysOrgMapper extends IBaseMapper<SysOrg> {
 
     /**
-     * 获取机构树
+     * 获取部门树
      * @param id
      * @return
      */
     SysOrg getOrgTree(String id);
 
     /**
-     * 获取子机构
+     * 获取子部门
      * @param id
      * @return
      */
     List<SysOrg> getChildren(String id);
 
     /**
-     * 查询机构管理员
+     * 查询部门管理员
      * @param orgId
      * @return
      */

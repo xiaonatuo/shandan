@@ -6,7 +6,7 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
     let searchText = '';
 
     /**
-     * 检查是否有子机构
+     * 检查是否有子部门
      * @param orgParentId
      * @returns {boolean}
      */
@@ -25,7 +25,7 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
     }
 
     /**
-     * 删除组织机构
+     * 删除部门
      * @param id
      * @param callback
      */
@@ -44,16 +44,16 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
     }
 
     /**
-     * 打开组织机构编辑窗口
-     * @param parentId 父机构
-     * @param orgId 当前组织机构
+     * 打开部门编辑窗口
+     * @param parentId 父部门
+     * @param orgId 当前部门
      */
     let editLayerWin;
     const openEditLayer = function (parentId = '', orgId = '') {
         layer.open({
             id: 'orgEdit',
             type: 2,
-            title: '编辑组织机构',
+            title: '编辑部门',
             area:['800px', '545px'],
             content: ctx + `/sys/org/edit?orgParentId=${parentId}&id=${orgId}`,
             btn: ['确定', '取消'],
@@ -84,7 +84,7 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
                 if (treeNodeParam && treeNodeParam.id) {
                     openEditLayer(treeNodeParam.id)
                 } else {
-                    layer.msg('请先选择左侧父机构')
+                    layer.msg('请先选择左侧上级部门')
                 }
                 break;
             case 'query':
@@ -99,10 +99,10 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
                 openEditLayer('', rowData.id);
                 break;
             case 'delete':
-                layer.confirm('确定要删除该组织机构吗？', function (index) {
+                layer.confirm('确定要删除该部门吗？', function (index) {
                     if(checkChildOrg(rowData.id)){
                         layer.close(index);
-                        layer.confirm('该组织机构包含子机构是否确定删除？', function (num) {
+                        layer.confirm('该部门包含子部门是否确定删除？', function (num) {
                             deleteOrg(rowData.id, () => layer.close(num));
                         })
                     }else{
@@ -113,7 +113,7 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
         }
     }
 
-    //加载组织机构树
+    //加载部门树
     orgTree.init({
         // 点击树节点回显数据到表单
         onClick: function (node) {
@@ -123,7 +123,7 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
         }
     });
 
-    // 加载组织机构列表
+    // 加载部门列表
     let options = {
         id: 'orgTable',
         url: ctx + '/sys/org/page',
@@ -131,11 +131,11 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
         title: '用户列表',
         cols: [[
             {field: 'id', title: 'ID', hide: true}
-            , {field: 'orgNumber', title: '机构编号'}
-            , {field: 'orgName', title: '机构名称'}
-            , {field: 'orgShortName', title: '机构简称'}
-            , {field: 'orgParentName', title: '父机构'}
-            , {field: 'leaderName', title: '机构负责人'}
+            , {field: 'orgNumber', title: '部门编号'}
+            , {field: 'orgName', title: '部门名称'}
+            , {field: 'orgShortName', title: '部门简称'}
+            , {field: 'orgParentName', title: '上级部门'}
+            , {field: 'leaderName', title: '部门负责人'}
             , {fixed: 'right', title: '操作', toolbar: '#rowToolBar'}
         ]],
         onToolBarTable: tableEventCallback,

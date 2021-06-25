@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * <p>
- * 组织机构表
+ * 部门表
  * </p>
  *
  * @author GuoXin
@@ -30,56 +30,56 @@ public class SysOrg extends BaseEntity implements Serializable {
     private String id;
 
     /**
-     * 机构编号
+     * 部门编号
      */
     @OrderBy
     @TableField("ORG_NUMBER")
     private String orgNumber;
 
     /**
-     * 机构名称
+     * 部门名称
      */
     @TableField(value = "ORG_NAME", condition= SqlCondition.LIKE)
     private String orgName;
 
     /**
-     * 机构简称
+     * 部门简称
      */
     @TableField("ORG_SHORT_NAME")
     private String orgShortName;
 
     /**
-     * 父机构ID
+     * 父部门ID
      */
     @TableField("ORG_PARENT_ID")
     private String orgParentId;
 
     /**
-     * 父机构名称
+     * 父部门名称
      */
     @TableField("ORG_PARENT_NAME")
     private String orgParentName;
 
     /**
-     * 机构路径
+     * 部门路径
      */
     @TableField("ORG_PATH")
     private String orgPath;
 
     /**
-     * 机构负责人
+     * 部门负责人
      */
     @TableField("LEADER")
     private String leader;
 
     /**
-     * 机构负责人名称
+     * 部门负责人名称
      */
     @TableField("LEADER_NAME")
     private String leaderName;
 
     /**
-     * 机构描述
+     * 部门描述
      */
     @TableField("REMARK")
     private String remark;
@@ -99,7 +99,7 @@ public class SysOrg extends BaseEntity implements Serializable {
     private Boolean deleted;
 
     /**
-     * 子机构
+     * 子部门
      */
     @TableField(exist = false)
     private List<SysOrg> children;

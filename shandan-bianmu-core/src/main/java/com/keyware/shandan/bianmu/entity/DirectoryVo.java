@@ -61,12 +61,12 @@ public class DirectoryVo extends BaseEntity{
     private ReviewStatus reviewStatus;
 
     /**
-     * 所属机构ID
+     * 所属部门ID
      */
     @TableField(value = "ORG_ID", fill = FieldFill.INSERT)
     private String orgId;
     /**
-     * 所属机构对象
+     * 所属部门对象
      */
     @TableField(exist = false)
     private SysOrg org;

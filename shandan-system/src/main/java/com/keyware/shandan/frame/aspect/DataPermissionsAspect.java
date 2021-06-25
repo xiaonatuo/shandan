@@ -44,7 +44,7 @@ public class DataPermissionsAspect {
         // 当前用户权限范围
         HashMap<String, SysPermissions> permisMap = getCurrentUserPermissions(currentUser.getUserId());
         DataPermissions annotation = getAnnotationByMethod(joinPoint, DataPermissions.class);
-        // 不包含最高权限范围时，通过查询权限范围内的机构作为条件进行查询
+        // 不包含最高权限范围时，通过查询权限范围内的部门作为条件进行查询
         if (permisMap.get(DataPermisScope.ALL_SCOPE.name()) == null) {
             Object[] args = joinPoint.getArgs();
             for (int i = 0; i < args.length; i++) {
@@ -53,11 +53,11 @@ public class DataPermissionsAspect {
                     List<String> orgIds = new ArrayList<>();
                     SysOrg currentOrg = sysOrgService.getById(currentUser.getOrgId());
                     if (permisMap.get(DataPermisScope.CURRENT_ORG_CHILDRENS.name()) != null) {
-                        // 添加当前机构和子机构
+                        // 添加当前部门和子部门
                         orgIds.add(currentOrg.getId());
                         sysOrgService.getOrgAllChildren(currentOrg.getId()).forEach(org -> orgIds.add(org.getId()));
                     } else if (permisMap.get(DataPermisScope.ONLY_CURRENT_ORG.name()) != null) {
-                        // 只添加当前机构
+                        // 只添加当前部门
                         orgIds.add(currentOrg.getId());
                     } else {
                         // 只查询自己创建的数据

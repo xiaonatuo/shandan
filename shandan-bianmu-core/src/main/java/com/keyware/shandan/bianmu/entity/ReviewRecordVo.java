@@ -56,7 +56,7 @@ public class ReviewRecordVo extends BaseEntity{
     private String reviewOpinion;
 
     /**
-     * 所属机构
+     * 所属部门
      */
     @TableField(value = "ORG_ID", fill = FieldFill.INSERT)
     private String orgId;

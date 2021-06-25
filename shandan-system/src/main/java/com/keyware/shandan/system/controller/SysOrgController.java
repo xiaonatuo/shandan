@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * 组织机构表 前端控制器
+ * 部门表 前端控制器
  * </p>
  *
  * @author GuoXin
@@ -59,7 +59,7 @@ public class SysOrgController extends BaseController<SysOrgService, SysOrg, Stri
     }
 
     /**
-     * 获取机构树
+     * 获取部门树
      * @param parentId
      * @return
      */
@@ -75,7 +75,7 @@ public class SysOrgController extends BaseController<SysOrgService, SysOrg, Stri
     }
 
     /**
-     * 构建机构树
+     * 构建部门树
      * @param list
      * @return
      */
@@ -83,22 +83,22 @@ public class SysOrgController extends BaseController<SysOrgService, SysOrg, Stri
         Set<SysOrg> allOrgSet = new HashSet<>(list);
 
         list.stream()
-                // 找到当前机构列表的根机构
+                // 找到当前部门列表的根部门
                 .filter(org -> list.stream().noneMatch(o -> o.getId().equals(org.getOrgParentId())))
-                // 根据当前根机构查找所有父机构
+                // 根据当前根部门查找所有父部门
                 .forEach(org -> allOrgSet.addAll(sysOrgService.listByIds(Arrays.asList(org.getOrgPath().split("\\|")))));
 
         return allOrgSet.stream()
-                // 找到根机构
+                // 找到根部门
                 .filter(org -> allOrgSet.stream().noneMatch(o -> o.getId().equals(org.getOrgParentId())))
-                // 递归子机构
+                // 递归子部门
                 .peek(org-> findChildren(org, new ArrayList<>(allOrgSet)))
                 // 转换List
                 .collect(Collectors.toList());
     }
 
     /**
-     * 递归子机构
+     * 递归子部门
      * @param org
      * @param list
      */
