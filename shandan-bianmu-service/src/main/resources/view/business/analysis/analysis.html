@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body onselectstart="return false">
+<div class="layui-row layui-col-space15">
+    <!-- 树 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <!--<label class="layui-form-label">选择数据源</label>-->
+                            <div class="layui-input-inline">
+                                <select id="dataSourcesSelect" name="dataSourceId" lay-verify="required"
+                                        lay-filter="dataSourcesSelect">
+                                    <option value="" selected>请选择数据源</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <a id="start-analysis" class="layui-btn layui-btn-sm" href="javascript:void(0)">开始分析</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <div id="echarts-div" style="height: 700px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<!-- js -->
+<script th:src="@{/js/business/analysis/analysis.js}"></script>
+<script type="text/javascript">
+    const sizeInit = () => {
+        $(".layui-card-body").height(window.innerHeight - 43 - 40 - 20);
+    }
+    window.onresize = sizeInit;
+    sizeInit();
+</script>
+</html>

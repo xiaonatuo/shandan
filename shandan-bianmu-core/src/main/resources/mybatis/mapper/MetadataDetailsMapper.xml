@@ -21,4 +21,15 @@
                      column="METADATA_ID"
                      select="com.keyware.shandan.bianmu.mapper.MetadataBasicMapper.selectById"/>-->
     </resultMap>
+
+    <select id="selectHasForeignTableData" resultType="com.keyware.shandan.bianmu.entity.MetadataDetailsVo">
+        select *
+        from (
+                 select BMD.*
+                 from B_METADATA_BASIC BMB
+                          left join B_METADATA_DETAILS BMD on BMB.ID = BMD.METADATA_ID
+                 where DATA_SOURCE_ID = #{datasourceId}
+             ) TEMP
+        where exists (select 1 from B_METADATA_DETAILS BMD where BMD.TABLE_NAME = TEMP.FOREIGN_TABLE)
+    </select>
 </mapper>
