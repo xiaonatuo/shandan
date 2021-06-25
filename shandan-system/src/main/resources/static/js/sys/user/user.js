@@ -21,14 +21,15 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             {field: 'userId', title: 'ID', hide: true}
             , {field: 'userName', title: '用户名称'}
             , {field: 'loginName', title: '登录名'}
+            , {field: 'orgName', title: '所属部门', templet: data => data.org ? data.org.orgName : ''}
             , {field: 'valid', title: '是否允许登录系统', hide: true}
             , {field: 'limitMultiLogin', title: '是否允许多人在线', hide: true}
             , {field: 'limitedIp', title: '限制允许登录的IP集合', hide: true}
-            , {field: 'expiredTime', title: '账号失效时间', hide: true}
+            , {field: 'expiredTime', title: '账号失效时间'}
             , {field: 'lastChangePwdTime', title: '最近修改密码时间', hide: true}
             , {field: 'createTime', title: '创建时间', hide: true}
-            , {field: 'modifyTime', title: '更新时间', hide: true}
-            , {fixed: 'right', title: '操作', toolbar: '#userTableBarDemo'}
+            , {field: 'modifyTime', title: '更新时间'}
+            , {fixed: 'right', title: '操作', toolbar: '#userTableBarDemo', width: 220}
         ]],
         onToolBarTable: function (obj) {
             switch (obj.event) {
@@ -66,10 +67,9 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
         },
         onToolBarRow: function (obj) {
             let data = obj.data;
-            switch (obj.event){
+            switch (obj.event) {
                 case 'del':
                     layer.confirm('确认删除吗？', function (index) {
-                        //向服务端发送删除指令
                         $.delete(ctx + "/sys/sysUser/delete/" + data.userId, {}, function (data) {
                             userTable.reload();
                             layer.close(index);
@@ -91,45 +91,47 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
      * 选择角色弹框
      * @param userId
      */
-    function openRoleLayer(userId){
+    function openRoleLayer(userId) {
         let roleLayer;
         layer.open({
             id: 'roleLayer',
             type: 2,
             title: '选择角色',
-            area:['300px', '330px'],
+            area: ['300px', '330px'],
             content: ctx + `/sys/role/layer?userId=${userId}`,
             btn: ['确定'],
             success: function (layero, index) {
                 roleLayer = window[layero.find('iframe')[0]['name']]
             },
-            yes: function(index){
+            yes: function (index) {
                 //roleLayer && roleLayer.save();
                 layer.close(index)
             },
-            end: function(){
+            end: function () {
                 //userTable.reload();
             }
         });
     }
 
-    function openEditLayer(orgId, orgName, userId){
-        if(!userId) {userId = ''}
+    function openEditLayer(orgId, orgName, userId) {
+        if (!userId) {
+            userId = ''
+        }
         let editLayerWin;
         layer.open({
             id: 'userEdit',
             type: 2,
             title: '添加用户',
-            area:['800px', '545px'],
+            area: ['800px', '545px'],
             content: ctx + `/sys/sysUser/edit?orgId=${orgId}&orgName=${orgName}&userId=${userId}`,
             btn: ['确定', '取消'],
             success: function (layero, index) {
                 editLayerWin = window[layero.find('iframe')[0]['name']]
             },
-            yes: function(){
+            yes: function () {
                 editLayerWin && editLayerWin.save();
             },
-            end: function(){
+            end: function () {
                 gtable.reload();
             }
         });
@@ -141,8 +143,9 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
     function loadOrgTree() {
         orgTree.init({
             id: `orgTree`,
-            done: function (nodes, elem){},
-            onClick: function(obj){
+            done: function (nodes, elem) {
+            },
+            onClick: function (obj) {
                 let query = {
                     page: {
                         curr: 1 //重新从第 1 页开始
@@ -154,6 +157,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             }
         })
     }
+
     loadOrgTree();
 });
 
