@@ -10,6 +10,8 @@ spring:
           username: BIANMU
           password: 123456789
           driver-class-name: dm.jdbc.driver.DmDriver
+    sql-script-encoding: UTF-8
+
 
 bianmu:
   #是否需要输入验证码
