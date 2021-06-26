@@ -54,6 +54,13 @@
             <artifactId>thymeleaf</artifactId>
         </dependency>
 
+        <!--达梦数据库驱动-->
+        <!-- mvn install:install-file -DgroupId=com.dameng -DartifactId=dm8 -Dversion=1.0.0 -Dpackaging=jar -Dfile=E:\dmdbms\drivers\jdbc\DmJdbcDriver18.jar -->
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>dm8</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.keyware.shandan</groupId>
             <artifactId>shandan-common</artifactId>

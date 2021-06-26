@@ -2,6 +2,7 @@ package com.keyware.shandan.datasource.service.impl;
 
 import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
+import com.baomidou.dynamic.datasource.exception.ErrorCreateDataSourceException;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.keyware.shandan.datasource.entity.DataSourceVo;
 import com.keyware.shandan.datasource.mapper.DataSourceMapper;
@@ -93,10 +94,12 @@ public class DataSourceServiceImpl extends BaseServiceImpl<DataSourceMapper, Dat
         Connection con = null;
         try {
             con = dataSourceCreator.createDataSource(dataSourceProperty).getConnection();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return Result.of(false, false, "连接失败：" + throwables.getMessage());
-        }finally {
+        } catch (SQLException | ErrorCreateDataSourceException e) {
+            if(e instanceof ErrorCreateDataSourceException){
+                return Result.of(false, false, "连接失败：" + e.getCause().getMessage());
+            }
+            return Result.of(false, false, "连接失败：" + e.getMessage());
+        } finally {
             if (con != null) {
                 try {
                     con.close();
