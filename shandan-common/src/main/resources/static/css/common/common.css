@@ -16,3 +16,5 @@ body, html {
     left: 0;
 }
 .layui-logo {padding: 0 20px}
+.dtree-nav-item .dtree-nav-div {overflow: hidden}
+.dtree-nav-item .dtree-nav-div cite{white-space: nowrap}
