@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.entity.MetadataDetailsVo;
 import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.datasource.entity.DBTableColumnVo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,9 +125,20 @@ public class MetadataUtils {
         String tableColumns = detail.getTableColumns();
         // 如果字段中没有配置的列，则添加全部列
         if (StringUtils.isBlank(tableColumns)) {
-            columns.addAll(detail.getColumnList().stream().map(column -> (JSONObject) JSONObject.toJSON(column)).collect(Collectors.toList()));
+            columns.addAll(detail.getColumnList().stream().map(column -> JSONObject.toJSON(column)).collect(Collectors.toList()));
         } else {
-            columns.addAll(JSON.parseArray(tableColumns));
+            JSONArray arr = JSONArray.parseArray(tableColumns);
+            if(arr != null){
+                arr.forEach(item ->{
+                    JSONObject obj = (JSONObject)item;
+                    for (DBTableColumnVo col : detail.getColumnList()) {
+                        if(col.getColumnName().equals(obj.getString("columnName"))){
+                            columns.add(JSONObject.toJSON(col));
+                            break;
+                        }
+                    }
+                });
+            }
         }
 
         return columns;
