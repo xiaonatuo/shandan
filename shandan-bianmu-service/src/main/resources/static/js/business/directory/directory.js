@@ -350,12 +350,12 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             // 显示右键菜单之前的回调，用于设置显示哪些菜单
             loadToolbarBefore: function (buttons, param, $div) {
                 const {id, parentId, context} = param;
-                const basicData = dirCache.get(id).basicData;
                 let btns = {};
                 // 根目录只显示添加
                 if (id === '-' || parentId === -1 || context === '根目录') {
                     btns = {addToolbar: buttons.addToolbar};
                 }else{
+                    const basicData = dirCache.get(id).basicData;
                     if (basicData) {
                         // 元数据 或者文件
                         if (basicData.metadataName || basicData.entityId) {
