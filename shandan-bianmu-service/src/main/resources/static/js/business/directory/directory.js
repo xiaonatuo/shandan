@@ -127,7 +127,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                     layer.iframeAuto(index)
                 },
                 yes: function (index) {
-                    fileUploadLayerWin.save().then(ok=>{
+                    fileUploadLayerWin.save().then(ok => {
                         ok && dirTree.partialRefreshAdd(currentTreeNode);
                     });
                 }
@@ -249,14 +249,27 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         toolbarStyle: {title: "目录", area: ["600px", "350px"]},
         toolbarShow: ["add", "edit", "delete"],
         toolbarBtn: [dirAddLayer, dirEditLayer],
-        onDbClick: function({dom}){
+        onDbClick: function ({dom}) {
             dirTree.clickSpread(dom);
         },
-        sendSuccess: function(res){
-            if(res.flag){
-                res.data.forEach(item=>{
+        sendSuccess: function (res) {
+            if (res.flag) {
+                res.data.forEach(item => {
                     dirCache.set(item.id, item);
                 })
+                initLiHoverEvent();
+                async function initLiHoverEvent() {
+                    setTimeout(() => {
+                        $('.dtree-nav-div.dtree-theme-item').each((index, elem)=>{
+                            let data = $(elem).data('basic');
+                            if (data) {
+                                if(typeof data === 'string'){data = JSON.parse(data);}
+                                let title = data.metadataComment || data.directoryName || data.fileName + data.fileSuffix;
+                                $(elem).attr('title', title)
+                            }
+                        });
+                    }, 200)
+                }
             }
         },
         done: function (nodes, elem) {
@@ -267,25 +280,31 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             currentTreeNode = node.dom;
             const {basicData} = node.param;
             let showType = 'directory';
-            let callback = ()=>{loadMetadataList(node.param)}
-            if(basicData){
-                if(basicData.metadataName){
+            let callback = () => {
+                loadMetadataList(node.param)
+            }
+            if (basicData) {
+                if (basicData.metadataName) {
                     showType = 'metadata';
-                    callback = ()=>{loadMetadataDetails(node.param)}
-                }else if(basicData.entityId){
+                    callback = () => {
+                        loadMetadataDetails(node.param)
+                    }
+                } else if (basicData.entityId) {
                     showType = 'file';
-                    callback = ()=>{viewFile(basicData);}
+                    callback = () => {
+                        viewFile(basicData);
+                    }
                 }
             }
             toggleRightCard(showType, callback);
 
             // 先移除事件，否则会和节点点击事件重叠
             $('#directoryTree cite i.icon-fail').off('click');
-            $('#directoryTree cite i.icon-fail').on('click', function({target}){
+            $('#directoryTree cite i.icon-fail').on('click', function ({target}) {
                 const id = $(target).data('id');
                 const elemId = `tips-rw-${id}`;
-                $.get(`${ctx}/business/review/get/entity?entityId=${id}`, {}, function(res){
-                    if(res.flag){
+                $.get(`${ctx}/business/review/get/entity?entityId=${id}`, {}, function (res) {
+                    if (res.flag) {
                         const reviewData = res.data;
                         layer.tips(reviewData.reviewOpinion, `#${elemId}`, {tips: [3]});
                     }
@@ -337,8 +356,10 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                         // 遍历缓存数据，如果数据中不包含parentId为node.parentId的数据，则证明没有子目录，需要更新父目录hasChild字段
                         let parent = dirCache.get(node.parentId)
                         let hasChild = false;
-                        dirCache.forEach((value, key)=>{
-                            if(value.parentId === node.parentId){hasChild = true}
+                        dirCache.forEach((value, key) => {
+                            if (value.parentId === node.parentId) {
+                                hasChild = true
+                            }
                         })
                         parent.basicData.hasChild = hasChild;
                         dirCache.set(node.parentId, parent);
@@ -354,7 +375,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 // 根目录只显示添加
                 if (id === '-' || parentId === -1 || context === '根目录') {
                     btns = {addToolbar: buttons.addToolbar};
-                }else{
+                } else {
                     const basicData = dirCache.get(id).basicData;
                     if (basicData) {
                         // 元数据 或者文件
@@ -364,7 +385,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                             // 审核状态为已提交或者审核通过时，不显示菜单
                             if (status === ReviewStatus.SUBMITTED || status === ReviewStatus.PASS) {
                                 btns = {noneToolbar: buttons.noneToolbar};
-                            }else{
+                            } else {
                                 btns = {removeLinkToolbar: buttons.removeLinkToolbar};
                             }
                         } else { // 目录
@@ -374,15 +395,15 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                             if (basicData.directoryType === ReviewEntityType.DIRECTORY) {
                                 // 显示新增目录
                                 btns.addToolbar = buttons.addToolbar;
-                                if(!basicData.hasChild){
+                                if (!basicData.hasChild) {
                                     btns.editToolbar = buttons.editToolbar;
                                     btns.delToolbar = buttons.delToolbar;
                                 }
-                            }else{ // 目录类型为元数据时， 判断对象为父目录
+                            } else { // 目录类型为元数据时， 判断对象为父目录
                                 // 审核状态为已提交或者审核通过时，不显示菜单
                                 if (status === ReviewStatus.SUBMITTED || status === ReviewStatus.PASS) {
                                     btns = {noneToolbar: buttons.noneToolbar};
-                                }else{
+                                } else {
                                     btns.editToolbar = buttons.editToolbar;
                                     btns.delToolbar = buttons.delToolbar;
                                     btns.addMetadataToolbar = buttons.addMetadataToolbar;
@@ -390,7 +411,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                                 }
                             }
                         }
-                    }else{
+                    } else {
                         btns = {noneToolbar: buttons.noneToolbar}
                     }
                 }
@@ -438,7 +459,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                         if (basicData.metadataName) {
                             url = `${ctx}/business/directory/remove/metadata`
                             data = {directoryId: parentId, metadataId: basicData.id};
-                        }else{
+                        } else {
                             url = `${ctx}/business/directory/remove/file`
                             data = {fileId: basicData.id};
                         }
@@ -456,13 +477,14 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             {
                 toolbarId: "noneToolbar",
                 icon: "",
-                title: "无可操作选项", handler: function (node) {}
+                title: "无可操作选项", handler: function (node) {
+                }
             },
         ],
-        formatter:{
-            title: function(data) { // 文字过滤，返回null,"",undefined之后，都不会改变原有的内容返回。
+        formatter: {
+            title: function (data) { // 文字过滤，返回null,"",undefined之后，都不会改变原有的内容返回。
                 let {title, basicData} = data;
-                if(basicData && basicData.directoryType === ReviewEntityType.METADATA){
+                if (basicData && basicData.directoryType === ReviewEntityType.METADATA) {
                     const reviewStatus = data.basicData.reviewStatus;
                     title += ReviewStatusIcon[reviewStatus].replaceAll('##id##', basicData.id);
                 }
@@ -473,18 +495,19 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     dirTree = globalTree.init(treeOps);
 
     let player;
+
     /**
      * 预览文件
      * @param file
      */
-    function viewFile(file){
+    function viewFile(file) {
         const filePath = `${ctx}/upload/${file.path}`;
         if (viewType.image.includes(file.fileSuffix)) {
             let htm = `<img id="image-viewer" src="${filePath}" style="max-height: ${imageHeight}px; max-width: ${imageWidth}px"/>`
             $('#file-viewer-image').html(htm)
             showFileViewer('image');
         } else if (viewType.video.includes(file.fileSuffix)) {
-            if(!player){
+            if (!player) {
                 initVideoPlayer();
             }
             player.src(filePath);
@@ -495,12 +518,12 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         } else if (viewType.text.includes(file.fileSuffix)) {
             $('#txtViewer').attr('src', filePath);
             showFileViewer('text');
-        }else{
+        } else {
             let htm = `<p>该文件不支持预览，可下载后查看。</p>
                         <a href="javascript:void(0)"  id="download-file" data-id="${file.id}" style="color: blue; text-decoration: underline;">下载文件</a>`;
             $('#file-viewer-other').html(htm)
             $('#download-file').off('click')
-            $('#download-file').on('click', function({target}){
+            $('#download-file').on('click', function ({target}) {
                 let fileId = $(target).data('id')
                 window.open(`${ctx}/sys/file/download/${fileId}`)
             })
@@ -511,9 +534,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     /**
      * 视频播放器初始化
      */
-    function initVideoPlayer(){
+    function initVideoPlayer() {
         player = videojs('videoPlayer');
-        player.ready(function(){
+        player.ready(function () {
             //this.play();
         });
     }
