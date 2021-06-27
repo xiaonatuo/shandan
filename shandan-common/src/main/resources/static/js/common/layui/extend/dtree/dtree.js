@@ -3617,7 +3617,7 @@ layui.define(['jquery','layer','form'], function(exports) {
             $p_li = $div.parent("li[data-index]"),	//当前选中节点的顶级li节点
             $p_ul = $p_li.parent("ul"),	//当前选中节点的顶级li节点的父级ul
             $p_div = $p_ul.prev("div"), //当前选中节点的顶级li节点的父级ul的前一个div
-            title = $cite.html();
+            title = $cite.text();
         switch (tool) {
             case defaultTool.pulldown:
                 _this.toolbarMethod().pulldown($ul);

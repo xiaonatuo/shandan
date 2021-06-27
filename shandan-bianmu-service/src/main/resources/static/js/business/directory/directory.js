@@ -25,7 +25,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     //目录树右键添加和编辑菜单弹框显示的其他内容
     const dirAddLayer = [{
         label: "目录类型", name: "directoryType", type: "select", optionsData: function () {
-            return {"0": "结构目录", "1": "元数据目录"}
+            return {"DIRECTORY": "结构目录", "METADATA": "元数据目录"}
         }
     }];
     const dirEditLayer = $.extend(dirAddLayer, [])
@@ -313,7 +313,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         },
         toolbarFun: {
             editTreeLoad: function (node) { // 目录树右键编辑菜单显示弹窗后的回调
-                dirTree.changeTreeNodeDone({directoryType: node.basicData.directoryType});
+                $('.layui-layer .dtree-toolbar-tool .layui-form-item:first').addClass('layui-hide');
+                const {directoryName, directoryType} = node.basicData;
+                dirTree.changeTreeNodeDone({directoryName, directoryType, editNodeName: directoryName});
             },
             addTreeNode: function (node, elem) { // 目录树右键新增菜单-点击保存后的回调
                 const data = {
