@@ -164,6 +164,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             url: `${ctx}/business/metadata/columns?id=${basicData.id}`,
             method: 'get',
             toolbar: '',
+            height: 'full-136',
             page: false,
             cols: [[
                 {field: 'tableName', title: 'tableName', hide: true},
