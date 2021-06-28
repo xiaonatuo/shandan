@@ -33,7 +33,7 @@
             if (res.flag) {
                 let columns = [];
                 for (let {columnName} of res.data) {
-                    columns.push({field: columnName, title: columnName});
+                    columns.push({field: columnName, title: columnName, minWidth: 150});
                 }
                 const tableOptions = {
                     id: 'metadataExampleTable',

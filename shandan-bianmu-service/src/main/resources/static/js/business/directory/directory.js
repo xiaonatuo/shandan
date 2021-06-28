@@ -185,7 +185,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             let columns = [];
             if (res.flag) {
                 for (let {columnName} of res.data) {
-                    columns.push({field: columnName, title: columnName});
+                    columns.push({field: columnName, title: columnName, minWidth: 150});
                 }
             }
             const tableOptions = {
