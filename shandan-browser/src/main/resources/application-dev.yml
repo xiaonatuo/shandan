@@ -11,6 +11,11 @@ spring:
           password: 123456789
           driver-class-name: dm.jdbc.driver.DmDriver
 
+  thymeleaf:
+    # 页面缓存配置
+    cache: false
+
+
 bianmu:
   #是否需要输入验证码
   captcha-enable: false
