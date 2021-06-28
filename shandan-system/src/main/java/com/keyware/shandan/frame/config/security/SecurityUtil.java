@@ -56,7 +56,11 @@ public class SecurityUtil {
      * @return
      */
     public static SysUser getLoginSysUser(){
-        return UserConfig.getLoginUserByLoginName(getLoginUser().getUsername());
+        User user = getLoginUser();
+        if(user != null){
+            return UserConfig.getLoginUserByLoginName(user.getUsername());
+        }
+        return null;
     }
 
     /**
