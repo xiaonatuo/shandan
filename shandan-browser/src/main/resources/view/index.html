@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <title th:text="${appName}">综合浏览</title>
     <script th:replace="common/head::static"></script>
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
     <style>
         .layui-layout-admin .layui-body {
             left: 0;
             padding: 15px;
             background-color: #eee
         }
-        .layui-form-item .layui-input-inline{width:auto}
+
+        .layui-form-item .layui-input-inline {
+            width: auto
+        }
     </style>
 </head>
 <body>
@@ -42,46 +46,114 @@
                 <div class="layui-card">
                     <div class="layui-card-header">数据检索</div>
                     <div class="layui-card-body">
-                        <div class="layui-form">
+                        <div class="layui-form" lay-filter="search-form">
                             <div class="layui-form-item search-line">
-                                <div style="margin: 0 auto">
+                                <div class="b-search-input-line">
                                     <div class="layui-input-inline">
-                                        <input type="text" id="search-input" class="layui-input" placeholder="输入关键词进行搜索。。。"/>
+                                        <input type="text" name="searchInput" id="search-input" class="layui-input"
+                                               placeholder="输入关键词进行搜索。。。"/>
                                     </div>
                                     <div class="layui-input-inline">
-                                        <button class="layui-btn">开始搜索</button>
+                                        <button class="layui-btn" id="begin-search-btn">开始搜索</button>
                                     </div>
                                     <div class="layui-input-inline">
-                                        <button class="layui-btn layui-btn-primary layui-border-green" style="border: 0" id="condition-btn">条件搜索<i class="layui-icon layui-icon-down"></i></button>
+                                        <button class="layui-btn layui-btn-primary layui-border-green" style="border: 0"
+                                                id="condition-btn">更多条件<i class="layui-icon layui-icon-down"></i>
+                                        </button>
+                                        <button class="layui-btn layui-btn-primary layui-border-green" style="border: 0;padding:0;margin:0"
+                                                id="condition-clear-btn">重置
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="" style="height: 200px; top:50px; display: none" id="condition-div">
-                                    内容
+                                <div class="b-search-slide-div" id="condition-div">
+                                    <div class="layui-form-item">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">录入人员</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="entryStaff" class="layui-input"/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">文件来源</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="source" class="layui-input"/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">收文时间</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" id="input-date" name="inputDate" class="layui-input"/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">任务代号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="taskCode" class="layui-input"/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">任务性质</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="taskNature" class="layui-input"/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">目标编号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="targetNumber" class="layui-input"/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">部队代号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="troopCode" class="layui-input"/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">装备型号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="equipmentModel" class="layui-input"/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">导弹编号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="missileNumber" class="layui-input"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item" style="text-align: right">
+                                        <button class="layui-btn layui-btn-primary layui-border-green" style="border: 0;padding:0;margin:0;height: 16px;line-height: 16px;" onclick="$(`#condition-btn`).click()">确定</button>
+                                    </div>
+                                </div>
+                                <div class="layui-tab" lay-allowClose="true" id="condition-tab" lay-filter="condition-tab">
+                                    <label class="condition-title-label">查询条件：</label>
+                                    <ul class="layui-tab-title"></ul>
                                 </div>
                             </div>
+                        </div>
+                        <div class="search-result-div" id="search-result-div">
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
+    <script src="js/index.js"></script>
+    <script>
+        const sizeInit = () => {
+            $(".layui-card-body").height(window.innerHeight - 60 - 30 - 15 - 43 - 5);
 
+            const formItemWidth = $('#search-input').parent().parent().innerWidth();
+            $('#search-input').parent().width(formItemWidth - 300);
+
+            $('#search-result-div').height($(".layui-card-body").innerHeight() - 105);
+        }
+        window.onresize = sizeInit;
+        sizeInit();
+    </script>
 </div>
-<script src="js/index.js"></script>
-<script>
-    const sizeInit = () => {
-        $(".layui-card-body").height(window.innerHeight - 60 - 30 - 15 - 43 - 5);
-
-        const formItemWidth = $('#search-input').parent().parent().innerWidth();
-        $('#search-input').parent().width(formItemWidth - 300);
-        $('#search-input').parent()
-    }
-    window.onresize = sizeInit;
-    sizeInit();
-
-    $('#condition-btn').click(function(){
-        $('#condition-div').slideToggle()
-    });
-</script>
 </body>
 </html>
