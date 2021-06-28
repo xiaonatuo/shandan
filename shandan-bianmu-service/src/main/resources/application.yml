@@ -108,6 +108,7 @@ spring:
 
 
 bianmu:
+  app-name: 数据分类编目系统
   #是否需要输入验证码
   captcha-enable: false
   #文件上传资源映射

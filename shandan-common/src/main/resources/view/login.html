@@ -4,7 +4,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${sys.sysName} + '  登录页面'"></title>
+    <title th:text="登录页面"></title>
     <link rel="shortcut icon" th:href='${sys.sysLogo}' th:mce_href='${sys.sysLogo}' type="image/x-icon">
     <!-- 引入公用部分 -->
     <script th:replace="common/head::static"></script>
@@ -22,7 +22,7 @@
 <div class="main">
     <form class="layui-form layui-form-pane">
         <div class="layui-form-item">
-            <h1 style="text-align: center" th:text="${sys.sysName}">XXX系统</h1>
+            <h1 style="text-align: center" th:text="${appName}">XXX系统</h1>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">账号<i class="layui-icon layui-icon-username"></i></label>

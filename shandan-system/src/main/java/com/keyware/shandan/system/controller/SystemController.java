@@ -54,6 +54,8 @@ public class SystemController {
     @Autowired
     private SysShortcutMenuService sysShortcutMenuService;
 
+    @Value("${bianmu.app-name}")
+    private String appName;
 
     @Value("${bianmu.captcha-enable}")
     private Boolean captchaEnable;
@@ -76,6 +78,8 @@ public class SystemController {
 
         //系统信息
         modelAndView.addObject("sys", SysSettingUtil.getSysSetting());
+
+        modelAndView.addObject("appName", appName);
 
         //后端公钥
         String publicKey = RsaUtil.getPublicKey();

@@ -8,6 +8,7 @@ import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,9 +33,13 @@ public class BrowserIndexController {
     @Autowired
     private DirectoryService directoryService;
 
+    @Value("${bianmu.app-name}")
+    private String appName;
+
     @GetMapping("/index")
     public ModelAndView index(ModelAndView modelAndView){
         modelAndView.setViewName("index");
+        modelAndView.addObject("appName", appName);
         modelAndView.addObject("user", SecurityUtil.getLoginSysUser());
         return modelAndView;
     }
