@@ -77,6 +77,7 @@ public class SystemController {
         // 是否启用验证码
         modelAndView.addObject("captchaEnable", customProperties.getCaptchaEnable());
 
+        // 是否启用记住我
         modelAndView.addObject("rememberMeEnable", customProperties.getRememberMeEnable());
 
         //系统信息

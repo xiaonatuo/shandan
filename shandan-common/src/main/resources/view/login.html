@@ -42,14 +42,18 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">验证码</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="captcha" name="captcha" placeholder="请输入验证码"  class="layui-input" style="float: left;width: 52%">
-                    <img id="captchaImg" th:src="@{/getVerifyCodeImage}" onclick="changeCode()"/><!-- <a href="javascript:changeCode()">看不清换一张</a>-->
+                    <input type="text" id="captcha" name="captcha" placeholder="请输入验证码" class="layui-input"
+                           style="float: left;width: 52%">
+                    <img id="captchaImg" th:src="@{/getVerifyCodeImage}" onclick="changeCode()"/>
+                    <!-- <a href="javascript:changeCode()">看不清换一张</a>-->
                 </div>
             </div>
         </block>
-        <!--<div class="layui-form-item" style="float: right;">
-            <input id="remember-me" type="checkbox" title="七天免登陆" name="rememberMe" lay-skin="primary">
-        </div>-->
+        <block th:if="${rememberMeEnable}">
+            <div class="layui-form-item" style="float: right;">
+                <input id="remember-me" type="checkbox" title="七天免登陆" name="rememberMe" lay-skin="primary">
+            </div>
+        </block>
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <a class="layui-btn" style="margin-left: -50px;margin-right: 50px;" onclick="formSubmit()">登录</a>
@@ -70,21 +74,21 @@
     jQueryExtend.ajaxExtend();
 </script>
 <script>
-    if (self!=top) {
+    if (self != top) {
         window.parent.location.reload();
     }
 
     let layer;
-    layui.use(['layer','form'], function () {
+    layui.use(['layer', 'form'], function () {
         layer = layui.layer;
         let form = layui.form;//select、单选、复选等依赖form
 
         /**
          * 监听键盘事件
          */
-        document.addEventListener("keydown",function (even) {
+        document.addEventListener("keydown", function (even) {
             //按下Enter回车键
-            if(even.keyCode === 13){
+            if (even.keyCode === 13) {
                 formSubmit();
             }
         })
@@ -95,7 +99,7 @@
      */
     function formSubmit() {
         let rememberMe = false;
-        if($("input[name='rememberMe']:checked").length > 0){
+        if ($("input[name='rememberMe']:checked").length > 0) {
             rememberMe = true;
         }
         $.post(ctx + "/login", {
@@ -105,11 +109,12 @@
             "remember-me": rememberMe,
         }, function (data) {
             if (data.code == 300) {
-                layer.msg(data.msg, {icon: 1,time: 1000}, function () {
+                layer.msg(data.msg, {icon: 1, time: 1000}, function () {
                     window.location.href = ctx + data.url;
                 });
             } else {
-                layer.msg(data.msg, {icon: 2,time: 2000}, function () {});
+                layer.msg(data.msg, {icon: 2, time: 2000}, function () {
+                });
             }
         })
     }
