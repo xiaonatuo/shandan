@@ -7,19 +7,80 @@
     <script th:replace="common/head::static"></script>
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .layui-form-item .layui-input-inline{width: 270px}
+    </style>
 </head>
 <body>
 <div class="layui-row layui-col-space15">
     <!-- 操作表单 -->
     <div class="layui-col-md12">
-        <div class="layui-card">
-            <div class="layui-card-header">文件选择</div>
+        <div class="layui-card" style="margin-bottom: 0">
+            <!--<div class="layui-card-header">文件选择</div>-->
             <div class="layui-card-body">
+                <div class="layui-form" lay-filter="file-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">录入人员</label>
+                            <div class="layui-input-inline" th:object="${@securityUtil.getLoginSysUser()}">
+                                <input class="layui-input" name="entryStaff" type="text" readonly th:value="*{userName}">
+                            </div>
+                            <label class="layui-form-label">收文时间</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" id="input-data" name="inputDate" type="text" readonly disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">文件来源</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="source" type="text">
+                            </div>
+                            <label class="layui-form-label">目标编号</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="targetNumber" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">任务代号</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="taskCode" type="text">
+                            </div>
+                            <label class="layui-form-label">任务性质</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="taskNature" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">部队代号</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="troopCode" type="text">
+                            </div>
+                            <label class="layui-form-label">装备型号</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="equipmentModel" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">导弹编号</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="missileNumber" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="layui-upload">
                     <button type="button" class="layui-btn layui-btn-sm  layui-btn-normal" id="chooseFile"><i
                             class="layui-icon layui-icon-file"></i>选择文件
                     </button>
-                    <div class="layui-upload-list" style="max-width: 1000px; height: 320px; overflow-y: auto">
+                    <div class="layui-upload-list" style="max-width: 1000px; height: 216px; overflow-y: auto">
                         <table class="layui-table">
                             <colgroup>
                                 <col>

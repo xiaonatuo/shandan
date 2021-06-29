@@ -1,4 +1,5 @@
 package com.keyware.shandan.system.entity;
+
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.keyware.shandan.common.entity.BaseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import cn.hutool.core.io.FileTypeUtil;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * <p>
@@ -22,7 +24,7 @@ import java.io.IOException;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("SYS_FILE")
-public class SysFile extends BaseEntity{
+public class SysFile extends BaseEntity {
 
     private static final long serialVersionUID = 9146049308480231565L;
 
@@ -74,20 +76,66 @@ public class SysFile extends BaseEntity{
     @TableField("PATH")
     private String path;
 
+    /**
+     * 录入人员
+     */
+    @TableField("ENTRYSTAFF")
+    private String entryStaff;
+    /**
+     * 装备型号
+     */
+    @TableField("EQUIPMENTMODEL")
+    private String equipmentModel;
+    /**
+     * 收文时间
+     */
+    @TableField("INPUTDATE")
+    private Date inputDate;
+    /**
+     * 文件来源
+     */
+    @TableField("SOURCE")
+    private String source;
+    /**
+     * 任务代号
+     */
+    @TableField("TASKCODE")
+    private String taskCode;
+    /**
+     * 任务性质
+     */
+    @TableField("TASKNATURE")
+    private String taskNature;
+    /**
+     * 部队代号
+     */
+    @TableField("TROOPCODE")
+    private String troopCode;
+    /**
+     * 目标编号
+     */
+    @TableField("TARGETNUMBER")
+    private String targetNumber;
+    /**
+     * 导弹编号
+     */
+    @TableField("MISSILENUMBER")
+    private String missileNumber;
+
+
     public SysFile() {
     }
 
-
-    public SysFile(MultipartFile file) throws IOException {
-        if(file != null && !file.isEmpty()){
-            int index =  file.getOriginalFilename().lastIndexOf(".");
+    public void setMultipartFile(MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            int index = file.getOriginalFilename().lastIndexOf(".");
             this.fileName = file.getOriginalFilename().substring(0, index);
             this.fileSuffix = file.getOriginalFilename().substring(index);
             this.fileSize = file.getSize() / 1024d / 1024d;
             String fileType = FileTypeUtil.getType(file.getInputStream());
             this.fileType = StringUtils.isBlank(fileType) ? this.fileSuffix.substring(1) : fileType;
 
-        }else{
+        } else {
             throw new IOException("file is empty!");
         }
     }

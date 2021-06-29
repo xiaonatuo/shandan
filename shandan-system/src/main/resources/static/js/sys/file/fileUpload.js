@@ -20,13 +20,11 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
 
     let param = layui.url().search;
 
-    let entityId = '';
     let uploadListIns = upload.render({
         elem: '#chooseFile',
         elemList: $('#fileList'), //列表元素对象
         url: `${ctx}/sys/file/upload`,
         accept: 'file',
-        data: {entityId},
         multiple: true,
         auto: false,
         bindAction: '#fileUploadAction',
@@ -68,8 +66,10 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
                 element.render('progress'); //渲染新加的进度条组件
             });
         },
+        before: function(obj){
+            this.data = getFormVal();
+        },
         done: function (res, index, upload) { //成功的回调
-            console.info(res, index, upload);
             let that = this;
             if (res.flag) { //上传成功
                 let tr = that.elemList.find('tr#upload-' + index), tds = tr.children();
@@ -85,24 +85,12 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
             this.error(index, upload);
         },
         allDone: function (obj) { //多文件上传完毕后的状态回调
-            // 上传完成后关联目录
-            let fileIds = [];
-            for(let f of fileMap.values()){
-                fileIds.push(f.id)
-            }
+            uploadStatus.success = true;
+            uploadStatus.done = true;
 
-            const formData = {directoryId: param.directoryId,fileIds:fileIds.join(',')};
-            $.post(`${ctx}/business/directory/save/file`, formData, function(res){
-                if(res.flag){
-                    uploadStatus.success = true;
-                    let index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-                    parent.layer.msg('上传成功');
-                }else{
-                    layer.msg('保存失败')
-                }
-                uploadStatus.done = true;
-            })
+            let index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            parent.layer.msg('上传成功');
         },
         error: function (index, upload) { //错误回调
             let that = this;
@@ -117,10 +105,22 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
             element.progress('progress-file-u-' + index, n + '%'); //执行进度条。n 即为返回的进度百分比
         }
     });
+
+    /**
+     * 获取form表单数据
+     * @returns {*}
+     */
+    function getFormVal(){
+        let formVal = form.val('file-form');
+        formVal.entityId = param.directoryId;
+        return formVal;
+    }
 //日期选择器
     laydate.render({
-        elem: '#collectionTime',
-        format: "yyyy-MM-dd HH:mm:ss"
+        elem: '#input-data',
+        format: "yyyy-MM-dd HH:mm:ss",
+        value: new Date(),
+        isInitValue: true,
     });
 });
 

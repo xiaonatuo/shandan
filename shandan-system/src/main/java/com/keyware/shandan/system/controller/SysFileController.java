@@ -53,9 +53,9 @@ public class SysFileController extends BaseController<SysFileService, SysFile, S
      * @return
      */
     @PostMapping("/upload")
-    public Result<SysFile> upload(MultipartFile file) {
+    public Result<SysFile> upload(MultipartFile file, SysFile fileVo) {
         try {
-            return Result.of(sysFileService.uploadFiles(file));
+            return Result.of(sysFileService.uploadFiles(file, fileVo));
         } catch (IOException e) {
             e.printStackTrace();
             return Result.of(null, false, "文件上传服务异常");

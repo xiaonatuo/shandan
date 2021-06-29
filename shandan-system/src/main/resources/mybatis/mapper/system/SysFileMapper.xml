@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.keyware.shandan.system.entity.SysFile">
-        <id column="ID" property="ID" />
+        <id column="ID" property="id" />
         <result column="FILE_NAME" property="fileName" />
         <result column="FILE_SUFFIX" property="fileSuffix" />
         <result column="FILE_TYPE" property="fileType" />
@@ -15,5 +15,15 @@
         <result column="CREATE_TIME" property="createTime" />
         <result column="MODIFY_USER" property="modifyUser" />
         <result column="MODIFY_TIME" property="modifyTime" />
+
+        <result column="ENTRYSTAFF" property="entryStaff" />
+        <result column="EQUIPMENTMODEL" property="equipmentModel" />
+        <result column="INPUTDATE" property="inputDate" />
+        <result column="SOURCE" property="source" />
+        <result column="TASKCODE" property="taskCode" />
+        <result column="TASKNATURE" property="taskNature" />
+        <result column="TROOPCODE" property="troopCode" />
+        <result column="TARGETNUMBER" property="targetNumber" />
+        <result column="MISSILENUMBER" property="missileNumber" />
     </resultMap>
 </mapper>
