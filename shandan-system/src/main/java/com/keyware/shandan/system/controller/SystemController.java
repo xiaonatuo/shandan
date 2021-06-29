@@ -2,8 +2,10 @@ package com.keyware.shandan.system.controller;
 
 import com.keyware.shandan.common.util.ErrorUtil;
 import com.keyware.shandan.common.util.RsaUtil;
+import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.common.util.VerifyCodeImageUtil;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
+import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.*;
 import com.keyware.shandan.system.service.SysRoleService;
 import com.keyware.shandan.system.service.SysSettingService;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,32 +57,32 @@ public class SystemController {
     @Autowired
     private SysShortcutMenuService sysShortcutMenuService;
 
-    @Value("${bianmu.app-name}")
-    private String appName;
-
-    @Value("${bianmu.captcha-enable}")
-    private Boolean captchaEnable;
-
     /**
      * 端口
      */
-    @Value("${server.port}")
+    @Value("${server.port:8080}")
     private String port;
+
+
+    @Autowired
+    private CustomProperties customProperties;
 
     /**
      * 跳转登录页面
      */
     @GetMapping("loginPage")
-    public ModelAndView login(){
+    public ModelAndView login() {
         ModelAndView modelAndView = new ModelAndView("login");
 
         // 是否启用验证码
-        modelAndView.addObject("captchaEnable", captchaEnable);
+        modelAndView.addObject("captchaEnable", customProperties.getCaptchaEnable());
+
+        modelAndView.addObject("rememberMeEnable", customProperties.getRememberMeEnable());
 
         //系统信息
         modelAndView.addObject("sys", SysSettingUtil.getSysSetting());
 
-        modelAndView.addObject("appName", appName);
+        modelAndView.addObject("appName", customProperties.getAppName());
 
         //后端公钥
         String publicKey = RsaUtil.getPublicKey();
@@ -92,7 +95,7 @@ public class SystemController {
      * 跳转首页
      */
     @GetMapping("")
-    public void index1(HttpServletResponse response){
+    public void index1(HttpServletResponse response) {
         //内部重定向
         try {
             response.sendRedirect("/index");
@@ -130,7 +133,7 @@ public class SystemController {
      */
     @GetMapping("monitor")
     public ModelAndView monitor() {
-        return new ModelAndView("monitor.html","port",port);
+        return new ModelAndView("monitor.html", "port", port);
     }
 
     /**
@@ -138,6 +141,6 @@ public class SystemController {
      */
     @GetMapping("logging")
     public ModelAndView logging() {
-        return new ModelAndView("logging.html","port",port);
+        return new ModelAndView("logging.html", "port", port);
     }
 }
