@@ -46,6 +46,7 @@ public class EsSysFileQueueConsumer extends Thread {
                 esBaseRepository.saveAll(esFiles);
                 sysFileList.clear();// 清空列表
             } else {
+                // 如果没有数据，则休眠指定时间后，再次执行
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -59,8 +60,8 @@ public class EsSysFileQueueConsumer extends Thread {
     /**
      * 将系统文件转换成带有大文本字段的ES文件实体类
      *
-     * @param sysFileList
-     * @return
+     * @param sysFileList -
+     * @return -
      */
     private List<EsSysFile> transformSysFile(List<SysFile> sysFileList) {
         String pathPrefix = customProperties.getFileStorage().getPath();

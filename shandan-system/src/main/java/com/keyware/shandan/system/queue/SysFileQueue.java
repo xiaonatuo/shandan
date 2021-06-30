@@ -16,13 +16,17 @@ import java.util.concurrent.BlockingQueue;
 @Slf4j
 @Component
 public class SysFileQueue {
+
+    /**
+     * 待保存到ES的文件队列
+     */
     private final BlockingQueue<SysFile> queue = new ArrayBlockingQueue<>(50);
 
     /**
      * 添加文件到队列
      *
      * @param file
-     * @throws InterruptedException
+     * @throws InterruptedException -
      */
     public void append(SysFile file) throws InterruptedException {
         queue.put(file);
@@ -30,6 +34,7 @@ public class SysFileQueue {
 
     /**
      * 获取队列
+     *
      * @return
      */
     public BlockingQueue<SysFile> getQueue() {
