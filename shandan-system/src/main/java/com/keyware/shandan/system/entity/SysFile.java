@@ -1,14 +1,14 @@
 package com.keyware.shandan.system.entity;
 
+import cn.hutool.core.io.FileTypeUtil;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.keyware.shandan.common.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.keyware.shandan.common.util.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.web.multipart.MultipartFile;
-import cn.hutool.core.io.FileTypeUtil;
 
 import java.io.IOException;
 import java.util.Date;
@@ -32,7 +32,7 @@ public class SysFile extends BaseEntity {
      * 主键ID
      */
     @TableId("ID")
-    private String id;
+     private String id;
 
     /**
      * 数据实体ID

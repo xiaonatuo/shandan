@@ -6,6 +6,7 @@ import com.keyware.shandan.common.util.UUIDUtil;
 import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.mapper.SysFileMapper;
+import com.keyware.shandan.system.queue.provider.EsSysFileProvider;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,9 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
     @Autowired
     private CustomProperties customProperties;
 
+    @Autowired
+    private EsSysFileProvider sysFileProvider;
+
     @Override
     public SysFile uploadFiles(MultipartFile file, SysFile sysFile) throws IOException {
         if (file.isEmpty()) {
@@ -49,16 +53,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
         file.transferTo(new File(storagePath + "/" + sysFile.getPath()));
 
         save(sysFile);
+        sysFileProvider.appendQueue(sysFile);
         return sysFile;
-    }
-
-    private synchronized void mkdirs(String path) throws IOException {
-        String storagePath = customProperties.getFileStorage().getPath();
-        File fileDir = new File(storagePath + "/" +path);
-        if(!fileDir.exists()) {
-            if(!fileDir.mkdirs()){
-                throw new IOException("文件目录创建失败");
-            }
-        }
     }
 }
