@@ -1,3 +1,12 @@
+.layui-layout-admin .layui-body {
+    left: 0;
+    padding: 15px;
+    background-color: #eee
+}
+
+.layui-form-item .layui-input-inline {
+    width: auto
+}
 .b-search-input-line {
     margin: 0 auto;
     height: 38px;
@@ -5,8 +14,8 @@
 
 .b-search-slide-div {
     min-height: 100px;
-    max-height: 300px;
-    overflow-y: auto;
+    /*max-height: 300px;*/
+    /*overflow-y: auto;*/
     top: 50px;
     display: none;
     border-radius: 2px;
@@ -20,6 +29,10 @@
 }
 
 .b-search-slide-div .layui-form-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
     margin-bottom: 0
 }
 
@@ -30,7 +43,16 @@
 .b-search-slide-div .layui-form-item .layui-inline {
     margin-bottom: 10px
 }
+.b-search-slide-div .layui-form-item .layui-input-inline input{margin-left: 78px; width:300px}
+.b-search-slide-div .layui-form-select{width: 80px;float: left; position: absolute;}
+.b-search-slide-div .layui-form-select .layui-select-title input{width: 80px; padding-right: 20px; padding-left: 10px; margin-left: 0}
+.b-search-slide-div .layui-form-select .layui-select-title i.layui-edge{right: 10px;}
 
+.b-search-slide-div .layui-form-item .input-date{
+    width: 378px !important;
+    float: left !important;
+    margin-left: 0 !important;
+}
 .layui-input, .layui-textarea {
     border-color: #dedede !important;
 }

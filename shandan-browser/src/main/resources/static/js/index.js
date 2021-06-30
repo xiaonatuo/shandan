@@ -70,9 +70,14 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate'], function () {
         });
 
         //日期选择器
-        laydate.render({
-            elem: '#input-date',
+        /*laydate.render({
+            elem: '#input-date-begin',
             format: "yyyy-MM-dd"
+        });*/
+        laydate.render({
+            elem: '#input-date-begin'
+            ,type: 'date'
+            ,range: '至'
         });
     }
 
