@@ -5,6 +5,8 @@ import com.keyware.shandan.system.queue.SysFileQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * 系统文件保存到ES的生产者
  *
@@ -19,11 +21,25 @@ public class EsSysFileProvider {
 
     /**
      * 追加到队列
-     * @param entity -
+     *
+     * @param file -
      */
-    public void appendQueue(SysFile entity) {
+    public void appendQueue(SysFile file) {
         try {
-            sysFileQueue.append(entity);
+            sysFileQueue.append(file);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 追加到队列
+     *
+     * @param files -
+     */
+    public void appendQueue(List<SysFile> files) {
+        try {
+            sysFileQueue.append(files);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

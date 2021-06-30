@@ -4,6 +4,7 @@ import com.keyware.shandan.system.entity.SysFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -30,6 +31,18 @@ public class SysFileQueue {
      */
     public void append(SysFile file) throws InterruptedException {
         queue.put(file);
+    }
+
+    /**
+     * 追加到队列
+     *
+     * @param files -
+     * @throws InterruptedException -
+     */
+    public void append(List<SysFile> files) throws InterruptedException {
+        for (SysFile file : files) {
+            append(file);
+        }
     }
 
     /**

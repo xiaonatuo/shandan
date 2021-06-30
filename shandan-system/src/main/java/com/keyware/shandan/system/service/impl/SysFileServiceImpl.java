@@ -53,7 +53,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
         file.transferTo(new File(storagePath + "/" + sysFile.getPath()));
 
         save(sysFile);
-        sysFileProvider.appendQueue(sysFile);
+        // sysFileProvider.appendQueue(sysFile); 改为审核通过后将文件进行保存
         return sysFile;
     }
 }

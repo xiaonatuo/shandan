@@ -11,6 +11,9 @@ import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.service.BaseServiceImpl;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.frame.annotation.DataPermissions;
+import com.keyware.shandan.system.entity.SysFile;
+import com.keyware.shandan.system.queue.provider.EsSysFileProvider;
+import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,12 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     @Autowired
     private DirectoryMapper directoryMapper;
 
+    @Autowired
+    private SysFileService fileService;
+
+    @Autowired
+    private EsSysFileProvider esSysFileProvider;
+
     @Override
     public Result<DirectoryVo> updateOrSave(DirectoryVo entity) {
         if (StringUtils.isBlank(entity.getId())) {
@@ -38,6 +47,15 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
         // 查询父目录，并设置目录路径
         DirectoryVo parent = getById(entity.getParentId());
         entity.setDirectoryPath(parent == null ? "/".concat(entity.getDirectoryName()) : parent.getDirectoryPath().concat("/").concat(entity.getDirectoryName()));
+
+        //如果审核通过则需要把目录下文件保存到ES
+        if (entity.getReviewStatus() == ReviewStatus.PASS) {
+            SysFile condition = new SysFile();
+            condition.setEntityId(entity.getId());
+            List<SysFile> files = fileService.list(new QueryWrapper<>(condition));
+            esSysFileProvider.appendQueue(files);
+        }
+
         return super.updateOrSave(entity);
     }
 
