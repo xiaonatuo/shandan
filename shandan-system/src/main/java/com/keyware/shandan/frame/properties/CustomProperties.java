@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
  * @since 2021/6/29
  */
 @Data
-@Component
 @Configuration
 @ConfigurationProperties("bianmu")
 public class CustomProperties {
@@ -48,5 +47,9 @@ public class CustomProperties {
          * 存储路径
          */
         private String path;
+        /**
+         * 文件服务映射别名
+         */
+        private String uploadFileMapper = "/upload/**";
     }
 }

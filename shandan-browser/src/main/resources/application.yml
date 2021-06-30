@@ -35,5 +35,3 @@ mybatis-plus:
 
 bianmu:
   app-name: 数据综合浏览系统
-  #文件上传资源映射
-  file-upload-resource: /upload/**

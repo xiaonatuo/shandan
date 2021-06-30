@@ -21,4 +21,4 @@ bianmu:
     # 存储位置，local：本地，nas：NAS存储服务
     location: local
     # 存储路径
-    path: D:/BIANMU/
+    path: D:/BIANMU

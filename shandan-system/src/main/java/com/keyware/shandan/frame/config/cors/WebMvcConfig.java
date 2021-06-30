@@ -1,5 +1,7 @@
 package com.keyware.shandan.frame.config.cors;
 
+import com.keyware.shandan.frame.properties.CustomProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -12,11 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${bianmu.file-upload-resource}")
-    private String resourceHandler;
-
-    @Value("${bianmu.file-storage.path}")
-    private String resourceLocations;
+    @Autowired
+    private CustomProperties customProperties;
 
     /**
      * 文件上传资源虚拟映射
@@ -25,6 +24,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String resourceHandler = customProperties.getFileStorage().getUploadFileMapper();
+        String resourceLocations = customProperties.getFileStorage().getPath();
         registry.addResourceHandler(resourceHandler).addResourceLocations("file:///" + resourceLocations);
         WebMvcConfigurer.super.addResourceHandlers(registry);
     }
