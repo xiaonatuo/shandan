@@ -63,17 +63,20 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate'], function () {
         $('#condition-clear-btn').on('click', function(){
             let formVal = form.val('search-form') || {};
             for(let key in formVal){
-                formVal[key] = '';
+                if(key.startsWith('condition-')){
+                    formVal[key] = 'eq';
+                }else{
+                    formVal[key] = '';
+                }
             }
+            console.info(formVal);
             form.val('search-form', formVal);
             renderConditionTabByForm();
         });
 
-        //日期选择器
-        /*laydate.render({
-            elem: '#input-date-begin',
-            format: "yyyy-MM-dd"
-        });*/
+        /**
+         * 渲染时间选择组件
+         */
         laydate.render({
             elem: '#input-date-begin'
             ,type: 'date'
@@ -99,10 +102,30 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate'], function () {
         const formVal = form.val('search-form') || {}
         let htm = '';
         for (let key in formVal) {
+            // 如果key是条件下拉框，则跳过
+            if(key.startsWith('condition-')) continue;
+
             let val = formVal[key];
             if(val.trim()){
                 let title = $(`#condition-div .layui-form-item input[name='${key}']`).parent().prev().text();
-                htm += `<li data-key="${key}"><label style="color:gray">${title}</label>: ${val}</li>`
+                let condition = '';
+                switch (formVal[`condition-${key}`]) {
+                    case 'eq':
+                        condition = '等于';
+                        break;
+                    case 'nq':
+                        condition = '不等于';
+                        break;
+                    case 'gt':
+                        condition = '大于';
+                        break;
+                    case 'lt':
+                        condition = '小于';
+                        break;
+                    case 'like':
+                        condition = '包含';
+                }
+                htm += `<li data-key="${key}" style="color:#009688"><label style="color:#333">${title}</label><label style="color:gray;margin-left:5px">${condition}</label>: ${val}</li>`
             }
         }
         $('#condition-tab ul').html(htm);

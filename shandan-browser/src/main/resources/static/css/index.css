@@ -69,7 +69,7 @@
 .condition-title-label {
     float: left;
     line-height: 40px;
-    color: #333333
+    color: gray
 }
 
 .layui-form-item.search-line {
