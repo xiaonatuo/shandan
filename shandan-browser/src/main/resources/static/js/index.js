@@ -20,7 +20,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate'], function () {
      * 初始化目录树
      */
     function initDirTree(){
-        tree.init({
+        const dirTree = tree.init({
             id: 'directory-tree',
             url: `${ctx}/browser/dir/tree`,
             data: [{id: '-', parentId: '', title: '根目录', leaf: false, last: false, spread: false}],
@@ -29,6 +29,19 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate'], function () {
                 // 模拟鼠标点击事件展开第一层目录
                 $('i.dtree-icon-jia[data-id="-"]').click();
             },
+            onClick: function(obj){
+                console.info(obj);
+                const node = obj.param;
+                const formVal = form.val('search-form');
+                if(formVal.directoryId === node.id){
+                    formVal.directoryId = '';
+                    dirTree.cancelNavThis(obj.dom)
+                }else{
+                    formVal.directoryId = node.id
+                }
+                form.val('search-form', formVal);
+                console.info(formVal);
+            }
         });
     }
 
@@ -63,7 +76,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate'], function () {
         $('#condition-clear-btn').on('click', function(){
             let formVal = form.val('search-form') || {};
             for(let key in formVal){
-                if(key.startsWith('condition-')){
+                if(key.startsWith('logic-')){
                     formVal[key] = 'eq';
                 }else{
                     formVal[key] = '';
@@ -103,13 +116,13 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate'], function () {
         let htm = '';
         for (let key in formVal) {
             // 如果key是条件下拉框，则跳过
-            if(key.startsWith('condition-')) continue;
+            if(key.startsWith('logic-')) continue;
 
             let val = formVal[key];
             if(val.trim()){
                 let title = $(`#condition-div .layui-form-item input[name='${key}']`).parent().prev().text();
                 let condition = '';
-                switch (formVal[`condition-${key}`]) {
+                switch (formVal[`logic-${key}`]) {
                     case 'eq':
                         condition = '等于';
                         break;
@@ -138,10 +151,27 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate'], function () {
      * 开始检索
      */
     function beginSearch(){
+        const formVal = form.val('search-form') || {};
         console.info('开始条件查询数据:', form.val('search-form'))
         // 如果搜索条件下拉框处于显示状态则隐藏
         if($('#condition-div').css('display') !== 'none'){
             $('#condition-div').slideToggle('fast');
         }
+
+        let data = {conditions:[]};
+        for(let key in formVal){
+            // 如果key是条件下拉框，则跳过
+            if(key.startsWith('logic-')) continue;
+            if(!formVal[key]) continue;
+            data.conditions.push({
+                field: key,
+                logic: formVal[`logic-${key}`],
+                value: formVal[key]
+            });
+        }
+        console.info(data);
+        $.post(`${ctx}/search/`, data, function (res) {
+            console.info(res);
+        });
     }
 });

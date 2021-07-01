@@ -63,7 +63,11 @@
 
 .layui-tab-title {
     border-bottom-width: 0 !important;
-    float: left
+    float: left;
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
+    max-width: 90%;
 }
 
 .condition-title-label {
