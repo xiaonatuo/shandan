@@ -42,7 +42,7 @@ public class EsSysFileQueueConsumer extends Thread {
             // 开始消费队列中的数据
             int size = sysFileQueue.getQueue().drainTo(sysFileList, 1);
             if (size > 0) {
-                List<EsSysFile> esFiles = transformSysFile(sysFileList);
+                List<SysFile> esFiles = transformSysFile(sysFileList);
                 esBaseRepository.saveAll(esFiles);
                 sysFileList.clear();// 清空列表
             } else {
@@ -63,17 +63,15 @@ public class EsSysFileQueueConsumer extends Thread {
      * @param sysFileList -
      * @return -
      */
-    private List<EsSysFile> transformSysFile(List<SysFile> sysFileList) {
+    private List<SysFile> transformSysFile(List<SysFile> sysFileList) {
         String pathPrefix = customProperties.getFileStorage().getPath();
-        return sysFileList.stream().map(file -> {
-            EsSysFile esFile = (EsSysFile) file;
+        return sysFileList.stream().peek(file -> {
             String path = pathPrefix + "/" + file.getPath();
             try {
-                esFile.setText(PoiFileReadUtil.parseTextByFile(new File(path)));
+                file.setText(PoiFileReadUtil.parseTextByFile(new File(path)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return esFile;
         }).collect(Collectors.toList());
     }
 }

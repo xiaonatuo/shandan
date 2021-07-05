@@ -8,6 +8,9 @@ import com.keyware.shandan.common.entity.BaseEntity;
 import com.keyware.shandan.common.util.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,7 +27,8 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("SYS_FILE")
-public class SysFile extends BaseEntity {
+@Document(indexName = "sys_file")
+public class SysFile extends EsSysFile {
 
     private static final long serialVersionUID = 9146049308480231565L;
 
@@ -32,6 +36,7 @@ public class SysFile extends BaseEntity {
      * 主键ID
      */
     @TableId("ID")
+    @Id
      private String id;
 
     /**
@@ -43,6 +48,7 @@ public class SysFile extends BaseEntity {
     /**
      * 文件名称
      */
+    @Field
     @TableField("FILE_NAME")
     private String fileName;
 
@@ -79,46 +85,55 @@ public class SysFile extends BaseEntity {
     /**
      * 录入人员
      */
+    @Field
     @TableField("ENTRYSTAFF")
     private String entryStaff;
     /**
      * 装备型号
      */
+    @Field
     @TableField("EQUIPMENTMODEL")
     private String equipmentModel;
     /**
      * 收文时间
      */
+    @Field
     @TableField("INPUTDATE")
     private Date inputDate;
     /**
      * 文件来源
      */
+    @Field
     @TableField("SOURCE")
     private String source;
     /**
      * 任务代号
      */
+    @Field
     @TableField("TASKCODE")
     private String taskCode;
     /**
      * 任务性质
      */
+    @Field
     @TableField("TASKNATURE")
     private String taskNature;
     /**
      * 部队代号
      */
+    @Field
     @TableField("TROOPCODE")
     private String troopCode;
     /**
      * 目标编号
      */
+    @Field
     @TableField("TARGETNUMBER")
     private String targetNumber;
     /**
      * 导弹编号
      */
+    @Field
     @TableField("MISSILENUMBER")
     private String missileNumber;
 
