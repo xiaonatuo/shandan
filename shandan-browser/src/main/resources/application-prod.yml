@@ -11,6 +11,10 @@ spring:
           password: 123456789
           driver-class-name: dm.jdbc.driver.DmDriver
 
+  elasticsearch:
+    rest:
+      uris: http://192.168.146.128:9200
+
 bianmu:
   #是否需要输入验证码
   captcha-enable: true
