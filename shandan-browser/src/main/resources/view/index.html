@@ -164,23 +164,163 @@
                             </div>
                         </div>
                         <div class="search-result-div" id="search-result-div">
-
+                            <div class="layui-card">
+                                <div class="layui-card-header b-result-head">
+                                    <p style="color: gray !important;">共<label style="color:orange;">0</label>条数据，耗时<label style="color:orange;">0</label>秒</p>
+                                    <p>
+                                        <a id="btn-sorting" class="layui-btn layui-btn-primary layui-border-green layui-btn-xs" style="border: 0">排序</a>
+                                        <a id="btn-report" class="layui-btn layui-btn-primary layui-border-green layui-btn-xs" style="border: 0">
+                                            <i class="layui-icon layui-icon-chart"></i>统计报表</a>
+                                    </p>
+                                    <div id="sorting-layer" style="display: none">
+                                        <div style="width: 150px; height: 330px">
+                                            <ul class="layui-menu" id="sorting-field" lay-filter="sorting-field">
+                                                <li class="sorting-item">
+                                                    <div class="layui-menu-body-title">收文时间</div>
+                                                    <div data-field="inputDate">
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                    </div>
+                                                </li>
+                                                <li class="sorting-item">
+                                                    <div class="layui-menu-body-title">录入人员</div>
+                                                    <div data-field="entryStaff">
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                    </div>
+                                                </li>
+                                                <li class="sorting-item">
+                                                    <div class="layui-menu-body-title">文件来源</div>
+                                                    <div data-field="source">
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                    </div>
+                                                </li>
+                                                <li class="sorting-item">
+                                                    <div class="layui-menu-body-title">任务代号</div>
+                                                    <div data-field="taskCode">
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                    </div>
+                                                </li>
+                                                <li class="sorting-item">
+                                                    <div class="layui-menu-body-title">任务性质</div>
+                                                    <div data-field="taskNature">
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                    </div>
+                                                </li>
+                                                <li class="sorting-item">
+                                                    <div class="layui-menu-body-title">目标编号</div>
+                                                    <div data-field="targetNumber">
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                    </div>
+                                                </li>
+                                                <li class="sorting-item">
+                                                    <div class="layui-menu-body-title">部队代号</div>
+                                                    <div data-field="troopCode">
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                    </div>
+                                                </li>
+                                                <li class="sorting-item">
+                                                    <div class="layui-menu-body-title">装备型号</div>
+                                                    <div data-field="equipmentModel">
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                    </div>
+                                                </li>
+                                                <li class="sorting-item">
+                                                    <div class="layui-menu-body-title">导弹编号</div>
+                                                    <div data-field="missileNumber">
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
+                                                        <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-card-body" style="height: auto !important;">
+                                    <div class="result-content">
+                                        <div class="result-item">
+                                            <p class="result-item-title">弹目参数表|C-300-DANMUCANSHUBIAO</p>
+                                            <p class="result-item-content">
+                                                收文时间：2020-11-30；录入人员：张三；文件来源：靶场；任务性质：远程；任务代号：RW-3321；目标编号：MB-3383；部队代号：33883；装备型号：ZB-38384；导弹编号：DD-338883
+                                            </p>
+                                        </div>
+                                        <div class="result-item">
+                                            <p class="result-item-title">弹目参数表|C-300-DANMUCANSHUBIAO</p>
+                                            <p class="result-item-content">
+                                                收文时间：2020-11-30；录入人员：张三；文件来源：靶场；任务性质：远程；任务代号：RW-3321；目标编号：MB-3383；部队代号：33883；装备型号：ZB-38384；导弹编号：DD-338883
+                                            </p>
+                                        </div>
+                                        <div class="result-item">
+                                            <p class="result-item-title">弹目参数表|C-300-DANMUCANSHUBIAO</p>
+                                            <p class="result-item-content">
+                                                收文时间：2020-11-30；录入人员：张三；文件来源：靶场；任务性质：远程；任务代号：RW-3321；目标编号：MB-3383；部队代号：33883；装备型号：ZB-38384；导弹编号：DD-338883
+                                            </p>
+                                        </div>
+                                        <div class="result-item">
+                                            <p class="result-item-title">弹目参数表|C-300-DANMUCANSHUBIAO</p>
+                                            <p class="result-item-content">
+                                                收文时间：2020-11-30；录入人员：张三；文件来源：靶场；任务性质：远程；任务代号：RW-3321；目标编号：MB-3383；部队代号：33883；装备型号：ZB-38384；导弹编号：DD-338883
+                                            </p>
+                                        </div>
+                                        <div class="result-item">
+                                            <p class="result-item-title">弹目参数表|C-300-DANMUCANSHUBIAO</p>
+                                            <p class="result-item-content">
+                                                收文时间：2020-11-30；录入人员：张三；文件来源：靶场；任务性质：远程；任务代号：RW-3321；目标编号：MB-3383；部队代号：33883；装备型号：ZB-38384；导弹编号：DD-338883
+                                            </p>
+                                        </div>
+                                        <div class="result-item">
+                                            <p class="result-item-title">弹目参数表|C-300-DANMUCANSHUBIAO</p>
+                                            <p class="result-item-content">
+                                                收文时间：2020-11-30；录入人员：张三；文件来源：靶场；任务性质：远程；任务代号：RW-3321；目标编号：MB-3383；部队代号：33883；装备型号：ZB-38384；导弹编号：DD-338883
+                                            </p>
+                                        </div>
+                                        <div class="result-item">
+                                            <p class="result-item-title">弹目参数表|C-300-DANMUCANSHUBIAO</p>
+                                            <p class="result-item-content">
+                                                收文时间：2020-11-30；录入人员：张三；文件来源：靶场；任务性质：远程；任务代号：RW-3321；目标编号：MB-3383；部队代号：33883；装备型号：ZB-38384；导弹编号：DD-338883
+                                            </p>
+                                        </div>
+                                        <div class="result-item">
+                                            <p class="result-item-title">弹目参数表|C-300-DANMUCANSHUBIAO</p>
+                                            <p class="result-item-content">
+                                                收文时间：2020-11-30；录入人员：张三；文件来源：靶场；任务性质：远程；任务代号：RW-3321；目标编号：MB-3383；部队代号：33883；装备型号：ZB-38384；导弹编号：DD-338883
+                                            </p>
+                                        </div>
+                                        <div class="result-item">
+                                            <p class="result-item-title">弹目参数表|C-300-DANMUCANSHUBIAO</p>
+                                            <p class="result-item-content">
+                                                收文时间：2020-11-30；录入人员：张三；文件来源：靶场；任务性质：远程；任务代号：RW-3321；目标编号：MB-3383；部队代号：33883；装备型号：ZB-38384；导弹编号：DD-338883
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div id="page-component" style="position: absolute; bottom: 0"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
+    <script th:replace="report"></script>
     <script th:src="@{/js/index.js}" type="text/javascript"></script>
     <script type="text/javascript">
         const sizeInit = () => {
             $(".layui-card-body").height(window.innerHeight - 60 - 30 - 15 - 43 - 5);
+            $(".search-result-div .layui-card-body").height(window.innerHeight - 153 -136);
 
             const formItemWidth = $('#search-input').parent().parent().innerWidth();
             $('#search-input').parent().width(formItemWidth - 300);
 
             $('#search-result-div').height($(".layui-card-body").innerHeight() - 105);
+
+            $('.result-content').height($(".search-result-div .layui-card-body").innerHeight() - 70)
         }
         window.onresize = sizeInit;
         sizeInit();
