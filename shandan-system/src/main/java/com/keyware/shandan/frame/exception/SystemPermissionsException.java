@@ -1,4 +1,4 @@
-package com.keyware.shandan.frame;
+package com.keyware.shandan.frame.exception;
 
 /**
  * <p>
