@@ -26,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String resourceHandler = customProperties.getFileStorage().getUploadFileMapper();
         String resourceLocations = customProperties.getFileStorage().getPath();
-        registry.addResourceHandler(resourceHandler).addResourceLocations("file:///" + resourceLocations);
+        registry.addResourceHandler(resourceHandler).addResourceLocations("file:///" + resourceLocations + "/");
         WebMvcConfigurer.super.addResourceHandlers(registry);
     }
 
