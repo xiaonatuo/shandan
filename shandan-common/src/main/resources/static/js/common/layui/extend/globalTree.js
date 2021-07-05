@@ -126,6 +126,9 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
     GlobalTree.prototype.clickSpread = function(dom){
         dtreeObj.clickSpread(dom);
     }
+    GlobalTree.prototype.cancelNavThis = function(dom){
+        dtreeObj.cancelNavThis(dom);
+    }
 
     // 为了可继承dtree的内部方法，将dtree拷贝到一个新的对象
     let globalTree = $.extend({}, dtree);
