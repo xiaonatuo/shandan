@@ -64,7 +64,7 @@ public class PoiFileReadUtil {
                 case "txt":
                     return readContentByTxt(file);
                 default:
-                    throw new POIException("不支持解析的文件");
+                    return "";
             }
         } else {
             throw new Exception("文件不存在");
