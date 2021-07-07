@@ -23,6 +23,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     initDirTree();
     initSortingComponent();
     renderPageComponent();
+    beginSearch();
 
     // 监听统计报表按钮点击事件
     $('#btn-report').on('click', function () {
@@ -106,7 +107,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         });
 
         // 搜索按钮点击事件监听
-        $('#begin-search-btn').on('click', beginSearch);
+        $('#begin-search-btn').on('click', ()=>renderConditionTabByForm());
 
         // 监听重置按钮
         $('#condition-clear-btn').on('click', function () {
@@ -240,17 +241,14 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         data = data || {total: 0, size: 20}
         laypage.render({
             elem: 'page-component',
+            curr: data.page,
             limit: data.size,
             count: data.total, //数据总数，从服务端得到
             layout: ['prev', 'page', 'next', 'limit', 'count', 'refresh'],
             jump: function (obj, first) {
-                //obj包含了当前分页的所有参数，比如：
-                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
-                console.log(obj.limit); //得到每页显示的条数
-
                 //首次不执行
                 if (!first) {
-                    //do something
+                    beginSearch(obj.curr, obj.limit);
                 }
             }
         });
@@ -259,32 +257,59 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     /**
      * 开始检索
      */
-    function beginSearch() {
+    function beginSearch(page = 1, size = 20) {
         const formVal = form.val('search-form') || {};
-        console.info('开始条件查询数据:', form.val('search-form'))
         // 如果搜索条件下拉框处于显示状态则隐藏
         if ($('#condition-div').css('display') !== 'none') {
             $('#condition-div').slideToggle('fast');
         }
 
-        let data = {conditions: []};
+        let data = {conditions: [], page, size};
         for (let key in formVal) {
             // 如果key是条件下拉框，则跳过
             if (key.startsWith('logic-')) continue;
-            if (!formVal[key]) continue;
+            //if (!formVal[key]) continue;
             data.conditions.push({
                 field: key,
                 logic: formVal[`logic-${key}`],
                 value: formVal[key]
             });
         }
-        console.info(data);
-        $.post(`${ctx}/search/`, data, function (res) {
-            console.info(res);
-            if(res.flag){
+        $.post(`${ctx}/search/full`, data, function (res) {
+            if (res.flag) {
+                // 渲染列表
+                renderResultList(res.data.records);
                 // 渲染分页
                 renderPageComponent(res.data)
             }
         });
+    }
+
+    /**
+     * 渲染结果列表
+     * @param list
+     */
+    function renderResultList(list){
+        console.info(list);
+        $('#result-list-content').html('');
+        let htm = '';
+        for(let item of list){
+            let title = '';
+            if(item.fileName){
+                title = item.fileName + item.fileSuffix;
+            }
+            let text = item.text;
+
+            htm += `<div class="result-item">
+                        <p class="result-item-title">${title}</p>
+                        <p class="result-item-content">
+                            ${item.commonText}
+                        </p>
+                        <p class="result-item-content">
+                            ${text}
+                        </p>
+                    </div>`;
+        }
+        $('#result-list-content').html(htm);
     }
 });

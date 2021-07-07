@@ -2,6 +2,8 @@ package com.keyware.shandan.browser.entity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.keyware.shandan.browser.config.BianmuDataCache;
+import com.keyware.shandan.browser.constants.CommonFields;
+import com.keyware.shandan.common.util.DateUtil;
 import com.keyware.shandan.common.util.StringUtils;
 import lombok.Data;
 import org.elasticsearch.common.text.Text;
@@ -10,7 +12,9 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,32 +66,85 @@ public class PageVo implements Serializable {
         vo.total = datas.getTotalHits();
         vo.pageTotal = (int) Math.ceil(vo.total / (double) page.size);
         vo.records = Arrays.stream(datas.getHits()).map(PageVo::fillMetadata).collect(Collectors.toList());
-        //vo.records = Arrays.asList(datas.getHits());
         return vo;
     }
 
+    /**
+     * 对搜索结果填充元数据
+     *
+     * @param hit -
+     * @return -
+     */
     private static Map<String, Object> fillMetadata(SearchHit hit) {
         Map<String, Object> source = hit.getSourceAsMap();
-        // 数据实体类型
-        String type = (String)source.getOrDefault("entityType", "");
+
+        // 数据类型,具体对应实际数据中的表名或者文件类型
+        String type = hit.getType();
         String tableComment = BianmuDataCache.getComment(type);
         JSONObject tableColumns = BianmuDataCache.getColumns(type);
+
+        // 时间戳类型处理
+        if(source.get("inputDate") != null){
+            long date = (long) source.get("inputDate");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            source.put("inputDate", sdf.format(new Date(date)));
+        }
+
+        // 设置标题
+        source.put("title", "");
+        if (!type.equals("file") && !type.equals("_doc")) {
+            if (StringUtils.isNotBlank(tableComment)) {
+                tableComment += "|";
+            }
+            source.put("title", tableComment + type);
+        }
+
+        // 设置公共字段注释
+        StringBuilder commonText = new StringBuilder();
+        for (Map.Entry<String, String> entry : CommonFields.entrySet()) {
+            if (entry.getKey() != null) {
+                commonText.append("<label style=\"font-weight: bold;\">").append(entry.getValue()).append("</label>:").append(source.get(entry.getKey())).append(";");
+            }
+        }
+        source.put("commonText", commonText);
+
+        // 对大文本text字段长度进行预处理，最大长度不超过200个字符
+        if(source.get("text") != null){
+            String text = (String) source.get("text");
+            if(text.length() > 200){
+                source.put("text", text.substring(0, 200));
+            }
+        }
+
         //解析高亮字段
         Map<String, HighlightField> highlightFields = hit.getHighlightFields();
         for (Map.Entry<String, HighlightField> entry : highlightFields.entrySet()) {
-            Text[] fragments = entry.getValue().fragments();
-            StringBuilder n_field = new StringBuilder();
-            for (Text fragment : fragments) {
-                n_field.append(fragment);
-            }
             //高亮标题覆盖原标题
-            source.put(entry.getKey(), n_field.toString());
+            source.put(entry.getKey(), fragmentText(entry.getValue()));
         }
-        String title = "";
-        if(StringUtils.isNotBlank(type)){
-            title = tableComment + type;
-        }
-        source.put("title", tableComment + type);
         return source;
+    }
+
+    /**
+     * 拼接命中高亮文本
+     *
+     * @param field 命中字段
+     * @return 文本
+     */
+    private static String fragmentText(HighlightField field) {
+        StringBuilder text = new StringBuilder();
+        for (Text fragment : field.getFragments()) {
+            text.append(fragment);
+
+            // 如果是大文本，判断长度
+            if(field.getName().equals("text")){
+                text.append(";");
+                int size = text.toString().replace("<label style=\"color:red\">", "").replace("</label>", "").length();
+                if(size > 150){
+                    break;
+                }
+            }
+        }
+        return text.toString();
     }
 }
