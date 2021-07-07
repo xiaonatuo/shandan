@@ -93,4 +93,9 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     public List<MetadataBasicVo> directoryMetadata(String id) {
         return directoryMapper.selectMetadataByDirectory(id);
     }
+
+    @Override
+    public List<MetadataBasicVo> directoryAllMetadata(String id) {
+        return directoryMapper.selectAllMetadataByDirectory(id);
+    }
 }

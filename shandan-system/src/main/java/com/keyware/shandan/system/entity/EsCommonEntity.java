@@ -37,7 +37,7 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     /**
      * 录入人员
      */
-    @Field
+    @Field(type = FieldType.Keyword)
     @TableField("ENTRYSTAFF")
     private String entryStaff;
 
@@ -58,7 +58,7 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     /**
      * 文件来源
      */
-    @Field
+    @Field(type = FieldType.Keyword)
     @TableField("SOURCE")
     private String source;
 

@@ -2,7 +2,11 @@ package com.keyware.shandan.browser.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.keyware.shandan.bianmu.entity.DirectoryVo;
+import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.service.DirectoryService;
+import com.keyware.shandan.browser.config.BianmuDataCache;
 import com.keyware.shandan.browser.entity.ConditionItem;
 import com.keyware.shandan.browser.entity.ConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
@@ -28,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 检索服务实现类
@@ -91,7 +96,13 @@ public class SearchServiceImpl implements SearchService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-            } else {
+            } else if("directoryId".equals(item.getField())){
+                // 设置查询类型
+                request.types(getMetadataIdsByDirId(item.getValue()));
+                //因为包含file类型，所以需要单独对file类型的数据做过滤
+                String[] dirids = getDirectoryAllChildIds(item.getValue());
+                boolQueryBuilder.must(QueryBuilders.termsQuery("entityId", dirids));
+            }else{
                 if (item.getLogic() == ConditionLogic.eq) {
                     boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(item.getField(), item.getValue()));
                 } else if (item.getLogic() == ConditionLogic.nq) {
@@ -136,5 +147,38 @@ public class SearchServiceImpl implements SearchService {
         int page = vo.getPage();
         int size = vo.getSize();
         builder.from(page * size - size).size(size);
+    }
+
+    /**
+     * 找到目录下所有的元数据表
+     * @param dirId 目录ID
+     * @return -
+     */
+    private String[] getMetadataIdsByDirId(String dirId){
+        List<MetadataBasicVo> list = directoryService.directoryAllMetadata(dirId);
+        String[] types = new String[list.size() + 1];
+        types[0] = "file";
+        for(int i=1; i <= list.size(); i++){
+            types[i] = list.get(i-1).getMetadataName();
+        }
+        return types;
+    }
+
+    /**
+     * 获取目录的所有子级目录ID
+     * @param dirId 目录ID
+     * @return
+     */
+    private String[] getDirectoryAllChildIds(String dirId){
+        DirectoryVo vo = directoryService.getById(dirId);
+        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
+        wrapper.like("DIRECTORY_PATH", vo.getDirectoryName());
+        List<DirectoryVo> list = directoryService.list(wrapper);
+        String[] ids = new String[list.size() + 1];
+        ids[0] = dirId;
+        for(int i=1; i <= list.size(); i++){
+            ids[i] = list.get(i-1).getId();
+        }
+        return ids;
     }
 }

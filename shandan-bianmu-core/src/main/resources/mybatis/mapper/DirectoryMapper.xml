@@ -42,4 +42,17 @@
                  left join B_METADATA_BASIC mb on dm.METADATA_ID = mb.ID
         where dir.ID = #{id}
     </select>
+
+    <select id="selectAllMetadataByDirectory" resultType="com.keyware.shandan.bianmu.entity.MetadataBasicVo"
+            parameterType="string">
+        select B.*
+        from B_METADATA_BASIC B
+                 left join B_DIRECTORY_METADATA DM on B.ID = DM.METADATA_ID
+                 left join (
+            select D1.*
+            from B_DIRECTORY D1
+                     left join B_DIRECTORY D2 on D1.DIRECTORY_PATH like '%' || D2.DIRECTORY_NAME || '%'
+            where D2.ID = #{id}
+        ) t on t.ID = DM.DIRECTORY_ID
+    </select>
 </mapper>

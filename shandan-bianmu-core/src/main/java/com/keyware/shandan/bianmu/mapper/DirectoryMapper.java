@@ -24,4 +24,11 @@ public interface DirectoryMapper extends IBaseMapper<DirectoryVo> {
      * @return
      */
     List<MetadataBasicVo> selectMetadataByDirectory(String id);
+
+    /**
+     * 获取目录下所有元数据，包含子级
+     * @param id 目录ID
+     * @return -
+     */
+    List<MetadataBasicVo> selectAllMetadataByDirectory(String id);
 }

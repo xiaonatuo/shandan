@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class SysFile extends EsCommonEntity {
     /**
      * 数据实体ID
      */
+    @Field(type = FieldType.Keyword)
     @TableField("ENTITY_ID")
     private String entityId;
 

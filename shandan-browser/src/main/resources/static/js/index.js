@@ -78,6 +78,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 }
                 form.val('search-form', formVal);
                 console.info(formVal);
+                renderConditionTabByForm();
             }
         });
     }
