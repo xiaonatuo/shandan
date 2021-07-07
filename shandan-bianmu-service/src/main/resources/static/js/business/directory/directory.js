@@ -445,7 +445,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
                         if (res.flag) {
                             layer.msg('提交成功');
-                            listPage.reloadTable();
+                            metaListTable.reloadTable();
                         } else {
                             layer.msg('提交失败,' + res.msg);
                         }
