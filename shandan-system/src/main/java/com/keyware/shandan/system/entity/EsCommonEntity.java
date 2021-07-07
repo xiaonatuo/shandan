@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -98,7 +99,7 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     /**
      * 大文本字段，用于保存文件中的文本信息
      */
-    @Field
+    @Field(type = FieldType.Text)
     @TableField(exist = false)
     private String text;
 
