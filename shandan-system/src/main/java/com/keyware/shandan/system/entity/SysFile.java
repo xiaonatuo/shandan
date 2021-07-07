@@ -4,7 +4,6 @@ import cn.hutool.core.io.FileTypeUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.keyware.shandan.common.entity.BaseEntity;
 import com.keyware.shandan.common.util.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +13,6 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * <p>
@@ -27,17 +25,10 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("SYS_FILE")
-@Document(indexName = "sys_file")
-public class SysFile extends EsSysFile {
+@Document(indexName = "shandan", type = "file")
+public class SysFile extends EsCommonEntity {
 
     private static final long serialVersionUID = 9146049308480231565L;
-
-    /**
-     * 主键ID
-     */
-    @TableId("ID")
-    @Id
-     private String id;
 
     /**
      * 数据实体ID
@@ -81,62 +72,6 @@ public class SysFile extends EsSysFile {
      */
     @TableField("PATH")
     private String path;
-
-    /**
-     * 录入人员
-     */
-    @Field
-    @TableField("ENTRYSTAFF")
-    private String entryStaff;
-    /**
-     * 装备型号
-     */
-    @Field
-    @TableField("EQUIPMENTMODEL")
-    private String equipmentModel;
-    /**
-     * 收文时间
-     */
-    @Field
-    @TableField("INPUTDATE")
-    private Date inputDate;
-    /**
-     * 文件来源
-     */
-    @Field
-    @TableField("SOURCE")
-    private String source;
-    /**
-     * 任务代号
-     */
-    @Field
-    @TableField("TASKCODE")
-    private String taskCode;
-    /**
-     * 任务性质
-     */
-    @Field
-    @TableField("TASKNATURE")
-    private String taskNature;
-    /**
-     * 部队代号
-     */
-    @Field
-    @TableField("TROOPCODE")
-    private String troopCode;
-    /**
-     * 目标编号
-     */
-    @Field
-    @TableField("TARGETNUMBER")
-    private String targetNumber;
-    /**
-     * 导弹编号
-     */
-    @Field
-    @TableField("MISSILENUMBER")
-    private String missileNumber;
-
 
     public SysFile() {
     }
