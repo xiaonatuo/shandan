@@ -16,7 +16,7 @@ body, html {
     left: 0;
 }
 .layui-logo {padding: 0 20px}
-.dtree-nav-item .dtree-nav-div {overflow: hidden}
+.dtree-nav-item .dtree-nav-div {overflow: hidden;white-space: nowrap;}
 .dtree-nav-item .dtree-nav-div cite{white-space: nowrap}
 ::-webkit-scrollbar{width: 10px;background-color:#F5F5F5;}
 /*定义滑块
