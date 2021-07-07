@@ -67,9 +67,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.keyware.shandan</groupId>
-            <artifactId>shandan-system</artifactId>
-            <version>1.0.0</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

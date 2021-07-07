@@ -59,7 +59,7 @@ public class PageVo implements Serializable {
         PageVo vo = new PageVo();
         vo.page = page.page;
         vo.size = page.size;
-        vo.total = datas.getTotalHits().value;
+        vo.total = datas.getTotalHits();
         vo.pageTotal = (int) Math.ceil(vo.total / (double) page.size);
         vo.records = Arrays.stream(datas.getHits()).map(PageVo::fillMetadata).collect(Collectors.toList());
         //vo.records = Arrays.asList(datas.getHits());
