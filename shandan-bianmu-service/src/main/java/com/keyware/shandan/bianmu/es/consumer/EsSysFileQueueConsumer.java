@@ -3,7 +3,6 @@ package com.keyware.shandan.bianmu.es.consumer;
 import com.keyware.shandan.bianmu.es.repository.EsSysFileRepository;
 import com.keyware.shandan.common.util.PoiFileReadUtil;
 import com.keyware.shandan.frame.properties.CustomProperties;
-import com.keyware.shandan.system.entity.EsSysFile;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.queue.SysFileQueue;
 import lombok.extern.slf4j.Slf4j;
