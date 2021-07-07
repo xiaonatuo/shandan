@@ -1,8 +1,8 @@
 package com.keyware.shandan.browser.entity;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Getter;
 import lombok.Setter;
+import org.elasticsearch.search.sort.SortOrder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class ConditionVo extends Page<Object> implements Serializable {
+public class ConditionVo extends PageVo implements Serializable {
 
     private static final long serialVersionUID = 703825295068176342L;
 
@@ -23,4 +23,14 @@ public class ConditionVo extends Page<Object> implements Serializable {
      * 搜索条件集合
      */
     List<ConditionItem> conditions;
+
+    /**
+     * 排序字段
+     */
+    private String sortFiled = "createTime";
+
+    /**
+     * 排序方式
+     */
+    private SortOrder sort = SortOrder.DESC;
 }

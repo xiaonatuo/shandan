@@ -1,7 +1,9 @@
 package com.keyware.shandan.browser.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.browser.entity.ConditionVo;
+import com.keyware.shandan.browser.entity.PageVo;
+
+import java.io.IOException;
 
 /**
  * 数据检索服务类
@@ -17,5 +19,5 @@ public interface SearchService {
      * @param condition 条件
      * @return -
      */
-    Page<Object> esSearch(ConditionVo condition);
+    PageVo esSearch(ConditionVo condition) throws IOException;
 }
