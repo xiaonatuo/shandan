@@ -5,6 +5,9 @@
     <title th:text="${appName}">综合浏览</title>
     <script th:replace="common/head::static"></script>
     <link rel="stylesheet" th:href="@{/css/index.css}"/>
+    <script type="text/javascript" th:inline="javascript">
+        const bianmuServer = /*[[${bianmuServer}]]*/ '';
+    </script>
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">

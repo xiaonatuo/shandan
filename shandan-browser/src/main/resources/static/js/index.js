@@ -329,7 +329,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         }
 
         // 延迟100毫秒刷新数据列表，否则当数据刷新很快时，无法看出数据刷新了
-        commonUtil.sleep(100).then(() => {
+        commonUtil.sleep(50).then(() => {
             $('#result-list-content').html(htm);
             // 数据渲染完成后，监听每条数据元素的点击事件
             $('.result-item').on('click', resultItemOnClick)

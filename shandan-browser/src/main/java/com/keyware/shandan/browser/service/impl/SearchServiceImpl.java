@@ -84,7 +84,7 @@ public class SearchServiceImpl implements SearchService {
             }
             // 文本框
             if ("searchInput".equals(item.getField())) {
-                
+
                 boolQueryBuilder.must(QueryBuilders.queryStringQuery(item.getValue()));
             } else if ("inputDate".equals(item.getField())) {
                 String[] dates = item.getValue().split("至");
@@ -96,12 +96,14 @@ public class SearchServiceImpl implements SearchService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-            } else if("directoryId".equals(item.getField())){
+            } else if("directoryId".equals(item.getField()) && !item.getField().equals("-")){
                 // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的元数据表
                 request.types(getMetadataIdsByDirId(item.getValue()));
                 //因为目录中也包含file类型，所以需要单独对file类型的数据做过滤
                 String[] dirids = getDirectoryAllChildIds(item.getValue());
-                boolQueryBuilder.filter(QueryBuilders.termsQuery("entityId", dirids));
+                if(dirids != null){
+                    boolQueryBuilder.filter(QueryBuilders.termsQuery("entityId", dirids));
+                }
             }else{
                 if (item.getLogic() == ConditionLogic.eq) {
                     boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(item.getField(), item.getValue()));
@@ -174,6 +176,9 @@ public class SearchServiceImpl implements SearchService {
      */
     private String[] getDirectoryAllChildIds(String dirId){
         DirectoryVo vo = directoryService.getById(dirId);
+        if(vo == null){
+            return null;
+        }
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
         wrapper.like("DIRECTORY_PATH", vo.getDirectoryName());
         List<DirectoryVo> list = directoryService.list(wrapper);

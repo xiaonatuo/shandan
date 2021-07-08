@@ -55,7 +55,7 @@ function fileViewer(file){
          * @param file
          */
         function viewFile(file) {
-            const filePath = `${ctx}/upload/${file.path}`;
+            const filePath = `${bianmuServer}/upload/${file.path}`;
             if (viewType.image.includes(file.fileSuffix)) {
                 let htm = `<img id="image-viewer" src="${filePath}" style="max-height: 100%; max-width: 100%"/>`
                 $('#file-viewer-image').html(htm)
@@ -79,7 +79,7 @@ function fileViewer(file){
                 $('#download-file').off('click')
                 $('#download-file').on('click', function ({target}) {
                     let fileId = $(target).data('id')
-                    window.open(`${ctx}/sys/file/download/${fileId}`)
+                    window.open(`${bianmuServer}/sys/file/download/${fileId}`)
                 })
                 showFileViewer('other');
             }
