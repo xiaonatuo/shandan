@@ -342,11 +342,86 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     function resultItemOnClick() {
         const id = $(this).data('id');
         const data = currPageData.get(id);
-
-        if(data.fileName === undefined){ // 说明数据不是文件，是元数据
-
-        }else{ // 数据是文件
+        if (data.fileName === undefined) { // 说明数据不是文件，是元数据
+            viewMetadata(data);
+        } else { // 数据是文件
             fileViewer(data);
         }
+    }
+
+    /**
+     * 查看数据
+     * @param data
+     */
+    function viewMetadata(data) {
+        console.info(data)
+        const container = `
+            <div class="details-container">
+                <p class="details-title">${data.title}</p>
+                <ul class="details-data-common">
+                    <li>
+                        <div class="details-label">任务代号</div>
+                        <span>${data.taskCode}</span>
+                    </li>
+                    <li>
+                        <div class="details-label">任务性质</div>
+                        <span>${data.taskNature}</span>
+                    </li>
+                    <li>
+                        <div class="details-label">收文日期</div>
+                        <span>${data.inputDate}</span>
+                    </li>
+                </ul>
+                <ul class="details-data-common">
+                    <li>
+                        <div class="details-label">装备型号</div>
+                        <span>${data.equipmentModel}</span>
+                    </li>
+                    <li>
+                        <div class="details-label">文件来源</div>
+                        <span>${data.source}</span>
+                    </li>
+                    <li>
+                        <div class="details-label">录入人员</div>
+                        <span>${data.entryStaff}</span>
+                    </li>
+                </ul>
+                <ul class="details-data-common" >
+                    <li>
+                        <div class="details-label">部队代号</div>
+                        <span>${data.troopCode}</span>
+                    </li>
+                    <li>
+                        <div class="details-label">目标编号</div>
+                        <span>${data.targetNumber}</span>
+                    </li>
+                    <li>
+                        <div class="details-label">导弹编号</div>
+                        <span>${data.missileNumber}</span>
+                    </li>
+                </ul>
+                <ul class="details-data-private">##COLS##</ul>
+            </div>`;
+        let cols_content = '';
+        if(data.columns.length > 0){
+            for(let col of data.columns){
+                let col_name = col.comment || col.columnName;
+                let val = data[col.columnName];
+                cols_content += `
+                    <li>
+                        <div class="details-label">${col_name}</div>
+                        <span>${val}</span>
+                    </li>`;
+            }
+        }
+
+        layer.open({
+            title: '查看数据',
+            type: 1,
+            content: container.replace('##COLS##', cols_content),
+            success: function (layerObj, index) {
+                layer.full(index);
+            }
+        });
     }
 });

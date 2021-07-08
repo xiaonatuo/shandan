@@ -91,12 +91,13 @@ public class PageVo implements Serializable {
         }
 
         // 设置标题
-        source.put("title", "");
         if (!type.equals("file") && !type.equals("_doc")) {
             if (StringUtils.isNotBlank(tableComment)) {
                 tableComment += "|";
             }
             source.put("title", tableComment + type);
+        }else{
+            source.put("title", source.get("fileName"));
         }
 
         // 设置公共字段注释
