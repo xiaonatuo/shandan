@@ -91,14 +91,7 @@
 .b-result-head p{color: gray !important; font-size: 12px;}
 .b-result-head p label{color: orange;}
 .b-result-head a.layui-btn{border: 0;height: 30px;line-height: 30px;}
-.report-main{display: flex; flex-direction: column; width: 100%; height: 100%}
-.report-main .report-btn-line{display: flex; border-bottom: 1px solid gray}
-.sorting-item {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 5px 0 !important;
-}
+
 .sorting-item .layui-btn{margin-left: 0; color: gray}
 .sorting-item .on{color: #009688}
 .result-content{

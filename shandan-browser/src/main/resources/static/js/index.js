@@ -33,7 +33,6 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             layer.msg('当前没有数据可用，请查询到数据后再点击')
             return;
         }*/
-        console.info($('#layer-content-report').html())
         layer.open({
             //id: 'layer-content-report',
             type: 1,
