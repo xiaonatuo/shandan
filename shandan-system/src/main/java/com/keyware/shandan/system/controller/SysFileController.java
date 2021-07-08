@@ -1,6 +1,7 @@
 package com.keyware.shandan.system.controller;
 
 import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,11 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/sys/file")
 public class SysFileController extends BaseController<SysFileService, SysFile, String> {
 
-    @Value("${bianmu.file-storage.location}")
-    private String storageLocation;
-
-    @Value("${bianmu.file-storage.path}")
-    private String storagePath;
-
-
     @Autowired
     private SysFileService sysFileService;
+
+    @Autowired
+    private CustomProperties customProperties;
 
     @GetMapping("/layer")
     public ModelAndView fileUploadLayer() {
@@ -75,10 +72,7 @@ public class SysFileController extends BaseController<SysFileService, SysFile, S
         if (sysFile == null) {
             return "文件不存在";
         }
-        String filePath = "";
-        if(!storageLocation.equalsIgnoreCase("nas")){
-            filePath = storagePath + "/" + sysFile.getPath();
-        }
+        String filePath =  customProperties.getFileStorage().getPath() + "/" + sysFile.getPath();
 
         File file = new File(filePath);
         if (!file.exists()) {

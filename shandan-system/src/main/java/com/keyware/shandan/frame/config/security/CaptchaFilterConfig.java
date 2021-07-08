@@ -1,5 +1,6 @@
 package com.keyware.shandan.frame.config.security;
 
+import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.utils.SysSettingUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,9 +31,6 @@ import java.util.HashMap;
 @Slf4j
 public class CaptchaFilterConfig implements Filter {
 
-    @Value("${bianmu.captcha-enable}")
-    private Boolean captchaEnable;
-
     @Value("${server.servlet.context-path:}")
     private String contextPath;
 
@@ -41,6 +39,9 @@ public class CaptchaFilterConfig implements Filter {
 
     @Autowired
     private UserConfig userConfig;
+
+    @Autowired
+    private CustomProperties customProperties;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -118,7 +119,7 @@ public class CaptchaFilterConfig implements Filter {
             }
 
             //从session中获取生成的验证码
-            if(captchaEnable){
+            if(customProperties.getCaptchaEnable()){
                 String verifyCode = session.getAttribute("verifyCode").toString();
 
                 if (!verifyCode.toLowerCase().equals(request.getParameter("captcha").toLowerCase())) {
