@@ -320,6 +320,9 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             htm = `<p style="text-align: center; color:gray;margin-top: 20px;">没有查询到数据</p>`
         }
 
-        $('#result-list-content').html(htm);
+        // 延迟100毫秒刷新数据列表，否则当数据刷新很快时，无法看出数据刷新了
+        commonUtil.sleep(100).then(()=>{
+            $('#result-list-content').html(htm);
+        })
     }
 });
