@@ -67,7 +67,6 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 $('i.dtree-icon-jia[data-id="-"]').click();
             },
             onClick: function (obj) {
-                console.info(obj);
                 const node = obj.param;
                 const formVal = form.val('search-form');
                 if (formVal.directoryId === node.id) {
@@ -77,7 +76,6 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                     formVal.directoryId = node.id
                 }
                 form.val('search-form', formVal);
-                console.info(formVal);
                 renderConditionTabByForm();
             }
         });
@@ -120,7 +118,6 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                     formVal[key] = '';
                 }
             }
-            console.info(formVal);
             form.val('search-form', formVal);
             renderConditionTabByForm();
         });
@@ -207,7 +204,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         let htm = '';
         for (let key in formVal) {
             // 如果key是条件下拉框，则跳过
-            if (key.startsWith('logic-')) continue;
+            if (key.startsWith('logic-') || key === 'directoryId') continue;
 
             let val = formVal[key];
             if (val.trim()) {
@@ -276,7 +273,9 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 value: formVal[key]
             });
         }
+        let loadLayer = layer.load();
         $.post(`${ctx}/search/full`, data, function (res) {
+            layer.close(loadLayer);
             if (res.flag) {
                 // 渲染列表
                 renderResultList(res.data.records);
@@ -291,7 +290,6 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
      * @param list
      */
     function renderResultList(list){
-        console.info(list);
         $('#result-list-content').html('');
         let htm = '';
         for(let item of list){
@@ -311,6 +309,11 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                         </p>
                     </div>`;
         }
+
+        if(!htm){
+            htm = `<p style="text-align: center; color:gray">没有查询到数据</p>`
+        }
+
         $('#result-list-content').html(htm);
     }
 });
