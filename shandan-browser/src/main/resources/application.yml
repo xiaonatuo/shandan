@@ -33,5 +33,5 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
-bianmu:
+project:
   app-name: 数据综合浏览系统

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Configuration
-@ConfigurationProperties("bianmu")
+@ConfigurationProperties("project")
 public class CustomProperties {
     /**
      * 系统名称
@@ -33,6 +33,11 @@ public class CustomProperties {
      * 文件存储配置
      */
     private FileStorageProperties fileStorage;
+
+    /**
+     * 数据分类编目服务地址
+     */
+    private String bianmuServer = "http://localhost:8080/";
 
     /**
      * 文件存储配置属性

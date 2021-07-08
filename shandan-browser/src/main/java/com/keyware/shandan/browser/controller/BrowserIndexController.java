@@ -66,6 +66,7 @@ public class BrowserIndexController {
         SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
         user.setPassword(null);//隐藏部分属性
         modelAndView.addObject( "loginUser", user);
+        modelAndView.addObject("bianmuServer", customProperties.getBianmuServer());
         return modelAndView;
     }
 

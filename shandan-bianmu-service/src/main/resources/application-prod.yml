@@ -16,7 +16,7 @@ spring:
     rest:
       uris: http://192.168.146.128:9200
 
-bianmu:
+project:
   #是否需要输入验证码
   captcha-enable: false
   # 配置文件存储方式

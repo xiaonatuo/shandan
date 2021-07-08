@@ -17,8 +17,13 @@ spring:
   elasticsearch:
     rest:
       uris: http://192.168.146.128:9200
+  #热部署设置
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/java/main
 
-bianmu:
+project:
   #是否需要输入验证码
   captcha-enable: false
   # 启用记住我，方便调试
@@ -29,3 +34,4 @@ bianmu:
     location: local
     # 存储路径
     path: D:/BIANMU/
+  bianmu-server: http://localhost:8080
