@@ -169,8 +169,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 end: function () {
                     // 判断排序是否发生变化
                     if (orderTemp && !(orderTemp.field === order.field && orderTemp.order === order.order)) {
-                        // TODO 刷新数据列表
-                        console.info('假装刷新了列表')
+                        beginSearch();
                     }
                 }
             })
@@ -273,6 +272,13 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 value: formVal[key]
             });
         }
+
+        // 排序
+        if(order.field){
+            data.sort = order.order.toUpperCase();
+            data.sortFiled = order.field;
+        }
+
         let loadLayer = layer.load();
         $.post(`${ctx}/search/full`, data, function (res) {
             layer.close(loadLayer);

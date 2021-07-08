@@ -27,7 +27,7 @@ public class ConditionVo extends PageVo implements Serializable {
     /**
      * 排序字段
      */
-    private String sortFiled = "createTime";
+    private String sortFiled;
 
     /**
      * 排序方式

@@ -37,63 +37,63 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     /**
      * 录入人员
      */
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Keyword, fielddata = true)
     @TableField("ENTRYSTAFF")
     private String entryStaff;
 
     /**
      * 装备型号
      */
-    @Field
+    @Field(type = FieldType.Keyword, fielddata = true)
     @TableField("EQUIPMENTMODEL")
     private String equipmentModel;
 
     /**
      * 收文时间
      */
-    @Field
+    @Field(type = FieldType.Keyword, fielddata = true)
     @TableField("INPUTDATE")
     private Date inputDate;
 
     /**
      * 文件来源
      */
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Keyword, fielddata = true)
     @TableField("SOURCE")
     private String source;
 
     /**
      * 任务代号
      */
-    @Field
+    @Field(type = FieldType.Keyword, fielddata = true)
     @TableField("TASKCODE")
     private String taskCode;
 
     /**
      * 任务性质
      */
-    @Field
+    @Field(type = FieldType.Keyword, fielddata = true)
     @TableField("TASKNATURE")
     private String taskNature;
 
     /**
      * 部队代号
      */
-    @Field
+    @Field(type = FieldType.Keyword, fielddata = true)
     @TableField("TROOPCODE")
     private String troopCode;
 
     /**
      * 目标编号
      */
-    @Field
+    @Field(type = FieldType.Keyword, fielddata = true)
     @TableField("TARGETNUMBER")
     private String targetNumber;
 
     /**
      * 导弹编号
      */
-    @Field
+    @Field(type = FieldType.Keyword, fielddata = true)
     @TableField("MISSILENUMBER")
     private String missileNumber;
 

@@ -62,7 +62,6 @@ public class SearchServiceImpl implements SearchService {
     public PageVo esSearch(ConditionVo condition) throws IOException {
         SearchRequest request = buildRequest("shandan", condition);
         SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
-        System.out.println("response = " + JSONObject.toJSON(response));
         return PageVo.ofSearchHits(response.getHits(), condition);
     }
 
@@ -85,6 +84,7 @@ public class SearchServiceImpl implements SearchService {
             }
             // 文本框
             if ("searchInput".equals(item.getField())) {
+                
                 boolQueryBuilder.must(QueryBuilders.queryStringQuery(item.getValue()));
             } else if ("inputDate".equals(item.getField())) {
                 String[] dates = item.getValue().split("至");
@@ -97,11 +97,11 @@ public class SearchServiceImpl implements SearchService {
                     e.printStackTrace();
                 }
             } else if("directoryId".equals(item.getField())){
-                // 设置查询类型
+                // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的元数据表
                 request.types(getMetadataIdsByDirId(item.getValue()));
-                //因为包含file类型，所以需要单独对file类型的数据做过滤
+                //因为目录中也包含file类型，所以需要单独对file类型的数据做过滤
                 String[] dirids = getDirectoryAllChildIds(item.getValue());
-                boolQueryBuilder.must(QueryBuilders.termsQuery("entityId", dirids));
+                boolQueryBuilder.filter(QueryBuilders.termsQuery("entityId", dirids));
             }else{
                 if (item.getLogic() == ConditionLogic.eq) {
                     boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(item.getField(), item.getValue()));
@@ -118,6 +118,9 @@ public class SearchServiceImpl implements SearchService {
         }
 
         searchSourceBuilder.query(boolQueryBuilder).highlighter(buildHighlightBuilder());
+        if(StringUtils.isNotBlank(condition.getSortFiled())){
+            searchSourceBuilder.sort(condition.getSortFiled(), condition.getSort());
+        }
         return request.source(searchSourceBuilder);
     }
 
