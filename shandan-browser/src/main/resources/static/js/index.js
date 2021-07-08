@@ -69,13 +69,30 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 $('i.dtree-icon-jia[data-id="-"]').click();
             },
             onClick: function (obj) {
-                const node = obj.param;
+                const {basicData} = obj.param;
                 const formVal = form.val('search-form');
-                if (formVal.directoryId === node.id) {
+                if(basicData){
+                    if(basicData.fileName){
+                        fileViewer(basicData);
+                        return;
+                    }else if(basicData.metadataName){
+                        if (formVal.metadataId === basicData.id) {
+                            formVal.metadataId = '';
+                            dirTree.cancelNavThis(obj.dom)
+                        } else {
+                            formVal.metadataId = basicData.id
+                        }
+                    }else{
+                        if (formVal.directoryId === basicData.id) {
+                            formVal.directoryId = '';
+                            dirTree.cancelNavThis(obj.dom)
+                        } else {
+                            formVal.directoryId = basicData.id
+                        }
+                    }
+                }else{
                     formVal.directoryId = '';
-                    dirTree.cancelNavThis(obj.dom)
-                } else {
-                    formVal.directoryId = node.id
+                    formVal.metadataId = '';
                 }
                 form.val('search-form', formVal);
                 renderConditionTabByForm();

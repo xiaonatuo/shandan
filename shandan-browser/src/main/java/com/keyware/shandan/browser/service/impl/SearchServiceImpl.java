@@ -96,6 +96,8 @@ public class SearchServiceImpl implements SearchService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+            }else if("metadataId".equals(item.getField())){
+                request.types(item.getValue());
             } else if("directoryId".equals(item.getField()) && !item.getField().equals("-")){
                 // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的元数据表
                 request.types(getMetadataIdsByDirId(item.getValue()));
