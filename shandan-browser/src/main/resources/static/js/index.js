@@ -311,7 +311,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         }
 
         if(!htm){
-            htm = `<p style="text-align: center; color:gray">没有查询到数据</p>`
+            htm = `<p style="text-align: center; color:gray;margin-top: 20px;">没有查询到数据</p>`
         }
 
         $('#result-list-content').html(htm);
