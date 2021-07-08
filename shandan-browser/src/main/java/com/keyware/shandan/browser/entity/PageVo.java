@@ -81,7 +81,7 @@ public class PageVo implements Serializable {
         // 数据类型,具体对应实际数据中的表名或者文件类型
         String type = hit.getType();
         String tableComment = BianmuDataCache.getComment(type);
-        JSONObject tableColumns = BianmuDataCache.getColumns(type);
+        source.put("columns", BianmuDataCache.getColumns(type));
 
         // 时间戳类型处理
         if(source.get("inputDate") != null){

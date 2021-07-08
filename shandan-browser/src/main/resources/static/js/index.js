@@ -18,6 +18,8 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     const result = [];
     // 排序
     let order = {field: '', order: 'asc'};
+    // 当前页数据
+    let currPageData = new Map;
 
     initConditionBlock()
     initDirTree();
@@ -106,7 +108,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         });
 
         // 搜索按钮点击事件监听
-        $('#begin-search-btn').on('click', ()=>renderConditionTabByForm());
+        $('#begin-search-btn').on('click', () => renderConditionTabByForm());
 
         // 监听重置按钮
         $('#condition-clear-btn').on('click', function () {
@@ -274,7 +276,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         }
 
         // 排序
-        if(order.field){
+        if (order.field) {
             data.sort = order.order.toUpperCase();
             data.sortFiled = order.field;
         }
@@ -283,10 +285,16 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         $.post(`${ctx}/search/full`, data, function (res) {
             layer.close(loadLayer);
             if (res.flag) {
+                const result = res.data;
                 // 渲染列表
-                renderResultList(res.data.records);
+                renderResultList(result.records);
                 // 渲染分页
-                renderPageComponent(res.data)
+                renderPageComponent(result)
+                // 更新当前页数据的缓存
+                currPageData.clear();
+                for (let item of result.records) {
+                    currPageData.set(item.id, item);
+                }
             }
         });
     }
@@ -295,17 +303,17 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
      * 渲染结果列表
      * @param list
      */
-    function renderResultList(list){
+    function renderResultList(list) {
         $('#result-list-content').html('');
         let htm = '';
-        for(let item of list){
+        for (let item of list) {
             let title = '';
-            if(item.fileName){
+            if (item.fileName) {
                 title = item.fileName + item.fileSuffix;
             }
             let text = item.text;
 
-            htm += `<div class="result-item">
+            htm += `<div class="result-item" data-id="${item.id}">
                         <p class="result-item-title">${title}</p>
                         <p class="result-item-content">
                             ${item.commonText}
@@ -316,13 +324,29 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                     </div>`;
         }
 
-        if(!htm){
+        if (!htm) {
             htm = `<p style="text-align: center; color:gray;margin-top: 20px;">没有查询到数据</p>`
         }
 
         // 延迟100毫秒刷新数据列表，否则当数据刷新很快时，无法看出数据刷新了
-        commonUtil.sleep(100).then(()=>{
+        commonUtil.sleep(100).then(() => {
             $('#result-list-content').html(htm);
+            // 数据渲染完成后，监听每条数据元素的点击事件
+            $('.result-item').on('click', resultItemOnClick)
         })
+    }
+
+    /**
+     * 数据列表元素的点击事件回调
+     */
+    function resultItemOnClick() {
+        const id = $(this).data('id');
+        const data = currPageData.get(id);
+
+        if(data.fileName === undefined){ // 说明数据不是文件，是元数据
+
+        }else{ // 数据是文件
+            fileViewer(data);
+        }
     }
 });
