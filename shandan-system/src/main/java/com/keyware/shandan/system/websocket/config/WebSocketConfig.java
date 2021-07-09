@@ -15,7 +15,7 @@ public class WebSocketConfig {
      * 用途：扫描并注册所有携带@ServerEndpoint注解的实例。 @ServerEndpoint("/websocket")
      * PS：如果使用外部容器 则无需提供ServerEndpointExporter。
      */
-    @Bean
+    //@Bean
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
     }
@@ -23,7 +23,7 @@ public class WebSocketConfig {
     /**
      * 支持注入其他类
      */
-    @Bean
+    //@Bean
     public MyEndpointConfigure newMyEndpointConfigure (){
         return new MyEndpointConfigure ();
     }

@@ -6,6 +6,8 @@
  * @author Administrator
  * @since 2021/6/17
  */
+// 当前页数据
+let currPageData = new Map;
 layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'laypage'], function () {
     const tree = layui.globalTree,
         layer = layui.layer,
@@ -18,32 +20,22 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     const result = [];
     // 排序
     let order = {field: '', order: 'asc'};
-    // 当前页数据
-    let currPageData = new Map;
 
     initConditionBlock()
     initDirTree();
     initSortingComponent();
     renderPageComponent();
     beginSearch();
-
-    // 监听统计报表按钮点击事件
+    const reportComponent = new ReportComponent(layer, form);
     $('#btn-report').on('click', function () {
-        /*if(result.length <= 0){
+        /*if(currPageData.size <= 0){
             layer.msg('当前没有数据可用，请查询到数据后再点击')
             return;
         }*/
-        layer.open({
-            //id: 'layer-content-report',
-            type: 1,
-            title: '统计报表',
-            area: ['800px', '600px'],
-            content: $('#layer-content-report').html(),
-            success: function (layero, index) {
-                layer.full(index);
-            }
-        })
-    })
+        let formTemp = form.val('search-form')
+        reportComponent.setFormData(formTemp)
+        reportComponent.openMainLayer();
+    });
 
     /**
      * 渲染时间选择组件
@@ -79,6 +71,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                             formVal.metadataId = '';
                             dirTree.cancelNavThis(obj.dom)
                         } else {
+                            formVal.directoryId = '';
                             formVal.metadataId = basicData.id
                         }
                     }else{
@@ -86,6 +79,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                             formVal.directoryId = '';
                             dirTree.cancelNavThis(obj.dom)
                         } else {
+                            formVal.metadataId = '';
                             formVal.directoryId = basicData.id
                         }
                     }
@@ -221,7 +215,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         let htm = '';
         for (let key in formVal) {
             // 如果key是条件下拉框，则跳过
-            if (key.startsWith('logic-') || key === 'directoryId') continue;
+            if (key.startsWith('logic-') || key === 'directoryId' || key === 'metadataId') continue;
 
             let val = formVal[key];
             if (val.trim()) {

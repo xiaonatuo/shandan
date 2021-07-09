@@ -1,12 +1,9 @@
 package com.keyware.shandan.browser.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.service.DirectoryService;
-import com.keyware.shandan.browser.config.BianmuDataCache;
 import com.keyware.shandan.browser.entity.ConditionItem;
 import com.keyware.shandan.browser.entity.ConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
@@ -19,12 +16,10 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -32,7 +27,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 检索服务实现类
@@ -48,9 +42,6 @@ public class SearchServiceImpl implements SearchService {
 
     @Autowired
     private RestHighLevelClient esClient;
-
-    @Autowired
-    private ElasticsearchOperations elasticsearchOperations;
 
     /**
      * 全文检索

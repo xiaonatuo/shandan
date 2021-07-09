@@ -1,0 +1,36 @@
+#layer-content-report {
+    height: 100%
+}
+
+.report-main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%
+}
+
+.report-main .report-btn-line {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+    margin-bottom: 20px;
+}
+
+.report-main .report-items {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: overlay;
+}
+
+.sorting-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px 0 !important;
+}
+
+.echarts-item {
+    width: 50%;
+    height: 50%
+}
