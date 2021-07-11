@@ -12,8 +12,7 @@
 .report-main .report-btn-line {
     display: flex;
     justify-content: flex-end;
-    padding-right: 20px;
-    margin-bottom: 20px;
+    padding: 10px 20px;
 }
 
 .report-main .report-items {
