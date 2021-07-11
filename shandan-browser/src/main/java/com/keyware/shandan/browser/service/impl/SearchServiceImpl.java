@@ -1,5 +1,7 @@
 package com.keyware.shandan.browser.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
@@ -7,6 +9,7 @@ import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.browser.entity.ConditionItem;
 import com.keyware.shandan.browser.entity.ConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
+import com.keyware.shandan.browser.entity.ReportVo;
 import com.keyware.shandan.browser.enums.ConditionLogic;
 import com.keyware.shandan.browser.service.SearchService;
 import com.keyware.shandan.common.util.StringUtils;
@@ -17,8 +20,16 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
+import org.elasticsearch.search.aggregations.bucket.histogram.ParsedDateHistogram;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
+import org.elasticsearch.search.aggregations.metrics.valuecount.ParsedValueCount;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +48,14 @@ import java.util.List;
 @Service
 public class SearchServiceImpl implements SearchService {
 
+    private final String search_index = "shandan";
+
     @Autowired
     private DirectoryService directoryService;
 
     @Autowired
     private RestHighLevelClient esClient;
+
 
     /**
      * 全文检索
@@ -51,9 +65,65 @@ public class SearchServiceImpl implements SearchService {
      */
     @Override
     public PageVo esSearch(ConditionVo condition) throws IOException {
-        SearchRequest request = buildRequest("shandan", condition);
+        SearchRequest request = buildRequest(search_index, condition);
         SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
         return PageVo.ofSearchHits(response.getHits(), condition);
+    }
+
+    @Override
+    public JSONObject report(ReportVo report) throws IOException {
+        ConditionVo condition = new ConditionVo();
+        condition.setConditions(report.getConditions());
+        SearchRequest request = buildRequest(search_index, condition);
+        request.source().from(0).size(0);
+
+        request.source().aggregation(buildAggregation(report));
+
+        SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
+
+        return parseResponseAggs(response, report);
+    }
+
+    private AggregationBuilder buildAggregation(ReportVo report){
+        if(report.getType().equals("pie")){
+            return AggregationBuilders.terms(report.getFieldX()).field(report.getFieldX());
+        }else{
+            return AggregationBuilders.dateHistogram("inputDate").field("inputDate").dateHistogramInterval(DateHistogramInterval.DAY).subAggregation(AggregationBuilders.count("count").field(report.getFieldX()));
+        }
+    }
+
+    private JSONObject parseResponseAggs(SearchResponse response, ReportVo report){
+        Aggregations aggs = response.getAggregations();
+        if(report.getType().equals("pie")){
+            ParsedStringTerms terms = aggs.get(report.getFieldX());
+            JSONArray array = new JSONArray();
+            terms.getBuckets().forEach(bucket -> {
+                JSONObject json = new JSONObject();
+                json.put("name", StringUtils.isBlank(bucket.getKeyAsString()) ? "未知" : bucket.getKeyAsString());
+                json.put("value", bucket.getDocCount());
+                array.add(json);
+            });
+            JSONObject json = new JSONObject();
+            json.put("series", array);
+            return json;
+        }else {
+            ParsedDateHistogram terms = aggs.get("inputDate");
+
+            JSONArray xAxis = new JSONArray();
+            JSONArray series = new JSONArray();
+            terms.getBuckets().forEach(bucket -> {
+                DateTime time = (DateTime) bucket.getKey();
+                Date date = time.toLocalDateTime().toDate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                xAxis.add(sdf.format(date));
+                series.add(bucket.getDocCount());
+            });
+            JSONObject json = new JSONObject();
+            json.put("xAxis", xAxis);
+            json.put("series", series);
+            return json;
+        }
     }
 
     /**

@@ -38,21 +38,21 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     /**
      * 录入人员
      */
-    @Field(type = FieldType.Keyword, fielddata = true)
+    @Field(type = FieldType.Keyword)
     @TableField("ENTRYSTAFF")
     private String entryStaff;
 
     /**
      * 装备型号
      */
-    @Field(type = FieldType.Keyword, fielddata = true)
+    @Field(type = FieldType.Keyword)
     @TableField("EQUIPMENTMODEL")
     private String equipmentModel;
 
     /**
      * 收文时间
      */
-    @Field(type = FieldType.Keyword, fielddata = true)
+    @Field(type = FieldType.Date)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(value = "INPUTDATE")
     private Date inputDate;
@@ -60,42 +60,42 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     /**
      * 文件来源
      */
-    @Field(type = FieldType.Keyword, fielddata = true)
+    @Field(type = FieldType.Keyword)
     @TableField("SOURCE")
     private String source;
 
     /**
      * 任务代号
      */
-    @Field(type = FieldType.Keyword, fielddata = true)
+    @Field(type = FieldType.Keyword)
     @TableField("TASKCODE")
     private String taskCode;
 
     /**
      * 任务性质
      */
-    @Field(type = FieldType.Keyword, fielddata = true)
+    @Field(type = FieldType.Keyword)
     @TableField("TASKNATURE")
     private String taskNature;
 
     /**
      * 部队代号
      */
-    @Field(type = FieldType.Keyword, fielddata = true)
+    @Field(type = FieldType.Keyword)
     @TableField("TROOPCODE")
     private String troopCode;
 
     /**
      * 目标编号
      */
-    @Field(type = FieldType.Keyword, fielddata = true)
+    @Field(type = FieldType.Keyword)
     @TableField("TARGETNUMBER")
     private String targetNumber;
 
     /**
      * 导弹编号
      */
-    @Field(type = FieldType.Keyword, fielddata = true)
+    @Field(type = FieldType.Keyword)
     @TableField("MISSILENUMBER")
     private String missileNumber;
 
@@ -109,28 +109,28 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     /**
      * 创建用户
      */
-    @Field
+    @Field(type = FieldType.Keyword)
     @TableField(value = "CREATE_USER", fill = FieldFill.INSERT)
     private String createUser;
 
     /**
      * 创建时间
      */
-    @Field
+    @Field(type = FieldType.Date)
     @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
     private Date createTime;
 
     /**
      * 修改用户
      */
-    @Field
+    @Field(type = FieldType.Keyword)
     @TableField(value = "MODIFY_USER", fill = FieldFill.INSERT_UPDATE)
     private String modifyUser;
 
     /**
      * 修改时间
      */
-    @Field
+    @Field(type = FieldType.Date)
     @TableField(value = "MODIFY_TIME", fill = FieldFill.INSERT_UPDATE)
     private Date modifyTime;
 }

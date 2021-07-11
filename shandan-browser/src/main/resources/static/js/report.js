@@ -10,14 +10,14 @@ class ReportItem{
     type = '';
     data = {};
     condition = {};
-    fields = {};
+    xField = '';
+    yField = ''
     echarts = {};
     constructor(options) {
         options = options || {};
         this.type = options.type || '';
         this.data = options.data || '';
         this.condition = options.condition || {};
-        this.fields = options.fields || [];
     }
 }
 function ReportComponent(layer, form) {
@@ -27,7 +27,7 @@ function ReportComponent(layer, form) {
               <div class="report-main">
                   <div class="report-btn-line">
                       <a class="layui-btn layui-btn-sm layui-btn-normal" id="btn-add"><i class="layui-icon layui-icon-add-1"></i>定义新报表</a>
-                      <a class="layui-btn layui-btn-sm layui-btn-normal" id="btn-download"><i class="layui-icon layui-icon-download-circle"></i>下载报表</a>
+                      <!--<a class="layui-btn layui-btn-sm layui-btn-normal" id="btn-download"><i class="layui-icon layui-icon-download-circle"></i>下载报表</a>-->
                   </div>
                   <div class="report-items" id="report-items">
                   </div>
@@ -46,13 +46,13 @@ function ReportComponent(layer, form) {
         configPie: `
         <div class="layui-form" lay-filter="form-config-pie" id="form-config-pie">
             <div class="layui-form-item" style="padding:0 20px;">
-                <div class="layui-form-label" style="width: 100px">选择统计字段</div>
+                <div class="layui-form-label" style="width: 100px">标题</div>
                 <div class="layui-input-block" style="margin-left: 140px;">
                     <input type="text" class="layui-input" placeholder="设置图表的标题">
                 </div>
             </div>
             <div class="layui-form-item" style="padding:0 20px;">
-                <div class="layui-form-label" style="width: 100px">选择统计字段</div>
+                <div class="layui-form-label" style="width: 100px">统计维度</div>
                 <div class="layui-input-block" style="margin-left: 140px;">
                     <select name="field" id="selectField" lay-search>
                         <option value="source" selected>文件来源</option>
@@ -73,6 +73,7 @@ function ReportComponent(layer, form) {
     this.layer = layer || {};
     this.form = form || {};
     this.formData = {};
+    this.conditions = [];
     this.reports = [];
 }
 
@@ -142,7 +143,6 @@ ReportComponent.prototype.openConfigLayer = function(report){
         content: _this.template.configPie,
         success: function(layerObj, index){
             // 判断是否元数据表，如果是，则查询所有字段配置，并添加到字段下拉框
-            // report.fields = data;
             let formData = _this.formData
             if(formData.metadataId){
                 $.get(`${ctx}/report/metadata/columns/${formData.metadataId}`,{}, function(res){
@@ -164,8 +164,30 @@ ReportComponent.prototype.openConfigLayer = function(report){
         },
         yes: function(index){
             const selectForm = _this.form.val('form-config-pie');
-            _this.renderEcharts(report);
+            if(report.type == 'pie'){
+                report.xField = selectForm.field;
+            }
+            _this.requestData(report);
             layer.close(index);
+        }
+    });
+}
+
+/**
+ * 请求数据
+ */
+ReportComponent.prototype.requestData = function(report){
+    const _this = this;
+    const data = {
+        type: report.type,
+        fieldX: report.xField,
+        fieldY: report.yField,
+        conditions: _this.conditions
+    }
+    $.post(`${ctx}/report/data`, data, function(res){
+        if(res.flag){
+            report.data = res.data;
+            _this.renderEcharts(report);
         }
     });
 }
@@ -175,7 +197,7 @@ ReportComponent.prototype.openConfigLayer = function(report){
  * @param report
  */
 ReportComponent.prototype.renderEcharts = function(report){
-    console.info(report);
+    //console.info(report);
     const _this = this;
     const elemId = `echarts-item-${_this.reports.length + 1}`;
     $('#report-items').append(`<div class="echarts-item" id="${elemId}"></div>`)
@@ -183,9 +205,18 @@ ReportComponent.prototype.renderEcharts = function(report){
     let echartsItem = echarts.init(chartDom);
     let option = {
         title: {
-            text: '某站点用户访问来源',
-            subtext: '纯属虚构',
+            text: report.title || '统计图',
             left: 'center'
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    readOnly: false,
+                    title: '数据视图'
+                },
+                saveAsImage: {title:'下载'}
+            }
         },
         tooltip: {
             trigger: 'item'
@@ -196,16 +227,9 @@ ReportComponent.prototype.renderEcharts = function(report){
         },
         series: [
             {
-                name: '访问来源',
-                type: 'pie',
+                type: report.type,
                 radius: '50%',
-                data: [
-                    {value: 1048, name: '搜索引擎'},
-                    {value: 735, name: '直接访问'},
-                    {value: 580, name: '邮件营销'},
-                    {value: 484, name: '联盟广告'},
-                    {value: 300, name: '视频广告'}
-                ],
+                data: report.data.series,
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -216,7 +240,18 @@ ReportComponent.prototype.renderEcharts = function(report){
             }
         ]
     };
-
+    if(report.type !== 'pie'){
+        option.xAxis = [
+            {
+                type: 'category',
+                data: report.data.xAxis,
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ];
+        option.yAxis = [{type: 'value'}]
+    }
     option && echartsItem.setOption(option);
     report.echarts = echartsItem;
     _this.addReport(report);
@@ -237,23 +272,12 @@ ReportComponent.prototype.addReport = function (report) {
  */
 ReportComponent.prototype.setFormData = function (value){
     this.formData = value;
-    console.info(this.formData);
 }
 
 /**
- * 初始化统计报表组件
+ * 设置条件参数
+ * @param value
  */
-/*
-ReportComponent.prototype.init = function(){
-    const _this = this;
-
-    // 监听统计报表按钮点击事件
-    $('#btn-report').on('click', function () {
-        // 1、如果没有数据则返回
-        /!*if(currPageData.size <= 0){
-            layer.msg('当前没有数据可用，请查询到数据后再点击')
-            return;
-        }*!/
-        _this.openMainLayer();
-    })
-}*/
+ReportComponent.prototype.setConditions = function (value){
+    this.conditions = value;
+}

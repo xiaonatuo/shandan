@@ -24,7 +24,7 @@ import java.io.IOException;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("SYS_FILE")
-@Document(indexName = "shandan2", type = "file")
+@Document(indexName = "shandan", type = "file")
 public class SysFile extends EsCommonEntity {
 
     private static final long serialVersionUID = 9146049308480231565L;
@@ -39,7 +39,7 @@ public class SysFile extends EsCommonEntity {
     /**
      * 文件名称
      */
-    @Field
+    @Field(type = FieldType.Text)
     @TableField("FILE_NAME")
     private String fileName;
 

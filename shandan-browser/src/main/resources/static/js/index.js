@@ -21,19 +21,18 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     // 排序
     let order = {field: '', order: 'asc'};
 
+    const reportComponent = new ReportComponent(layer, form);
+
     initConditionBlock()
     initDirTree();
     initSortingComponent();
     renderPageComponent();
     beginSearch();
-    const reportComponent = new ReportComponent(layer, form);
     $('#btn-report').on('click', function () {
         /*if(currPageData.size <= 0){
             layer.msg('当前没有数据可用，请查询到数据后再点击')
             return;
         }*/
-        let formTemp = form.val('search-form')
-        reportComponent.setFormData(formTemp)
         reportComponent.openMainLayer();
     });
 
@@ -290,6 +289,8 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             data.sort = order.order.toUpperCase();
             data.sortFiled = order.field;
         }
+
+        reportComponent.setConditions(data.conditions)
 
         let loadLayer = layer.load();
         $.post(`${ctx}/search/full`, data, function (res) {

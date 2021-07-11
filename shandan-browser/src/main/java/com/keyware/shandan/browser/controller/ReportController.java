@@ -4,13 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.entity.MetadataDetailsVo;
 import com.keyware.shandan.bianmu.service.MetadataService;
+import com.keyware.shandan.browser.entity.ConditionVo;
+import com.keyware.shandan.browser.entity.ReportVo;
+import com.keyware.shandan.browser.service.SearchService;
+import com.keyware.shandan.browser.service.impl.SearchServiceImpl;
 import com.keyware.shandan.common.entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -27,6 +29,14 @@ public class ReportController {
     @Autowired
     private MetadataService metadataService;
 
+    @Autowired
+    private SearchService searchService;
+
+    /**
+     * 查询元数据表的字段
+     * @param id 元数据ID
+     * @return
+     */
     @GetMapping("/metadata/columns/{id}")
     public Result<Object> getColumn(@PathVariable String id){
         MetadataBasicVo vo = metadataService.getById(id);
@@ -39,5 +49,17 @@ public class ReportController {
             }
         }
         return Result.of(null);
+    }
+
+
+    @PostMapping("/data")
+    public Result<Object> getData(ReportVo report){
+
+        try {
+            return Result.of(searchService.report(report));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.of(null, false);
+        }
     }
 }
