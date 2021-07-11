@@ -85,12 +85,14 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
             this.error(index, upload);
         },
         allDone: function (obj) { //多文件上传完毕后的状态回调
-            uploadStatus.success = true;
-            uploadStatus.done = true;
+            if(obj.total === obj.successful){
+                uploadStatus.success = true;
+                uploadStatus.done = true;
 
-            let index = parent.layer.getFrameIndex(window.name);
-            parent.layer.close(index);
-            parent.layer.msg('上传成功');
+                let index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+                parent.layer.msg('上传成功');
+            }
         },
         error: function (index, upload) { //错误回调
             let that = this;

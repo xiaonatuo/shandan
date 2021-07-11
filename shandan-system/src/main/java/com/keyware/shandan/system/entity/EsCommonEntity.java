@@ -11,6 +11,7 @@ import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -52,7 +53,8 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
      * 收文时间
      */
     @Field(type = FieldType.Keyword, fielddata = true)
-    @TableField("INPUTDATE")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @TableField(value = "INPUTDATE")
     private Date inputDate;
 
     /**
