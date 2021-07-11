@@ -58,8 +58,10 @@
         <!-- mvn install:install-file -DgroupId=com.dameng -DartifactId=dm8 -Dversion=1.0.0 -Dpackaging=jar -Dfile=E:\dmdbms\drivers\jdbc\DmJdbcDriver18.jar -->
         <dependency>
             <groupId>com.dameng</groupId>
-            <artifactId>dm8</artifactId>
+            <artifactId>Dm8JdbcDriver18</artifactId>
+            <version>8.1.0.157</version>
         </dependency>
+
 
         <dependency>
             <groupId>com.keyware.shandan</groupId>
