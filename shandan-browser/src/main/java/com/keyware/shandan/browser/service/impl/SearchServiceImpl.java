@@ -153,7 +153,7 @@ public class SearchServiceImpl implements SearchService {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     Date begin = sdf.parse(dates[0].trim());
                     Date end = sdf.parse(dates[1].trim());
-                    boolQueryBuilder.must(QueryBuilders.rangeQuery(item.getField()).gt(begin.getTime()).lt(end.getTime()));
+                    boolQueryBuilder.must(QueryBuilders.rangeQuery(item.getField()).gte(begin.getTime()).lte(end.getTime()));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
