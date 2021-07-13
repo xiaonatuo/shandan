@@ -33,3 +33,13 @@
     width: 50%;
     height: 50%
 }
+.layui-elem-field legend {
+    margin-left: 20px;
+    padding: 0 10px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #7d7d7d;
+}
+.layui-field-box {
+    padding: 15px 50px 15px 15px;
+}

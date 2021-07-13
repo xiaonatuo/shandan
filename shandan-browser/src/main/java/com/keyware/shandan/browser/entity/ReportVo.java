@@ -18,7 +18,7 @@ public class ReportVo implements Serializable {
     /**
      * 图表类型
      */
-    private String type;
+    private String reportType;
 
     /**
      * 统计维度字段
@@ -26,7 +26,27 @@ public class ReportVo implements Serializable {
     private String fieldX;
 
     /**
-     * 统计指标字段
+     * 统计维度字段类型
+     */
+    private String fieldXType;
+
+    /**
+     * 统计维度日期间隔
+     */
+    private String dateInterval;
+
+    /**
+     * 统计维度数值间隔
+     */
+    private Double numberInterval;
+
+    /**
+     * 指标聚合方式
+     */
+    private String aggregationType;
+
+    /**
+     * 指标聚合字段
      */
     private String fieldY;
 

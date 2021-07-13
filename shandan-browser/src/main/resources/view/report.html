@@ -1,1 +1,122 @@
+<script type="text/javascript">
+
+    // 达梦日期类型集合
+    const dm_date_types = ['DATE', 'DATETIME', 'DATETIME WITH TIME ZONE', 'TIME', 'TIMESTAMP', 'TIME WITH TIME ZONE', 'TIMESTAMP WITH TIME ZONE', 'TIMESTAMP WITH LOCAL TIME ZONE'];
+    // 达梦数值类型集合
+    const dm_number_types = ['NUMERIC', 'NUMBER', 'DECIMAL', 'DEC', 'INTEGER', 'INT', 'PLS_INTEGER', 'BIGINT', 'TINYINT', 'BYTE', 'SMALLINT', 'FLOAT', 'DOUBLE', 'DOUBLE PRECISION'];
+    const common_fields = [
+        {field: 'source', type: 'VARCHAR2', comment: '文件来源'},
+        {field: 'inputDate', type: 'DATETIME', comment: '收文时间'},
+        {field: 'entryStaff', type: 'VARCHAR2', comment: '录入人员'},
+        {field: 'taskNature', type: 'VARCHAR2', comment: '任务性质'},
+        {field: 'taskCode', type: 'VARCHAR2', comment: '任务代号'},
+        {field: 'targetNumber', type: 'VARCHAR2', comment: '目标编号'},
+        {field: 'troopCode', type: 'VARCHAR2', comment: '部队代号'},
+        {field: 'equipmentModel', type: 'VARCHAR2', comment: '装备型号'},
+        {field: 'missileNumber', type: 'VARCHAR2', comment: '导弹编号'},
+    ];
+    const template_main = `
+        <div id="layer-content-report" >
+            <div class="report-main">
+                <div class="report-btn-line">
+                    <a class="layui-btn layui-btn-sm layui-btn-normal" id="btn-add"><i class="layui-icon layui-icon-add-1"></i>定义新报表</a>
+                    <!--<a class="layui-btn layui-btn-sm layui-btn-normal" id="btn-download"><i class="layui-icon layui-icon-download-circle"></i>下载报表</a>-->
+                </div>
+                <div class="report-items" id="report-items"></div>
+            </div>
+        </div>`;
+    const template_config = `
+        <div class="layui-form" lay-filter="echartsConfigForm" id="echartsConfigForm" style="padding:15px">
+
+            <fieldset class="layui-elem-field">
+                <legend>图表配置</legend>
+                <div class="layui-field-box">
+                    <div class="layui-form-item" style="padding:0 20px;">
+                        <div class="layui-form-label" style="width: 100px">标题</div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 300px">
+                                <input type="text" name="title" class="layui-input" placeholder="设置图表的标题">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="padding:0 20px;">
+                        <div class="layui-form-label" style="width: 100px">图表类型</div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 300px">
+                                <select name="reportType">
+                                    <option value="pie" selected>饼图</option>
+                                    <option value="bar">柱状图</option>
+                                    <option value="line">折线图</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field">
+                <legend>统计维度</legend>
+                <div class="layui-field-box">
+                    <div class="layui-form-item" style="padding:0 20px;">
+                        <div class="layui-form-label" style="width: 100px">字段</div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 300px">
+                                <input type="hidden" name="fieldXType" />
+                                <select name="fieldX" id="selectFieldX" lay-search lay-filter="selectFieldX"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-hide" style="padding:0 20px;" id="range-date-item">
+                        <div class="layui-form-label" style="width: 100px">时间间隔</div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 300px">
+                                <select name="dateInterval" id="dateInterval">
+                                    <option value="" selected>选择字段</option>
+                                    <option value="minute">每分钟</option>
+                                    <option value="hour">每小时</option>
+                                    <option value="day">每日</option>
+                                    <option value="week">每周</option>
+                                    <option value="month">每月</option>
+                                    <option value="year">每年</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-hide" style="padding:0 20px;" id="range-number-item">
+                        <div class="layui-form-label" style="width: 100px">数值间隔</div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 300px">
+                                <input class="layui-input" type="text" name="numberInterval" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field">
+                <legend>统计指标</legend>
+                <div class="layui-field-box">
+                    <div class="layui-form-item" style="padding:0 20px;">
+                        <div class="layui-form-label" style="width: 100px">聚合方式</div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 300px">
+                                <select name="aggregationType" lay-filter="aggregationType">
+                                    <option value="" selected>选择聚合方式</option>
+                                    <option value="count">计数</option>
+                                    <option value="sum">求和</option>
+                                    <option value="avg">平均值</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-hide" style="padding:0 20px;" id="field-select-item-y">
+                        <div class="layui-form-label" style="width: 100px">聚合字段</div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 300px">
+                                <select name="fieldY" id="selectFieldY" lay-search></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>`;
+</script>
 <script th:src="@{/js/report2.js}"></script>

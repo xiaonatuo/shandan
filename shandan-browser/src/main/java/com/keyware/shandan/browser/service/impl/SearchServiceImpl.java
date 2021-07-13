@@ -1,6 +1,5 @@
 package com.keyware.shandan.browser.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
@@ -12,6 +11,7 @@ import com.keyware.shandan.browser.entity.PageVo;
 import com.keyware.shandan.browser.entity.ReportVo;
 import com.keyware.shandan.browser.enums.ConditionLogic;
 import com.keyware.shandan.browser.service.SearchService;
+import com.keyware.shandan.browser.service.builders.ReportAggregation;
 import com.keyware.shandan.common.util.StringUtils;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -20,16 +20,8 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
-import org.elasticsearch.search.aggregations.bucket.histogram.ParsedDateHistogram;
-import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
-import org.elasticsearch.search.aggregations.metrics.valuecount.ParsedValueCount;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +41,6 @@ import java.util.List;
 public class SearchServiceImpl implements SearchService {
 
     private final String search_index = "shandan";
-
     @Autowired
     private DirectoryService directoryService;
 
@@ -75,26 +66,18 @@ public class SearchServiceImpl implements SearchService {
         ConditionVo condition = new ConditionVo();
         condition.setConditions(report.getConditions());
         SearchRequest request = buildRequest(search_index, condition);
-        request.source().from(0).size(0);
 
-        request.source().aggregation(buildAggregation(report));
+        ReportAggregation aggregation = ReportAggregation.getAggregation(request, report);
+        aggregation.search(esClient);
 
-        SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
-
-        return parseResponseAggs(response, report);
+        return aggregation.parse();
     }
 
-    private AggregationBuilder buildAggregation(ReportVo report){
-        if(report.getType().equals("pie")){
-            return AggregationBuilders.terms(report.getFieldX()).field(report.getFieldX());
-        }else{
-            return AggregationBuilders.dateHistogram("inputDate").field("inputDate").dateHistogramInterval(DateHistogramInterval.DAY).subAggregation(AggregationBuilders.count("count").field(report.getFieldX()));
-        }
-    }
 
-    private JSONObject parseResponseAggs(SearchResponse response, ReportVo report){
+
+/*    private JSONObject parseResponseAggs(SearchResponse response, ReportVo report) {
         Aggregations aggs = response.getAggregations();
-        if(report.getType().equals("pie")){
+        if (report.getReportType().equals("pie")) {
             ParsedStringTerms terms = aggs.get(report.getFieldX());
             JSONArray array = new JSONArray();
             terms.getBuckets().forEach(bucket -> {
@@ -106,7 +89,7 @@ public class SearchServiceImpl implements SearchService {
             JSONObject json = new JSONObject();
             json.put("series", array);
             return json;
-        }else {
+        } else {
             ParsedDateHistogram terms = aggs.get("inputDate");
 
             JSONArray xAxis = new JSONArray();
@@ -124,11 +107,12 @@ public class SearchServiceImpl implements SearchService {
             json.put("series", series);
             return json;
         }
-    }
+    }*/
 
     /**
      * 构建请求
-     * @param index 索引
+     *
+     * @param index     索引
      * @param condition 条件
      * @return -
      */
@@ -157,17 +141,17 @@ public class SearchServiceImpl implements SearchService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-            }else if("metadataId".equals(item.getField())){
+            } else if ("metadataId".equals(item.getField())) {
                 request.types(item.getValue());
-            } else if("directoryId".equals(item.getField()) && !item.getField().equals("-")){
+            } else if ("directoryId".equals(item.getField()) && !item.getField().equals("-")) {
                 // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的元数据表
                 request.types(getMetadataIdsByDirId(item.getValue()));
                 //因为目录中也包含file类型，所以需要单独对file类型的数据做过滤
                 String[] dirids = getDirectoryAllChildIds(item.getValue());
-                if(dirids != null){
+                if (dirids != null) {
                     boolQueryBuilder.filter(QueryBuilders.termsQuery("entityId", dirids));
                 }
-            }else{
+            } else {
                 if (item.getLogic() == ConditionLogic.eq) {
                     boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(item.getField(), item.getValue()));
                 } else if (item.getLogic() == ConditionLogic.nq) {
@@ -183,7 +167,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         searchSourceBuilder.query(boolQueryBuilder).highlighter(buildHighlightBuilder());
-        if(StringUtils.isNotBlank(condition.getSortFiled())){
+        if (StringUtils.isNotBlank(condition.getSortFiled())) {
             searchSourceBuilder.sort(condition.getSortFiled(), condition.getSort());
         }
         return request.source(searchSourceBuilder);
@@ -209,7 +193,7 @@ public class SearchServiceImpl implements SearchService {
      * 设置分页
      *
      * @param builder -
-     * @param vo -
+     * @param vo      -
      */
     private void setPage(SearchSourceBuilder builder, ConditionVo vo) {
         int page = vo.getPage();
@@ -219,27 +203,29 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * 找到目录下所有的元数据表
+     *
      * @param dirId 目录ID
      * @return -
      */
-    private String[] getMetadataIdsByDirId(String dirId){
+    private String[] getMetadataIdsByDirId(String dirId) {
         List<MetadataBasicVo> list = directoryService.directoryAllMetadata(dirId);
         String[] types = new String[list.size() + 1];
         types[0] = "file";
-        for(int i=1; i <= list.size(); i++){
-            types[i] = list.get(i-1).getMetadataName();
+        for (int i = 1; i <= list.size(); i++) {
+            types[i] = list.get(i - 1).getMetadataName();
         }
         return types;
     }
 
     /**
      * 获取目录的所有子级目录ID
+     *
      * @param dirId 目录ID
      * @return
      */
-    private String[] getDirectoryAllChildIds(String dirId){
+    private String[] getDirectoryAllChildIds(String dirId) {
         DirectoryVo vo = directoryService.getById(dirId);
-        if(vo == null){
+        if (vo == null) {
             return null;
         }
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
@@ -247,8 +233,8 @@ public class SearchServiceImpl implements SearchService {
         List<DirectoryVo> list = directoryService.list(wrapper);
         String[] ids = new String[list.size() + 1];
         ids[0] = dirId;
-        for(int i=1; i <= list.size(); i++){
-            ids[i] = list.get(i-1).getId();
+        for (int i = 1; i <= list.size(); i++) {
+            ids[i] = list.get(i - 1).getId();
         }
         return ids;
     }
