@@ -43,7 +43,7 @@
                         <div class="layui-form-label" style="width: 100px">图表类型</div>
                         <div class="layui-inline">
                             <div class="layui-input-inline" style="width: 300px">
-                                <select name="reportType">
+                                <select name="reportType" lay-filter="reportType">
                                     <option value="pie" selected>饼图</option>
                                     <option value="bar">柱状图</option>
                                     <option value="line">折线图</option>
@@ -98,11 +98,10 @@
                         <div class="layui-form-label" style="width: 100px">聚合方式</div>
                         <div class="layui-inline">
                             <div class="layui-input-inline" style="width: 300px">
-                                <select name="aggregationType" lay-filter="aggregationType">
-                                    <option value="" selected>选择聚合方式</option>
-                                    <option value="count">计数</option>
-                                    <option value="sum">求和</option>
-                                    <option value="avg">平均值</option>
+                                <select name="aggregationType" id="aggregationType" lay-filter="aggregationType">
+                                    <option value="count" selected>计数</option>
+                                    <option value="sum" disabled>求和</option>
+                                    <option value="avg" disabled>平均值</option>
                                 </select>
                             </div>
                         </div>
@@ -119,4 +118,4 @@
             </fieldset>
         </div>`;
 </script>
-<script th:src="@{/js/report2.js}"></script>
+<script th:src="@{/js/report.js}"></script>
