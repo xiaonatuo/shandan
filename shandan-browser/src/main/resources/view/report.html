@@ -5,15 +5,15 @@
     // 达梦数值类型集合
     const dm_number_types = ['NUMERIC', 'NUMBER', 'DECIMAL', 'DEC', 'INTEGER', 'INT', 'PLS_INTEGER', 'BIGINT', 'TINYINT', 'BYTE', 'SMALLINT', 'FLOAT', 'DOUBLE', 'DOUBLE PRECISION'];
     const common_fields = [
-        {field: 'source', type: 'VARCHAR2', comment: '文件来源'},
-        {field: 'inputDate', type: 'DATETIME', comment: '收文时间'},
-        {field: 'entryStaff', type: 'VARCHAR2', comment: '录入人员'},
-        {field: 'taskNature', type: 'VARCHAR2', comment: '任务性质'},
-        {field: 'taskCode', type: 'VARCHAR2', comment: '任务代号'},
-        {field: 'targetNumber', type: 'VARCHAR2', comment: '目标编号'},
-        {field: 'troopCode', type: 'VARCHAR2', comment: '部队代号'},
-        {field: 'equipmentModel', type: 'VARCHAR2', comment: '装备型号'},
-        {field: 'missileNumber', type: 'VARCHAR2', comment: '导弹编号'},
+        {field: 'source', dataType: 'VARCHAR2', comment: '文件来源'},
+        {field: 'inputDate', dataType: 'DATETIME', comment: '收文时间'},
+        {field: 'entryStaff', dataType: 'VARCHAR2', comment: '录入人员'},
+        {field: 'taskNature', dataType: 'VARCHAR2', comment: '任务性质'},
+        {field: 'taskCode', dataType: 'VARCHAR2', comment: '任务代号'},
+        {field: 'targetNumber', dataType: 'VARCHAR2', comment: '目标编号'},
+        {field: 'troopCode', dataType: 'VARCHAR2', comment: '部队代号'},
+        {field: 'equipmentModel', dataType: 'VARCHAR2', comment: '装备型号'},
+        {field: 'missileNumber', dataType: 'VARCHAR2', comment: '导弹编号'},
     ];
     const template_main = `
         <div id="layer-content-report" >

@@ -36,19 +36,4 @@ public class NumberHistogramReportAggregation extends ReportAggregation<ParsedHi
         subAggregation(builder);
         return builder;
     }
-
-    @Override
-    public JSONObject parse() {
-        ParsedHistogram histogram = getAggregations();
-        JSONArray xAxis = new JSONArray();
-        JSONArray series = new JSONArray();
-        histogram.getBuckets().forEach(bucket -> {
-            xAxis.add(bucket.getKeyAsString());
-            series.add(bucket.getDocCount());
-        });
-        JSONObject json = new JSONObject();
-        json.put("xAxis", xAxis);
-        json.put("series", series);
-        return json;
-    }
 }

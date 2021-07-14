@@ -15,13 +15,6 @@
     padding: 10px 20px;
 }
 
-.report-main .report-items {
-    flex-grow: 1;
-    display: flex;
-    flex-wrap: wrap;
-    overflow-y: overlay;
-}
-
 .sorting-item {
     display: flex;
     flex-direction: row;
@@ -29,9 +22,18 @@
     padding: 5px 0 !important;
 }
 
+.report-main .report-items {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: overlay;
+    justify-content: space-around;
+}
+
 .echarts-item {
-    width: 50%;
-    height: 50%
+    width: 40%;
+    height: 40%;
+    padding: 0 20px;
 }
 .layui-elem-field{border-color: #e8e8e8 !important;}
 .layui-elem-field legend {

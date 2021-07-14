@@ -71,7 +71,7 @@ ReportComponent.prototype.initFieldSelect = function (metadataId) {
         if (res.flag && res.data) {
             let cols = JSON.parse(res.data);
             for (let item of cols) {
-                const field = item.columnName, type = item.type, comment = item.comment;
+                const field = item.columnName, type = item.dataType, comment = item.comment;
                 if (!field || field.toLowerCase().endsWith('id')) {
                     continue
                 }
@@ -247,15 +247,14 @@ ReportComponent.prototype.validate = function(formVal){
  */
 ReportComponent.prototype.renderEcharts = function(reportData){
     const _this = this;
-    const data = $.extend(true, _this.form.val('echartsConfigForm'), {data: reportData});
-    console.info(data);
+    const formData = _this.form.val('echartsConfigForm');
     const elemId = `echarts-item-${_this.size}`;
     $('#report-items').append(`<div class="echarts-item" id="${elemId}"></div>`)
     let chartDom = document.getElementById(elemId);
     let echartsItem = echarts.init(chartDom);
     let option = {
         title: {
-            text: data.title || '统计图',
+            text: formData.title || '统计图',
             left: 'center'
         },
         toolbox: {
@@ -277,9 +276,9 @@ ReportComponent.prototype.renderEcharts = function(reportData){
         },
         series: [
             {
-                type: data.reportType,
+                type: formData.reportType,
                 radius: '50%',
-                data: data.data.series,
+                data: reportData.data,
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -290,17 +289,22 @@ ReportComponent.prototype.renderEcharts = function(reportData){
             }
         ]
     };
-    if(data.reportType !== 'pie'){
+    if(formData.reportType !== 'pie'){
         option.xAxis = [
             {
                 type: 'category',
-                data: data.data.xAxis,
+                data: [],
                 axisTick: {
                     alignWithLabel: true
                 }
             }
         ];
         option.yAxis = [{type: 'value'}]
+        option.series[0].data = [];
+        for(let item of reportData.data){
+            option.xAxis[0].data.push(item.name)
+            option.series[0].data.push(item.value)
+        }
     }
     option && echartsItem.setOption(option);
     _this.size += 1;

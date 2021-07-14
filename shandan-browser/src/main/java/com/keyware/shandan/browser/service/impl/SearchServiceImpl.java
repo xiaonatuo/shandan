@@ -76,7 +76,7 @@ public class SearchServiceImpl implements SearchService {
         ReportAggregation aggregation = ReportAggregation.getAggregation(request, report);
         aggregation.search(esClient);
 
-        return aggregation.parse();
+        return aggregation.parseEchartsItem();
     }
 
     /**

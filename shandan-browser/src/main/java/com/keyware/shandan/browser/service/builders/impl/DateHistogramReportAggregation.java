@@ -23,8 +23,6 @@ import java.util.Date;
  */
 public class DateHistogramReportAggregation extends ReportAggregation<ParsedDateHistogram> {
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
     public DateHistogramReportAggregation(SearchRequest request, ReportVo report) {
         super(request, report);
     }
@@ -58,24 +56,5 @@ public class DateHistogramReportAggregation extends ReportAggregation<ParsedDate
         }
         subAggregation(builder);
         return builder;
-    }
-
-    @Override
-    public JSONObject parse() {
-        ParsedDateHistogram histogram = getAggregations();
-
-        JSONArray xAxis = new JSONArray();
-        JSONArray series = new JSONArray();
-        histogram.getBuckets().forEach(bucket -> {
-            DateTime time = (DateTime) bucket.getKey();
-            Date date = time.toLocalDateTime().toDate();
-
-            xAxis.add(sdf.format(date));
-            series.add(bucket.getDocCount());
-        });
-        JSONObject json = new JSONObject();
-        json.put("xAxis", xAxis);
-        json.put("series", series);
-        return json;
     }
 }

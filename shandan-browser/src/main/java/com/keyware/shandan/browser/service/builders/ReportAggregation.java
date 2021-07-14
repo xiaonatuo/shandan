@@ -1,10 +1,12 @@
 package com.keyware.shandan.browser.service.builders;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keyware.shandan.browser.entity.ReportVo;
 import com.keyware.shandan.browser.service.builders.impl.DateHistogramReportAggregation;
 import com.keyware.shandan.browser.service.builders.impl.NumberHistogramReportAggregation;
 import com.keyware.shandan.browser.service.builders.impl.StringTermsReportAggregation;
+import com.keyware.shandan.common.util.StringUtils;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -12,9 +14,14 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.ParsedMultiBucketAggregation;
+import org.elasticsearch.search.aggregations.bucket.histogram.ParsedAutoDateHistogram;
+import org.elasticsearch.search.aggregations.bucket.histogram.ParsedDateHistogram;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * 统计报表聚合抽象类
@@ -31,6 +38,8 @@ public abstract class ReportAggregation<T extends ParsedMultiBucketAggregation> 
      * 达梦数据库数值类型集合
      */
     private final static String[] dm_number_types = {"NUMERIC", "NUMBER", "DECIMAL", "DEC", "INTEGER", "INT", "PLS_INTEGER", "BIGINT", "TINYINT", "BYTE", "SMALLINT", "FLOAT", "DOUBLE", "DOUBLE PRECISION"};
+
+    protected final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     protected ReportVo report;
     protected SearchRequest request;
@@ -56,19 +65,36 @@ public abstract class ReportAggregation<T extends ParsedMultiBucketAggregation> 
     public abstract AggregationBuilder builder();
 
     /**
-     * 解析查询结果
-     *
-     * @return -
-     */
-    public abstract JSONObject parse();
-
-    /**
      * 获取聚合结果集
      *
      * @return -
      */
     public T getAggregations() {
         return response.getAggregations().get(alias);
+    }
+
+    /**
+     * 解析为图表数据
+     * @return -
+     */
+    public JSONObject parseEchartsItem(){
+        ParsedMultiBucketAggregation histogram = getAggregations();
+        JSONArray array = new JSONArray();
+        histogram.getBuckets().forEach(bucket -> {
+            String key = bucket.getKeyAsString();
+            if(bucket instanceof ParsedDateHistogram.ParsedBucket || bucket instanceof ParsedAutoDateHistogram.ParsedBucket){
+                DateTime time = (DateTime) bucket.getKey();
+                Date date = time.toLocalDateTime().toDate();
+                key = sdf.format(date);
+            }
+            JSONObject json = new JSONObject();
+            json.put("name", StringUtils.isBlank(key) ? "未知" : key);
+            json.put("value", bucket.getDocCount());
+            array.add(json);
+        });
+        JSONObject json = new JSONObject();
+        json.put("data", array);
+        return json;
     }
 
     /**
