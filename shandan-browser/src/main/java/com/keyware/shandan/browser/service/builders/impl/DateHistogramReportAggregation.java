@@ -1,5 +1,6 @@
 package com.keyware.shandan.browser.service.builders.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keyware.shandan.browser.entity.ReportVo;
 import com.keyware.shandan.browser.service.builders.ReportAggregation;
@@ -8,8 +9,11 @@ import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
+import org.elasticsearch.search.aggregations.bucket.histogram.ParsedDateHistogram;
+import org.joda.time.DateTime;
 
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 日期直方图类型报表聚合构建类
@@ -17,7 +21,9 @@ import java.util.HashMap;
  * @author GuoXin
  * @since 2021/7/13
  */
-public class DateHistogramReportAggregation extends ReportAggregation {
+public class DateHistogramReportAggregation extends ReportAggregation<ParsedDateHistogram> {
+
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     public DateHistogramReportAggregation(SearchRequest request, ReportVo report) {
         super(request, report);
@@ -56,7 +62,20 @@ public class DateHistogramReportAggregation extends ReportAggregation {
 
     @Override
     public JSONObject parse() {
+        ParsedDateHistogram histogram = getAggregations();
 
-        return null;
+        JSONArray xAxis = new JSONArray();
+        JSONArray series = new JSONArray();
+        histogram.getBuckets().forEach(bucket -> {
+            DateTime time = (DateTime) bucket.getKey();
+            Date date = time.toLocalDateTime().toDate();
+
+            xAxis.add(sdf.format(date));
+            series.add(bucket.getDocCount());
+        });
+        JSONObject json = new JSONObject();
+        json.put("xAxis", xAxis);
+        json.put("series", series);
+        return json;
     }
 }

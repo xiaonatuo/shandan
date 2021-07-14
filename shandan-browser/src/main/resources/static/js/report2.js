@@ -9,6 +9,7 @@ function ReportComponent(layer, form) {
     this.form = form || {}; // layui form组件
     this.formData = {}; // 检索页面的form表单数据
     this.fields = common_fields; // 当前字段集合，默认只有公共字段
+    this.size = 0;
 }
 
 ReportComponent.Report = class {
@@ -104,7 +105,7 @@ ReportComponent.prototype.openEchartsConfigLayer = function () {
                 }
             }
             _this.requestData(formVal);
-            //layer.close(index);
+            layer.close(index);
         }
     });
 }
@@ -117,12 +118,75 @@ ReportComponent.prototype.requestData = function (formVal) {
     const _this = this;
     formVal.conditions = _this.conditions
     $.post(`${ctx}/report/data`, formVal, function (res) {
-        console.info(res);
         if (res.flag) {
-            //report.data = res.data;
-            //_this.renderEcharts(report);
+            _this.renderEcharts(res.data);
         }
     });
+}
+
+/**
+ * 渲染echarts
+ * @param reportData
+ */
+ReportComponent.prototype.renderEcharts = function(reportData){
+    const _this = this;
+    const data = $.extend(true, _this.form.val('echartsConfigForm'), {data: reportData});
+    console.info(data);
+    const elemId = `echarts-item-${_this.size}`;
+    $('#report-items').append(`<div class="echarts-item" id="${elemId}"></div>`)
+    let chartDom = document.getElementById(elemId);
+    let echartsItem = echarts.init(chartDom);
+    let option = {
+        title: {
+            text: data.title || '统计图',
+            left: 'center'
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    readOnly: false,
+                    title: '数据视图'
+                },
+                saveAsImage: {title:'下载'}
+            }
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+        },
+        series: [
+            {
+                type: data.reportType,
+                radius: '50%',
+                data: data.data.series,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    if(data.reportType !== 'pie'){
+        option.xAxis = [
+            {
+                type: 'category',
+                data: data.data.xAxis,
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ];
+        option.yAxis = [{type: 'value'}]
+    }
+    option && echartsItem.setOption(option);
+    _this.size += 1;
 }
 
 /**

@@ -61,6 +61,12 @@ public class SearchServiceImpl implements SearchService {
         return PageVo.ofSearchHits(response.getHits(), condition);
     }
 
+    /**
+     * 统计报表聚合查询
+     * @param report 统计类型
+     * @return -
+     * @throws IOException
+     */
     @Override
     public JSONObject report(ReportVo report) throws IOException {
         ConditionVo condition = new ConditionVo();
@@ -72,42 +78,6 @@ public class SearchServiceImpl implements SearchService {
 
         return aggregation.parse();
     }
-
-
-
-/*    private JSONObject parseResponseAggs(SearchResponse response, ReportVo report) {
-        Aggregations aggs = response.getAggregations();
-        if (report.getReportType().equals("pie")) {
-            ParsedStringTerms terms = aggs.get(report.getFieldX());
-            JSONArray array = new JSONArray();
-            terms.getBuckets().forEach(bucket -> {
-                JSONObject json = new JSONObject();
-                json.put("name", StringUtils.isBlank(bucket.getKeyAsString()) ? "未知" : bucket.getKeyAsString());
-                json.put("value", bucket.getDocCount());
-                array.add(json);
-            });
-            JSONObject json = new JSONObject();
-            json.put("series", array);
-            return json;
-        } else {
-            ParsedDateHistogram terms = aggs.get("inputDate");
-
-            JSONArray xAxis = new JSONArray();
-            JSONArray series = new JSONArray();
-            terms.getBuckets().forEach(bucket -> {
-                DateTime time = (DateTime) bucket.getKey();
-                Date date = time.toLocalDateTime().toDate();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-                xAxis.add(sdf.format(date));
-                series.add(bucket.getDocCount());
-            });
-            JSONObject json = new JSONObject();
-            json.put("xAxis", xAxis);
-            json.put("series", series);
-            return json;
-        }
-    }*/
 
     /**
      * 构建请求

@@ -11,10 +11,10 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.ParsedMultiBucketAggregation;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * 统计报表聚合抽象类
@@ -22,7 +22,7 @@ import java.util.HashMap;
  * @author GuoXin
  * @since 2021/7/13
  */
-public abstract class ReportAggregation {
+public abstract class ReportAggregation<T extends ParsedMultiBucketAggregation> {
     /**
      * 达梦数据库日期类型集合
      */
@@ -43,6 +43,9 @@ public abstract class ReportAggregation {
         setAlias();
     }
 
+    /**
+     * 设置聚合别名
+     */
     public abstract void setAlias();
 
     /**
@@ -58,6 +61,15 @@ public abstract class ReportAggregation {
      * @return -
      */
     public abstract JSONObject parse();
+
+    /**
+     * 获取聚合结果集
+     *
+     * @return -
+     */
+    public T getAggregations() {
+        return response.getAggregations().get(alias);
+    }
 
     /**
      * 构建子聚合
@@ -77,6 +89,12 @@ public abstract class ReportAggregation {
         }
     }
 
+    /**
+     * 执行搜索
+     *
+     * @param client ES高级客户端
+     * @throws IOException -
+     */
     public void search(RestHighLevelClient client) throws IOException {
         this.request.source().from(0).size(0).aggregation(builder());
         this.response = client.search(this.request, RequestOptions.DEFAULT);
@@ -84,16 +102,17 @@ public abstract class ReportAggregation {
 
     /**
      * 根据统计报表参数返回不同类型的聚合
-     * @param request
-     * @param report
-     * @return
+     *
+     * @param request 搜索请求
+     * @param report  统计报表参数
+     * @return -
      */
-    public static ReportAggregation getAggregation(SearchRequest request, ReportVo report){
+    public static ReportAggregation getAggregation(SearchRequest request, ReportVo report) {
         if (Arrays.asList(dm_date_types).contains(report.getFieldXType())) { // 日期类型
             return new DateHistogramReportAggregation(request, report);
         } else if (Arrays.asList(dm_number_types).contains(report.getFieldXType())) { //数值类型
             return new NumberHistogramReportAggregation(request, report);
-        }else{// 字符串类型
+        } else {// 字符串类型
             return new StringTermsReportAggregation(request, report);
         }
     }

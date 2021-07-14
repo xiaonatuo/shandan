@@ -9,10 +9,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.histogram.HistogramAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
-
-import java.util.HashMap;
 
 /**
  * 字符串类型报表聚合构建类
@@ -20,7 +17,7 @@ import java.util.HashMap;
  * @author GuoXin
  * @since 2021/7/13
  */
-public class StringTermsReportAggregation extends ReportAggregation {
+public class StringTermsReportAggregation extends ReportAggregation<ParsedStringTerms> {
     public StringTermsReportAggregation(SearchRequest request, ReportVo report) {
         super(request, report);
     }
@@ -37,8 +34,7 @@ public class StringTermsReportAggregation extends ReportAggregation {
 
     @Override
     public JSONObject parse() {
-        Aggregations aggs = response.getAggregations();
-        ParsedStringTerms terms = aggs.get(alias);
+        ParsedStringTerms terms = getAggregations();
         JSONArray array = new JSONArray();
         terms.getBuckets().forEach(bucket -> {
             JSONObject json = new JSONObject();
