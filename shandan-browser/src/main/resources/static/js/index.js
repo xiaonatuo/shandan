@@ -29,10 +29,10 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     renderPageComponent();
     beginSearch();
     $('#btn-report').on('click', function () {
-        /*if(currPageData.size <= 0){
+        if(currPageData.size <= 0){
             layer.msg('当前没有数据可用，请查询到数据后再点击')
             return;
-        }*/
+        }
         reportComponent.openMainLayer();
     });
 
