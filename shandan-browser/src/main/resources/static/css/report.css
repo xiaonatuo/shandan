@@ -33,6 +33,7 @@
     width: 50%;
     height: 50%
 }
+.layui-elem-field{border-color: #e8e8e8 !important;}
 .layui-elem-field legend {
     margin-left: 20px;
     padding: 0 10px;
