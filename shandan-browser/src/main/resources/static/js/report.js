@@ -164,7 +164,7 @@ ReportComponent.prototype.findFieldType = function (field) {
     const fields = this.fields;
     for (let f of fields) {
         if (field == f.field) {
-            return f.type;
+            return f.dataType;
         }
     }
     return '';
