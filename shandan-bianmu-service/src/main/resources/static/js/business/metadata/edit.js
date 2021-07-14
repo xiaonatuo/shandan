@@ -187,8 +187,8 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
         // 设置字段默认全部显示
         metadataTableMap.forEach((tableInfo, key)=>{
             if(!tableInfo.tableColumns){
-                const cols = tableInfo.columnList.map(({columnName, comment}) => {
-                    return {columnName, comment}
+                const cols = tableInfo.columnList.map(({columnName, comment, dataType}) => {
+                    return {columnName, comment, dataType}
                 });
                 tableInfo.tableColumns = JSON.stringify(cols);
                 metadataTableMap.set(key, tableInfo);
