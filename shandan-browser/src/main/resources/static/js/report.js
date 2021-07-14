@@ -295,10 +295,17 @@ ReportComponent.prototype.renderEcharts = function(reportData){
                 type: 'category',
                 data: [],
                 axisTick: {
+                    interval:0,
                     alignWithLabel: true
                 }
             }
         ];
+        option.tooltip = {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        }
         option.yAxis = [{type: 'value'}]
         option.series[0].data = [];
         for(let item of reportData.data){
