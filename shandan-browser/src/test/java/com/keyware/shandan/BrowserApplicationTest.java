@@ -7,6 +7,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
@@ -62,11 +63,21 @@ public class BrowserApplicationTest {
                 ParsedValueCount count = bucket.getAggregations().get("count");
 
 
-                /*bucket.getAggregations().asList().forEach(item -> {
-
-                    System.out.println(item.getType() + "," + item.getName() + "," + JSONObject.toJSON(item.getMetaData()));
-                });*/
             });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test2(){
+        SearchRequest request = Requests.searchRequest("shandan");
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        builder.query(QueryBuilders.queryStringQuery("微信"));
+        request.source(builder);
+        try {
+            SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
+            System.out.println(JSONObject.toJSONString(response));
         } catch (IOException e) {
             e.printStackTrace();
         }
