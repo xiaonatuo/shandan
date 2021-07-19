@@ -2,6 +2,7 @@ package com.keyware.shandan.system.service.impl;
 
 import com.keyware.shandan.common.service.BaseServiceImpl;
 import com.keyware.shandan.common.util.DateUtil;
+import com.keyware.shandan.common.util.PoiFileReadUtil;
 import com.keyware.shandan.common.util.UUIDUtil;
 import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.SysFile;
@@ -9,7 +10,6 @@ import com.keyware.shandan.system.mapper.SysFileMapper;
 import com.keyware.shandan.system.queue.provider.EsSysFileProvider;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,10 +50,19 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
         File fileDir = new File(storagePath + "/" +path);
         fileDir.mkdirs();
         sysFile.setPath(path + "/" + fileNewName);
-        file.transferTo(new File(storagePath + "/" + sysFile.getPath()));
 
+        if(sysFile.getFileType().equalsIgnoreCase("txt")){
+            PoiFileReadUtil.convertToUTF8(file, f ->{
+                try {
+                    f.transferTo(new File(storagePath + "/" + sysFile.getPath()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }else{
+            file.transferTo(new File(storagePath + "/" + sysFile.getPath()));
+        }
         save(sysFile);
-        // sysFileProvider.appendQueue(sysFile); 改为审核通过后将文件进行保存
         return sysFile;
     }
 }

@@ -25,8 +25,8 @@ function fileViewer(file){
                             <iframe id="pdfViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
                         </div>
                         <!-- 文本文件浏览组件 -->
-                        <div id="file-viewer-text" class="file-viewer layui-hide" style="height: 100%">
-                            <iframe id="txtViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                        <div id="file-viewer-text" class="file-viewer layui-hide" style="height: 100%; display: flex; justify-content: center; align-items: center">
+                            <textarea readonly style="width: 98%; height: 98%; border:0"></textarea>
                         </div>
                         <!-- 不至于预览的文件 -->
                         <div id="file-viewer-other" class="file-viewer layui-hide" style="height: 100%;text-align: center;">
@@ -70,7 +70,23 @@ function fileViewer(file){
                 $('#pdfViewer').attr('src', filePath);
                 showFileViewer('pdf');
             } else if (viewType.text.includes(file.fileSuffix)) {
-                $('#txtViewer').attr('src', filePath);
+                //$('#txtViewer').attr('src', filePath);
+                $.get(filePath, {}, function (res){
+                    $('#file-viewer-text textarea').html(res);
+                });
+                /*$.ajax({
+                    url: filePath,
+                    dataType: 'blob',
+                    type: 'get',
+                    success: function (res){
+                        let reader = new FileReader()
+                        reader.readAsDataURL(res);
+                        reader.onload(()=>{})
+                    },
+                    error: function(err){
+
+                    }
+                });*/
                 showFileViewer('text');
             } else {
                 let htm = `<p>该文件不支持预览，可下载后查看。</p>

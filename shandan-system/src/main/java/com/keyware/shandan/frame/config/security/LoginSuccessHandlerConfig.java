@@ -59,7 +59,7 @@ public class LoginSuccessHandlerConfig implements AuthenticationSuccessHandler {
         }
 
         //禁止多人在线
-        if("N".equals(sysUser.getLimitMultiLogin()) &&  securityUtil.sessionRegistryGetUserBySessionId(httpServletRequest.getRequestedSessionId()) != null){
+        if(!sysUser.getLimitMultiLogin() &&  securityUtil.sessionRegistryGetUserBySessionId(httpServletRequest.getRequestedSessionId()) != null){
             msg = "{\"code\":\"400\",\"msg\":\"该账号禁止多人在线，请联系管理员\"}";
             flag = true;
         }
@@ -71,7 +71,7 @@ public class LoginSuccessHandlerConfig implements AuthenticationSuccessHandler {
         }
 
         //禁止登陆系统
-        if("N".equals(sysUser.getValid())){
+        if(!sysUser.getValid()){
             msg = "{\"code\":\"400\",\"msg\":\"该账号已被禁止登陆系统，请联系管理员\"}";
             flag = true;
         }
