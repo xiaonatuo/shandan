@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>应用桌面</title>
+    <script th:replace="common/head::static"></script>
+    <link rel="stylesheet" th:href="@{/style/index.css}"/>
+</head>
+<body>
+<div class="main bg1">
+    <div class="sys-setting">
+        <a class="layui-btn layui-btn-xs" id="btn-setting"><i class="layui-icon layui-icon-set"></i>设置</a>
+    </div>
+    <div class="sys-title">
+        <h1>山丹项目应用系统全称</h1>
+    </div>
+    <div class="app-list">
+        <div class="app-item">
+            <img th:src="@{/style/image/metro/cloud.png}" src="" alt="应用名称"/>
+            <div class="mask"></div>
+            <p>应用名称应用名称应用名称应用名称</p>
+        </div>
+        <div class="app-item">
+            <img th:src="@{/style/image/pc.png}" src="" alt="应用名称"/>
+            <div class="mask"></div>
+            <p>应用名称</p>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/index.js}"></script>
+<script>
+    // 禁止右键菜单
+    document.oncontextmenu = () => false;
+    // 图片加载失败的监听
+    $('.app-item img').on('error', function(){
+        this.src = `${ctx}/style/image/metro/dropbox.png`
+    })
+</script>
+</html>

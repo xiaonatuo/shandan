@@ -206,5 +206,7 @@
         <module>shandan-bianmu-service</module>
         <!-- 综合浏览系统业务模块 -->
         <module>shandan-browser</module>
+        <!-- 应用云桌面 -->
+        <module>shandan-desktop</module>
     </modules>
 </project>

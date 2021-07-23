@@ -1,4 +1,4 @@
-package com.keyware.shandan.frame.aspect;
+package com.keyware.shandan.common.aspect;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,7 +9,6 @@ import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.AesUtil;
 import com.keyware.shandan.common.util.ErrorUtil;
 import com.keyware.shandan.common.util.RsaUtil;
-import com.keyware.shandan.system.utils.SysSettingUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
@@ -51,9 +50,9 @@ public class SafetyAspect {
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         try {
             //判断api加密开关是否开启
-            if ("N".equals(SysSettingUtil.getSysSetting().getSysApiEncrypt())) {
+            /*if ("N".equals(SysSettingUtil.getSysSetting().getSysApiEncrypt())) {
                 return joinPoint.proceed(joinPoint.getArgs());
-            }
+            }*/
 
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             assert attributes != null;
