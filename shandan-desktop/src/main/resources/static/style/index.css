@@ -56,8 +56,9 @@ body {
     position: relative;
     width: 140px;
     height: 140px;
-    border-radius: 25px;
+    border-radius: 30px;
     overflow: hidden;
+    box-shadow: 1px 1px 5px #0000004d;
 }
 .app-list .app-item img{
     float: left;
