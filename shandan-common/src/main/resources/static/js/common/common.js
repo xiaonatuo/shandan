@@ -246,8 +246,16 @@ jQueryExtend = {
                     fn.success = opt.success;
                 }
 
+                let isFile = false;
+                if(opt.data instanceof FormData){
+                    let file = opt.data.get('file');
+                    if(file){
+                        isFile = true
+                    }
+                }
+
                 //加密再传输
-                if (opt.type.toLowerCase() === "post" && !opt.url.endsWith('file/upload')) {
+                if (opt.type.toLowerCase() === "post" && !opt.url.endsWith('file/upload') && !isFile) {
                     let data = opt.data;
                     //发送请求之前随机获取AES的key
                     let aesKey = aesUtil.genKey();
@@ -264,7 +272,7 @@ jQueryExtend = {
                     //成功回调方法增强处理
                     success: function (data, textStatus) {
                         try {
-                            if (opt.type.toLowerCase() === "post" && data.data && !opt.url.endsWith('file/upload')) {
+                            if (opt.type.toLowerCase() === "post" && data.data && !opt.url.endsWith('file/upload') && !isFile) {
                                 data = aesUtil.decrypt(data.data.data, rsaUtil.decrypt(data.data.aesKey, window.jsPrivateKey));
                             }
                         } catch (e) {

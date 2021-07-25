@@ -2,7 +2,9 @@ package com.keyware.shandan.desktop.services;
 
 import com.keyware.shandan.desktop.entity.AppInfo;
 import com.keyware.shandan.desktop.entity.DesktopSetting;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -30,25 +32,18 @@ public interface DesktopService {
     Map<String, Object> getSetting();
 
     /**
-     * 获取应用列表
-     *
-     * @return
-     */
-    List<AppInfo> appList();
-
-    /**
-     * 保存应用
-     *
-     * @param appInfo 应用信息
-     * @return
-     */
-    Boolean saveApp(AppInfo appInfo);
-
-    /**
      * 保存应用桌面设置
      *
      * @param setting 设置
      * @return
      */
     Boolean saveSetting(DesktopSetting.Setting setting);
+
+    /**
+     * 上传图标
+     *
+     * @param file
+     * @return
+     */
+    String uploadIcon(MultipartFile file) throws IOException;
 }

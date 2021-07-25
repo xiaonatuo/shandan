@@ -1,9 +1,8 @@
 package com.keyware.shandan.desktop.entity;
-import com.baomidou.mybatisplus.annotation.OrderBy;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableField;
+
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,8 +23,8 @@ public class AppInfo implements Serializable {
     /**
      * 主键
      */
-    @TableId("ID")
-    private Integer id;
+    @TableId(value = "ID")
+    private String id;
 
     /**
      * 应用标题
@@ -56,18 +55,18 @@ public class AppInfo implements Serializable {
      */
     @TableField("SORT")
     @OrderBy(isDesc = false)
-    private Integer sort;
+    private int sort;
 
     /**
      * 创建时间
      */
-    @TableField("CREATE_TIME")
+    @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
     private Date createTime;
 
     /**
      * 修改时间
      */
-    @TableField("MODIFY_TIME")
+    @TableField(value = "MODIFY_TIME", fill = FieldFill.INSERT_UPDATE)
     private Date modifyTime;
 
 }

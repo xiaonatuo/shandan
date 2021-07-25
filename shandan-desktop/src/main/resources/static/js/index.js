@@ -50,7 +50,7 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
                 <div class="layer-setting">
                     <div class="setting-btn">
                         <a class="layui-btn layui-btn-xs" id="addApp"><i class="layui-icon"></i>添加应用</a>
-                        <a class="layui-btn layui-btn-xs" id="setBackground"><i class="layui-icon"></i>设置桌面背景图</a>
+                        <!--<a class="layui-btn layui-btn-xs" id="setBackground"><i class="layui-icon"></i>设置桌面背景图</a>-->
                     </div>
                     <fieldset class="layui-elem-field layui-field-title" style="margin:0">
                         <legend style="margin-left: 5px; font-size: 16px;color: #4a4a4a;">应用列表</legend>
@@ -85,9 +85,17 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
                 let appsHtml = '';
                 for (let item of res) {
                     const tabStyle = item.target == '_blank' ? 'layui-bg-green' : 'layui-bg-orange'
+                    let icon;
+                    if (item.icon.startsWith('icon-')) {
+                        icon = `<div class="app-icon ${item.icon}"></div>`;
+                    } else if (item.icon.startsWith('images/')) {
+                        icon = `<img src="${ctx}/${item.icon}" alt="" />`;
+                    } else {
+                        icon = `<img src="${item.icon}" alt="" />`;
+                    }
                     appsHtml += `
                                 <div class="app-item">
-                                    <img src="../style/image/metro/cloud.png" alt="" />
+                                    ${icon}
                                     <div class="app-info">
                                         <p class="title">${item.title}<span class="layui-badge ${tabStyle}">${item.target}</span></p>
                                         <p class="sub-title">${item.url}</p>
@@ -135,22 +143,27 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
     function openAppEditLayer(id) {
         layer.open({
             type: 1,
-            area: ['500px', '520px'],
+            area: ['500px', '573px'],
             btn: ['确定', '取消'],
             content: `
-                <div class="layui-form" lay-filter="appInfoForm" style="overflow: hidden; padding: 15px 20px 0 0;">
+                <form class="layui-form" lay-filter="appInfoForm" style="overflow: hidden; padding: 15px 20px 0 0;">
                     <div class="layui-form-item">
                         <label class="layui-form-label">应用名称</label>
                         <div class="layui-input-block">
-                            <input type="text" name="title" required  lay-verify="required" placeholder="请输入应用名称" autocomplete="off" class="layui-input">
+                            <input type="text" name="title" lay-verify="required" placeholder="请输入应用名称" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">访问url</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="url" required lay-verify="required" placeholder="请输入访问地址" autocomplete="off" class="layui-input">
+                        <div class="layui-input-block">
+                            <input type="text" name="url" lay-verify="required" placeholder="请输入访问地址" autocomplete="off" class="layui-input">
                         </div>
-                        <!--<div class="layui-form-mid layui-word-aux">辅助文字</div>-->
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">排序</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sort" lay-verify="required|number" placeholder="应用排列顺序" autocomplete="off" class="layui-input">
+                        </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">打开方式</label>
@@ -165,62 +178,89 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
                         <div class="layui-input-block">
                             <div class="selected-icon">
                                 <div class="current-icon">
-                                    <div class="icon icon-altbook"></div>
+                                    <div class="icon" id="icon-content"></div>
                                 </div>
                                 <div class="upload-btn-area">
+                                    <input type="hidden" name="icon" value="">
                                     <a class="layui-btn layui-btn-sm layui-btn-danger" id="upload-icon"><i class="layui-icon layui-icon-upload"></i>上传图标</a>
                                     <div class="layui-word-aux">仅限上传1MB以内的图标</div>
                                 </div>
                             </div>
                             <ul class="icon-list">
-                                <li class="icon-altbook on"><div class="mask"></div></li>
-                                <li class="icon-approvedsafety"><div class="mask"></div></li>
-                                <li class="icon-boldness"><div class="mask"></div></li>
-                                <li class="icon-calculator"><div class="mask"></div></li>
-                                <li class="icon-cloud"><div class="mask"></div></li>
-                                <li class="icon-configured"><div class="mask"></div></li>
-                                <li class="icon-dashmac"><div class="mask"></div></li>
-                                <li class="icon-directmail"><div class="mask"></div></li>
-                                <li class="icon-dropbox"><div class="mask"></div></li>
-                                <li class="icon-dunpai"><div class="mask"></div></li>
-                                <li class="icon-excel"><div class="mask"></div></li>
-                                <li class="icon-fanglian"><div class="mask"></div></li>
-                                <li class="icon-googledocsblast"><div class="mask"></div></li>
-                                <li class="icon-googlemapsrafaga"><div class="mask"></div></li>
-                                <li class="icon-icalmac"><div class="mask"></div></li>
-                                <li class="icon-instagram"><div class="mask"></div></li>
-                                <li class="icon-internetdownloadmanager"><div class="mask"></div></li>
-                                <li class="icon-liveMessenger"><div class="mask"></div></li>
-                                <li class="icon-liveSync"><div class="mask"></div></li>
-                                <li class="icon-macappstorealt"><div class="mask"></div></li>
-                                <li class="icon-magnifier"><div class="mask"></div></li>
-                                <li class="icon-newswindows8"><div class="mask"></div></li>
-                                <li class="icon-notebook"><div class="mask"></div></li>
-                                <li class="icon-pc"><div class="mask"></div></li>
-                                <li class="icon-search"><div class="mask"></div></li>
-                                <li class="icon-skyDrive"><div class="mask"></div></li>
-                                <li class="icon-windows8photos"><div class="mask"></div></li>
-                                <li class="icon-windowsmediaplayer"><div class="mask"></div></li>
-                                <li class="icon-yuansu"><div class="mask"></div></li>
-                                <li class="icon-zipfile"><div class="mask"></div></li>
+                                <li class="icon-altbook" data-value="icon-altbook"><div class="mask"></div></li>
+                                <li class="icon-approvedsafety" data-value=""><div class="mask"></div></li>
+                                <li class="icon-boldness" data-value="icon-boldness"><div class="mask"></div></li>
+                                <li class="icon-calculator" data-value="icon-calculator"><div class="mask"></div></li>
+                                <li class="icon-cloud" data-value="icon-cloud"><div class="mask"></div></li>
+                                <li class="icon-configured" data-value="icon-configured"><div class="mask"></div></li>
+                                <li class="icon-dashmac" data-value="icon-dashmac"><div class="mask"></div></li>
+                                <li class="icon-directmail" data-value="icon-directmail"><div class="mask"></div></li>
+                                <li class="icon-dropbox" data-value="icon-dropbox"><div class="mask"></div></li>
+                                <li class="icon-dunpai" data-value="icon-dunpai"><div class="mask"></div></li>
+                                <li class="icon-excel" data-value="icon-excel"><div class="mask"></div></li>
+                                <li class="icon-fanglian" data-value="icon-fanglian"><div class="mask"></div></li>
+                                <li class="icon-googledocsblast" data-value="icon-googledocsblast"><div class="mask"></div></li>
+                                <li class="icon-googlemapsrafaga" data-value="icon-googlemapsrafaga"><div class="mask"></div></li>
+                                <li class="icon-icalmac" data-value="icon-icalmac"><div class="mask"></div></li>
+                                <li class="icon-instagram" data-value="icon-instagram"><div class="mask"></div></li>
+                                <li class="icon-internetdownloadmanager" data-value="icon-internetdownloadmanager"><div class="mask"></div></li>
+                                <li class="icon-liveMessenger" data-value="icon-liveMessenger"><div class="mask"></div></li>
+                                <li class="icon-liveSync" data-value="icon-liveSync"><div class="mask"></div></li>
+                                <li class="icon-macappstorealt" data-value="icon-macappstorealt"><div class="mask"></div></li>
+                                <li class="icon-magnifier" data-value="icon-magnifier"><div class="mask"></div></li>
+                                <li class="icon-newswindows8" data-value="icon-newswindows8"><div class="mask"></div></li>
+                                <li class="icon-notebook" data-value="icon-notebook"><div class="mask"></div></li>
+                                <li class="icon-pc" data-value="icon-pc"><div class="mask"></div></li>
+                                <li class="icon-search" data-value="icon-search"><div class="mask"></div></li>
+                                <li class="icon-skyDrive" data-value="icon-skyDrive"><div class="mask"></div></li>
+                                <li class="icon-windows8photos" data-value="icon-windows8photos"><div class="mask"></div></li>
+                                <li class="icon-windowsmediaplayer" data-value="icon-windowsmediaplayer"><div class="mask"></div></li>
+                                <li class="icon-yuansu" data-value="icon-yuansu"><div class="mask"></div></li>
+                                <li class="icon-zipfile" data-value="icon-zipfile"><div class="mask"></div></li>
                             </ul>
                         </div>
                     </div>
-                </div>
+                    <input type="hidden" name="id">
+                    <button type="submit" lay-submit id="appInfoSubmit" style="border: none; position: absolute"/>
+                </form>
             `,
             success: function (layerObj, index) {
-                $('ul.icon-list li').on('click', function () {
-                    $(this).addClass('on').siblings().removeClass('on');
-                    const _class = $(this).attr('class');
-                    $('.current-icon div:first').attr('class', 'icon ' + _class);
-                })
-                bindUploadBtn();
+                $('ul.icon-list li').on('click', showDefaultIcon)
                 if (id) {
                     getApp(id).then(appInfo => {
-
+                        form.val('appInfoForm', appInfo);
+                        let icon;
+                        if (appInfo.icon.startsWith('icon-')) {
+                            $('.current-icon div:first').attr('class', 'icon ' + appInfo.icon);
+                        } else if (appInfo.icon.startsWith('images/')) {
+                            $('#icon-content').html(`<img src="${ctx}/${appInfo.icon}" alt="" style="width: 100%; height: 100%; border-radius: 5px;"/>`);
+                        } else {
+                            $('#icon-content').html(`<img src="${appInfo.icon}" alt="" style="width: 100%; height: 100%; border-radius: 5px;"/>`);
+                        }
                     })
                 }
                 form.render()
+                bindUploadBtn();
+            },
+            yes: function (index) {
+                form.on('submit(appInfoForm)', function () {
+                    let formVal = form.val('appInfoForm');
+                    if (!formVal.icon) {
+                        layer.msg('请选择图标', {icon: 5});
+                        return false;
+                    }
+                    $.post(`${ctx}/desktop/app/save`, formVal, function (res) {
+                        if (res.flag && res.data) {
+                            layer.msg('保存成功');
+                            layer.close(index);
+                            getApps();
+                        } else {
+                            layer.msg('保存失败', {icon: 5});
+                        }
+                    });
+                    return false; //阻止表单跳转刷新
+                });
+                $('#appInfoSubmit').click();
             },
             end: function (index) {
 
@@ -253,7 +293,7 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
     async function getApp(id) {
         let appInfo = undefined;
         await $.ajax({
-            url: '',
+            url: `${ctx}/desktop/app/${id}`,
             type: 'get',
             async: false,
             success: function (res) {
@@ -273,7 +313,16 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
      * @param id 应用ID
      */
     function deleteApp(id) {
-
+        layer.confirm('确定要删除该应用吗？', {title: '删除确认'}, function () {
+            $.delete(`${ctx}/desktop/app/${id}`, {}, function (res) {
+                if (res.flag) {
+                    getApps();
+                    layer.msg('删除成功');
+                } else {
+                    layer.msg('删除失败', {icon: 5})
+                }
+            })
+        })
     }
 
     /**
@@ -282,12 +331,48 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
     function bindUploadBtn() {
         layui.upload.render({
             elem: '#upload-icon',
-            url: `${ctx}/desktop/icon/upload`, //改成您自己的上传接口
+            url: `${ctx}/desktop/upload/icon`,
+            multiple: false,
+            auto: true,
             size: 1024, //限制文件大小，单位 KB
+            accept: 'images',
+            acceptMime: 'image/*', // 只显示图片类型
             done: function (res) {
-                layer.msg('上传成功');
-                console.log(res)
+                if (res.flag) { //上传成功
+                    showImgIcon(res.data);
+                    let data = form.val('appInfoForm');
+                    data.icon = res.data;
+                    form.val('appInfoForm', data);
+                } else {
+                    layer.msg('上传失败', {icon: 5});
+                }
             }
         });
+    }
+
+    /**
+     * 显示上传后的图标
+     * @param path
+     */
+    function showImgIcon(path) {
+        const url = `${ctx}/${path}`;
+        const img = `<img src="${url}" alt="" style="width: 100%; height: 100%; border-radius: 5px;" />`
+        $('#icon-content').html(img);
+        $('ul.icon-list li').removeClass('on')
+    }
+
+    /**
+     * 显示默认的图标
+     */
+    function showDefaultIcon() {
+        $(this).addClass('on').siblings().removeClass('on');
+        const _class = $(this).attr('class');
+        $('.current-icon div:first').attr('class', 'icon ' + _class);
+
+        const icon = $(this).data('value');
+        let data = form.val('appInfoForm');
+        data.icon = icon;
+        form.val('appInfoForm', data);
+        $('#icon-content').html('');
     }
 });

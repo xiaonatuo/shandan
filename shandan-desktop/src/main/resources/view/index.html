@@ -14,22 +14,45 @@
     <div class="sys-title">
         <h1>山丹项目应用系统全称</h1>
     </div>
-    <div class="app-list">
-        <div class="app-item">
-            <img th:src="@{/style/image/metro/cloud.png}" src="" alt="应用名称"/>
-            <div class="mask"></div>
-            <p>应用名称应用名称应用名称应用名称</p>
-        </div>
-        <div class="app-item">
-            <img th:src="@{/style/image/pc.png}" src="" alt="应用名称"/>
-            <div class="mask"></div>
-            <p>应用名称</p>
-        </div>
+    <div class="app-list" id="app-list">
     </div>
 </div>
 </body>
 <script th:src="@{/js/index.js}"></script>
-<script>
+<script th:inline="javascript">
+    const appList = /*[[${appList}]]*/ [];
+    for(const app of appList){
+        let icon;
+        if (app.icon.startsWith('icon-')) {
+            icon = `<div class="app-icon ${app.icon}" title="${app.title}">
+                        <div class="mask" title="${app.title}"></div>
+                    </div>`;
+        } else if (app.icon.startsWith('images/')) {
+            icon = `<div class="app-icon">
+                        <img src="${ctx}/${app.icon}" title="${app.title}" alt="${app.title}" />
+                        <div class="mask" title="${app.title}"></div>
+                    </div>`;
+        } else {
+            icon = `<div class="app-icon">
+                        <img src="${app.icon}" title="${app.title}" alt="${app.title}" />
+                        <div class="mask" title="${app.title}"></div>
+                    </div>`;
+        }
+        $('#app-list').append(`
+            <div class="app-item" data-target="${app.target}" data-url="${app.url}">
+                ${icon}
+                <p>${app.title}</p>
+            </div>
+        `)
+    }
+    $('.app-item').on('click',function (){
+        const url = $(this).data('url');
+        const target = $(this).data('target');
+        if(url){
+            window.open(url, target);
+        }
+    })
+
     // 禁止右键菜单
     document.oncontextmenu = () => false;
     // 图片加载失败的监听
