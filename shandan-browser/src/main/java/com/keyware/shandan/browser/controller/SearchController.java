@@ -4,6 +4,7 @@ import com.keyware.shandan.browser.entity.ConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
 import com.keyware.shandan.browser.service.SearchService;
 import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.frame.annotation.AppLog;
 import com.keyware.shandan.system.entity.SysFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ public class SearchController {
      * @param condition 条件
      * @return -
      */
+    @AppLog(operate = "数据检索")
     @PostMapping("/full")
     public Result<PageVo> fullSearch(ConditionVo condition) {
 
