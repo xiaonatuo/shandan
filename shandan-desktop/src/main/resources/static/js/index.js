@@ -93,11 +93,12 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
                     } else {
                         icon = `<img src="${item.icon}" alt="" />`;
                     }
+                    let target = item.target == '_self' ? '在当前页打开' : '在新页面打开';
                     appsHtml += `
                                 <div class="app-item">
                                     ${icon}
                                     <div class="app-info">
-                                        <p class="title">${item.title}<span class="layui-badge ${tabStyle}">${item.target}</span></p>
+                                        <p class="title">${item.title}<span class="layui-badge ${tabStyle}">${target}</span></p>
                                         <p class="sub-title">${item.url}</p>
                                     </div>
                                     <div class="app-btn">
