@@ -1,5 +1,6 @@
 package com.keyware.shandan.system.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.keyware.shandan.common.enums.DataPermisScope;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.system.entity.SysPermissions;
@@ -8,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.keyware.shandan.common.controller.BaseController;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -38,7 +42,13 @@ public class SysPermissionsController extends BaseController<SysPermissionsServi
         if(StringUtils.isNotBlank(permisId)){
             permis = sysPermissionsService.getById(permisId);
         }
-        modelAndView.addObject("permisScopes", DataPermisScope.class.getEnumConstants());
+
+        modelAndView.addObject("permisScopes", Arrays.stream(DataPermisScope.values()).map(value -> {
+            JSONObject json = new JSONObject();
+            json.put("name", value.name());
+            json.put("remark", value.getRemark());
+            return json;
+        }).collect(Collectors.toList()));
         modelAndView.addObject("permis", permis);
         modelAndView.setViewName("/sys/permissions/permissionsEdit");
         return modelAndView;
