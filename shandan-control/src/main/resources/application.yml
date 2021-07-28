@@ -2,7 +2,7 @@
 
 #内置Tomcat容器配置
 server:
-  port: 8080
+  port: 8100
   servlet:
     #应用路径，配置应用路径，可方便进行反向代理
     context-path:
@@ -15,7 +15,7 @@ spring:
   profiles:
     active: prod #选择配置分支，先读取系统环境变量，如果没有则默认值为 dev
   application:
-    name: bianmu
+    name: control
 
   # 文件上传
   servlet:
@@ -108,7 +108,7 @@ spring:
 
 
 project:
-  app-name: 数据分类编目系统
+  app-name: 数据管控子系统
   #是否需要输入验证码
   captcha-enable: false
   # 是否启用记住我（免登录，debug利器）

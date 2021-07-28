@@ -13,7 +13,43 @@ import java.lang.annotation.Target;
 public @interface DataPermissions {
     /**
      * 指定要查询的数据表中标识部门ID的列
+     *
      * @return
      */
     String orgColumn() default "ORG_ID";
+
+    /**
+     * 数据权限类型
+     *
+     * @return -
+     */
+    Type type() default Type.ORG;
+
+    /**
+     * 数据权限类型
+     */
+    public static enum Type {
+        /**
+         * 机构权限
+         */
+        ORG,
+
+        /**
+         * 目录权限
+         */
+        DIRECTORY,
+
+        /**
+         * 机构和目录权限
+         */
+        ORG_AND_DIRECTORY,
+
+        /**
+         * 元数据权限
+         */
+        METADATA;
+
+        Type() {
+        }
+    }
 }

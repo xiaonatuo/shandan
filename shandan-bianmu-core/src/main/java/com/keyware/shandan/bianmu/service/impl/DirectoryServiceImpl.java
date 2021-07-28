@@ -60,13 +60,13 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     }
 
     @Override
-    @DataPermissions
+    @DataPermissions(type = DataPermissions.Type.ORG_AND_DIRECTORY)
     public List<DirectoryVo> list(QueryWrapper<DirectoryVo> wrapper) {
         return super.list(wrapper);
     }
 
     @Override
-    @DataPermissions
+    @DataPermissions(type = DataPermissions.Type.ORG_AND_DIRECTORY)
     public Page<DirectoryVo> page(Page<DirectoryVo> page, QueryWrapper<DirectoryVo> wrapper) {
         return super.page(page, wrapper);
     }
