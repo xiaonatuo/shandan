@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.enums.DirectoryType;
+import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.RsaUtil;
@@ -86,6 +87,7 @@ public class BrowserIndexController {
     public Result<Object> treeChildren(DirectoryVo directory) {
         directory.setParentId(StringUtils.isBlank(directory.getId()) ? "-" : directory.getId());
         directory.setId(null);
+        directory.setReviewStatus(ReviewStatus.PASS);
 
         DirectoryVo parentDir = directoryService.getById(directory.getParentId());
         List<JSONObject> result;
