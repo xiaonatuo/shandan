@@ -15,7 +15,7 @@
 <div class="layui-layout layui-layout-admin">
     <!-- 头部区域（可配合layui已有的水平导航）组织 -->
     <div class="layui-header">
-        <div class="layui-logo"><img th:src='${sys.sysLogo}' class="layui-nav-img"/> <span
+        <div class="layui-logo"><!--<img th:src='${sys.sysLogo}' class="layui-nav-img"/> --><span
                 th:text="${sys.sysName}"></span></div>
         <ul class="layui-nav layui-layout-left" lay-filter="navbar-top" id="navbar-top">
             <li class="layui-nav-item" th:each="menu,iterStat : ${menuList}">

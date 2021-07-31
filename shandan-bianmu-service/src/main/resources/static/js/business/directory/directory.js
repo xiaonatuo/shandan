@@ -489,7 +489,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 let {title, basicData} = data;
                 if (basicData && basicData.directoryType === ReviewEntityType.METADATA) {
                     const reviewStatus = data.basicData.reviewStatus;
-                    title += ReviewStatusIcon[reviewStatus].replaceAll('##id##', basicData.id);
+                    title += ReviewStatusIcon[reviewStatus].replace('##id##', basicData.id);
                 }
                 return title;
             }

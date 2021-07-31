@@ -11,6 +11,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 /**
  * AspectUtil
@@ -30,6 +31,7 @@ public class AspectUtil {
      * @throws Exception -
      */
     public static Object[] parseJoinPointArgs(JoinPoint joinPoint, HttpServletRequest request) throws Exception {
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         if(request.getMethod().equalsIgnoreCase("get") || ServletFileUpload.isMultipartContent(request)){
             return joinPoint.getArgs();
         }
