@@ -5,7 +5,7 @@ spring:
   application:
     name: shandan-browser
   profiles:
-    active: dev #选择配置分支，先读取系统环境变量，如果没有则默认值为 dev
+    active: prod #选择配置分支，先读取系统环境变量，如果没有则默认值为 pord
 
   #修改thymeleaf访问根路径
   thymeleaf:

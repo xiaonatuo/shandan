@@ -71,7 +71,7 @@
                 <configuration>
                     <fork>true</fork>
                     <addResources>true</addResources>
-                    <mainClass>com.keyware.shandan.BianmuApplication</mainClass>
+                    <mainClass>com.keyware.shandan.BrowserApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

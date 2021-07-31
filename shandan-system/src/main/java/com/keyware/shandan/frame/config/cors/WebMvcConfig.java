@@ -14,22 +14,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Autowired
-    private CustomProperties customProperties;
-
-    /**
-     * 文件上传资源虚拟映射
-     *
-     * @param registry
-     */
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String resourceHandler = customProperties.getFileStorage().getUploadFileMapper();
-        String resourceLocations = customProperties.getFileStorage().getPath();
-        registry.addResourceHandler(resourceHandler).addResourceLocations("file:///" + resourceLocations + "/");
-        WebMvcConfigurer.super.addResourceHandlers(registry);
-    }
-
     /**
      * cors安全跨域配置
      *

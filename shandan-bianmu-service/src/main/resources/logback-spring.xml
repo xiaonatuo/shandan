@@ -68,7 +68,7 @@
     </springProfile>
     <springProfile name="prod">
         <!--root节点 全局日志级别，用来指定最基础的日志输出级别-->
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="FILE"/>
             <appender-ref ref="CONSOLE"/>
         </root>

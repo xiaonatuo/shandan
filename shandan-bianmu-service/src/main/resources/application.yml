@@ -1,5 +1,3 @@
-##### 公共 配置 #######
-
 #内置Tomcat容器配置
 server:
   port: 8080
@@ -12,10 +10,10 @@ server:
 
 #基础配置
 spring:
+  application:
+    name: shandan-bianmu
   profiles:
     active: prod #选择配置分支，先读取系统环境变量，如果没有则默认值为 dev
-  application:
-    name: bianmu
 
   # 文件上传
   servlet:
@@ -103,9 +101,6 @@ spring:
         #属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有：
         #监控统计用的filter:stat日志用的filter:log4j防御sql注入的filter:wall
         filters: stat
-
-
-
 
 project:
   app-name: 数据分类编目系统

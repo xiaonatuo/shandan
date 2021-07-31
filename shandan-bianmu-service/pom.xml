@@ -79,13 +79,13 @@
         <plugins>
 
             <!--移除配置文件将其不打包进jar包中，并可以将打包后的jar包输出到指定路径 -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <!-- 剔除配置文件或目录:注意从编译结果目录开始算目录结构excludes\includes 是根据编译后的classes这个路径计算的-->
+                    &lt;!&ndash; 剔除配置文件或目录:注意从编译结果目录开始算目录结构excludes\includes 是根据编译后的classes这个路径计算的&ndash;&gt;
                     <excludes>
-                        <!-- 剔除指定后缀配置文件 -->
+                        &lt;!&ndash; 剔除指定后缀配置文件 &ndash;&gt;
                         <exclude>*.properties</exclude>
                         <exclude>*.yml</exclude>
                         <exclude>*/*.properties</exclude>
@@ -94,25 +94,25 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <!-- MANIFEST.MF 中 Class-Path 各个依赖加入前缀 -->
-                            <!--lib文件夹内容，需要 maven-dependency-plugin插件补充 (依赖包剥离位置)-->
+                            &lt;!&ndash; MANIFEST.MF 中 Class-Path 各个依赖加入前缀 &ndash;&gt;
+                            &lt;!&ndash;lib文件夹内容，需要 maven-dependency-plugin插件补充 (依赖包剥离位置)&ndash;&gt;
                             <classpathPrefix>${output.dependence.file.path}</classpathPrefix>
-                            <!-- jar包不包含唯一版本标识 -->
+                            &lt;!&ndash; jar包不包含唯一版本标识 &ndash;&gt;
                             <useUniqueVersions>false</useUniqueVersions>
-                            <!--指定入口类 -->
+                            &lt;!&ndash;指定入口类 &ndash;&gt;
                             <mainClass>com.keyware.shandan.BianmuApplication</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <!--MANIFEST.MF 中 Class-Path 加入自定义路径，多个路径用空格隔开 -->
-                            <!--此处resources文件夹的内容，需要maven-resources-plugin插件补充上 (配置文件剥离位置)-->
+                            &lt;!&ndash;MANIFEST.MF 中 Class-Path 加入自定义路径，多个路径用空格隔开 &ndash;&gt;
+                            &lt;!&ndash;此处resources文件夹的内容，需要maven-resources-plugin插件补充上 (配置文件剥离位置)&ndash;&gt;
                             <Class-Path>./${output.resource.file.path}</Class-Path>
                         </manifestEntries>
                     </archive>
-                    <!--输出目录-->
+                    &lt;!&ndash;输出目录&ndash;&gt;
                     <outputDirectory>${project.build.directory}/${project.artifactId}</outputDirectory>
                 </configuration>
             </plugin>
-            <!-- 将依赖包导出到指定文件夹 -->
+            &lt;!&ndash; 将依赖包导出到指定文件夹 &ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -124,17 +124,17 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <!--依赖包的输出路径-->
+                            &lt;!&ndash;依赖包的输出路径&ndash;&gt;
                             <outputDirectory>${project.build.directory}/${project.artifactId}/${output.dependence.file.path}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <!-- 将需要复制的文件复制到指定路径（例：将配置文件提取到指定路径） -->
+            &lt;!&ndash; 将需要复制的文件复制到指定路径（例：将配置文件提取到指定路径） &ndash;&gt;
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
-                    <!-- 复制配置文件 -->
+                    &lt;!&ndash; 复制配置文件 &ndash;&gt;
                     <execution>
                         <id>copy-resources</id>
                         <phase>package</phase>
@@ -142,11 +142,11 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <!-- 复制哪些目录下的哪些文件到指定目录 -->
+                            &lt;!&ndash; 复制哪些目录下的哪些文件到指定目录 &ndash;&gt;
                             <resources>
                                 <resource>
                                     <directory>src/main/resources</directory>
-                                    <!-- 不配置excludes\includes默认就是复制指定目录的所有文件 -->
+                                    &lt;!&ndash; 不配置excludes\includes默认就是复制指定目录的所有文件 &ndash;&gt;
                                     <includes>
                                         <include>*.properties</include>
                                         <include>*.yml</include>
@@ -161,7 +161,7 @@
                 </executions>
             </plugin>
 
-            <!--maven打包时，跳过测试-->
+            &lt;!&ndash;maven打包时，跳过测试&ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -170,11 +170,11 @@
                 </configuration>
             </plugin>
 
-            <!-- 指定多个源代码目录、多个资源文件目录 -->
+            &lt;!&ndash; 指定多个源代码目录、多个资源文件目录 &ndash;&gt;
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <!--<version>1.8</version>-->
+                &lt;!&ndash;<version>1.8</version>&ndash;&gt;
                 <executions>
                     <execution>
                         <id>add-source</id>
@@ -192,7 +192,7 @@
                 </executions>
             </plugin>
 
-            <!-- 编译插件 -->
+            &lt;!&ndash; 编译插件 &ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -200,7 +200,7 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>

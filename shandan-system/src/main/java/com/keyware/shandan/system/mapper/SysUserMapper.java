@@ -20,8 +20,5 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface SysUserMapper extends IBaseMapper<SysUser> {
-    @Override
-    @Select("select * from SYS_USER ${ew.customSqlSegment}")
-    @ResultMap("ResultMapWithOrg")
-    <E extends IPage<SysUser>> E selectPage(E page, @Param(Constants.WRAPPER) Wrapper<SysUser> queryWrapper);
+
 }
