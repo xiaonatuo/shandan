@@ -7,6 +7,10 @@ import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.entity.MetadataDetailsVo;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.datasource.entity.DBTableColumnVo;
+import com.keyware.shandan.datasource.entity.DataSourceVo;
+import com.keyware.shandan.datasource.service.DataSourceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +31,15 @@ public class MetadataUtils {
     // 右表别名前缀
     private static final String TABLE_ALIAS_PREFIX = " T";
 
-    public static String generateSql(MetadataBasicVo metadata) {
+    public static String generateSql(MetadataBasicVo metadata, DataSourceVo dataSource) {
         StringBuilder builder = new StringBuilder();
 
+        String schema = dataSource.getJdbcSchema();
+        if(StringUtils.isBlank(schema)){
+            schema = "";
+        }else{
+            schema = "\"" + schema + "\".";
+        }
         // 找到主表并设置为左表
         Optional<MetadataDetailsVo> optional = metadata.getMetadataDetailsList().stream().filter(MetadataDetailsVo::getMaster).findFirst();
         List<MetadataDetailsVo> rightTables = metadata.getMetadataDetailsList().stream().filter(t -> !t.getMaster()).collect(Collectors.toList());
@@ -49,7 +59,7 @@ public class MetadataUtils {
                     columnsBuilder.append(MASTER_TABLE_ALIAS).append(".\"").append(obj.getString("columnName")).append("\",");
                 });
                 // 主表表名
-                tableNameBuilder.append("\"").append(master_table).append("\" as ").append(MASTER_TABLE_ALIAS);
+                tableNameBuilder.append(schema).append("\"").append(master_table).append("\" as ").append(MASTER_TABLE_ALIAS);
 
                 // 需要判断所有右表是否被设定为外表，如果没有，则该表不参与sql查询
                 List<MetadataDetailsVo> tables = getForeignTables(rightTables, masterTable);
@@ -60,7 +70,7 @@ public class MetadataUtils {
                 for (int i = 0; i < tables.size(); i++) {
                     MetadataDetailsVo table = tables.get(i);
                     String rightTableAlias = TABLE_ALIAS_PREFIX + i;
-                    tableNameBuilder.append(", \"").append(table.getTableName()).append("\" as ").append(rightTableAlias);
+                    tableNameBuilder.append(", ").append(schema).append("\"").append(table.getTableName()).append("\" as ").append(rightTableAlias);
 
                     getColumns(table).forEach(obj -> {
                         JSONObject col = (JSONObject) obj;
@@ -110,6 +120,9 @@ public class MetadataUtils {
     private static List<MetadataDetailsVo> getForeignTables(List<MetadataDetailsVo> rightTables, MetadataDetailsVo masterTable) {
         List<MetadataDetailsVo> result = new ArrayList<>();
         for (MetadataDetailsVo vo : rightTables) {
+            if(StringUtils.isBlank(masterTable.getForeignTable())){
+                continue;
+            }
             if (masterTable.getForeignTable().equals(vo.getTableName())) {
                 // 判定为被主表关联，添加
                 result.add(vo);

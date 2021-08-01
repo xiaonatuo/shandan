@@ -16,6 +16,7 @@ import com.keyware.shandan.bianmu.utils.MetadataUtils;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.service.BaseServiceImpl;
 import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.datasource.entity.DataSourceVo;
 import com.keyware.shandan.datasource.mapper.DynamicDatasourceMapper;
 import com.keyware.shandan.datasource.service.DynamicDataSourceService;
 import com.keyware.shandan.frame.annotation.DataPermissions;
@@ -123,13 +124,13 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
      * @return
      */
     @Override
-    @DS("#sourceId")
-    public Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, String sourceId) {
+    @DS("#metadataBasic.dataSourceId")
+    public Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, DataSourceVo dataSource) {
         Optional<MetadataDetailsVo> optional = metadataBasic.getMetadataDetailsList().stream().filter(MetadataDetailsVo::getMaster).findFirst();
         if (!optional.isPresent()) {
             return new Page<>();
         }
-        String sql = MetadataUtils.generateSql(metadataBasic);
+        String sql = MetadataUtils.generateSql(metadataBasic, dataSource);
         List<HashMap<String, Object>> list = dynamicDatasourceMapper.list(sql);
         Page<HashMap<String, Object>> page = new Page<>(1, 10);
 
@@ -215,4 +216,5 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
             return Result.of(false, false, "删除失败，数据不存在");
         }
     }
+
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.common.service.IBaseService;
+import com.keyware.shandan.datasource.entity.DataSourceVo;
 
 import java.util.HashMap;
 
@@ -35,10 +36,10 @@ public interface MetadataService extends IBaseService<MetadataBasicVo, String> {
     /**
      * 查询示例数据
      * @param metadataBasic
-     * @param sourceId
+     * @param dataSource
      * @return
      */
-    Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, String sourceId);
+    Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, DataSourceVo dataSource);
 
     /**
      * 获取元数据的列

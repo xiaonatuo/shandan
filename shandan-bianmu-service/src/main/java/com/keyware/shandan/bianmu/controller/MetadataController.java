@@ -10,6 +10,8 @@ import com.keyware.shandan.bianmu.entity.DirectoryMetadataVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.entity.MetadataDetailsVo;
 import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
+import com.keyware.shandan.datasource.entity.DataSourceVo;
+import com.keyware.shandan.datasource.service.DataSourceService;
 import com.keyware.shandan.datasource.service.DynamicDataSourceService;
 import com.keyware.shandan.bianmu.service.MetadataService;
 import com.keyware.shandan.common.controller.BaseController;
@@ -50,6 +52,9 @@ public class MetadataController extends BaseController<MetadataService, Metadata
 
     @Autowired
     private SysFileService sysFileService;
+
+    @Autowired
+    private DataSourceService dataSourceService;
 
     @GetMapping("/")
     public ModelAndView index() {
@@ -94,7 +99,8 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     @GetMapping("/example/data")
     public Result<Page<HashMap<String, Object>>> exampleData(String metadataId){
         MetadataBasicVo metadata = metadataService.get(metadataId).getData();
-        Page<HashMap<String, Object>> result = metadataService.getExampleData(metadata, metadata.getDataSourceId());
+        DataSourceVo dataSource = dataSourceService.getById(metadata.getDataSourceId());
+        Page<HashMap<String, Object>> result = metadataService.getExampleData(metadata, dataSource);
         return Result.of(result);
     }
 
