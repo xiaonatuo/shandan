@@ -98,15 +98,15 @@
      * 登录
      */
     function formSubmit() {
-        let rememberMe = false;
+        /*let rememberMe = false;
         if ($("input[name='rememberMe']:checked").length > 0) {
             rememberMe = true;
-        }
+        }*/
         $.post(ctx + "/login", {
             "username": $("#username").val(),
             "password": $("#password").val(),
             "captcha": $("#captcha").val(),
-            "remember-me": rememberMe,
+            "remember-me": true,
         }, function (data) {
             if (data.code == 300) {
                 layer.msg(data.msg, {icon: 1, time: 1000}, function () {

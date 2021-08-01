@@ -17,30 +17,24 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
     // 默认事件
     let events = {
         query: function (data, _this) {
+            console.info(_this.table);
             searchText = $(`#${_this.table.searchInput}`).val().trim();
             let where; // 需要保留初始化时的参数
-            if (_this.table.method.toLowerCase() == 'get') {
-                where = $.extend(_this.table.where, {current: 1});
-            } else {
-                where = $.extend(_this.table.where, {page: {current: 1}});
-            }
+
             let fieldNames = _this.table.searchFieldNames;
             if(!fieldNames){console.error('listPage.table.searchFieldNames is undefined!')}
-            if (_this.table.queryParam) {
-                this.table.queryParam(where);
-            } else if (fieldNames) {
+            if (fieldNames) {
                 if (Array.isArray(fieldNames)) {
                     for (let field of fieldNames) {
-                        where[field] = searchText;
+                        _this.table.where[field] = searchText;
                     }
                 } else {
-                    where[fieldNames] = searchText;
+                    _this.table.where[fieldNames] = searchText;
                 }
             } else {
-                where.name = searchText
+                _this.table.where.name = searchText
             }
-            console.info(where)
-            gtable.reload({where: where, done: _this.table.done});
+            gtable.reload(_this.table);
         },
         add: function (data, _this) {
             if (_this.table.btnAdd) {
@@ -145,7 +139,8 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
                 $(`#${table.searchInput}`).val(searchText);
             }
         }
-        gtable.init(this.table);
+        let _table = gtable.init(this.table);
+        this.table = $.extend(true, this.table, _table.config);
     }
 
     ListPage.prototype.reloadTable = function (options) {

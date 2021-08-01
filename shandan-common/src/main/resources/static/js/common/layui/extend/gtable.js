@@ -51,7 +51,8 @@ layui.define(['table'], function (exports) {
     };
 
     const render = function (opt) {
-        let ops = Object.assign({}, opt);
+        this.options = $.extend({}, options);
+        let ops = $.extend(true, this.options, opt);
         ops.elem = `#${ops.id}`;
         let tableObj = table.render(ops);
         table.on(`toolbar(${ops.id})`, function(obj){
@@ -78,7 +79,7 @@ layui.define(['table'], function (exports) {
         return tableObj;
     }
 
-    const gtable = Object.assign({}, table);
+    const gtable = $.extend({}, table);
 
     /**
      * 表格初始化
