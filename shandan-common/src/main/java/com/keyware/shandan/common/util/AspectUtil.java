@@ -63,11 +63,11 @@ public class AspectUtil {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         // 通过方法签名拿到方法参数名称数组和方法参数类型数组
         String[] parameterNames = methodSignature.getParameterNames();
-        Class[] parameterTypes = methodSignature.getParameterTypes();
+        Class<?>[] parameterTypes = methodSignature.getParameterTypes();
         // 遍历数组
         for (int i = 0; i < parameterNames.length; i++) {
             String paramName = parameterNames[i];
-            Class clazz = parameterTypes[i];
+            Class<?> clazz = parameterTypes[i];
             // 从JsonNode中根据指定参数名称拿出对应参数
             JsonNode js = node.get(paramName);
             if (js != null) {
