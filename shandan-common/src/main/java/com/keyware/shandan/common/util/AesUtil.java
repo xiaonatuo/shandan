@@ -120,6 +120,9 @@ public class AesUtil {
     public static String decrypt(HttpServletRequest request) throws Exception {
         //AES加密后的数据
         String data = request.getParameter("data");
+        if(StringUtils.isBlank(data)){
+            return null;
+        }
         //后端RSA公钥加密后的AES的key
         String aesKey = request.getParameter("aesKey");
         //前端公钥

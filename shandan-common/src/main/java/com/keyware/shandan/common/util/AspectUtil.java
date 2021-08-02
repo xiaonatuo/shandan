@@ -47,6 +47,9 @@ public class AspectUtil {
      * @throws JsonProcessingException -
      */
     private static Object[] transformArguments(String data, JoinPoint joinPoint) throws JsonProcessingException {
+        if(StringUtils.isBlank(data)){
+            return joinPoint.getArgs();
+        }
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Object[] args = joinPoint.getArgs();
         JsonNode node = null;
