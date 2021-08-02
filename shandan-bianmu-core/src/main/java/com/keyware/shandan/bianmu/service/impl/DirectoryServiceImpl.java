@@ -15,6 +15,7 @@ import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.queue.provider.EsSysFileProvider;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,6 +55,9 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
             condition.setEntityId(entity.getId());
             List<SysFile> files = fileService.list(new QueryWrapper<>(condition));
             esSysFileProvider.appendQueue(files);
+
+            //处理父级所有目录
+            updateParentsToPass(entity);
         }
 
         return super.updateOrSave(entity);
@@ -97,5 +101,20 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     @Override
     public List<MetadataBasicVo> directoryAllMetadata(String id) {
         return directoryMapper.selectAllMetadataByDirectory(id);
+    }
+
+    /**
+     * 递归更新所有父级目录为PASS
+     * @param dir 目录
+     */
+    private void updateParentsToPass(DirectoryVo dir){
+        DirectoryVo parent = getById(dir.getParentId());
+        if(parent != null){
+            parent.setReviewStatus(ReviewStatus.PASS);
+            updateOrSave(parent);
+            if(!"-".equals(parent.getParentId())){
+                updateParentsToPass(parent);
+            }
+        }
     }
 }
