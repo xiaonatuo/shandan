@@ -15,7 +15,10 @@ import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -87,6 +90,7 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
 
     /**
      * 移除目录和元数据关系
+     *
      * @param directoryId
      * @param metadataId
      * @return
@@ -128,7 +132,7 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
             result = metadataBasicVoList.stream().filter(Objects::nonNull).map(vo -> {
                 JSONObject json = treeJson(vo, "metadata", true);
                 json.put("id", vo.getId());
-                json.put("title", vo.getMetadataName());
+                json.put("title", StringUtils.isBlank(vo.getMetadataComment()) ? vo.getMetadataName() : vo.getMetadataComment());
                 json.put("parentId", directory.getParentId());
                 json.put("iconClass", "dtree-icon-sort");
                 return json;
@@ -152,9 +156,9 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
                 json.put("id", vo.getId());
                 json.put("title", vo.getDirectoryName());
                 json.put("parentId", vo.getParentId());
-                if(vo.getDirectoryType() == DirectoryType.METADATA){
+                if (vo.getDirectoryType() == DirectoryType.METADATA) {
                     json.put("iconClass", "dtree-icon-fenzhijigou");
-                }else{
+                } else {
                     json.put("iconClass", "dtree-icon-wenjianjiazhankai");
                 }
                 return json;
@@ -165,13 +169,14 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
 
     /**
      * 保存目录文件关系
+     *
      * @param directoryId 目录ID
-     * @param fileIds 文件ID
+     * @param fileIds     文件ID
      * @return
      */
     @PostMapping("/save/file")
-    public Result<Object> saveFile(String directoryId, String fileIds){
-        if(StringUtils.isBlankAny(directoryId, fileIds)){
+    public Result<Object> saveFile(String directoryId, String fileIds) {
+        if (StringUtils.isBlankAny(directoryId, fileIds)) {
             return Result.of(null, false, "参数错误");
         }
 

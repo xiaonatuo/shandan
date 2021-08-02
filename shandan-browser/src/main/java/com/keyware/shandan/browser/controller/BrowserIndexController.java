@@ -98,7 +98,7 @@ public class BrowserIndexController {
             result = metadataBasicVoList.stream().filter(Objects::nonNull).map(vo -> {
                 JSONObject json = treeJson(vo, "metadata", true);
                 json.put("id", vo.getId());
-                json.put("title", vo.getMetadataName());
+                json.put("title", StringUtils.isBlank(vo.getMetadataComment()) ? vo.getMetadataName() : vo.getMetadataComment());
                 json.put("parentId", directory.getParentId());
                 json.put("iconClass", "dtree-icon-sort");
                 return json;
