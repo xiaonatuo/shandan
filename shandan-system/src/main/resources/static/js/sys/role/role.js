@@ -101,7 +101,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
                 renderPermisData(rowData.roleId);
                 break;
             case 'delete':
-                layer.confirm('确定要删除该菜单吗？', function (index) {
+                layer.confirm('确定要删除该角色吗？', function (index) {
                     deleteRole(rowData.roleId, () => layer.close(index));
                 });
                 break;
