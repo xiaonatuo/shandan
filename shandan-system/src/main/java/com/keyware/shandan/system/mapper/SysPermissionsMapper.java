@@ -86,6 +86,6 @@ public interface SysPermissionsMapper extends IBaseMapper<SysPermissions> {
      * @param parentId 父目录ID
      * @return -
      */
-    @Select("select * from B_DIRECTORY where PARENT_ID = #{parentId}")
+    @Select("select * from B_DIRECTORY where PARENT_ID = #{parentId} and REVIEW_STATUS = 'PASS'")
     List<Map<String, Object>> selectDirectoriesByParent(String parentId);
 }
