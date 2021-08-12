@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -80,18 +81,11 @@ public interface SysPermissionsMapper extends IBaseMapper<SysPermissions> {
     List<String> selectDirConfig(String permisId);
 
     /**
-     * @param permisId 权限ID
-     * @param orgId    机构ID
+     * 查询指定目录的下一级目录集合
+     *
+     * @param parentId 父目录ID
      * @return -
      */
-    @Select("select count(1) from SYS_PERMIS_ORG where PERMIS_ID = #{permisId} and ORG_ID = #{orgId} ")
-    int orgConfigExists(String permisId, String orgId);
-
-    /**
-     * @param permisId 权限ID
-     * @param dirId    目录ID
-     * @return
-     */
-    @Select("select count(1) from SYS_PERMIS_DIR where PERMIS_ID = #{permisId} and DIR_ID = #{dirId} ")
-    int dirConfigExists(String permisId, String dirId);
+    @Select("select * from B_DIRECTORY where PARENT_ID = #{parentId}")
+    List<Map<String, Object>> selectDirectoriesByParent(String parentId);
 }

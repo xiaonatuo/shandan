@@ -10,9 +10,7 @@ import com.keyware.shandan.system.service.SysPermissionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -89,5 +87,39 @@ public class SysPermissionsServiceImpl extends BaseServiceImpl<SysPermissionsMap
             Arrays.stream(ids).forEach(dirId -> permissionsMapper.saveDirConfig(permisId, dirId, userId));
         }
         return true;
+    }
+
+    /**
+     * @return 目录树
+     */
+    @Override
+    public List<Map<String, Object>> dirTree() {
+        List<Map<String, Object>> tree = new ArrayList<>();
+        List<Map<String, Object>> rootChildren = permissionsMapper.selectDirectoriesByParent("-");
+        Map<String, Object> root = new HashMap<>();
+        root.put("ID", "-");
+        root.put("PARENT_ID", "");
+        root.put("DIRECTORY_NAME", "系统根目录");
+        root.put("children", rootChildren.stream().peek(this::fillDirectoryChildren).collect(Collectors.toList()));
+        tree.add(root);
+        return tree;
+    }
+
+    /**
+     * 为父目录填充子级目录（递归方法）
+     *
+     * @param parent 父目录
+     */
+    private void fillDirectoryChildren(Map<String, Object> parent) {
+        // 先给自己加树组件需要的状态属性
+        parent.put("checked", "0"); //是否选中
+        parent.put("iconClass", "dtree-icon-wenjianjiazhankai");
+        parent.put("children", new ArrayList<>());
+        String parentId = (String) parent.get("ID");
+        List<Map<String, Object>> children = permissionsMapper.selectDirectoriesByParent(parentId);
+        if (children.size() > 0) {
+            parent.put("children", children.stream().peek(this::fillDirectoryChildren).collect(Collectors.toList()));
+        }
+
     }
 }

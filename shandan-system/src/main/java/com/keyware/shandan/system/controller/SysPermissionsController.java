@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -101,5 +102,11 @@ public class SysPermissionsController extends BaseController<SysPermissionsServi
             return Result.of(null, false, "权限ID不能为空");
         }
         return Result.of(sysPermissionsService.configDir(permisId, dirIds));
+    }
+
+
+    @GetMapping("/directory/tree")
+    public Result<List<Map<String, Object>>> dirTree(){
+        return Result.of(sysPermissionsService.dirTree());
     }
 }

@@ -4,6 +4,7 @@ import com.keyware.shandan.system.entity.SysPermissions;
 import com.keyware.shandan.common.service.IBaseService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -40,4 +41,9 @@ public interface SysPermissionsService extends IBaseService<SysPermissions, Stri
      * @return 是否成功
      */
     Boolean configDir(String permisId, String dirId);
+
+    /**
+     * @return 目录树
+     */
+    List<Map<String, Object>> dirTree();
 }
