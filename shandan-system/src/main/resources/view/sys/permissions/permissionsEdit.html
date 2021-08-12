@@ -16,13 +16,6 @@
             <div class="layui-card-body">
                 <form id="permissionsForm" class="layui-form layui-form-pane" lay-filter="permissionsForm">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">权限标识</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="permisId" autocomplete="off" placeholder="权限标识,PERMIS_开头"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
                         <label class="layui-form-label">权限名称</label>
                         <div class="layui-input-block">
                             <input type="text" name="permisName" autocomplete="off" placeholder="权限名称"
@@ -44,7 +37,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="layui-form-item">
+                    <!--<div class="layui-form-item">
                         <label class="layui-form-label">权限配置</label>
                         <div class="layui-input-block">
                             <input type="checkbox" name="hasSelect" title="查询" value="true">
@@ -52,7 +45,12 @@
                             <input type="checkbox" name="hasEdit" title="编辑" value="true">
                             <input type="checkbox" name="hasDelete" title="删除" value="true">
                         </div>
-                    </div>
+                    </div>-->
+                    <input type="hidden" name="permisId" >
+                    <input type="hidden" name="hasSelect" title="查询" value="true">
+                    <input type="hidden" name="hasAdd" title="新增" value="true">
+                    <input type="hidden" name="hasEdit" title="编辑" value="true">
+                    <input type="hidden" name="hasDelete" title="删除" value="true">
                     <button id="btn_submit" lay-submit lay-filter="*" style="position: absolute; left: -100px"></button>
                 </form>
             </div>

@@ -76,7 +76,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
                 openEditLayer(rowData.permisId);
                 break;
             case 'delete':
-                layer.confirm('确定要删除该菜单吗？', function (index) {
+                layer.confirm('确定要删除该权限吗？', function (index) {
                     deletePermissions(rowData.permisId, () => layer.close(index));
                 });
                 break;
@@ -100,14 +100,14 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
         toolbar: '#tableToolBar',
         title: '权限列表',
         cols: [[
-            {field: 'permisId', title: '权限标识', width: 200},
+            {field: 'permisId', title: '权限标识', width: 200, hide:true},
             {field: 'permisName', title: '权限名称', width: 250},
             {field: 'permisRemark', title: '权限描述'},
             {field: 'permisScopeRemark', title: '权限范围'},
-            {field: 'hasSelect', title: '查询', width: 80, align: 'center', templet: data => data.hasSelect ? '是' : '否'},
-            {field: 'hasAdd', title: '新增', width: 80, align: 'center', templet: data => data.hasAdd ? '是' : '否'},
-            {field: 'hasEdit', title: '修改', width: 80, align: 'center', templet: data => data.hasEdit ? '是' : '否'},
-            {field: 'hasDelete', title: '删除', width: 80, align: 'center', templet: data => data.hasDelete ? '是' : '否'},
+            {field: 'hasSelect', title: '查询', width: 80, align: 'center', templet: data => data.hasSelect ? '是' : '否', hide:true},
+            {field: 'hasAdd', title: '新增', width: 80, align: 'center', templet: data => data.hasAdd ? '是' : '否', hide:true},
+            {field: 'hasEdit', title: '修改', width: 80, align: 'center', templet: data => data.hasEdit ? '是' : '否', hide:true},
+            {field: 'hasDelete', title: '删除', width: 80, align: 'center', templet: data => data.hasDelete ? '是' : '否', hide:true},
             {fixed: 'right', title: '操作', toolbar: '#rowToolBar', align: 'right', width: 180}
         ]],
         onToolBarTable: tableEventCallback,

@@ -30,8 +30,14 @@
                     {{# if(d.permisScope == 'SPECIAL'){ }}
                         <a class="layui-btn layui-btn-xs" lay-event="config">配置</a>
                     {{# } }}
-                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+                    {{#
+                        let disabled = '';
+                        if(d.permisId.startsWith('PERMIS_')){
+                            disabled = ' layui-disabled'
+                        }
+                    }}
+                    <a class="layui-btn layui-btn-xs {{disabled}}" lay-event="edit{{disabled}}">编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs {{disabled}}" lay-event="delete{{disabled}}">删除</a>
                 </script>
             </div>
         </div>
