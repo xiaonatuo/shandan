@@ -104,4 +104,7 @@ public class SysOrg extends BaseEntity implements Serializable {
     @TableField(exist = false)
     private List<SysOrg> children;
 
+    @TableField(exist = false)
+    private String checked = "0";
+
 }

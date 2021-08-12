@@ -1,10 +1,11 @@
-// let tableIns;
-// let tree;
-layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
+layui.extend({
+    permisConfig: '{/}/js/sys/permissions/permisConfig' // {/}的意思即代表采用自有路径，即不跟随 base 路径
+})
+layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
     let layer = layui.layer,
         gtable = layui.gtable,
         form = layui.form;
-
+    const permisConfLayer = layui.permisConfig.init()
     // 用于临时存储查询条件
     let searchText = '';
 
@@ -13,18 +14,18 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
      * @param permisId 当前部门
      */
     let editLayerWin;
-    const openEditLayer = function ( permisId = '') {
+    const openEditLayer = function (permisId = '') {
         layer.open({
             id: 'permissionsEdit',
             type: 2,
             title: '权限编辑',
-            area:['650px', '450px'],
+            area: ['650px', '450px'],
             content: ctx + `/sys/permissions/edit?permisId=${permisId}`,
             btn: ['确定', '取消'],
             success: function (layero, index) {
                 editLayerWin = window[layero.find('iframe')[0]['name']]
             },
-            yes: function(index){
+            yes: function (index) {
                 editLayerWin && editLayerWin.save().then(ok => {
                     if (ok) {
                         gtable.reload();
@@ -79,6 +80,8 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
                     deletePermissions(rowData.permisId, () => layer.close(index));
                 });
                 break;
+            case 'config':
+                permisConfLayer.showLayer(rowData)
         }
     }
     /**
@@ -105,7 +108,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
             {field: 'hasAdd', title: '新增', width: 80, align: 'center', templet: data => data.hasAdd ? '是' : '否'},
             {field: 'hasEdit', title: '修改', width: 80, align: 'center', templet: data => data.hasEdit ? '是' : '否'},
             {field: 'hasDelete', title: '删除', width: 80, align: 'center', templet: data => data.hasDelete ? '是' : '否'},
-            {fixed: 'right', title: '操作', toolbar: '#rowToolBar', align: 'center',width: 120}
+            {fixed: 'right', title: '操作', toolbar: '#rowToolBar', align: 'right', width: 180}
         ]],
         onToolBarTable: tableEventCallback,
         onToolBarRow: tableEventCallback,

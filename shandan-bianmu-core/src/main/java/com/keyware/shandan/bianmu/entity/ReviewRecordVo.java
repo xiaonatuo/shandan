@@ -1,13 +1,11 @@
 package com.keyware.shandan.bianmu.entity;
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.OrderBy;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.util.Date;
 
 import com.keyware.shandan.bianmu.enums.ReviewEntityType;
 import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.common.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 /**
@@ -28,7 +26,7 @@ public class ReviewRecordVo extends BaseEntity{
     /**
      * 主键
      */
-    @TableField("ID")
+    @TableId("ID")
     private String id;
 
     /**

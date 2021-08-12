@@ -247,9 +247,9 @@ jQueryExtend = {
                 }
 
                 let isFile = false;
-                if(opt.data instanceof FormData){
+                if (opt.data instanceof FormData) {
                     let file = opt.data.get('file');
-                    if(file){
+                    if (file) {
                         isFile = true
                     }
                 }
@@ -287,6 +287,22 @@ jQueryExtend = {
         }
     },
 };
+
+let loadIndex = undefined;
+window.showLoading = () => {
+    if (!loadIndex) {
+        loadIndex = layer.load();
+    }
+}
+window.closeLoading = () => {
+    if (loadIndex) {
+        layer.close(loadIndex);
+        loadIndex = undefined;
+    }
+}
+window.showErrorMsg = (msg = '服务器连接异常') => {
+    layer.msg(msg, {icon: 5})
+}
 
 /**
  * 常用工具方法
@@ -353,6 +369,50 @@ commonUtil = {
         return newArray
     },
 
+    /**
+     * get请求
+     * @param url 请求地址
+     * @param data 请求数据
+     * @returns {Promise<unknown>}
+     */
+    get: (url, data) => Util.send(url, data),
+
+    /**
+     * post请求
+     * @param url 请求地址
+     * @param data 请求数据
+     * @returns {Promise<unknown>}
+     */
+    post: (url, data) => Util.send(url, data, 'post'),
+
+    /**
+     * 封装ajax异步请求
+     * @param url 请求地址
+     * @param data 请求数据
+     * @param type 请求类型
+     * @returns {Promise<unknown>}
+     */
+    send: (url, data, type = 'get') => {
+        showLoading()
+        let promise = new Promise(function (resolve, reject) {
+            $.ajax({
+                url:`${ctx}${url}`,
+                type: type,
+                data: data,
+                dataType: 'json',
+                success: resolve,
+                error: err => {
+                    if(reject){
+                        reject(err)
+                    }else{
+                        showErrorMsg();
+                    }
+                }
+            })
+        })
+        promise.finally(() => closeLoading());
+        return promise;
+    },
 
     /**
      * 休眠
@@ -362,8 +422,8 @@ commonUtil = {
     sleep: function (delay) {
         return new Promise(resolve => setTimeout(resolve, delay));
     }
-}
-;
+};
+const Util = commonUtil;
 
 
 /* 以下代码所有页面统一执行  */

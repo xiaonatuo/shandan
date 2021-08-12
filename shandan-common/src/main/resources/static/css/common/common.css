@@ -26,3 +26,6 @@ body, html {
     border-radius:10px;
     background-color:#b9b9b9;
 }
+.flex-row{display: flex; flex-direction: row}
+.flex-column{display: flex; flex-direction: column}
+.flex-fill{display: flex;flex-grow: 1}

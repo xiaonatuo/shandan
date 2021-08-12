@@ -17,6 +17,7 @@ spring:
   elasticsearch:
     rest:
       uris: http://192.168.146.128:9200
+
   #热部署设置
   devtools:
     restart:
