@@ -76,7 +76,7 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
     @Override
     public List<SysOrg> getOrgAllChildren(String orgId) {
         QueryWrapper<SysOrg> query = new QueryWrapper<>();
-        query.ne("ID", orgId).like("ORG_PATH", "%" + orgId + "%");
+        query.ne("ID", orgId).like("ORG_PATH", orgId);
         return list(query);
     }
 
