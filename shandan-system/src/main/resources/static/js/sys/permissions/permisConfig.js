@@ -72,7 +72,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
      * @param _this 组件对象
      */
     function bindOrgTree(_this) {
-        layui.orgTree.init({
+        let orgTree =  layui.orgTree.init({
             id: 'org-config',
             checkbar: true,
             // 复选框回调配置
@@ -90,7 +90,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
                     if (res.flag) {
                         res.data = res.data || [];
                         _this.orgIds = res.data.join(',');
-                        layui.orgTree.chooseDataInit(res.data);
+                        orgTree.chooseDataInit(res.data);
                     }
                 });
             }
@@ -102,7 +102,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
      * @param _this 组件对象
      */
     function bindDirectoryTree(_this) {
-        layui.globalTree.init({
+        let dirTree = layui.globalTree.init({
             id: 'dir-config',
             url: `${ctx}/sys/permissions/directory/tree`,
             checkbar: true,
@@ -122,7 +122,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
                     if (res.flag) {
                         res.data = res.data || [];
                         _this.dirIds = res.data.join(',');
-                        layui.globalTree.chooseDataInit(res.data);
+                        dirTree.chooseDataInit(res.data);
                     }
                 });
             }

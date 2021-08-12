@@ -18,7 +18,7 @@ layui.define(['globalTree'], function (exports) {
     let orgTree = Object.assign({}, globalTree);
     orgTree.init = function (opt){
         options = Object.assign(options, opt);
-        globalTree.init(options);
+        return globalTree.init(options);
     }
     exports('orgTree', orgTree)
 });
