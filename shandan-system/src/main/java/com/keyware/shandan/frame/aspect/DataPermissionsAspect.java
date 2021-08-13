@@ -1,5 +1,6 @@
 package com.keyware.shandan.frame.aspect;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.common.enums.DataPermisScope;
 import com.keyware.shandan.frame.annotation.DataPermissions;
@@ -50,37 +51,45 @@ public class DataPermissionsAspect {
         List<SysPermissions> permisList = getCurrentUserPermissions(currentUser.getUserId());
         DataPermissions annotation = getAnnotationByMethod(joinPoint, DataPermissions.class);
         // 不包含最高权限范围时，通过查询权限范围内的部门作为条件进行查询
-        if (permisList.stream().noneMatch(permis-> permis.getPermisScope() == DataPermisScope.ALL_SCOPE)) {
+        if (permisList.stream().noneMatch(permis -> permis.getPermisScope() == DataPermisScope.ALL_SCOPE)) {
             Object[] args = joinPoint.getArgs();
             for (int i = 0; i < args.length; i++) {
                 if (args[i] instanceof QueryWrapper) {
-                    QueryWrapper wrapper = (QueryWrapper) args[i];
+                    QueryWrapper<Object> wrapper = (QueryWrapper<Object>) args[i];
+
                     Set<String> orgIds = new HashSet<>();
                     SysOrg currentOrg = sysOrgService.getById(currentUser.getOrgId());
-                    if (permisList.stream().anyMatch(permis-> permis.getPermisScope() == DataPermisScope.CURRENT_ORG_CHILDRENS)) {
+                    if (permisList.stream().anyMatch(permis -> permis.getPermisScope() == DataPermisScope.CURRENT_ORG_CHILDRENS)) {
                         // 添加当前部门和子部门
                         orgIds.add(currentOrg.getId());
                         sysOrgService.getOrgAllChildren(currentOrg.getId()).forEach(org -> orgIds.add(org.getId()));
 
-                    } else if (permisList.stream().anyMatch(permis-> permis.getPermisScope() == DataPermisScope.ONLY_CURRENT_ORG)) {
+                    } else if (permisList.stream().anyMatch(permis -> permis.getPermisScope() == DataPermisScope.ONLY_CURRENT_ORG)) {
                         // 只添加当前部门
                         orgIds.add(currentOrg.getId());
-                    } else {
-                        // 只查询自己创建的数据
-                        wrapper.eq("CREATE_USER", currentUser.getUserId());
-                        args[i] = wrapper;
-                        return joinPoint.proceed(args);
                     }
 
                     // 自定义权限
-                    if(permisList.stream().anyMatch(permis-> permis.getPermisScope() == DataPermisScope.SPECIAL)){
-                        permisList.stream().filter(permis-> permis.getPermisScope() == DataPermisScope.SPECIAL).forEach(permis->{
+                    if (permisList.stream().anyMatch(permis -> permis.getPermisScope() == DataPermisScope.SPECIAL)) {
+                        permisList.stream().filter(permis -> permis.getPermisScope() == DataPermisScope.SPECIAL).forEach(permis -> {
                             List<String> ids = permissionsService.getDirConfigs(permis.getPermisId());
                             orgIds.addAll(ids);
                         });
                     }
 
-                    wrapper.in(annotation.orgColumn(), orgIds);
+                    // 只查询自己创建的数据
+                    wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
+                            .or(true, wp ->{
+                                wp.in(true, annotation.orgColumn(), orgIds);
+
+                                // 查询实体为目录或者元数据时，则添加审核通过条件
+                                String className = wrapper.getEntity().getClass().getName();
+                                if (className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")
+                                        || className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
+                                    wp.and(true, wpe->wpe.eq("REVIEW_STATUS", "PASS"));
+                                }
+                            });
+
                     args[i] = wrapper;
                     return joinPoint.proceed(args);
                 }
@@ -94,10 +103,10 @@ public class DataPermissionsAspect {
      *
      * @return
      */
-    private List<SysPermissions> getCurrentUserPermissions(String userId){
+    private List<SysPermissions> getCurrentUserPermissions(String userId) {
         List<SysRole> roleList = sysRoleService.getUserRoles(userId);
         List<SysPermissions> permisList = new ArrayList<>();
-        roleList.forEach(role-> permisList.addAll(role.getPermissionsList()));
+        roleList.forEach(role -> permisList.addAll(role.getPermissionsList()));
         return permisList;
     }
 
