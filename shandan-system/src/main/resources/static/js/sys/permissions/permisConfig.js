@@ -6,11 +6,11 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
         <div class="layui-tab layui-tab-card flex-column flex-fill" style="margin: 0">
             <ul class="layui-tab-title">
                 <li class="layui-this">机构权限</li>
-                <li>目录权限</li>
+                <!--<li>目录权限</li>-->
             </ul>
             <div class="layui-tab-content flex-column flex-fill">
                 <div class="layui-tab-item layui-show" id="org-config">机构权限</div>
-                <div class="layui-tab-item" id="dir-config">目录权限</div>
+                <!--<div class="layui-tab-item" id="dir-config">目录权限</div>-->
             </div>
         </div>
     `
@@ -51,7 +51,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
             success: function (layerObj, index) {
                 $('#permis-config-layer').addClass('flex-column');
                 bindOrgTree(_this);
-                bindDirectoryTree(_this);
+                // bindDirectoryTree(_this);
             },
             yes: function (index) {
                 const {orgIds, dirIds} = _this;
@@ -164,7 +164,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
 
         // 目录配置保存
         let dirOk = true;
-        await saveDirConfig(permisId, dirIds).then(res => {
+        /*await saveDirConfig(permisId, dirIds).then(res => {
             if (!res.flag) {
                 dirOk = false
                 console.error('目录权限保存失败', res);
@@ -172,7 +172,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
         }).catch((err) => {
             dirOk = false;
             console.error('目录权限保存失败', err);
-        });
+        });*/
         return orgOk && dirOk;
     }
 

@@ -72,7 +72,7 @@ public class DataPermissionsAspect {
                     // 自定义权限
                     if (permisList.stream().anyMatch(permis -> permis.getPermisScope() == DataPermisScope.SPECIAL)) {
                         permisList.stream().filter(permis -> permis.getPermisScope() == DataPermisScope.SPECIAL).forEach(permis -> {
-                            List<String> ids = permissionsService.getDirConfigs(permis.getPermisId());
+                            List<String> ids = permissionsService.getOrgConfigs(permis.getPermisId());
                             orgIds.addAll(ids);
                         });
                     }
