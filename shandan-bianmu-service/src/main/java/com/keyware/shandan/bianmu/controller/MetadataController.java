@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.service.impl.MetadataDetailsService;
+import com.keyware.shandan.common.enums.SecretLevel;
 import com.keyware.shandan.datasource.entity.DBTableColumnVo;
 import com.keyware.shandan.bianmu.entity.DirectoryMetadataVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
@@ -62,8 +63,10 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     }
 
     @GetMapping("/edit")
-    public ModelAndView edit() {
-        return new ModelAndView("business/metadata/metadataEdit");
+    public ModelAndView edit(ModelAndView mov) {
+        mov.setViewName("business/metadata/metadataEdit");
+        mov.addObject("SecretLevel", SecretLevel.values());
+        return mov;
     }
 
     @GetMapping("/example")

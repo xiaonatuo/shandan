@@ -13,6 +13,7 @@
         <result column="SECRET_LEVEL" property="secretLevel" />
         <result column="COLLECTION_TIME" property="collectionTime" />
         <result column="THEME_TASK" property="themeTask" />
+        <result column="SECRET_LEVEL" property="secretLevel" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
         <result column="REVIEW_STATUS" property="reviewStatus" />
         <result column="ORG_ID" property="orgId" />
         <result column="CREATE_USER" property="createUser" />

@@ -1,5 +1,7 @@
 package com.keyware.shandan.bianmu.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -11,12 +13,15 @@ import lombok.Getter;
  * @since 2021/6/4
  */
 @Getter
+@AllArgsConstructor
 public enum DirectoryType {
-    DIRECTORY("结构目录"),
-    METADATA("元数据目录");
+    DIRECTORY("DIRECTORY","结构目录"),
+    METADATA("METADATA","元数据目录");
 
-    DirectoryType( String remark){
+    /*DirectoryType( String remark){
         this.remark = remark;
-    }
+    }*/
+    @EnumValue
+    private final String value;
     private final String remark;
 }

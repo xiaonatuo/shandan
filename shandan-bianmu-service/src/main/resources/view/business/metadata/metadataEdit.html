@@ -59,13 +59,16 @@
                                    class="layui-input">
                         </div>
                     </div>
-                    <!--<div class="layui-form-item">
+                    <div class="layui-form-item">
                         <label class="layui-form-label">数据密级</label>
                         <div class="layui-input-block">
-                            <input type="text" name="secretLevel" autocomplete="off" placeholder="数据密级"
-                                   class="layui-input">
+                            <!--<input type="text" name="secretLevel" autocomplete="off" placeholder="数据密级"
+                                   class="layui-input">-->
+                            <select name="secretLevel" lay-filter="secretLevel">
+                                <option th:each="secret: ${SecretLevel}" th:value="${secret.value}" th:text="${secret.desc}"></option>
+                            </select>
                         </div>
-                    </div>-->
+                    </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">主题任务</label>
                         <div class="layui-input-block">

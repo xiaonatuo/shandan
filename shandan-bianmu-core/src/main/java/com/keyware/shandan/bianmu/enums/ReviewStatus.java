@@ -1,5 +1,7 @@
 package com.keyware.shandan.bianmu.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -11,15 +13,18 @@ import lombok.Getter;
  * @since 2021/5/25
  */
 @Getter
+@AllArgsConstructor
 public enum ReviewStatus  {
-    UN_SUBMIT("未提交"),
-    SUBMITTED("已提交"),
-    PASS("审核通过"),
-    FAIL("审核不通过");
+    UN_SUBMIT("UN_SUBMIT", "未提交"),
+    SUBMITTED("SUBMITTED", "已提交"),
+    PASS("PASS", "审核通过"),
+    FAIL("FAIL", "审核不通过");
 
+    @EnumValue
+    private final String value;
     private final String remark;
 
-    ReviewStatus(String remark) {
+    /*ReviewStatus(String remark) {
         this.remark = remark;
-    }
+    }*/
 }

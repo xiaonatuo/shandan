@@ -1,10 +1,13 @@
 package com.keyware.shandan.bianmu.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler;
 import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.common.entity.BaseEntity;
+import com.keyware.shandan.common.enums.SecretLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.ibatis.type.EnumOrdinalTypeHandler;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -20,7 +23,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "B_METADATA_BASIC", resultMap = "BaseResultMap")
+@TableName(value = "B_METADATA_BASIC", resultMap = "BaseResultMap", autoResultMap = true)
 public class MetadataBasicVo extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 8359416863637721055L;
@@ -64,8 +67,8 @@ public class MetadataBasicVo extends BaseEntity implements Serializable {
     /**
      * 数据密级
      */
-    @TableField("SECRET_LEVEL")
-    private String secretLevel;
+    @TableField(value = "SECRET_LEVEL", typeHandler = EnumOrdinalTypeHandler.class)
+    private SecretLevel secretLevel;
 
     /**
      * 采集时间

@@ -1,5 +1,7 @@
 package com.keyware.shandan.common.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -11,13 +13,13 @@ import lombok.Getter;
  * @since 2021/6/11
  */
 @Getter
+@AllArgsConstructor
 public enum NotificationType {
-    NORMAL("普通通知"),
-    METADATA_REVIEW("元数据审核通知"),
-    DIRECTORY_REVIEW("目录审核通知");
+    NORMAL("NORMAL", "普通通知"),
+    METADATA_REVIEW("NORMAL", "元数据审核通知"),
+    DIRECTORY_REVIEW("NORMAL", "目录审核通知");
 
+    @EnumValue
+    private final String value;
     private final String remark;
-    NotificationType(String remark){
-        this.remark = remark;
-    }
 }

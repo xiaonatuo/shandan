@@ -1,5 +1,7 @@
 package com.keyware.shandan.bianmu.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -11,12 +13,12 @@ import lombok.Getter;
  * @since 2021/6/4
  */
 @Getter
+@AllArgsConstructor
 public enum ReviewEntityType {
-    DIRECTORY("目录"),
-    METADATA("元数据");
+    DIRECTORY("DIRECTORY", "目录"),
+    METADATA("METADATA", "元数据");
 
-    ReviewEntityType(String remark){
-        this.remark = remark;
-    }
+    @EnumValue
+    private final String value;
     private final String remark;
 }
