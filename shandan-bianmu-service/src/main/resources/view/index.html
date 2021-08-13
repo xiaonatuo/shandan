@@ -29,14 +29,13 @@
             <li class="layui-nav-item">
                 <a href="javascript:;" style="padding:0 10px">
                     <i class="layui-icon layui-icon-username"></i>
-                    <span th:text="${loginUser.userName}">XXX</span>
+                    <span th:text="${loginUser.userName}" style="padding-right: 10px;">XXX</span>
                 </a>
-                <!--<dl class="layui-nav-child">
-                    <dd><a class="huanzi-menu" th:data-url="${#request.getContextPath()} + '/user/userinfo'"
-                           data-id="userinfo" href="javascript:;">基本资料</a></dd>
-                    <dd><a class="huanzi-menu" th:data-url="${#request.getContextPath()} + '/user/shortcMenu'"
-                           data-id="shortcMenu" href="javascript:;">个性菜单</a></dd>
-                </dl>-->
+                <dl class="layui-nav-child">
+                    <dd><a class="huanzi-menu" data-id="userinfo" id="modifyPwd" href="javascript:void(0);">修改密码</a></dd>
+                    <!--<dd><a class="huanzi-menu" th:data-url="${#request.getContextPath()} + '/user/shortcMenu'"
+                           data-id="shortcMenu" href="javascript:;">个性菜单</a></dd>-->
+                </dl>
             </li>
             <li class="layui-nav-item">
                 <a href="javascript:;" style="padding:0 10px" data-id="unread">
@@ -73,6 +72,55 @@
     const error = /*[[${ERROR}]]*/ '';
     if (error) {
         layer.alert(error);
+    }
+</script>
+<script type="text/javascript">
+
+    /**
+     * 修改密码
+     */
+    $('#modifyPwd').on('click', updatePassword);
+    function updatePassword() {
+        let html = "<form id=\"updatePassword\" class=\"layui-form layui-form-pane\">\n" +
+            "\t<div class=\"layui-form-item\">\n" +
+            "\t\t<label class=\"layui-form-label\" style='width: 110px !important;'>原密码</label>\n" +
+            "\t\t<div class=\"layui-input-block\">\n" +
+            "\t\t\t<input type=\"password\" name=\"oldPassword\" autocomplete=\"off\"\n" +
+            "\t\t\t\t   placeholder=\"原密码\" class=\"layui-input\">\n" +
+            "\t\t</div>\n" +
+            "\t</div>\n" +
+            "\t<div class=\"layui-form-item\">\n" +
+            "\t\t<label class=\"layui-form-label\"  style='width: 110px !important;'>新密码</label>\n" +
+            "\t\t<div class=\"layui-input-block\">\n" +
+            "\t\t\t<input type=\"password\" name=\"newPassword\" autocomplete=\"off\"\n" +
+            "\t\t\t\t   placeholder=\"新密码\" class=\"layui-input\">\n" +
+            "\t\t</div>\n" +
+            "\t</div>\n" +
+            "\t<div class=\"layui-form-item\">\n" +
+            "\t\t<div class=\"layui-input-block\">\n" +
+            "\t\t\t<a class=\"layui-btn\" onclick=\"" +
+            "    $.post(ctx + '/user/updatePassword', $('#updatePassword').serializeObject(), function (data) {\n" +
+            "        if (data.flag) {\n" +
+            "            layer.msg('修改密码成功，请重新登录系统！', {icon: 1, time: 2000}, function () {\n" +
+            "                window.parent.location.href = ctx + '/logout';\n" +
+            "            });\n" +
+            "        }else{\n" +
+            "            layer.msg(data.msg, {icon: 2, time: 2000}, function () {});\n" +
+            "        }\n" +
+            "    });" +
+            "\">修改</a>\n" +
+            "\t\t</div>\n" +
+            "\t</div>\n" +
+            "</form>";
+        //iframe层-父子操作
+        layer.open({
+            title: '修改密码',
+            type: 1,
+            area: ['400px', '250px'],
+            fixed: false, //不固定
+            maxmin: false,
+            content: html
+        });
     }
 </script>
 </body>

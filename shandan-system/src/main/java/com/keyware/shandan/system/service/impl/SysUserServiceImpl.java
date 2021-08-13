@@ -120,7 +120,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser, 
 
             user.setLastChangePwdTime(new Date());
 
-            ok = super.update(new QueryWrapper<>(user));
+            ok = saveOrUpdate(user);
 
         }
 
