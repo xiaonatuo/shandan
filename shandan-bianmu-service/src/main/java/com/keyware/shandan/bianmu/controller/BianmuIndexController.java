@@ -42,7 +42,7 @@ public class BianmuIndexController {
     private SysShortcutMenuService sysShortcutMenuService;
 
     @GetMapping("index")
-    public ModelAndView index(){
+    public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("index");
 
         //系统信息
@@ -51,12 +51,12 @@ public class BianmuIndexController {
         //登录用户
         SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
         user.setPassword(null);//隐藏部分属性
-        modelAndView.addObject( "loginUser", user);
+        modelAndView.addObject("loginUser", user);
 
         //登录用户系统菜单
         List<SysRole> roles = sysRoleService.getUserRoles(user.getUserId());
         List<SysMenu> menuList = new ArrayList<>();
-        for(SysRole role : roles){
+        for (SysRole role : roles) {
             menuList.addAll(role.getMenuList());
         }
 
@@ -64,12 +64,14 @@ public class BianmuIndexController {
 
         //登录用户快捷菜单
         List<SysShortcutMenu> shortcutMenuList = sysShortcutMenuService.findByUserId(user.getUserId()).getData();
-        modelAndView.addObject("shortcutMenuList",shortcutMenuList);
+        modelAndView.addObject("shortcutMenuList", shortcutMenuList);
 
         //后端公钥
         String publicKey = RsaUtil.getPublicKey();
         modelAndView.addObject("publicKey", publicKey);
-
+        if (roles.size() == 0) {
+            modelAndView.addObject("ERROR", "没有配置角色");
+        }
         return modelAndView;
     }
 }

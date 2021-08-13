@@ -1,5 +1,12 @@
-layui.use(['element', 'flow', 'util'], function () {
+layui.extend({
+    notification: '{/}/js/sys/notification/notification' // {/}的意思即代表采用自有路径，即不跟随 base 路径
+})
+layui.use(['element', 'flow', 'util', 'notification'], function () {
     let element = layui.element;
+
+    window.NotificationUtil = layui.notification.init();
+    // 轮询查询系统未读通知
+    NotificationUtil.getUnreadNotifications();
 
     // 右侧用户导航栏不显示点击状态样式
     element.on('nav(user-nav)', function(elem){
@@ -122,7 +129,5 @@ layui.use(['element', 'flow', 'util'], function () {
     }
     navbarInit();
 
-    // 轮询查询系统未读通知
-    NotificationUtil.getUnreadNotifications();
 })
 

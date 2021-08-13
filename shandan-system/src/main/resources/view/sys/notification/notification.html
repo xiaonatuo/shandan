@@ -9,12 +9,20 @@
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
     <style>
-        .layui-breadcrumb a{padding: 0 90px}
-        .layui-breadcrumb a.active{color:#5FB878 !important}
-        li.notification-item {text-align: right}
+        .layui-breadcrumb a {
+            padding: 0 90px
+        }
+
+        .layui-breadcrumb a.active {
+            color: #5FB878 !important
+        }
+
+        li.notification-item {
+            text-align: right
+        }
     </style>
 </head>
-<body  style="background-color: #FFF">
+<body style="background-color: #FFF">
 <div id="notification_layer">
     <div style="width: 500px;">
         <span class="layui-breadcrumb" lay-separator="|" id="n_lay_tab">
@@ -35,9 +43,10 @@
     window.onresize = sizeInit;
     sizeInit();
 
-    layui.use(['flow', 'util'], function(){
+    layui.use(['flow', 'util', 'notification'], function () {
         let flow = layui.flow;
         let util = layui.util;
+        NotificationUtil = parent.window.NotificationUtil;
 
         // 系统通知侧边栏流加载
         loadFlow('unread_flow', NotificationUtil.urls.unreadPageList);
@@ -71,7 +80,7 @@
                 elem: `#${id}`,
                 // isAuto: false,
                 done: function (page, next) {
-                    $.get(url, {current: page, size:30}, function (res) {
+                    $.get(url, {current: page, size: 30}, function (res) {
 
                         if (res.flag) {
                             let htm = '';
@@ -93,18 +102,18 @@
                                 const id = $(elem.target).data('id');
                                 const type = $(elem.target).data('type');
                                 let data;
-                                if(type === 'unread_flow'){
+                                if (type === 'unread_flow') {
                                     data = NotificationUtil.getUnreadByID(id);
                                     NotificationUtil.setRead(data.id, function () {
                                         loadFlow('unread_flow', NotificationUtil.urls.unreadPageList);
                                     });
-                                }else{
+                                } else {
                                     data = records.filter(item => item.id == id)[0];
                                 }
                                 if (data.type === 'METADATA_REVIEW') {
-                                    parent.open(`${ctx}/business/metadata/`);
+                                    parent.open(`${ctx}/business/review/metadata`);
                                 } else {
-                                    parent.open(`${ctx}/business/directory/`)
+                                    parent.open(`${ctx}/business/review/directory`)
 
                                 }
                             });

@@ -12,6 +12,8 @@
             //项目根路径
             // ctx = /*[[@{/}]]*/'';
             ctx = [[${#request.getContextPath()}]];//应用路径
+            user = [[${loginUser}]];
+            sessionStorage.setItem('login_user', JSON.stringify(user));
         </script>
     </head>
 

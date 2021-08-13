@@ -12,6 +12,7 @@ import com.keyware.shandan.system.service.SysUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,9 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRole, 
         sysUserRole.setUserId(userId);
         List<SysUserRole> userRoleList = sysUserRoleService.list(new QueryWrapper<>(sysUserRole));
 
+        if(userRoleList.size() == 0){
+            return new ArrayList<>();
+        }
         return listByIds(userRoleList.stream().map(SysUserRole::getRoleId).collect(Collectors.toList()));
     }
 }

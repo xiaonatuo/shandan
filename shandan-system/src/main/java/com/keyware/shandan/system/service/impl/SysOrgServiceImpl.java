@@ -88,7 +88,14 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
      */
     @Override
     public List<SysUser> getOrgAdmins(String orgId) {
-        return sysOrgMapper.selectOrgAdmins(orgId);
+        List<SysUser> leaders = sysOrgMapper.selectOrgAdmins(orgId);
+        if(leaders.size() == 0){ // 如果当前结构没有管理员，则查找上级机构管理员
+            SysOrg org = getById(orgId);
+            if(org != null){
+                leaders = getOrgAdmins(org.getOrgParentId());
+            }
+        }
+        return leaders;
     }
 
     /**

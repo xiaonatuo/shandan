@@ -8,7 +8,7 @@
     <link rel="shortcut icon" th:href='${sys.sysLogo}' th:mce_href='${sys.sysLogo}' type="image/x-icon">
     <!-- 引入公用部分 -->
     <script th:replace="common/head::static"></script>
-    <script th:src="@{/js/sys/notification/notification.js}"></script>
+    <!--<script th:src="@{/js/sys/notification/notification.js}"></script>-->
     <script th:src="@{/js/index.js}"></script>
 </head>
 <body>
@@ -41,7 +41,8 @@
             <li class="layui-nav-item">
                 <a href="javascript:;" style="padding:0 10px" data-id="unread">
                     <i class="layui-icon layui-icon-notice"></i>
-                    <span class="layui-badge-dot layui-hide" id="unread-mark" style="margin: -10px -4px 0; height:6px; width: 6px"></span>
+                    <span class="layui-badge-dot layui-hide" id="unread-mark"
+                          style="margin: -10px -4px 0; height:6px; width: 6px"></span>
                 </a>
             </li>
             <li class="layui-nav-item"><a th:href="@{/logout}" style="padding:0 10px"><i
@@ -68,6 +69,11 @@
     const frameHeight = $(".layui-body")[0].offsetHeight;
     $("#containerFrame").attr("height", frameHeight + "px")
     $('#notification_layer div:first').css('height', frameHeight - 51 + 'px');
+
+    const error = /*[[${ERROR}]]*/ '';
+    if (error) {
+        layer.alert(error);
+    }
 </script>
 </body>
 </html>
