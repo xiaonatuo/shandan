@@ -504,21 +504,23 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
      * @param file
      */
     function viewFile(file) {
+        const fileSuffix = file.fileSuffix.toLowerCase();
+
         const filePath = `${ctx}/upload/${file.path}`;
-        if (viewType.image.includes(file.fileSuffix)) {
+        if (viewType.image.includes(fileSuffix)) {
             let htm = `<img id="image-viewer" src="${filePath}" style="max-height: ${imageHeight}px; max-width: ${imageWidth}px"/>`
             $('#file-viewer-image').html(htm)
             showFileViewer('image');
-        } else if (viewType.video.includes(file.fileSuffix)) {
+        } else if (viewType.video.includes(fileSuffix) || viewType.audio.includes(fileSuffix)) {
             if (!player) {
                 initVideoPlayer();
             }
             player.src(filePath);
             showFileViewer('video');
-        } else if (viewType.pdf.includes(file.fileSuffix)) {
+        } else if (viewType.pdf.includes(fileSuffix)) {
             $('#pdfViewer').attr('src', filePath);
             showFileViewer('pdf');
-        } else if (viewType.text.includes(file.fileSuffix)) {
+        } else if (viewType.text.includes(fileSuffix)) {
             $('#txtViewer').attr('src', filePath);
             showFileViewer('text');
         } else {

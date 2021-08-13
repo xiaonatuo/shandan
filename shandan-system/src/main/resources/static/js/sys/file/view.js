@@ -57,7 +57,9 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
      * @param file 文件信息
      */
     function fileListItemClick(file) {
-        if (viewType.image.includes(file.fileSuffix)) {
+        const fileSuffix = file.fileSuffix.toLowerCase();
+
+        if (viewType.image.includes(fileSuffix)) {
             if(!imgInit){ // 没有初始化则先初始化
                 initImageViewer();
             }else{
@@ -66,16 +68,16 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
                 $(`#image-carousel div.layui-carousel-ind ul li:eq(${index})`).click();
             }
             showFileViewer('image');
-        } else if (viewType.video.includes(file.fileSuffix)) {
+        } else if (viewType.video.includes(fileSuffix) || viewType.audio.includes(fileSuffix)) {
             if(!player){
                 initVideoPlayer();
             }
             player.src(`${ctx}/upload/${file.path}`);
             showFileViewer('video');
-        } else if (viewType.pdf.includes(file.fileSuffix)) {
+        } else if (viewType.pdf.includes(fileSuffix)) {
             $('#pdfViewer').attr('src', `${ctx}/upload/${file.path}`);
             showFileViewer('pdf');
-        } else if (viewType.text.includes(file.fileSuffix)) {
+        } else if (viewType.text.includes(fileSuffix)) {
             $('#txtViewer').attr('src', `${ctx}/upload/${file.path}`);
             showFileViewer('text');
         }

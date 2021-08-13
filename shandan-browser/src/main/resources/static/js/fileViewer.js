@@ -55,38 +55,25 @@ function fileViewer(file){
          * @param file
          */
         function viewFile(file) {
+            const fileSuffix = file.fileSuffix.toLowerCase();
             const filePath = `${bianmuServer}/upload/${file.path}`;
-            if (viewType.image.includes(file.fileSuffix)) {
+            if (viewType.image.includes(fileSuffix)) {
                 let htm = `<img id="image-viewer" src="${filePath}" style="max-height: 100%; max-width: 100%"/>`
                 $('#file-viewer-image').html(htm)
                 showFileViewer('image');
-            } else if (viewType.video.includes(file.fileSuffix)) {
+            } else if (viewType.video.includes(fileSuffix) || viewType.audio.includes(fileSuffix)) {
                 if (!player) {
                     initVideoPlayer();
                 }
                 player.src(filePath);
                 showFileViewer('video');
-            } else if (viewType.pdf.includes(file.fileSuffix)) {
+            } else if (viewType.pdf.includes(fileSuffix)) {
                 $('#pdfViewer').attr('src', filePath);
                 showFileViewer('pdf');
-            } else if (viewType.text.includes(file.fileSuffix)) {
-                //$('#txtViewer').attr('src', filePath);
+            } else if (viewType.text.includes(fileSuffix)) {
                 $.get(filePath, {}, function (res){
                     $('#file-viewer-text textarea').html(res);
                 });
-                /*$.ajax({
-                    url: filePath,
-                    dataType: 'blob',
-                    type: 'get',
-                    success: function (res){
-                        let reader = new FileReader()
-                        reader.readAsDataURL(res);
-                        reader.onload(()=>{})
-                    },
-                    error: function(err){
-
-                    }
-                });*/
                 showFileViewer('text');
             } else {
                 let htm = `<p>该文件不支持预览，可下载后查看。</p>
