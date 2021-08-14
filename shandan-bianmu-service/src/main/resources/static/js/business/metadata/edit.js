@@ -57,10 +57,6 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                     layer.msg('数据源查询失败');
                 }
                 form.render('select');
-
-                form.on('select(dataSourcesSelect)',function(obj){
-                    form.val('metadataForm', {'dataFrom': obj.othis.find('.layui-this:first').text()});
-                })
             })
 
             // 根据元数据详情表渲染元数据标签组件

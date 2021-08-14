@@ -7,6 +7,9 @@
     <script th:replace="common/head::static"></script>
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <script th:inline="javascript">
+        const SecretLevel = /*[[${SecretLevel}]]*/ {};
+    </script>
 </head>
 <body>
 <div class="layui-row layui-col-space15">

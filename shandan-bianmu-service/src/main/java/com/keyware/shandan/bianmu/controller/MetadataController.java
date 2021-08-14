@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -58,8 +55,12 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     private DataSourceService dataSourceService;
 
     @GetMapping("/")
-    public ModelAndView index() {
-        return new ModelAndView("business/metadata/metadata");
+    public ModelAndView index(ModelAndView mov) {
+        mov.setViewName("business/metadata/metadata");
+        Map<String, String> map = new HashMap<>();
+        Arrays.stream(SecretLevel.values()).forEach(secret-> map.put(secret.name(), secret.getDesc()));
+        mov.addObject("SecretLevel", map);
+        return mov;
     }
 
     @GetMapping("/edit")
@@ -76,6 +77,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
 
     /**
      * 元数据选择框页面
+     *
      * @return
      */
     @GetMapping("/layer/choose")
@@ -96,11 +98,12 @@ public class MetadataController extends BaseController<MetadataService, Metadata
 
     /**
      * 示例数据
+     *
      * @param metadataId
      * @return
      */
     @GetMapping("/example/data")
-    public Result<Page<HashMap<String, Object>>> exampleData(String metadataId){
+    public Result<Page<HashMap<String, Object>>> exampleData(String metadataId) {
         MetadataBasicVo metadata = metadataService.get(metadataId).getData();
         DataSourceVo dataSource = dataSourceService.getById(metadata.getDataSourceId());
         Page<HashMap<String, Object>> result = metadataService.getExampleData(metadata, dataSource);
@@ -109,22 +112,24 @@ public class MetadataController extends BaseController<MetadataService, Metadata
 
     /**
      * 查询元数据表字段列表
+     *
      * @param id
      * @return
      */
     @GetMapping("/columns")
-    public Result<JSONArray> columns(String id){
+    public Result<JSONArray> columns(String id) {
         return Result.of(metadataService.getColumns(id));
     }
 
     /**
      * 根据目录ID查询元数据列表
+     *
      * @param directoryId
      * @return
      */
     @GetMapping("/list/directory")
-    public Result<Page<MetadataBasicVo>> listByDirectory(Page<MetadataBasicVo> page, String directoryId, String metadataName){
-        if(StringUtils.isBlank(directoryId)){
+    public Result<Page<MetadataBasicVo>> listByDirectory(Page<MetadataBasicVo> page, String directoryId, String metadataName) {
+        if (StringUtils.isBlank(directoryId)) {
             return Result.of(null, false, "参数不能为空");
         }
         return Result.of(metadataService.pageListByDirectory(page, directoryId, metadataName));
@@ -132,18 +137,19 @@ public class MetadataController extends BaseController<MetadataService, Metadata
 
     /**
      * 保存元数据及文件，并关联目录
-     * @param metadata 元数据
+     *
+     * @param metadata    元数据
      * @param directoryId 目录ID
-     * @param fileIds 文件ID
+     * @param fileIds     文件ID
      * @return
      */
     @PostMapping("/save/file")
-    public Result<Boolean> saveMetadataAndFiles(MetadataBasicVo metadata, String directoryId, String fileIds){
-        if(StringUtils.isBlankAny(directoryId, fileIds)){
+    public Result<Boolean> saveMetadataAndFiles(MetadataBasicVo metadata, String directoryId, String fileIds) {
+        if (StringUtils.isBlankAny(directoryId, fileIds)) {
             return Result.of(null, false, "参数错误");
         }
         // 保存元数据
-        if(metadataService.save(metadata)){
+        if (metadataService.save(metadata)) {
             // 保存目录元数据关系
             directoryMetadataService.save(new DirectoryMetadataVo(directoryId, metadata.getId()));
             //更新文件信息

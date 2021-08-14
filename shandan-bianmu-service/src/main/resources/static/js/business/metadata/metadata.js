@@ -22,6 +22,7 @@ layui.use(['layer', 'listPage', 'form'], function () {
                 {field: 'id', title: 'ID', hide: true},
                 {field: 'metadataName', title: '元数据表名'},
                 {field: 'metadataComment', title: '中文注释'},
+                {field: 'secretLevel', title: '密级', templet: data => SecretLevel[data.secretLevel]},
                 {field: 'themeTask', title: '主题任务'},
                 {field: 'dataFrom', title: '数据来源', width: 100},
                 {field: 'collectionTime', title: '采集时间', width: 180, align: 'center'},
@@ -41,7 +42,7 @@ layui.use(['layer', 'listPage', 'form'], function () {
                         return `<span class="review-tips layui-badge ${colorClass}" data-status="${data.reviewStatus}" data-id="${data.id}" id="tips-${data.id}">${ReviewStatusMsg[data.reviewStatus]}</span>`
                     }
                 },
-                {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 300, align: 'right'}
+                {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 200, align: 'right'}
             ]],
             done: data => {
                 form.val('metadataSearchForm', {reviewStatusSelect: reviewStatusSearch});

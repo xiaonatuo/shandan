@@ -23,8 +23,7 @@
                             <input type="hidden" name="dataFrom" >
                             <select id="dataSourcesSelect" name="dataSourceId" lay-verify="required" lay-filter="dataSourcesSelect"></select>
                             <button id="btn_selectTable" type="button" class="layui-btn layui-btn-sm"
-                                    style="float: left; margin: 4px">选择元数据表
-                            </button>
+                                    style="float: left; margin: 4px">选择元数据表</button>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -45,13 +44,13 @@
                                    class="layui-input" lay-verify="required" readonly>
                         </div>
                     </div>
-                    <!--<div class="layui-form-item">
+                    <div class="layui-form-item">
                         <label class="layui-form-label">数据来源</label>
                         <div class="layui-input-block">
                             <input type="text" name="dataFrom" autocomplete="off" placeholder="数据来源"
                                    class="layui-input">
                         </div>
-                    </div>-->
+                    </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">数据类型</label>
                         <div class="layui-input-block">
@@ -62,10 +61,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">数据密级</label>
                         <div class="layui-input-block">
-                            <!--<input type="text" name="secretLevel" autocomplete="off" placeholder="数据密级"
-                                   class="layui-input">-->
                             <select name="secretLevel" lay-filter="secretLevel">
-                                <option th:each="secret: ${SecretLevel}" th:value="${secret.value}" th:text="${secret.desc}"></option>
+                                <option th:each="secret: ${SecretLevel}" th:value="${secret.name()}" th:text="${secret.desc}"></option>
                             </select>
                         </div>
                     </div>

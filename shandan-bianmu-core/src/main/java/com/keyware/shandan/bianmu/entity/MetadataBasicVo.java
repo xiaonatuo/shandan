@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "B_METADATA_BASIC", resultMap = "BaseResultMap", autoResultMap = true)
+@TableName(value = "B_METADATA_BASIC", resultMap = "BaseResultMap")
 public class MetadataBasicVo extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 8359416863637721055L;
@@ -68,7 +68,7 @@ public class MetadataBasicVo extends BaseEntity implements Serializable {
     /**
      * 数据密级
      */
-    @TableField(value = "SECRET_LEVEL", jdbcType = JdbcType.INTEGER,typeHandler = EnumOrdinalTypeHandler.class)
+    @TableField("SECRET_LEVEL")
     private SecretLevel secretLevel;
 
     /**
