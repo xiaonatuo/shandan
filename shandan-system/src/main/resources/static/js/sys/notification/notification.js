@@ -190,6 +190,7 @@ layui.define([], function (exports) {
             if(user){
                 user = JSON.parse(user);
                 NotificationUtil = new SysNotificationUtil(user);
+                NotificationUtil.init();
                 return NotificationUtil;
             }else{
                 console.error('用户数据初始化失败');

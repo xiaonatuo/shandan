@@ -21,7 +21,7 @@
     <!-- 查询未读通知分页列表 -->
     <select id="selectUnreadNotificationPageByUserId" resultType="com.keyware.shandan.system.entity.SysNotification">
         select n.* from SYS_NOTIFICATION n
-            left join SYS_NOTIFICATION_UNREAD nu on n.ID = nu.NOTIFICATION_ID
+            right join SYS_NOTIFICATION_UNREAD nu on n.ID = nu.NOTIFICATION_ID
         where nu.USER_ID = #{userId}
     </select>
 </mapper>
