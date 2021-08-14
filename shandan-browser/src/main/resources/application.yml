@@ -32,6 +32,7 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
-
+  configuration:
+    default-enum-type-handler: com.keyware.shandan.frame.config.myBatis.CustomEnumTypeHandler
 project:
   app-name: 数据综合浏览系统

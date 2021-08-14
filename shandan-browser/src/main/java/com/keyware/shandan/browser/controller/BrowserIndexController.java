@@ -8,6 +8,7 @@ import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.enums.DirectoryType;
 import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.service.DirectoryService;
+import com.keyware.shandan.browser.config.BrowserProperties;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.RsaUtil;
 import com.keyware.shandan.common.util.StringUtils;
@@ -53,6 +54,9 @@ public class BrowserIndexController {
     @Autowired
     private SysFileService sysFileService;
 
+    @Autowired
+    private BrowserProperties browserProperties;
+
     /**
      * 首页路由
      *
@@ -74,7 +78,15 @@ public class BrowserIndexController {
         user.setPassword(null);//隐藏部分属性
         modelAndView.addObject("loginUser", user);
         modelAndView.addObject("bianmuServer", customProperties.getBianmuServer());
+        modelAndView.addObject("dbtoolAddress", browserProperties.getDbtoolAddress());
         return modelAndView;
+    }
+
+    @GetMapping("/browser")
+    public ModelAndView browser(ModelAndView mov) {
+        mov.setViewName("browser");
+        mov.addObject("bianmuServer", customProperties.getBianmuServer());
+        return mov;
     }
 
     /**

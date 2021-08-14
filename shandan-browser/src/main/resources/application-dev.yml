@@ -16,7 +16,7 @@ spring:
     cache: false
   elasticsearch:
     rest:
-      uris: http://192.168.146.128:9200
+      uris: http://192.168.1.11:9200
 
   #热部署设置
   devtools:
@@ -30,3 +30,5 @@ project:
   # 启用记住我，方便调试
   remember-me-enable: true
   bianmu-server: http://localhost:8080
+  browser:
+    dbtool-address: http://localhost:8300/
