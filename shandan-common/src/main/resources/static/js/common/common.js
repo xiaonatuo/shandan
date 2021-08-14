@@ -29,8 +29,8 @@ const ReviewStatusIcon = {
 // 可预览的文件类型
 const viewType = {
     image: ['.avif', '.bmp', '.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png', '.svg', '.webp', '.ico', '.cur'],
-    video: ['.mp4', '.webm', '.avi', '.mpeg'],
-    audio: ['.mp3','.ogg', '.wav'],
+    video: ['.mp4', '.webm', '.avi', '.mpeg', '.wmv', '.mov', '.mkv','.3gp'],
+    audio: ['.mp3','.ogg', '.wav', '.aac', '.flac', '.wma', '.ape'],
     pdf: ['.pdf'],
     text: ['.txt']
 };
