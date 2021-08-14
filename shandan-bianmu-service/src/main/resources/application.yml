@@ -115,11 +115,10 @@ project:
 #mybatis-plus 配置项
 mybatis-plus:
   mapper-locations: classpath*:/mybatis/mapper/**/*Mapper.xml
-  #type-enums-package: com.keyware.shandan.common.enums,com.keyware.shandan.bianmu.enums
   global-config:
     db-config:
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
   configuration:
-    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+    default-enum-type-handler: com.keyware.shandan.frame.config.myBatis.CustomEnumTypeHandler

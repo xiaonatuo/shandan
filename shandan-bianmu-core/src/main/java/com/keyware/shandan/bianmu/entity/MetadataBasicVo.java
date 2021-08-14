@@ -8,6 +8,7 @@ import com.keyware.shandan.common.enums.SecretLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
+import org.apache.ibatis.type.JdbcType;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -67,7 +68,7 @@ public class MetadataBasicVo extends BaseEntity implements Serializable {
     /**
      * 数据密级
      */
-    @TableField(value = "SECRET_LEVEL", typeHandler = EnumOrdinalTypeHandler.class)
+    @TableField(value = "SECRET_LEVEL", jdbcType = JdbcType.INTEGER,typeHandler = EnumOrdinalTypeHandler.class)
     private SecretLevel secretLevel;
 
     /**
