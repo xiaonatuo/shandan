@@ -92,7 +92,10 @@ public class AspectUtil {
                     }
                 }
             }else if(args[i] != null){
-                args[i] = mapper.readValue(data, args[i].getClass());
+                try {
+                    args[i] = mapper.readValue(data, args[i].getClass());
+                } catch (Exception ignored) {
+                }
             }
         }
         return args;

@@ -28,13 +28,13 @@ public class BianmuDataCache {
     }
 
     /**
-     * 获取指定key的元数据信息
+     * 根据元数据表ID获取主表信息
      *
-     * @param table -
+     * @param id -
      * @return -
      */
-    public static MetadataDetailsVo get(String table) {
-        return cache.get(table);
+    public static MetadataDetailsVo get(String id) {
+        return cache.values().stream().filter(item -> item.getMetadataId().equals(id) && item.getMaster()).findFirst().orElse(null);
     }
 
     /**

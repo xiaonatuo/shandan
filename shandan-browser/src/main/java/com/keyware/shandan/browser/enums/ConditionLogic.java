@@ -1,5 +1,6 @@
 package com.keyware.shandan.browser.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -10,17 +11,18 @@ import lombok.Getter;
  */
 @Getter
 public enum ConditionLogic {
-    eq("="),
-    nq("!="),
-    gt(">"),
-    lt("<"),
-    like("like %{}%"),
-    likeLeft("like %{}"),
-    likeRight("like {}%"),
-    and("and"),
-    or("or");
+    eq("等于?"),
+    nq("不等于?"),
+    gt("大于?"),
+    lt("小于?"),
+    like("包含?"),
+    likeLeft("以?开头"),
+    likeRight("以?结尾"),
+    and("并且"),
+    or("或者");
 
     private final String text;
+    //private final String desc;
 
     ConditionLogic(String text) {
         this.text = text;

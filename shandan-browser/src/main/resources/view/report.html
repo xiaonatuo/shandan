@@ -22,7 +22,7 @@
             <div class="report-main">
                 <div class="report-btn-line">
                     <a class="layui-btn layui-btn-sm layui-btn-normal" id="btn-add"><i class="layui-icon layui-icon-add-1"></i>定义新报表</a>
-                    <!--<a class="layui-btn layui-btn-sm layui-btn-normal" id="btn-download"><i class="layui-icon layui-icon-download-circle"></i>下载报表</a>-->
+                    <a class="layui-btn layui-btn-sm layui-btn-normal" id="btn-download"><i class="layui-icon layui-icon-download-circle"></i>下载报表</a>
                 </div>
                 <div class="report-items" id="report-items"></div>
             </div>
@@ -96,6 +96,14 @@
             <fieldset class="layui-elem-field">
                 <legend>统计指标</legend>
                 <div class="layui-field-box">
+                    <div class="layui-form-item" style="padding:0 20px;">
+                        <div class="layui-form-label" style="width: 100px">描述文本</div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 300px">
+                                <input type="text" name="remark" autocomplete="off" placeholder="用于生成文档报表，如：录入总数">
+                            </div>
+                        </div>
+                    </div>
                     <div class="layui-form-item" style="padding:0 20px;">
                         <div class="layui-form-label" style="width: 100px">聚合方式</div>
                         <div class="layui-inline">

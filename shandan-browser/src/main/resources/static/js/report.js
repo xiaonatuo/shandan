@@ -5,12 +5,21 @@
  * @since 2021/7/12
  */
 function ReportComponent(layer, form) {
-    this.layer = layer || {}; // layui layer组件
-    this.form = form || {}; // layui form组件
+    this.reset(layer, form);
+}
+
+ReportComponent.prototype.reset = function (layer, form) {
+    if (layer) {
+        this.layer = layer || {}; // layui layer组件
+    }
+    if (form) {
+        this.form = form || {}; // layui form组件
+    }
     this.formData = {}; // 检索页面的form表单数据
     this.fields = common_fields; // 当前字段集合，默认只有公共字段
     this.size = 0;
-}
+    this.echarts = [];
+};
 
 /**
  * 打开统计报表主窗口
@@ -25,11 +34,18 @@ ReportComponent.prototype.openMainLayer = function () {
         success: function (layero, index) {
             // 打开即页面全屏
             layer.full(index);
-
+            _this.reset();
             // 新增报表，先选择图表类型，然后再选择需要的字段
             $('#btn-add').on('click', function () {
                 _this.openEchartsConfigLayer();
             });
+
+            $('#btn-download').on('click', function () {
+                _this.download();
+            });
+        },
+        done: function () {
+            _this.reset();
         }
     })
 }
@@ -52,7 +68,7 @@ ReportComponent.prototype.openEchartsConfigLayer = function () {
         },
         yes: function (index) {
             const formVal = _this.form.val('echartsConfigForm');
-            if(_this.validate(formVal)){
+            if (_this.validate(formVal)) {
                 _this.requestData(formVal);
                 layer.close(index);
             }
@@ -144,12 +160,12 @@ ReportComponent.prototype.renderSelect = function () {
     })
 
     // 图表类型下拉框事件监听
-    _this.form.on('select(reportType)', function({elem, value, othis}){
+    _this.form.on('select(reportType)', function ({elem, value, othis}) {
         // 如果选择饼图，则聚合方式只能选则计数
-        if(value == 'pie'){
+        if (value == 'pie') {
             $('#aggregationType option[value="count"]').siblings().attr('disabled', true)
             _this.form.val('echartsConfigForm', {aggregationType: 'count'});
-        }else{
+        } else {
             $('#aggregationType option[value="count"]').siblings().attr('disabled', false)
         }
         _this.form.render('select')
@@ -199,7 +215,10 @@ ReportComponent.prototype.setConditions = function (value) {
 ReportComponent.prototype.requestData = function (formVal) {
     const _this = this;
     formVal.conditions = _this.conditions
+    let load = layer.load();
     $.post(`${ctx}/report/data`, formVal, function (res) {
+        layer.close(load);
+        console.info(res);
         if (res.flag) {
             _this.renderEcharts(res.data);
         }
@@ -210,30 +229,30 @@ ReportComponent.prototype.requestData = function (formVal) {
  * 数据校验
  * @param formVal
  */
-ReportComponent.prototype.validate = function(formVal){
+ReportComponent.prototype.validate = function (formVal) {
     // 数据校验
-    if(!formVal.title || formVal.title.trim() == ''){
+    if (!formVal.title || formVal.title.trim() == '') {
         this.layer.msg('请输入标题');
         return;
     }
-    if(!formVal.fieldX){
+    if (!formVal.fieldX) {
         this.layer.msg('请设置统计维度字段');
         return;
-    }else{
-        if(dm_date_types.includes(formVal.fieldXType) && !formVal.dateInterval){
+    } else {
+        if (dm_date_types.includes(formVal.fieldXType) && !formVal.dateInterval) {
             this.layer.msg('请设置时间间隔');
             return;
         }
-        if(dm_number_types.includes(formVal.fieldXType) && !formVal.numberInterval){
+        if (dm_number_types.includes(formVal.fieldXType) && !formVal.numberInterval) {
             this.layer.msg('请设置范围');
             return;
         }
     }
-    if(!formVal.aggregationType){
+    if (!formVal.aggregationType) {
         this.layer.msg('请设置聚合方式');
         return;
-    }else{
-        if((formVal.aggregationType == 'sum' || formVal.aggregationType == 'avg') && !formVal.fieldY){
+    } else {
+        if ((formVal.aggregationType == 'sum' || formVal.aggregationType == 'avg') && !formVal.fieldY) {
             this.layer.msg('请设置聚合字段');
             return;
         }
@@ -245,10 +264,10 @@ ReportComponent.prototype.validate = function(formVal){
  * 渲染echarts
  * @param reportData
  */
-ReportComponent.prototype.renderEcharts = function(reportData){
+ReportComponent.prototype.renderEcharts = function (reportData) {
     const _this = this;
     const formData = _this.form.val('echartsConfigForm');
-    const elemId = `echarts-item-${_this.size}`;
+    const elemId = `echarts-item-${_this.echarts.length + 1}`;
     $('#report-items').append(`<div class="echarts-item" id="${elemId}"></div>`)
     let chartDom = document.getElementById(elemId);
     let echartsItem = echarts.init(chartDom);
@@ -264,7 +283,7 @@ ReportComponent.prototype.renderEcharts = function(reportData){
                     readOnly: false,
                     title: '数据视图'
                 },
-                saveAsImage: {title:'下载'}
+                saveAsImage: {title: '下载'}
             }
         },
         tooltip: {
@@ -289,13 +308,13 @@ ReportComponent.prototype.renderEcharts = function(reportData){
             }
         ]
     };
-    if(formData.reportType !== 'pie'){
+    if (formData.reportType !== 'pie') {
         option.xAxis = [
             {
                 type: 'category',
                 data: [],
                 axisTick: {
-                    interval:0,
+                    interval: 0,
                     alignWithLabel: true
                 }
             }
@@ -308,11 +327,39 @@ ReportComponent.prototype.renderEcharts = function(reportData){
         }
         option.yAxis = [{type: 'value'}]
         option.series[0].data = [];
-        for(let item of reportData.data){
+        for (let item of reportData.data) {
             option.xAxis[0].data.push(item.name)
             option.series[0].data.push(item.value)
         }
     }
     option && echartsItem.setOption(option);
-    _this.size += 1;
+    echartsItem['reportRemark'] = formData.remark;
+    echartsItem['requestData'] = reportData.data;
+    _this.echarts.push(echartsItem);
+    //console.info(echartsItem.getDataURL());
 }
+
+ReportComponent.prototype.download = function () {
+    const _this = this;
+    console.info(_this);
+    const echartsData = [];
+    for (let e of _this.echarts) {
+        echartsData.push({
+            remark: e.reportRemark,
+            data: e.requestData,
+            image: e.getDataURL(),
+        })
+    }
+    const params = {
+        title: '自定义统计报表',
+        conditions: _this.conditions,
+        echarts: echartsData,
+        fields: _this.fields
+    };
+    console.info(params);
+    Util.post(`${ctx}/report/export/word`, params).then(() => {
+        console.info('统计报表下载成功');
+    }).catch(() => {
+        layer.alert('统计报表下载失败');
+    })
+};
