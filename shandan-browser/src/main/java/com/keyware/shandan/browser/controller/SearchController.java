@@ -33,7 +33,7 @@ public class SearchController {
      * @param condition 条件
      * @return -
      */
-    @AppLog(operate = "数据检索")
+    @AppLog(operate = "全文检索分页查询")
     @PostMapping("/full")
     public Result<PageVo> fullSearch(ConditionVo condition) {
 
