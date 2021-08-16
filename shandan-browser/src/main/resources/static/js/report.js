@@ -29,11 +29,11 @@ ReportComponent.prototype.openMainLayer = function () {
     layer.open({
         type: 1,
         title: '统计报表',
-        area: ['800px', '600px'],
+        area:['900px', '100%'],
         content: template_main,
         success: function (layero, index) {
             // 打开即页面全屏
-            layer.full(index);
+            //layer.full(index);
             _this.reset();
             // 新增报表，先选择图表类型，然后再选择需要的字段
             $('#btn-add').on('click', function () {
@@ -272,6 +272,7 @@ ReportComponent.prototype.renderEcharts = function (reportData) {
     let chartDom = document.getElementById(elemId);
     let echartsItem = echarts.init(chartDom);
     let option = {
+        width: 500,
         title: {
             text: formData.title || '统计图',
             left: 'center'
@@ -333,15 +334,14 @@ ReportComponent.prototype.renderEcharts = function (reportData) {
         }
     }
     option && echartsItem.setOption(option);
+    console.info(option);
     echartsItem['reportRemark'] = formData.remark;
     echartsItem['requestData'] = reportData.data;
     _this.echarts.push(echartsItem);
-    //console.info(echartsItem.getDataURL());
 }
 
 ReportComponent.prototype.download = function () {
     const _this = this;
-    console.info(_this);
     const echartsData = [];
     for (let e of _this.echarts) {
         echartsData.push({
@@ -356,10 +356,15 @@ ReportComponent.prototype.download = function () {
         echarts: echartsData,
         fields: _this.fields
     };
-    console.info(params);
-    Util.post(`${ctx}/report/export/word`, params).then(() => {
-        console.info('统计报表下载成功');
-    }).catch(() => {
-        layer.alert('统计报表下载失败');
-    })
+    const url = `${ctx}/report/export/word`
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: params,
+        success: function (response, status, request) {
+            let form = $(`<form method="GET" action="${ctx}/report/download/word"></form>`);
+            $('body').append(form);
+            form.submit(); //自动提交
+        }
+    });
 };

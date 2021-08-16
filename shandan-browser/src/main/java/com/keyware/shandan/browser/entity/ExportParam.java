@@ -23,4 +23,6 @@ public class ExportParam implements Serializable {
     private List<EchartsParam> echarts;
 
     private List<Map<String, Object>> fields;
+
+    private List<String> echartsImage;
 }

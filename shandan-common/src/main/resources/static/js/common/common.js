@@ -271,7 +271,7 @@ jQueryExtend = {
                 //扩展增强处理
                 let _opt = $.extend(opt, {
                     //成功回调方法增强处理
-                    success: function (data, textStatus) {
+                    success: function (data, textStatus, request) {
                         try {
                             if (opt.type.toLowerCase() === "post" && data.data && !opt.url.endsWith('file/upload') && !isFile) {
                                 data = aesUtil.decrypt(data.data.data, rsaUtil.decrypt(data.data.aesKey, window.jsPrivateKey));
@@ -280,7 +280,7 @@ jQueryExtend = {
                             console.error('加解密操作异常')
                         }
                         //先获取明文aesKey，再用明文key去解密数据
-                        fn.success(data, textStatus);
+                        fn.success(data, textStatus, request);
                     }
                 });
                 return _ajax(_opt);
