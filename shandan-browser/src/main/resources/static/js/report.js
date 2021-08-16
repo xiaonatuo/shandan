@@ -29,7 +29,7 @@ ReportComponent.prototype.openMainLayer = function () {
     layer.open({
         type: 1,
         title: '统计报表',
-        area:['900px', '100%'],
+        area: ['900px', '100%'],
         content: template_main,
         success: function (layero, index) {
             // 打开即页面全屏
@@ -169,6 +169,7 @@ ReportComponent.prototype.renderSelect = function () {
             $('#aggregationType option[value="count"]').siblings().attr('disabled', false)
         }
         _this.form.render('select')
+        console.info(_this.form.val('echartsConfigForm'));
     })
 }
 
@@ -218,7 +219,6 @@ ReportComponent.prototype.requestData = function (formVal) {
     let load = layer.load();
     $.post(`${ctx}/report/data`, formVal, function (res) {
         layer.close(load);
-        console.info(res);
         if (res.flag) {
             _this.renderEcharts(res.data);
         }
@@ -335,36 +335,48 @@ ReportComponent.prototype.renderEcharts = function (reportData) {
     }
     option && echartsItem.setOption(option);
     console.info(option);
+    echartsItem['formData'] = formData;
     echartsItem['reportRemark'] = formData.remark;
     echartsItem['requestData'] = reportData.data;
+
     _this.echarts.push(echartsItem);
 }
 
 ReportComponent.prototype.download = function () {
     const _this = this;
-    const echartsData = [];
-    for (let e of _this.echarts) {
-        echartsData.push({
-            remark: e.reportRemark,
-            data: e.requestData,
-            image: e.getDataURL(),
-        })
+    if(_this.echarts.length == 0){
+        layer.msg('请先定义图表', {icon:5})
+        return false;
     }
-    const params = {
-        title: '自定义统计报表',
-        conditions: _this.conditions,
-        echarts: echartsData,
-        fields: _this.fields
-    };
-    const url = `${ctx}/report/export/word`
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: params,
-        success: function (response, status, request) {
-            let form = $(`<form method="GET" action="${ctx}/report/download/word"></form>`);
-            $('body').append(form);
-            form.submit(); //自动提交
+    layer.prompt({title: '请输入报表文件名称', formType: 3}, function (text, index) {
+        layer.close(index);
+        const echartsData = [];
+        for (let e of _this.echarts) {
+            let config = e.formData;
+            echartsData.push({
+                title: config.title,
+                fieldX: config.fieldX,
+                filedY: config.fieldY,
+                aggregationType: config.aggregationType,
+                remark: config.remark,
+                data: e.requestData,
+                image: e.getDataURL(),
+            })
         }
+        const params = {
+            title: text,
+            conditions: _this.conditions,
+            echarts: echartsData,
+            fields: _this.fields
+        };
+
+        $.ajax({
+            type: "POST",
+            url: `${ctx}/report/export/word`,
+            data: params,
+            success: function (response, status, request) {
+                window.parent.open(`${ctx}/report/download/word`, '_blank')
+            }
+        });
     });
 };
