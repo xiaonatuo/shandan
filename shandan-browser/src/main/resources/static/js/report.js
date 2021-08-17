@@ -169,8 +169,9 @@ ReportComponent.prototype.renderSelect = function () {
             $('#aggregationType option[value="count"]').siblings().attr('disabled', false)
         }
         _this.form.render('select')
-        console.info(_this.form.val('echartsConfigForm'));
+        console.info('echartsConfigForm', _this.form.val('echartsConfigForm'));
     })
+    console.info('echartsConfigForm', _this.form.val('echartsConfigForm'));
 }
 
 /**
