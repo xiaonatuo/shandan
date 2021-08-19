@@ -65,9 +65,9 @@ public class SysSetting extends BaseEntity implements Serializable {
     private String sysColor;
 
     /**
-     * API加密 Y/N
+     * API是否加密
      */
     @TableField("SYS_API_ENCRYPT")
-    private String sysApiEncrypt;
+    private Boolean sysApiEncrypt;
 
 }

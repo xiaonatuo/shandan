@@ -58,10 +58,10 @@ public class AppLogAspect {
                 Object[] args = AspectUtil.parseJoinPointArgs(point, attributes.getRequest());
 
                 JSONArray argsArray = new JSONArray();
-                for (int i = 0; i < args.length; i++) {
-                    if (!(args[i] instanceof ServletRequest || args[i] instanceof ServletResponse ||
-                            args[i] instanceof MultipartFile || args[i] instanceof BindingResult) && args[i] != null) {
-                        argsArray.add(args[i]);
+                for (Object arg : args) {
+                    if (!(arg instanceof ServletRequest || arg instanceof ServletResponse ||
+                            arg instanceof MultipartFile || arg instanceof BindingResult) && arg != null) {
+                        argsArray.add(arg);
                     }
                 }
 

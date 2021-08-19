@@ -44,7 +44,7 @@ public class DesktopController {
         modelAndView.setViewName("index");
 
         Map<String, String> setting = new HashMap<>();
-        setting.put("sysApiEncrypt", "Y");
+        setting.put("sysApiEncrypt", String.valueOf(true));
         //系统信息
         modelAndView.addObject("sys", setting);
         //后端公钥

@@ -94,7 +94,7 @@ public class CaptchaFilterConfig implements Filter {
             mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
             //判断api加密开关是否开启
-            if("Y".equals(SysSettingUtil.getSysSetting().getSysApiEncrypt())){
+            if(SysSettingUtil.getSysSetting().getSysApiEncrypt()){
                 //解密
                 try {
                     //AES加密后的数据
@@ -126,7 +126,7 @@ public class CaptchaFilterConfig implements Filter {
                     String dataString = "{\"code\":\"400\",\"msg\":\"验证码错误\"}";
 
                     //判断api加密开关是否开启
-                    if("Y".equals(SysSettingUtil.getSysSetting().getSysApiEncrypt())){
+                    if(SysSettingUtil.getSysSetting().getSysApiEncrypt()){
                         //加密
                         try {
                             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

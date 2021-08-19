@@ -29,7 +29,7 @@ public class LoginFailureHandlerConfig implements AuthenticationFailureHandler {
         String msg = "{\"code\":\"400\",\"msg\":\"用户名或密码错误\"}";
 
         //判断api加密开关是否开启
-        if("Y".equals(SysSettingUtil.getSysSetting().getSysApiEncrypt())){
+        if(SysSettingUtil.getSysSetting().getSysApiEncrypt()){
             //加密
             try {
                 //前端公钥

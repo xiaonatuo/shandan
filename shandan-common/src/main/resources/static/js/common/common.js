@@ -216,7 +216,8 @@ jQueryExtend = {
      */
     ajaxExtend: function () {
         //判断api加密开关
-        if (sessionStorage.getItem('sysApiEncrypt') === "Y" && !jQueryExtend.ajaxExtendFlag) {
+        let flag = sessionStorage.getItem('sysApiEncrypt') == 'true';
+        if (flag && !jQueryExtend.ajaxExtendFlag) {
             jQueryExtend.ajaxExtendFlag = true;
             let _ajax = $.ajax;//首先备份下jquery的ajax方法
             $.ajax = function (opt) {
@@ -438,7 +439,7 @@ window.jsPublicKey = genKeyPair.publicKey;
 window.jsPrivateKey = genKeyPair.privateKey;
 
 //重写jq的ajax加密
-jQueryExtend.ajaxExtend();
+//jQueryExtend.ajaxExtend();
 
 /**
  * layui组件扩展

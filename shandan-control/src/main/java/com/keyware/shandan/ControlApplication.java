@@ -53,7 +53,7 @@ public class ControlApplication {
             view.setViewName("index");
 
             Map<String, String> setting = new HashMap<>();
-            setting.put("sysApiEncrypt", "Y");
+            setting.put("sysApiEncrypt", String.valueOf(true));
             //系统信息
             view.addObject("sys", setting);
             //后端公钥

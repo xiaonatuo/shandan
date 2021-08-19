@@ -1,30 +1,25 @@
-package com.keyware.shandan.common.aspect;
+package com.keyware.shandan.frame.aspect;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.AesUtil;
 import com.keyware.shandan.common.util.AspectUtil;
 import com.keyware.shandan.common.util.ErrorUtil;
 import com.keyware.shandan.common.util.RsaUtil;
+import com.keyware.shandan.system.utils.SysSettingUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -52,9 +47,9 @@ public class SafetyAspect {
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         try {
             //判断api加密开关是否开启
-            /*if ("N".equals(SysSettingUtil.getSysSetting().getSysApiEncrypt())) {
+            if (!SysSettingUtil.getSysSetting().getSysApiEncrypt()) {
                 return joinPoint.proceed(joinPoint.getArgs());
-            }*/
+            }
 
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             assert attributes != null;
