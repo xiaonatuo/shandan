@@ -93,7 +93,6 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
         switch (obj.event) {
             case 'add':
                 let treeNodeParam = menuTree.getNowParam();
-                console.info(treeNodeParam);
                 if (treeNodeParam && treeNodeParam.id) {
                     openEditLayer(treeNodeParam.id)
                 } else {
