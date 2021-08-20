@@ -93,8 +93,9 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
         switch (obj.event) {
             case 'add':
                 let treeNodeParam = menuTree.getNowParam();
-                if (treeNodeParam && treeNodeParam.nodeId) {
-                    openEditLayer(treeNodeParam.nodeId)
+                console.info(treeNodeParam);
+                if (treeNodeParam && treeNodeParam.id) {
+                    openEditLayer(treeNodeParam.id)
                 } else {
                     layer.msg('请先选择左侧上级菜单')
                 }
