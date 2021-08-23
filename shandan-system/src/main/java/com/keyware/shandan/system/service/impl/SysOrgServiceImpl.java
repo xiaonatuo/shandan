@@ -145,13 +145,21 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
      */
     @Override
     public Result<Boolean> deleteById(String id) {
-        List<SysOrg> menuList = listAllChildByParentId(id);
         List<String> idList = new ArrayList<>();
+        List<SysOrg> orgList = listAllChildByParentId(id);
         idList.add(id);
-        idList.addAll(menuList.stream().map(SysOrg::getId).collect(Collectors.toList()));
-        boolean ok = super.removeByIds(idList);
+        idList.addAll(orgList.stream().map(SysOrg::getId).collect(Collectors.toList()));
 
-        return Result.of(ok, ok);
+        // 查找该机构及子机构下是否包含用户
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+        wrapper.in("ORG_ID", idList);
+        List<SysUser> users = sysUserService.list(wrapper);
+        if (users.size() > 0) {
+            return Result.of(false, false, "该部门下有用户数据，不能删除");
+        }
+
+        super.removeByIds(idList);
+        return Result.of(true, true);
     }
 
     /**
