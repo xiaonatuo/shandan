@@ -44,7 +44,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
      */
     const renderPermisData = function (roleId) {
         // 使用jquery方法后 layui的form表单渲染失败
-        document.getElementsByName('permis').forEach(function(element){
+        document.getElementsByName('permis').forEach(function (element) {
             element.checked = false;
         });
         form.render('checkbox');
@@ -158,6 +158,8 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
                 $.post(`${ctx}/sys/role/save/menus`, data, function (res) {
                     if (!res.flag) {
                         layer.msg("保存失败")
+                    } else {
+                        layer.msg('保存成功', {icon: 1})
                     }
                 });
             }
@@ -195,6 +197,8 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
                     data.elem.checked = false;
                     form.render('checkbox');
                 });
+            } else {
+                layer.msg('保存成功', {icon: 1})
             }
         })
     });

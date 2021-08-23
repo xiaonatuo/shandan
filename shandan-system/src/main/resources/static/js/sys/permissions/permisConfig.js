@@ -5,11 +5,11 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
     const template = `
         <div class="layui-tab layui-tab-card flex-column flex-fill" style="margin: 0">
             <ul class="layui-tab-title">
-                <li class="layui-this">机构权限</li>
+                <li class="layui-this">部门权限</li>
                 <!--<li>目录权限</li>-->
             </ul>
             <div class="layui-tab-content flex-column flex-fill">
-                <div class="layui-tab-item layui-show" id="org-config">机构权限</div>
+                <div class="layui-tab-item layui-show" id="org-config">部门权限</div>
                 <!--<div class="layui-tab-item" id="dir-config">目录权限</div>-->
             </div>
         </div>
@@ -72,7 +72,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
      * @param _this 组件对象
      */
     function bindOrgTree(_this) {
-        let orgTree =  layui.orgTree.init({
+        let orgTree = layui.orgTree.init({
             id: 'org-config',
             checkbar: true,
             // 复选框回调配置
@@ -155,11 +155,13 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
         await saveOrgConfig(permisId, orgIds).then(res => {
             if (!res.flag) {
                 orgOk = false
-                console.error('机构权限保存失败', res);
+                console.error('部门权限保存失败', res);
+            } else {
+                layer.msg('保存成功', {icon: 1});
             }
         }).catch((err) => {
             orgOk = false
-            console.error('机构权限保存失败', err);
+            console.error('部门权限保存失败', err);
         });
 
         // 目录配置保存
