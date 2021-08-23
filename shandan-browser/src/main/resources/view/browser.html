@@ -9,6 +9,10 @@
     <script type="text/javascript" th:inline="javascript">
         const bianmuServer = /*[[${bianmuServer}]]*/ '';
     </script>
+    <style>
+        #secretLevel .layui-form-select {width: 300px;}
+        #secretLevel .layui-form-select .layui-select-title input{width: 300px}
+    </style>
 </head>
 <body>
 <div class="layui-row">
@@ -140,6 +144,49 @@
                                             <option value="like">包含</option>
                                         </select>
                                         <input type="text" name="missileNumber" class="layui-input" placeholder="导弹编号"/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">导弹编号</label>
+                                    <div class="layui-input-inline">
+                                        <select name="logic-missileNumber" lay-verify="select-condition">
+                                            <option value="eq" selected>等于</option>
+                                            <option value="nq">不等于</option>
+                                            <option value="like">包含</option>
+                                        </select>
+                                        <input type="text" name="missileNumber" class="layui-input" placeholder="导弹编号"/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">数据类型</label>
+                                    <div class="layui-input-inline">
+                                        <select name="logic-dataType" lay-verify="select-condition">
+                                            <option value="eq" selected>等于</option>
+                                            <option value="nq">不等于</option>
+                                            <option value="like">包含</option>
+                                        </select>
+                                        <input type="text" name="dataType" class="layui-input" placeholder="数据类型"/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">数据密级</label>
+                                    <div class="layui-input-inline" style="width: 80px;height: 38px; margin-right: -1px;">
+                                        <select name="logic-secretLevel" lay-verify="select-condition">
+                                            <option value="eq" selected>等于</option>
+                                            <option value="nq">不等于</option>
+                                            <option value="gt">大于</option>
+                                            <option value="lt">小于</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-input-inline" id="secretLevel">
+                                        <select name="secretLevel" lay-verify="select-secretLevel" style="width: 300px">
+                                            <option value="">请选择</option>
+                                            <option value="PUBLIC">公开</option>
+                                            <option value="INTERNAL">内部</option>
+                                            <option value="SECRET">秘密</option>
+                                            <option value="CONFIDENTIAL">机密</option>
+                                            <option value="TOP_SECRET">绝密</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

@@ -236,6 +236,10 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                     case 'like':
                         condition = '包含';
                 }
+
+                if(key == 'secretLevel'){
+                    val = $(`select[name="secretLevel"] option[value="${val}"]`).text();
+                }
                 htm += `<li data-key="${key}" style="color:#009688"><label style="color:#333">${title}</label><label style="color:gray;margin-left:5px">${condition}</label>: ${val}</li>`
             }
         }
