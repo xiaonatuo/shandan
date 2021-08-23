@@ -19,5 +19,6 @@
         <result column="CREATE_USER" property="createUser" />
         <result column="MODIFY_USER" property="modifyUser" />
         <result column="IS_DELETE" property="deleted" />
+        <association property="org" select="com.keyware.shandan.system.mapper.SysOrgMapper.selectById" column="ORG_ID" />
     </resultMap>
 </mapper>
