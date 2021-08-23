@@ -122,7 +122,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             id: 'userEdit',
             type: 2,
             title: '添加用户',
-            area: ['800px', '545px'],
+            area: ['500px', '380px'],
             content: ctx + `/sys/sysUser/edit?orgId=${orgId}&orgName=${orgName}&userId=${userId}`,
             btn: ['确定', '取消'],
             success: function (layero, index) {

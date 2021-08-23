@@ -8,6 +8,11 @@
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
     <link th:href="@{/css/sys/user/user.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .layui-form-label {
+             width: 150px !important;
+        }
+    </style>
 </head>
 <body>
 <div class="layui-row layui-col-space15">
@@ -42,21 +47,22 @@
                                    class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-form-item">
+                   <div class="layui-form-item">
                         <label class="layui-form-label">是否允许登录系统</label>
                         <div class="layui-input-block">
                             <input type="radio" name="valid" th:checked="${user.valid}" value="true" title="是" checked>
                             <input type="radio" name="valid" th:checked="${!user.valid}" value="false" title="否">
                         </div>
                     </div>
-                    <div class="layui-form-item">
+                    <!-- <div class="layui-form-item">
                         <label class="layui-form-label">是否允许多人在线</label>
                         <div class="layui-input-block">
                             <input type="radio" name="limitMultiLogin" th:checked="${user.limitMultiLogin}" value="true" title="是">
                             <input type="radio" name="limitMultiLogin" th:checked="${!user.limitMultiLogin}" value="false" title="否" checked>
                         </div>
-                    </div>
-                    <div class="layui-form-item">
+                    </div>-->
+                    <input type="hidden" name="limitMultiLogin" value="true">
+                    <!--<div class="layui-form-item">
                         <label class="layui-form-label">限制允许登录的IP集合（用,隔开）</label>
                         <div class="layui-input-block">
                             <input type="text" name="limitedIp" th:value="${user.limitedIp}" autocomplete="off" placeholder="限制允许登录的IP集合（多个IP用英文逗号隔开）"
@@ -71,7 +77,7 @@
                                        class="layui-input">
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <button id="btn_submit" lay-submit lay-filter="*" style="position: absolute; left: -100px"></button>
                 </form>
             </div>
