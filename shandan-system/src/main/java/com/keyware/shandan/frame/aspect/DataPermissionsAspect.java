@@ -82,11 +82,14 @@ public class DataPermissionsAspect {
                             .or(true, wp ->{
                                 wp.in(true, annotation.orgColumn(), orgIds);
 
-                                // 查询实体为目录或者元数据时，则添加审核通过条件
-                                String className = wrapper.getEntity().getClass().getName();
-                                if (className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")
-                                        || className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
-                                    wp.and(true, wpe->wpe.eq("REVIEW_STATUS", "PASS"));
+                                // 查询实体为目录或者元数据时，则添加审核通wrapper.getEntity()过条件
+                                Object entity = wrapper.getEntity();
+                                if(entity != null){
+                                    String className = entity.getClass().getName();
+                                    if (className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")
+                                            || className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
+                                        wp.and(true, wpe->wpe.eq("REVIEW_STATUS", "PASS"));
+                                    }
                                 }
                             });
 
