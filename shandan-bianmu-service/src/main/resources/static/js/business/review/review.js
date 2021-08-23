@@ -19,7 +19,7 @@ const cols = {
         {field: 'metadataName', title: '元数据表名'},
         {field: 'metadataComment', title: '中文注释'},
         {field: 'themeTask', title: '主题任务'},
-        {field: 'dataFrom', title: '数据来源'},
+        {field: 'modifyUserName', title: '提交人'},
         {field: 'collectionTime', title: '采集时间'},
         {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width:80}
     ]],
@@ -27,7 +27,7 @@ const cols = {
         {field: 'id', title: 'ID', hide: true},
         {field: 'directoryName', title: '目录名称'},
         {field: 'directoryPath', title: '目录路径'},
-        {field: 'modifyUser', title: '提交人'},
+        {field: 'modifyUserName', title: '提交人'},
         {field: 'modifyTime', title: '提交时间'},
         {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width:80}
     ]]

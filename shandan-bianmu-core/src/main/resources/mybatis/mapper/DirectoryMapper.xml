@@ -16,6 +16,7 @@
         <result column="MODIFY_USER" property="modifyUser"/>
         <result column="MODIFY_TIME" property="modifyTime"/>
         <association property="hasChild" column="ID" select="selectHasChild" />
+        <association property="modifyUserName" column="MODIFY_USER" select="selectModifyUserName" />
         <association property="org" column="ORG_ID" select="com.keyware.shandan.system.mapper.SysOrgMapper.selectById"
                      javaType="com.keyware.shandan.system.entity.SysOrg">
             <result column="ORG_NUMBER" property="orgNumber"/>
@@ -27,6 +28,10 @@
             <result column="REMARK" property="remark"/>
         </association>
     </resultMap>
+
+    <select id="selectModifyUserName" resultType="String" >
+        select USER_NAME from SYS_USER where USER_ID = #{userId}
+    </select>
 
     <select id="selectHasChild" parameterType="string" resultType="boolean">
         select count(1)

@@ -71,6 +71,9 @@ public class DirectoryVo extends BaseEntity{
     @TableField(exist = false)
     private SysOrg org;
 
+    @TableField(exist = false)
+    private String modifyUserName;
+
     /**
      * 是否有子级
      */

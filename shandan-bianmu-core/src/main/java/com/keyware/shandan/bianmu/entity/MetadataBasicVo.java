@@ -89,6 +89,9 @@ public class MetadataBasicVo extends BaseEntity implements Serializable {
     @TableField("REVIEW_STATUS")
     private ReviewStatus reviewStatus;
 
+    @TableField(exist = false)
+    private String modifyUserName;
+
     /**
      * 所属部门ID
      */

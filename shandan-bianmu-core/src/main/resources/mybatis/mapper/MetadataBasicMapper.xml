@@ -20,9 +20,14 @@
         <result column="CREATE_TIME" property="createTime" />
         <result column="MODIFY_USER" property="modifyUser" />
         <result column="MODIFY_TIME" property="modifyTime" />
+        <association property="modifyUserName" column="MODIFY_USER" select="selectModifyUserName" />
         <collection property="metadataDetailsList" column="ID" ofType="com.keyware.shandan.bianmu.entity.MetadataDetailsVo" select="selectDetailsList">
         </collection>
     </resultMap>
+
+    <select id="selectModifyUserName" resultType="String" >
+        select USER_NAME from SYS_USER where USER_ID = #{userId}
+    </select>
 
     <select id="selectDetailsList" resultMap="com.keyware.shandan.bianmu.mapper.MetadataDetailsMapper.BaseResultMap" parameterType="string">
         select * from B_METADATA_DETAILS where METADATA_ID = #{metadataId}
