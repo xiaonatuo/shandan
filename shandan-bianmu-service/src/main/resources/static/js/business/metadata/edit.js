@@ -46,7 +46,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
         },
         formInitDone: function (data) {
             // 表单初始化完成后，查询数据源列表，并渲染选择数据源下拉框
-            $.post(`${ctx}/business/datasource/list`, {}, function (res) {
+            $.post(`${ctx}/control/datasource/list`, {}, function (res) {
                 $('#dataSourcesSelect').html(`<option value="" selected>请选择数据源</option>`)
                 if (res.flag) {
                     for (let source of res.data) {
@@ -110,7 +110,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                 id: 'selectTable',
                 type: 2,
                 area: ['550px', '680px'],
-                content: `${ctx}/business/datasource/selectTableLayer?datasourceId=${datasourceId}`,
+                content: `${ctx}/control/datasource/selectTableLayer?datasourceId=${datasourceId}`,
                 btn: ['确定', '取消'],
                 success: function (layerObj) {
                     layerWin = window[layerObj.find('iframe')[0]['name']]
@@ -274,7 +274,7 @@ function save() {
  */
 function connectTest() {
     let data = editPage.getData();
-    $.post(`${ctx}/business/datasource/connection/test`, data, function (res) {
+    $.post(`${ctx}/control/datasource/connection/test`, data, function (res) {
         if (res.flag) {
             layer.msg('连接成功');
         } else {

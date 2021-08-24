@@ -2,6 +2,7 @@ package com.keyware.shandan.system.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.keyware.shandan.common.entity.BaseEntity;
+import com.keyware.shandan.common.enums.SystemTypes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,6 +29,12 @@ public class SysMenu extends BaseEntity implements Serializable {
      */
     @TableId("MENU_ID")
     private String menuId;
+
+    /**
+     * 所属系统
+     */
+    @TableField("SYSTEM")
+    private SystemTypes system;
 
     /**
      * 菜单名称

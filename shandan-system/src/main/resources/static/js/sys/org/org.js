@@ -136,7 +136,7 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
             , {field: 'orgShortName', title: '部门简称'}
             , {field: 'orgParentName', title: '上级部门'}
             , {field: 'leaderName', title: '部门负责人'}
-            , {fixed: 'right', title: '操作', toolbar: '#rowToolBar'}
+            , {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 150, align:'center'}
         ]],
         onToolBarTable: tableEventCallback,
         onToolBarRow: tableEventCallback,

@@ -60,7 +60,7 @@ public class BianmuIndexController {
             menuList.addAll(role.getMenuList());
         }
 
-        modelAndView.addObject("menuList", MenuUtil.getChildBySysMenuVo("", menuList));
+        modelAndView.addObject("menuList", MenuUtil.getChildBySysMenuVo("BIANMU", menuList));
 
         //登录用户快捷菜单
         List<SysShortcutMenu> shortcutMenuList = sysShortcutMenuService.findByUserId(user.getUserId()).getData();

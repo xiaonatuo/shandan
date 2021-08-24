@@ -23,7 +23,7 @@ layui.use(['layer', 'gtable'], function () {
             type: 2,
             title: '数据源编辑',
             area:['800px', '565px'],
-            content: `${ctx}/business/datasource/edit?id=${id}`,
+            content: `${ctx}/control/datasource/edit?id=${id}`,
             btn: ['确定', '取消', '连接测试'],
             success: function (layero, index) {
                 editLayerWin = window[layero.find('iframe')[0]['name']]
@@ -45,7 +45,7 @@ layui.use(['layer', 'gtable'], function () {
     }
 
     const deleteRow = function(id, callback){
-        $.delete(`${ctx}/business/datasource/delete/${id}`, {}, function (res) {
+        $.delete(`${ctx}/control/datasource/delete/${id}`, {}, function (res) {
             res.msg = res.flag ? '删除成功' : res.msg;
             let icon = res.flag ? 1 : 5;
             layer.msg(res.msg, {icon, time: 2000}, function () {
@@ -87,7 +87,7 @@ layui.use(['layer', 'gtable'], function () {
 
     const dsTableOptions = {
         id: 'dsTable',
-        url: `${ctx}/business/datasource/page`,
+        url: `${ctx}/control/datasource/page`,
         method: 'post',
         cols:[[
             {field: 'id', title: 'ID', hide: true},
@@ -96,7 +96,7 @@ layui.use(['layer', 'gtable'], function () {
             {field: 'host', title: '主机地址'},
             {field: 'port', title: '主机端口'},
             {field: 'jdbcSchema', title: '数据库模式'},
-            {fixed: 'right', title: '操作', toolbar: '#rowToolBar'}
+            {fixed: 'right', align:'center', title: '操作', toolbar: '#rowToolBar', width: 150}
         ]],
         onToolBarTable: tableEventCallback,
         onToolBarRow: tableEventCallback,

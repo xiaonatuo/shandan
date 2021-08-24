@@ -25,11 +25,11 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             , {field: 'valid', title: '是否允许登录系统', hide: true}
             , {field: 'limitMultiLogin', title: '是否允许多人在线', hide: true}
             , {field: 'limitedIp', title: '限制允许登录的IP集合', hide: true}
-            , {field: 'expiredTime', title: '账号失效时间'}
+            , {field: 'expiredTime', title: '账号失效时间', hide: true}
             , {field: 'lastChangePwdTime', title: '最近修改密码时间', hide: true}
             , {field: 'createTime', title: '创建时间', hide: true}
             , {field: 'modifyTime', title: '更新时间'}
-            , {fixed: 'right', title: '操作', toolbar: '#userTableBarDemo', width: 220}
+            , {fixed: 'right', align:'center', title: '操作', toolbar: '#userTableBarDemo', width: 220}
         ]],
         onToolBarTable: function (obj) {
             switch (obj.event) {

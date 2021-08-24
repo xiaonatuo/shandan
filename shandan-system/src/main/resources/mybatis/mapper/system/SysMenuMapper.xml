@@ -13,6 +13,7 @@
         <result column="MODIFY_TIME" property="modifyTime" />
         <result column="CREATE_USER" property="createUser" />
         <result column="MODIFY_USER" property="modifyUser" />
+        <result column="SYSTEM" property="system"/>
         <association property="parentMenu" column="MENU_PARENT_ID" select="selectById"/>
     </resultMap>
     <select id="listChildren" resultMap="BaseResultMap">

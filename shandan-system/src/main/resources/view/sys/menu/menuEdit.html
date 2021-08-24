@@ -38,6 +38,17 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">所属系统</label>
+                        <div class="layui-input-block">
+                            <select name="system" lay-verify="required">
+                                <option value="">请选择所属系统</option>
+                                <option value="BIANMU">数据分类编目</option>
+                                <option value="BROWSER">数据综合浏览</option>
+                                <option value="CONTROL">数据管控</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">同级排序权重</label>
                         <div class="layui-input-block">
                             <input type="text" name="sortWeight" autocomplete="off" placeholder="同级排序权重"

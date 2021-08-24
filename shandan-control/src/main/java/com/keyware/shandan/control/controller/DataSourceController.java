@@ -1,4 +1,4 @@
-package com.keyware.shandan.bianmu.controller;
+package com.keyware.shandan.control.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.datasource.entity.DBUserTableVo;
@@ -24,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @since 2021-05-11
  */
 @RestController
-@RequestMapping("/business/datasource")
+@RequestMapping("/control/datasource")
 public class DataSourceController extends BaseController<DataSourceService, DataSourceVo, String> {
 
     @Autowired
@@ -33,21 +33,21 @@ public class DataSourceController extends BaseController<DataSourceService, Data
     @Autowired
     private DynamicDataSourceService dynamicDataSourceService;
 
-    @GetMapping("/")
+    @GetMapping("/index")
     public ModelAndView index(ModelAndView modelAndView){
-        modelAndView.setViewName("business/datasource/datasource");
+        modelAndView.setViewName("datasource/datasource");
         return modelAndView;
     }
 
     @GetMapping("/edit")
     public ModelAndView edit(ModelAndView modelAndView){
-        modelAndView.setViewName("business/datasource/datasourceEdit");
+        modelAndView.setViewName("datasource/datasourceEdit");
         return modelAndView;
     }
 
     @GetMapping("/selectTableLayer")
     public ModelAndView selectTable(){
-        return new ModelAndView("business/datasource/selectTableLayer");
+        return new ModelAndView("datasource/selectTableLayer");
     }
 
     /**

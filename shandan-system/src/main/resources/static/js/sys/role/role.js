@@ -126,7 +126,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
             {field: 'roleId', title: 'ID', hide: true},
             {field: 'roleName', title: '角色名称', width: '25%'},
             {field: 'roleRemark', title: '角色描述'},
-            {fixed: 'right', title: '操作', toolbar: '#rowToolBar', align: 'center', width: '25%'}
+            {fixed: 'right', title: '操作', toolbar: '#rowToolBar', align: 'center', width: 150}
         ]],
         onToolBarTable: tableEventCallback,
         onToolBarRow: tableEventCallback,

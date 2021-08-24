@@ -57,7 +57,7 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
             id: 'menuEdit',
             type: 2,
             title: '编辑菜单',
-            area: ['600px', '380px'],
+            area: ['600px', '440px'],
             content: ctx + `/sys/menu/edit?menuParentId=${parentId}&menuId=${menuId}`,
             btn: ['确定', '取消'],
             success: function (layero, index) {
@@ -135,9 +135,23 @@ layui.use(['layer', 'gtable', 'menuTree'], function () {
         cols: [[
             {field: 'menuId', title: 'ID', hide: true}
             , {field: 'menuName', title: '菜单名称'}
+            , {field: 'system', title: '所属系统', templet: data=>{
+                switch (data.system){
+                    case "BIANMU":
+                        return "数据分类编目"
+                    case "BROWSER":
+                        return "数据综合浏览"
+                    case "CONTROL":
+                        return "数据管控"
+                    case "DESKTOP":
+                        return "应用桌面"
+                    default:
+                        return data.system;
+                }
+                }}
             , {field: 'menuPath', title: '菜单路径'}
             , {field: 'sortWeight', title: '同级排序权重'}
-            , {fixed: 'right', title: '操作', toolbar: '#rowToolBar'}
+            , {fixed: 'right', title: '操作', toolbar: '#rowToolBar', align:'center', width: 150}
         ]],
         onToolBarTable: tableEventCallback,
         onToolBarRow: tableEventCallback,

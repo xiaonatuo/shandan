@@ -16,7 +16,7 @@ layui.use(['layer', 'listPage'], function () {
     listPage.init({
         table:{
             id: 'dbTablesTable',
-            url: `${ctx}/business/datasource/table/list`,
+            url: `${ctx}/control/datasource/table/list`,
             page:{limit: 50},
             where:{datasourceId: requestParam.datasourceId},
             searchFieldNames: ['tableName'],

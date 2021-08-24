@@ -32,3 +32,9 @@ body, html {
 .layui-badge-rim, .layui-border, .layui-colla-content, .layui-colla-item, .layui-collapse, .layui-elem-field, .layui-form-pane .layui-form-item[pane], .layui-form-pane .layui-form-label, .layui-input, .layui-layedit, .layui-layedit-tool, .layui-panel, .layui-quote-nm, .layui-select, .layui-tab-bar, .layui-tab-card, .layui-tab-title, .layui-tab-title .layui-this:after, .layui-textarea {
     border-color: #eaeaea;
 }
+.layui-table-tool .layui-btn-container .layui-btn {
+     margin: 0
+}
+.layui-table-tool {
+    min-height: 58px;
+}
