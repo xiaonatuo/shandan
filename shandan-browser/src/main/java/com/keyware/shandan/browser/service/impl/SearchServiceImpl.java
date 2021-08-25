@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.service.DirectoryService;
+import com.keyware.shandan.bianmu.service.MetadataService;
 import com.keyware.shandan.browser.entity.ConditionItem;
 import com.keyware.shandan.browser.entity.ConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
@@ -13,11 +14,14 @@ import com.keyware.shandan.browser.enums.ConditionLogic;
 import com.keyware.shandan.browser.service.SearchService;
 import com.keyware.shandan.browser.service.builders.ReportAggregation;
 import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.frame.config.security.SecurityUtil;
+import com.keyware.shandan.system.entity.SysUser;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.Strings;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -30,6 +34,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 检索服务实现类
@@ -43,6 +48,9 @@ public class SearchServiceImpl implements SearchService {
     private final String search_index = "shandan";
     @Autowired
     private DirectoryService directoryService;
+
+    @Autowired
+    private MetadataService metadataService;
 
     @Autowired
     private RestHighLevelClient esClient;
@@ -135,7 +143,13 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
         }
-
+        if(request.types().length == 0){
+            request.types(getAccessibleMetadata());
+            String[] entityIds = getAccessibleDirectory();
+            if(entityIds.length > 0){
+                boolQueryBuilder.filter(QueryBuilders.termsQuery("entityId", entityIds));
+            }
+        }
         searchSourceBuilder.query(boolQueryBuilder).highlighter(buildHighlightBuilder());
         if (StringUtils.isNotBlank(condition.getSortFiled())) {
             searchSourceBuilder.sort(condition.getSortFiled(), condition.getSort());
@@ -207,5 +221,33 @@ public class SearchServiceImpl implements SearchService {
             ids[i] = list.get(i - 1).getId();
         }
         return ids;
+    }
+
+    /**
+     * 获取有访问权限的元数据信息
+     * @return
+     */
+    public String[] getAccessibleMetadata(){
+        SysUser user = SecurityUtil.getLoginSysUser();
+        if (user != null && (user.getLoginName().equals("sa") || user.getLoginName().equals("admin"))) {
+            return Strings.EMPTY_ARRAY;
+        }
+        List<MetadataBasicVo> metadataList = metadataService.list(new QueryWrapper<>());
+        String[] metadataNames = metadataList.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList()).toArray(new String[metadataList.size()+1]);
+        metadataNames[metadataList.size()] = "file";
+        return metadataNames;
+    }
+
+    /**
+     * 获取有访问权限的目录信息
+     * @return
+     */
+    public String[] getAccessibleDirectory(){
+        SysUser user = SecurityUtil.getLoginSysUser();
+        if (user != null && (user.getLoginName().equals("sa") || user.getLoginName().equals("admin"))) {
+            return Strings.EMPTY_ARRAY;
+        }
+        List<DirectoryVo> dirList = directoryService.list(new QueryWrapper<>());
+        return dirList.stream().map(DirectoryVo::getId).collect(Collectors.toList()).toArray(new String[dirList.size()]);
     }
 }
