@@ -14,11 +14,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SystemTypes {
 
-    BIANMU("数据分类编目分系统"),
-    BROWSER("数据综合浏览分系统"),
-    CONTROL("数据管控分系统"),
-    DESKTOP("应用桌面分系统");
+    BIANMU("BIANMU","数据分类编目分系统"),
+    BROWSER("BROWSER","数据综合浏览分系统"),
+    CONTROL("CONTROL","数据管控分系统"),
+    DESKTOP("DESKTOP","应用桌面分系统");
 
     @EnumValue
+    private final String value;
     private final String desc;
 }
