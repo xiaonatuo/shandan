@@ -3,6 +3,7 @@ package com.keyware.shandan.system.service.impl;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.service.BaseServiceImpl;
 import com.keyware.shandan.frame.properties.CustomProperties;
+import com.keyware.shandan.system.service.SysFileService;
 import com.keyware.shandan.system.utils.SysSettingUtil;
 import com.keyware.shandan.system.entity.SysSetting;
 import com.keyware.shandan.system.mapper.SysSettingMapper;
@@ -27,7 +28,7 @@ public class SysSettingServiceImpl extends BaseServiceImpl<SysSettingMapper, Sys
     private SysSettingMapper mapper;
 
     @Autowired
-    private CustomProperties customProperties;
+    private SysFileService fileService;
 
     @Override
     public Result<SysSetting> updateOrSave(SysSetting entity) {
@@ -88,8 +89,7 @@ public class SysSettingServiceImpl extends BaseServiceImpl<SysSettingMapper, Sys
 
     private void clearFiles() {
         mapper.clearSql("truncate table SYS_FILE");
-        File file = new File(customProperties.getFileStorage().getPath());
-        file.deleteOnExit();
+        fileService.clearFiles();
     }
 
     private static class ClearType {

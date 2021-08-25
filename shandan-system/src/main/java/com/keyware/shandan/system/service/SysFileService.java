@@ -17,4 +17,6 @@ import java.io.IOException;
 public interface SysFileService extends IBaseService<SysFile, String> {
 
     SysFile uploadFiles(MultipartFile file, SysFile sysFile) throws IOException;
+
+    void clearFiles();
 }

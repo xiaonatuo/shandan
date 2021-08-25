@@ -62,4 +62,10 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
         save(sysFile);
         return sysFile;
     }
+
+    @Override
+    public void clearFiles() {
+        File file = new File(customProperties.getFileStorage().getPath());
+        file.deleteOnExit();
+    }
 }
