@@ -18,36 +18,7 @@ layui.use(['form', 'gtable', 'dropdown'], function () {
             {field: 'modifyTime', title: '上一次修改时间'}
         ]],
         done: function () {
-            layui.dropdown.render({
-                elem: '#clear-btn',
-                data: [{title: '清除',id: 'clear-dir'},{title: '销毁', id: 'clear-all'}],
-                click: function({id}){
-                    let tipMsg = '警告：该操作将删除所有分类编目数据，<br>且该操作不可逆，是否继续';
-                    if(id == 'clear-all'){
-                        tipMsg = '警告：该操作将删除系统所有数据，<br>且该操作不可逆，是否继续';
-                    }
-                    layer.confirm(tipMsg,  {icon: 7, area:['350px','200px']}, function (c_index) {
-                        layer.close(c_index);
-                        layer.prompt({title: '请输入登录密码，以确认操作', formType: 1}, function(password, index){
-                            layer.close(index);
-                            // 验证密码
-                            Util.post(`${ctx}/`,{password}).then(res=>{ // todo 验证请求
-                                if(res.flag){
-                                    Util.post(`${ctx}/`, {type: id}).then(res=>{ // todo 清除请求
-                                        if(res.flag){
-                                            layer.alert('操作成功');
-                                        }else {
-                                            layer.alert(res.msg);
-                                        }
-                                    }).catch(error=>showErrorMsg())
-                                }else{
-                                    showErrorMsg('密码验证失败');
-                                }
-                            }).catch(error=> showErrorMsg());
-                        });
-                    });
-                }
-            });
+            dataClearBtnEventsBind();
         },
         onToolBarTable: function ({event, config}) {
             if (event == 'save') {
@@ -80,7 +51,8 @@ layui.use(['form', 'gtable', 'dropdown'], function () {
         if (modifyData.length != 0) {
             let ok = false;
             for (let item of modifyData) {
-                await Util.post(`${ctx}/sys/sysSetting/save`, item).then(res => ok = res.flag).catch(err => {})
+                await Util.post(`${ctx}/sys/sysSetting/save`, item).then(res => ok = res.flag).catch(err => {
+                })
             }
             if (ok) {
                 layer.msg('保存成功', {icon: 1, time: 1500})
@@ -92,9 +64,39 @@ layui.use(['form', 'gtable', 'dropdown'], function () {
         }
     }
 
-    function dataClear(){
-        layer.confirm('', function () {
-
+    /**
+     * 数据清除按钮事件绑定
+     */
+    function dataClearBtnEventsBind() {
+        layui.dropdown.render({
+            elem: '#clear-btn',
+            data: [{title: '清除', id: 'clear-dir'}, {title: '销毁', id: 'clear-all'}],
+            click: function ({id}) {
+                let tipMsg = '警告：该操作将删除所有分类编目数据，<br>且该操作不可逆，是否继续';
+                if (id == 'clear-all') {
+                    tipMsg = '警告：该操作将删除系统所有数据，<br>且该操作不可逆，是否继续';
+                }
+                layer.confirm(tipMsg, {icon: 7, area: ['350px', '200px']}, function (c_index) {
+                    layer.close(c_index);
+                    layer.prompt({title: '请输入登录密码，以确认操作', formType: 1}, function (password, index) {
+                        // 验证密码
+                        Util.post(`${ctx}/sys/sysSetting/pwd/verify`, {password}).then(res => { // todo 验证请求
+                            if (res.flag) {
+                                layer.close(index);
+                                Util.post(`${ctx}/sys/sysSetting/data/clear`, {type: id}).then(res => { // todo 清除请求
+                                    if (res.flag) {
+                                        layer.alert('操作成功');
+                                    } else {
+                                        layer.alert(res.msg);
+                                    }
+                                }).catch(error => showErrorMsg())
+                            } else {
+                                showErrorMsg('密码验证失败');
+                            }
+                        }).catch(error => showErrorMsg());
+                    });
+                });
+            }
         });
     }
 

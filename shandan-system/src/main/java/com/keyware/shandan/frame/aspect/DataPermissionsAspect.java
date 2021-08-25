@@ -77,21 +77,24 @@ public class DataPermissionsAspect {
                         });
                     }
 
-                    // 只查询自己创建的数据
-                    wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
-                            .or(true, wp ->{
-                                wp.in(true, annotation.orgColumn(), orgIds);
+                    if (orgIds.size() == 0) {
+                        wrapper.eq(true, "CREATE_USER", currentUser.getUserId());
+                    } else {
+                        wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
+                                .or(true, wp -> {
+                                    wp.in(true, annotation.orgColumn(), orgIds);
 
-                                // 查询实体为目录或者元数据时，则添加审核通wrapper.getEntity()过条件
-                                Object entity = wrapper.getEntity();
-                                if(entity != null){
-                                    String className = entity.getClass().getName();
-                                    if (className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")
-                                            || className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
-                                        wp.and(true, wpe->wpe.eq("REVIEW_STATUS", "PASS"));
+                                    // 查询实体为目录或者元数据时，则添加审核通wrapper.getEntity()过条件
+                                    Object entity = wrapper.getEntity();
+                                    if (entity != null) {
+                                        String className = entity.getClass().getName();
+                                        if (className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")
+                                                || className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
+                                            wp.and(true, wpe -> wpe.eq("REVIEW_STATUS", "PASS"));
+                                        }
                                     }
-                                }
-                            });
+                                });
+                    }
 
                     args[i] = wrapper;
                     return joinPoint.proceed(args);

@@ -30,9 +30,6 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
     @Autowired
     private CustomProperties customProperties;
 
-    @Autowired
-    private EsSysFileProvider sysFileProvider;
-
     @Override
     public SysFile uploadFiles(MultipartFile file, SysFile sysFile) throws IOException {
         if (file.isEmpty()) {

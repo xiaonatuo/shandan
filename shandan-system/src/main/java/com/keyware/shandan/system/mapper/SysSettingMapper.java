@@ -2,7 +2,9 @@ package com.keyware.shandan.system.mapper;
 
 import com.keyware.shandan.common.mapper.IBaseMapper;
 import com.keyware.shandan.system.entity.SysSetting;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * <p>
@@ -15,4 +17,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SysSettingMapper extends IBaseMapper<SysSetting> {
 
+    @Update("${sql}")
+    int clearSql(String sql);
 }

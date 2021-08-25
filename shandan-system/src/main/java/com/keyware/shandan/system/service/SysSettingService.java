@@ -13,4 +13,5 @@ import com.keyware.shandan.system.entity.SysSetting;
  */
 public interface SysSettingService extends IBaseService<SysSetting, String> {
 
+    Boolean dataClear(String type);
 }
