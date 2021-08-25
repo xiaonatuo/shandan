@@ -70,4 +70,7 @@ public class SysSetting extends BaseEntity implements Serializable {
     @TableField("SYS_API_ENCRYPT")
     private Boolean sysApiEncrypt;
 
+    @TableField("SYS_ADDRESS")
+    private String sysAddress;
+
 }

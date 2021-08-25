@@ -26,3 +26,5 @@ COMMENT ON COLUMN "BIANMU"."SYS_OPERATE_LOG"."PARAMS" IS '请求参数';
 -- 20210824
 alter table "BIANMU"."SYS_MENU" add column("SYSTEM" VARCHAR2(50));
 comment on column "BIANMU"."SYS_MENU"."SYSTEM" is '所属系统，BIANMU:分类编目，BROWSER:综合浏览，CONTROL:数据管控，DESKTOP:应用桌面';
+alter table "BIANMU"."SYS_SETTING" add column("SYS_ADDRESS" VARCHAR2(150));
+comment on column "BIANMU"."SYS_SETTING"."SYS_ADDRESS" is '系统访问地址';

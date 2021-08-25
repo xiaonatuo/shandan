@@ -1,9 +1,9 @@
 package com.keyware.shandan.system.controller;
 
 import com.keyware.shandan.common.controller.BaseController;
-import com.keyware.shandan.system.utils.SysSettingUtil;
 import com.keyware.shandan.system.entity.SysSetting;
 import com.keyware.shandan.system.service.SysSettingService;
+import com.keyware.shandan.system.utils.SysSettingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
