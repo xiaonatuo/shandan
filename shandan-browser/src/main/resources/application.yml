@@ -35,4 +35,5 @@ mybatis-plus:
   configuration:
     default-enum-type-handler: com.keyware.shandan.frame.config.myBatis.CustomEnumTypeHandler
 project:
+  id: BROWSER
   app-name: 数据综合浏览系统

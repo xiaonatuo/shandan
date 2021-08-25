@@ -18,6 +18,6 @@ public class SysSettingController extends BaseController<SysSettingService, SysS
 
     @GetMapping("setting")
     public ModelAndView setting() {
-        return new ModelAndView("sys/setting/setting", "sys", SysSettingUtil.getSysSetting());
+        return new ModelAndView("sys/setting/setting", "sys", SysSettingUtil.getCurrentSysSetting());
     }
 }

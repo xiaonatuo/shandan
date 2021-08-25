@@ -32,7 +32,7 @@ public class SysUserController extends BaseController<SysUserService, SysUser, S
 
     @GetMapping("/")
     public ModelAndView user(){
-        return new ModelAndView("sys/user/user","initPassword", SysSettingUtil.getSysSetting().getUserInitPassword());
+        return new ModelAndView("sys/user/user","initPassword", SysSettingUtil.getCurrentSysSetting().getUserInitPassword());
     }
 
     @GetMapping("edit")

@@ -47,7 +47,7 @@ public class SafetyAspect {
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         try {
             //判断api加密开关是否开启
-            if (!SysSettingUtil.getSysSetting().getSysApiEncrypt()) {
+            if (!SysSettingUtil.getCurrentSysSetting().getSysApiEncrypt()) {
                 return joinPoint.proceed(joinPoint.getArgs());
             }
 

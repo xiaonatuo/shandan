@@ -12,19 +12,25 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SysSettingUtil {
 
     //使用线程安全的ConcurrentHashMap来存储系统设置
-    private static ConcurrentHashMap<String, SysSetting> sysSettingMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, SysSetting> sysSettingMap = new ConcurrentHashMap<>();
+
+    private static String currentSysId;
+
+    public static void setCurrentSysId(String sysId) {
+        currentSysId = sysId;
+    }
 
     //从公用静态集合sysSettingMap获取系统设置
-    public static SysSetting getSysSetting(){
-        return sysSettingMap.get("sysSetting");
+    public static SysSetting getCurrentSysSetting() {
+        return sysSettingMap.get(currentSysId);
+    }
+
+    public static SysSetting getSysSetting(String sysId) {
+        return sysSettingMap.get(sysId);
     }
 
     //更新公用静态集合sysSettingMap
-    public static void setSysSettingMap(SysSetting setting){
-        if(sysSettingMap.isEmpty()){
-            sysSettingMap.put("sysSetting",setting);
-        }else{
-            sysSettingMap.replace("sysSetting",setting);
-        }
+    public static void setSysSettingMap(SysSetting setting) {
+        sysSettingMap.put(setting.getId(), setting);
     }
 }

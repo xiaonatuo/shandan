@@ -1,4 +1,4 @@
-package com.keyware.shandan.bianmu.controller;
+package com.keyware.shandan.control.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -50,7 +50,7 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
      */
     @GetMapping("/directory")
     public ModelAndView directoryReview() {
-        return new ModelAndView("business/review/directoryReview");
+        return new ModelAndView("review/directoryReview");
     }
 
     /**
@@ -60,7 +60,7 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
      */
     @GetMapping("/metadata")
     public ModelAndView metadataReview() {
-        return new ModelAndView("business/review/metadataReview");
+        return new ModelAndView("review/metadataReview");
     }
 
     /**

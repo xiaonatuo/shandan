@@ -55,7 +55,7 @@
 
         <dependency>
             <groupId>com.keyware.shandan</groupId>
-            <artifactId>shandan-system</artifactId>
+            <artifactId>shandan-bianmu-core</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

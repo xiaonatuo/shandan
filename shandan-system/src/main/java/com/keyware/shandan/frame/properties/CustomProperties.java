@@ -1,5 +1,6 @@
 package com.keyware.shandan.frame.properties;
 
+import com.keyware.shandan.common.enums.SystemTypes;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,10 @@ import org.springframework.stereotype.Component;
 @Configuration
 @ConfigurationProperties("project")
 public class CustomProperties {
+    /**
+     * 系统ID
+     */
+    private SystemTypes id;
     /**
      * 系统名称
      */
@@ -35,8 +40,9 @@ public class CustomProperties {
     private FileStorageProperties fileStorage;
 
     /**
-     * 数据分类编目服务地址
+     * 数据分类编目服务地址(弃用)
      */
+    @Deprecated
     private String bianmuServer = "http://localhost:8080/";
 
     /**
@@ -47,6 +53,7 @@ public class CustomProperties {
         /**
          * 存储位置
          */
+        @Deprecated
         private String location = "local";
         /**
          * 存储路径

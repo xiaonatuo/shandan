@@ -93,7 +93,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser, 
                 return Result.of(entity, false, "用户名已存在");
             }
             //需要设置初始密码
-            entity.setPassword(MD5Util.getMD5(SysSettingUtil.getSysSetting().getUserInitPassword()));
+            entity.setPassword(MD5Util.getMD5(SysSettingUtil.getCurrentSysSetting().getUserInitPassword()));
         }
         return super.updateOrSave(entity);
     }
@@ -102,7 +102,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser, 
     public Result<SysUser> resetPassword(String userId) {
         SysUser user = new SysUser();
         user.setUserId(userId);
-        user.setPassword(MD5Util.getMD5(SysSettingUtil.getSysSetting().getUserInitPassword()));
+        user.setPassword(MD5Util.getMD5(SysSettingUtil.getCurrentSysSetting().getUserInitPassword()));
         boolean flag = super.update(new QueryWrapper<>(user));
         if (flag) {
             user.setPassword(null);

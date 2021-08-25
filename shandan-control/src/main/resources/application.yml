@@ -108,6 +108,7 @@ spring:
 
 
 project:
+  id: CONTROL
   app-name: 数据管控子系统
   #是否需要输入验证码
   captcha-enable: false
@@ -125,3 +126,5 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
+  configuration:
+    default-enum-type-handler: com.keyware.shandan.frame.config.myBatis.CustomEnumTypeHandler

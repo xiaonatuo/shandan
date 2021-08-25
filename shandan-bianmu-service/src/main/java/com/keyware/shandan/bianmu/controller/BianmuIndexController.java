@@ -46,7 +46,7 @@ public class BianmuIndexController {
         ModelAndView modelAndView = new ModelAndView("index");
 
         //系统信息
-        modelAndView.addObject("sys", SysSettingUtil.getSysSetting());
+        modelAndView.addObject("sys", SysSettingUtil.getCurrentSysSetting());
 
         //登录用户
         SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();

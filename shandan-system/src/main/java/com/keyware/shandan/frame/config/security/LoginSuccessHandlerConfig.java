@@ -90,7 +90,7 @@ public class LoginSuccessHandlerConfig implements AuthenticationSuccessHandler {
         }
 
         //判断api加密开关是否开启
-        if(SysSettingUtil.getSysSetting().getSysApiEncrypt()) {
+        if(SysSettingUtil.getCurrentSysSetting().getSysApiEncrypt()) {
             //加密
             try {
                 //前端公钥

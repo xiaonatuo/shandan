@@ -2,24 +2,12 @@ package com.keyware.shandan.system.controller;
 
 import com.keyware.shandan.common.util.ErrorUtil;
 import com.keyware.shandan.common.util.RsaUtil;
-import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.common.util.VerifyCodeImageUtil;
-import com.keyware.shandan.frame.config.security.SecurityUtil;
 import com.keyware.shandan.frame.properties.CustomProperties;
-import com.keyware.shandan.system.entity.*;
-import com.keyware.shandan.system.service.SysRoleService;
-import com.keyware.shandan.system.service.SysSettingService;
-import com.keyware.shandan.system.service.SysShortcutMenuService;
-import com.keyware.shandan.system.service.SysUserService;
-import com.keyware.shandan.system.utils.MenuUtil;
 import com.keyware.shandan.system.utils.SysSettingUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,10 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
@@ -48,15 +32,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class SystemController {
-    @Autowired
-    private SysUserService sysUserService;
-
-    @Autowired
-    private SysRoleService sysRoleService;
-
-    @Autowired
-    private SysShortcutMenuService sysShortcutMenuService;
-
     /**
      * 端口
      */
@@ -81,7 +56,7 @@ public class SystemController {
         modelAndView.addObject("rememberMeEnable", customProperties.getRememberMeEnable());
 
         //系统信息
-        modelAndView.addObject("sys", SysSettingUtil.getSysSetting());
+        modelAndView.addObject("sys", SysSettingUtil.getCurrentSysSetting());
 
         modelAndView.addObject("appName", customProperties.getAppName());
 

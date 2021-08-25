@@ -1,14 +1,17 @@
 package com.keyware.shandan;
 
+import com.keyware.shandan.common.enums.SystemTypes;
 import com.keyware.shandan.common.util.RsaUtil;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
 import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.SysMenu;
 import com.keyware.shandan.system.entity.SysRole;
+import com.keyware.shandan.system.entity.SysSetting;
 import com.keyware.shandan.system.entity.SysUser;
 import com.keyware.shandan.system.service.SysRoleService;
 import com.keyware.shandan.system.service.SysUserService;
 import com.keyware.shandan.system.utils.MenuUtil;
+import com.keyware.shandan.system.utils.SysSettingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -79,6 +82,9 @@ public class ControlApplication {
             String publicKey = RsaUtil.getPublicKey();
             view.addObject("publicKey", publicKey);
 
+            // 数据分类编目服务地址
+            SysSetting bianmuSetting = SysSettingUtil.getSysSetting(SystemTypes.BIANMU.name());
+            view.addObject("bianmuAddress", bianmuSetting.getSysAddress());
 
             //登录用户系统菜单
             List<SysRole> roles = sysRoleService.getUserRoles(user.getUserId());

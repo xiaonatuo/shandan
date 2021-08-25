@@ -3,6 +3,7 @@ package com.keyware.shandan.frame.config;
 import com.keyware.shandan.common.util.ErrorUtil;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.datasource.service.DataSourceService;
+import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.SysSetting;
 import com.keyware.shandan.system.service.SysSettingService;
 import com.keyware.shandan.system.utils.SysSettingUtil;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * <p>
@@ -38,6 +40,9 @@ public class ApplicationInitializing implements InitializingBean {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private CustomProperties customProperties;
+
     @Override
     public void afterPropertiesSet() throws Exception {
         dataSourceService.loadDataSource();
@@ -57,8 +62,9 @@ public class ApplicationInitializing implements InitializingBean {
         return applicationArguments -> {
             try {
                 //系统启动时获取数据库数据，设置到公用静态集合sysSettingMap
-                SysSetting setting = sysSettingService.list().get(0);
-                SysSettingUtil.setSysSettingMap(setting);
+                List<SysSetting> settings = sysSettingService.list();
+                SysSettingUtil.setCurrentSysId(customProperties.getId().name());
+                settings.forEach(SysSettingUtil::setSysSettingMap);
 
                 //获取本机内网IP
                 log.info("启动成功：" + "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + finalPort + finalContextPath);

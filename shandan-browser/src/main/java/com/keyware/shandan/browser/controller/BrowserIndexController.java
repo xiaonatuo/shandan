@@ -10,11 +10,13 @@ import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.browser.config.BrowserProperties;
 import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.common.enums.SystemTypes;
 import com.keyware.shandan.common.util.RsaUtil;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
 import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.SysFile;
+import com.keyware.shandan.system.entity.SysSetting;
 import com.keyware.shandan.system.entity.SysUser;
 import com.keyware.shandan.system.service.SysFileService;
 import com.keyware.shandan.system.service.SysUserService;
@@ -69,7 +71,7 @@ public class BrowserIndexController {
         modelAndView.addObject("appName", customProperties.getAppName());
         modelAndView.addObject("user", SecurityUtil.getLoginSysUser());
         //系统信息
-        modelAndView.addObject("sys", SysSettingUtil.getSysSetting());
+        modelAndView.addObject("sys", SysSettingUtil.getCurrentSysSetting());
         //后端公钥
         String publicKey = RsaUtil.getPublicKey();
         modelAndView.addObject("publicKey", publicKey);
@@ -77,7 +79,9 @@ public class BrowserIndexController {
         SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
         user.setPassword(null);//隐藏部分属性
         modelAndView.addObject("loginUser", user);
-        modelAndView.addObject("bianmuServer", customProperties.getBianmuServer());
+
+        SysSetting bianmuSetting = SysSettingUtil.getSysSetting(SystemTypes.BIANMU.name());
+        modelAndView.addObject("bianmuServer", bianmuSetting.getSysAddress());
         modelAndView.addObject("dbtoolAddress", browserProperties.getDbtoolAddress());
         return modelAndView;
     }

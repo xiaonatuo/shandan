@@ -41,16 +41,16 @@ public class ErrorPageConfig implements ErrorPageRegistrar {
 class ErrorPageController {
     @GetMapping("/error/403")
     public ModelAndView error403(){
-        return new ModelAndView("common/error/403","sysLogo",SysSettingUtil.getSysSetting().getSysLogo());
+        return new ModelAndView("common/error/403","sysLogo",SysSettingUtil.getCurrentSysSetting().getSysLogo());
     }
 
     @GetMapping("/error/404")
     public ModelAndView error404() {
-        return new ModelAndView("common/error/404", "sysLogo", SysSettingUtil.getSysSetting().getSysLogo());
+        return new ModelAndView("common/error/404", "sysLogo", SysSettingUtil.getCurrentSysSetting().getSysLogo());
     }
 
     @GetMapping("/error/500")
     public ModelAndView error500(){
-        return new ModelAndView("common/error/500","sysLogo",SysSettingUtil.getSysSetting().getSysLogo());
+        return new ModelAndView("common/error/500","sysLogo",SysSettingUtil.getCurrentSysSetting().getSysLogo());
     }
 }
