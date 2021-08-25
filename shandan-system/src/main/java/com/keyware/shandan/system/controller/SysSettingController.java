@@ -23,6 +23,9 @@ public class SysSettingController extends BaseController<SysSettingService, SysS
     @Autowired
     private SysSettingService sysSettingService;
 
+    @Autowired
+    private SysUserService sysUserService;
+
     @GetMapping("setting")
     public ModelAndView setting() {
         return new ModelAndView("sys/setting/setting", "sys", SysSettingUtil.getCurrentSysSetting());
@@ -38,7 +41,7 @@ public class SysSettingController extends BaseController<SysSettingService, SysS
         if (StringUtils.isBlank(password)) {
             return Result.of(null, false, "密码不能为空");
         }
-        SysUser user = SecurityUtil.getLoginSysUser();
+        SysUser user = sysUserService.findByLoginName("sa").getData();
         if (user == null) {
             throw new RuntimeException("获取当前用户信息异常");
         }

@@ -78,7 +78,7 @@ layui.use(['form', 'gtable', 'dropdown'], function () {
                 }
                 layer.confirm(tipMsg, {icon: 7, area: ['350px', '200px']}, function (c_index) {
                     layer.close(c_index);
-                    layer.prompt({title: '请输入登录密码，以确认操作', formType: 1}, function (password, index) {
+                    layer.prompt({title: '请输入超级管理员密码，以确认操作', formType: 1}, function (password, index) {
                         // 验证密码
                         Util.post(`${ctx}/sys/sysSetting/pwd/verify`, {password}).then(res => { // todo 验证请求
                             if (res.flag) {
