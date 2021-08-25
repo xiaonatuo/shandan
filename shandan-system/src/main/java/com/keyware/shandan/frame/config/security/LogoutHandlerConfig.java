@@ -21,7 +21,7 @@ public class LogoutHandlerConfig implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) {
         //剔除退出用户
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = authentication.getPrincipal();
         if (principal !=null){
             securityUtil.sessionRegistryRemoveUser((User)principal);
         }
