@@ -1,4 +1,6 @@
 ##### 生产环境配置 #######
+server:
+  port: 18100
 spring:
   #数据库配置
   datasource:
@@ -6,16 +8,12 @@ spring:
       primary: master
       datasource:
         master:
-          url: jdbc:dm://localhost:5236
+          url: jdbc:dm://172.16.36.240:5236
           username: BIANMU
-          password: 123456789
+          password: admin1234
           driver-class-name: dm.jdbc.driver.DmDriver
     sql-script-encoding: UTF-8
 
 project:
   #是否需要输入验证码
   captcha-enable: false
-  # 配置文件存储方式
-  file-storage:
-    # 存储路径
-    path: D:/BIANMU

@@ -21,4 +21,3 @@ spring:
 project:
   #是否需要输入验证码
   captcha-enable: false
-  bianmu-server: http://172.16.36.224:18080/

@@ -29,6 +29,5 @@ project:
   captcha-enable: false
   # 启用记住我，方便调试
   remember-me-enable: true
-  bianmu-server: http://localhost:8080
   browser:
     dbtool-address: http://localhost:8300/
