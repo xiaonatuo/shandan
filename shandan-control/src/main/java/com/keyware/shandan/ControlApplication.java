@@ -95,7 +95,7 @@ public class ControlApplication {
 
             view.addObject("menuList", MenuUtil.getChildBySysMenuVo("CONTROL", menuList));
 
-            view.addObject("appName", customProperties.getAppName());
+            view.addObject("appName", SysSettingUtil.getCurrentSysSetting().getSysName());
             view.addObject("user", SecurityUtil.getLoginSysUser());
             return view;
         }
