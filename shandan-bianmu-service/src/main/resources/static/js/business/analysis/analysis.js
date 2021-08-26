@@ -30,7 +30,7 @@ layui.use(['layer', 'form'], function () {
      * 加载数据源
      */
     function loadDatasource(){
-        $.post(`${ctx}/control/datasource/list`, {}, function (res) {
+        $.post(`${ctx}/business/datasource/list`, {}, function (res) {
             if (res.flag) {
                 let html = ``;
                 for (let source of res.data) {
