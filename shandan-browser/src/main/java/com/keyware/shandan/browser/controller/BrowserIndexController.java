@@ -68,7 +68,7 @@ public class BrowserIndexController {
     @GetMapping("/index")
     public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
-        modelAndView.addObject("appName", customProperties.getAppName());
+        modelAndView.addObject("appName", SysSettingUtil.getCurrentSysSetting().getSysName());
         modelAndView.addObject("user", SecurityUtil.getLoginSysUser());
         //系统信息
         modelAndView.addObject("sys", SysSettingUtil.getCurrentSysSetting());
