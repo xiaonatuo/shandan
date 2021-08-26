@@ -20,7 +20,7 @@
 </head>
 <body>
 <div class="main">
-    <form class="layui-form layui-form-pane">
+    <form class="layui-form layui-form-pane" lay-filter="login-form">
         <div class="layui-form-item">
             <h1 style="text-align: center" th:text="${appName}">XXX系统</h1>
         </div>
@@ -51,12 +51,12 @@
         </block>
         <block th:if="${rememberMeEnable}">
             <div class="layui-form-item" style="float: right;">
-                <input id="remember-me" type="checkbox" title="记住我" name="rememberMe" lay-skin="primary">
+                <input id="remember-me" type="checkbox" title="记住我" name="rememberMe" value="true" lay-skin="primary">
             </div>
         </block>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <a class="layui-btn" style="margin-left: -50px;margin-right: 50px;" onclick="formSubmit()">登录</a>
+                <a class="layui-btn" style="margin-left: -50px;margin-right: 50px;" id="login-btn">登录</a>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
@@ -92,32 +92,32 @@
                 formSubmit();
             }
         })
+
+        $('#login-btn').on('click', formSubmit);
+
+        /**
+         * 登录
+         */
+        function formSubmit() {
+            let data = form.val('login-form');
+            if(!data.username || !data.password){
+                layer.msg('用户名和密码不能为空', {icon: 2, time: 2000});
+                return;
+            }
+            data['remember-me'] = data.rememberMe == 'true'
+
+            $.post(ctx + "/login", data, function (data) {
+                if (data.code == 300) {
+                    layer.msg(data.msg, {icon: 1, time: 1000}, function () {
+                        window.location.href = ctx + data.url;
+                    });
+                } else {
+                    layer.msg(data.msg, {icon: 2, time: 2000});
+                }
+            })
+        }
     });
 
-    /**
-     * 登录
-     */
-    function formSubmit() {
-        /*let rememberMe = false;
-        if ($("input[name='rememberMe']:checked").length > 0) {
-            rememberMe = true;
-        }*/
-        $.post(ctx + "/login", {
-            "username": $("#username").val(),
-            "password": $("#password").val(),
-            "captcha": $("#captcha").val(),
-            "remember-me": true,
-        }, function (data) {
-            if (data.code == 300) {
-                layer.msg(data.msg, {icon: 1, time: 1000}, function () {
-                    window.location.href = ctx + data.url;
-                });
-            } else {
-                layer.msg(data.msg, {icon: 2, time: 2000}, function () {
-                });
-            }
-        })
-    }
 
     /**
      * 刷新验证码
