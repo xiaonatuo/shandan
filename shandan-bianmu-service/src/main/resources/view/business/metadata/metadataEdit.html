@@ -95,28 +95,26 @@
                 <i class="layui-icon layui-icon-close" data-id="{{item.tableName}}"></i>
             </div>
             {{#
-                var dis = '';
                 if(d.length > 1){
-                    dis = 'layui-hide';
             }}
-            <select id="selectForginColumn_{{item.tableName}}" lay-filter="selectForeignColumn_{{item.tableName}}">
-                <option>选择外键</option>
-                {{# layui.each(item.columnList,function(idx, col){ }}
-                <option value="{{col.columnName}}" {{col.selected}}>{{col.columnName}}</option>
-                {{# }); }}
-            </select>
-            <select id="selectForeignTable_{{item.tableName}}" lay-filter="selectForeignTable_{{item.tableName}}">
-                <option>选择外表</option>
-                {{#
-                for(let [i, o] of d){
-                if(index == i ){continue;}
-                let selected = o.tableName == item.foreignTable ? 'selected' : '';
-                }}
-                <option value="{{ i }}" {{selected}} >{{ i }}</option>
-                {{# } }}
-            </select>
+                <select id="selectForginColumn_{{item.tableName}}" lay-filter="selectForeignColumn_{{item.tableName}}">
+                    <option>选择外键</option>
+                    {{# layui.each(item.columnList,function(idx, col){ }}
+                    <option value="{{col.columnName}}" {{col.selected}}>{{col.columnName}}</option>
+                    {{# }); }}
+                </select>
+                <select id="selectForeignTable_{{item.tableName}}" lay-filter="selectForeignTable_{{item.tableName}}">
+                    <option>选择外表</option>
+                    {{#
+                    for(let [i, o] of d){
+                    if(index == i ){continue;}
+                    let selected = o.tableName == item.foreignTable ? 'selected' : '';
+                    }}
+                    <option value="{{ i }}" {{selected}} >{{ i }}</option>
+                    {{# } }}
+                </select>
+                <input type="radio" name="master" value="{{item.tableName}}" lay-skin="primary" title="主表">
             {{# } }}
-            <input type="radio" name="master" value="{{item.tableName}}" lay-skin="primary" title="主表" class="{{dis}}">
             <a class="layui-btn layui-btn-xs btn-field-config" data-table="{{item.tableName}}" title="字段配置">字段配置</a>
         </li>
 
