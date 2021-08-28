@@ -31,19 +31,19 @@ public class DBTableColumnVo implements Serializable {
     private String dataType; // VARCHAR(128) 列类型名
 
     @TableField("DATA_LENGTH")
-    private String dataLength; // NUMBER 列长度。单位：字节
+    private Integer dataLength; // NUMBER 列长度。单位：字节
 
     @TableField("DATA_PRECISION")
-    private String dataPrecision; // NUMBER 精度
+    private Integer dataPrecision; // NUMBER 精度
 
     @TableField("DATA_SCALE")
-    private String dataScale; // NUMBER 刻度
+    private Integer dataScale; // NUMBER 刻度
 
     @TableField("NULLABLE")
     private String nullAble; // VARCHAR(1) 是否允许为 NULL，Y 是，N 否
 
     @TableField("DEFAULT_LENGTH")
-    private String defaultLength; // NUMBER 默认值长度
+    private Integer defaultLength; // NUMBER 默认值长度
 
     @TableField("DATA_DEFAULT")
     private String dataDefault; // TEXT 默认值
