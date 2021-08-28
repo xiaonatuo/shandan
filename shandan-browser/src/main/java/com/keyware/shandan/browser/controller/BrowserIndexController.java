@@ -89,7 +89,8 @@ public class BrowserIndexController {
     @GetMapping("/browser")
     public ModelAndView browser(ModelAndView mov) {
         mov.setViewName("browser");
-        mov.addObject("bianmuServer", customProperties.getBianmuServer());
+        SysSetting bianmuSetting = SysSettingUtil.getSysSetting(SystemTypes.BIANMU.name());
+        mov.addObject("bianmuServer", bianmuSetting.getSysAddress());
         return mov;
     }
 
