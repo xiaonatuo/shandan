@@ -48,7 +48,7 @@
          */
         layui.element.on('nav(navbar-top)', function (elem) {
             let url = $(elem).data('url');
-            $("#containerFrame").attr("src", url)
+            $("#containerFrame").attr("src", ctx + url)
         });
         $('#navbar-top li:first a').click();
     });

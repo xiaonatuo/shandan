@@ -297,7 +297,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
 
         reportComponent.setConditions(data.conditions)
 
-        Util.post(`${ctx}/search/full`, data).then(res=>{
+        Util.post(`/search/full`, data).then(res=>{
             console.info(res);
             if (res.flag) {
                 const result = res.data;

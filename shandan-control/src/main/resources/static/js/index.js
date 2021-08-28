@@ -1,5 +1,5 @@
 layui.extend({
-    notification: '{/}/js/sys/notification/notification' // {/}的意思即代表采用自有路径，即不跟随 base 路径
+    notification: `{/}${ctx}/js/sys/notification/notification` // {/}的意思即代表采用自有路径，即不跟随 base 路径
 })
 layui.use(['element', 'flow', 'util', 'notification'], function () {
     let element = layui.element;

@@ -445,7 +445,7 @@ window.jsPrivateKey = genKeyPair.privateKey;
  * layui组件扩展
  */
 layui.config({
-    base: '/js/common/layui/extend/'
+    base: `${ctx}/js/common/layui/extend/`
 }).extend({
     dtree: 'dtree/dtree',
     globalTree: 'globalTree', // 通用树组件
