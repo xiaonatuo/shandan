@@ -30,4 +30,4 @@ project:
   # 启用记住我，方便调试
   remember-me-enable: true
   browser:
-    dbtool-address: http://localhost:8300/
+    dbtool-address: http://localhost:8300/dbtool/
