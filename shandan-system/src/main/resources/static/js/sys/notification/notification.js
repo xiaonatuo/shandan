@@ -62,6 +62,8 @@ layui.define([], function (exports) {
         let list = this.getUnreadList()
         if (list && list.length > 0) {
             this.showMark();
+        }else{
+            this.hideMark();
         }
     }
 
@@ -145,6 +147,12 @@ layui.define([], function (exports) {
     SysNotificationUtil.prototype.showMark = function () {
         setTimeout(() => {
             $('#unread-mark.layui-hide').removeClass('layui-hide');
+        }, 150)
+    };
+
+    SysNotificationUtil.prototype.hideMark = function () {
+        setTimeout(() => {
+            $('#unread-mark.layui-hide').addClass('layui-hide');
         }, 150)
     };
 
