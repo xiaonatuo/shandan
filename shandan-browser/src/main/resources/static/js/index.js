@@ -53,6 +53,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             id: 'directory-tree',
             url: `${ctx}/browser/dir/tree`,
             data: [{id: '-', parentId: '', title: '根目录', leaf: false, last: false, spread: false}],
+            load:false,
             cache: false,
             done: function (nodes, elem) {
                 // 模拟鼠标点击事件展开第一层目录
@@ -296,9 +297,8 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
 
         reportComponent.setConditions(data.conditions)
 
-        let loadLayer = layer.load();
-        $.post(`${ctx}/search/full`, data, function (res) {
-            layer.close(loadLayer);
+        Util.post(`${ctx}/search/full`, data).then(res=>{
+            console.info(res);
             if (res.flag) {
                 const result = res.data;
                 // 渲染列表
@@ -344,7 +344,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         }
 
         // 延迟100毫秒刷新数据列表，否则当数据刷新很快时，无法看出数据刷新了
-        commonUtil.sleep(50).then(() => {
+        commonUtil.sleep(10).then(() => {
             $('#result-list-content').html(htm);
             // 数据渲染完成后，监听每条数据元素的点击事件
             $('.result-item').on('click', resultItemOnClick)
