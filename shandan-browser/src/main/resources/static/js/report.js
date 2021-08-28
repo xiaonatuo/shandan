@@ -297,7 +297,7 @@ ReportComponent.prototype.renderEcharts = function (reportData) {
         },
         series: [
             {
-                type: formData.reportType,
+                type: reportData.reportType,
                 radius: '50%',
                 data: reportData.data,
                 emphasis: {
@@ -310,7 +310,7 @@ ReportComponent.prototype.renderEcharts = function (reportData) {
             }
         ]
     };
-    if (formData.reportType !== 'pie') {
+    if (reportData.reportType !== 'pie') {
         option.xAxis = [
             {
                 type: 'category',
@@ -335,7 +335,6 @@ ReportComponent.prototype.renderEcharts = function (reportData) {
         }
     }
     option && echartsItem.setOption(option);
-    console.info(option);
     echartsItem['formData'] = formData;
     echartsItem['reportRemark'] = formData.remark;
     echartsItem['requestData'] = reportData.data;

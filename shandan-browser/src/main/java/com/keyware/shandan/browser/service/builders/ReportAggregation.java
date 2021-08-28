@@ -94,6 +94,7 @@ public abstract class ReportAggregation<T extends ParsedMultiBucketAggregation> 
         });
         JSONObject json = new JSONObject();
         json.put("data", array);
+        json.put("reportType", report.getReportType());
         return json;
     }
 
