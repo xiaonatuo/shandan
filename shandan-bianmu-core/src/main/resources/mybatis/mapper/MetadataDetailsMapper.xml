@@ -28,7 +28,7 @@
                  select BMD.*
                  from B_METADATA_BASIC BMB
                           left join B_METADATA_DETAILS BMD on BMB.ID = BMD.METADATA_ID
-                 where DATA_SOURCE_ID = #{datasourceId}
+                 where DATA_SOURCE_ID = #{datasourceId} and REVIEW_STATUS = 'PASS'
              ) TEMP
         where exists (select 1 from B_METADATA_DETAILS BMD where BMD.TABLE_NAME = TEMP.FOREIGN_TABLE)
     </select>

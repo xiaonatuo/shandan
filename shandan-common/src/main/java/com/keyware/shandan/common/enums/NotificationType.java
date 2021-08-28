@@ -16,8 +16,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum NotificationType {
     NORMAL("NORMAL", "普通通知"),
-    METADATA_REVIEW("NORMAL", "元数据审核通知"),
-    DIRECTORY_REVIEW("NORMAL", "目录审核通知");
+    METADATA_REVIEW("METADATA_REVIEW", "元数据审核通知"),
+    METADATA_REVIEW_PASS("METADATA_REVIEW_PASS", "元数据审核通过通知"),
+    METADATA_REVIEW_FAIL("METADATA_REVIEW_FAIL", "元数据审核未通过通知"),
+    DIRECTORY_REVIEW("DIRECTORY_REVIEW", "目录审核通知"),
+    DIRECTORY_REVIEW_PASS("DIRECTORY_REVIEW_PASS", "目录审核通过通知"),
+    DIRECTORY_REVIEW_FAIL("DIRECTORY_REVIEW_FAIL", "目录审核未通过通知");
 
     @EnumValue
     private final String value;

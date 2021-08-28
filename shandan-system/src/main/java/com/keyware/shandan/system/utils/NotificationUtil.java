@@ -94,7 +94,7 @@ public class NotificationUtil {
      * @param receiveIds 通知接收人ID
      * @return 新的通知
      */
-    private static SysNotification newNotification(NotificationType type, String title, String content, String receiveIds) {
+    public static SysNotification newNotification(NotificationType type, String title, String content, String receiveIds) {
         if (StringUtils.isBlank(title)) {
             title = type.getRemark();
         }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 树 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">目录审核列表</div>
+            <div class="layui-card-body">
+                <!-- 表格主体 -->
+                <table class="layui-hide" id="reviewTable" lay-filter="reviewTable"></table>
+                <!-- 模板 -->
+                <script type="text/html" id="tableToolBar">
+                    <div class="layui-btn-container">
+                        <input type="text" id="searchKeyInput" name="searchKeyInput" autocomplete="off"
+                               placeholder="请输入目录名称" class="layui-input layui-btn-sm">
+                        <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
+                    </div>
+                </script>
+                <script type="text/html" id="rowToolBar">
+                    <a class="layui-btn layui-btn-xs" lay-event="review">审核</a>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/html" id="reviewLayer">
+    <div class="layui-form" lay-filter="reviewForm" style="padding-right: 20px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="PASS" title="通过" lay-verify="required">
+                <input type="radio" name="status" value="FAIL" title="不通过" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核意见</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" name="opinion" cols="4" lay-verify="required" placeholder="请输入审核意见..." style="width: 450px"/>
+            </div>
+        </div>
+        <button id="btn-submit" class="layui-btn" lay-submit lay-filter="reviewForm" style="position: absolute; left:-1000px"/>
+    </div>
+</script>
+<!-- js -->
+<script th:src="@{/js/business/review/review.js}"></script>
+<script>
+    const review = new Review();
+    review.options.entityType = ReviewEntityType.DIRECTORY;
+    review.init()
+</script>
+</html>

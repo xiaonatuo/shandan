@@ -95,7 +95,7 @@
                 <i class="layui-icon layui-icon-close" data-id="{{item.tableName}}"></i>
             </div>
             {{#
-                if(d.length > 1){
+                if(d.size > 1){
             }}
                 <select id="selectForginColumn_{{item.tableName}}" lay-filter="selectForeignColumn_{{item.tableName}}">
                     <option>选择外键</option>
@@ -115,7 +115,7 @@
                 </select>
                 <input type="radio" name="master" value="{{item.tableName}}" lay-skin="primary" title="主表">
             {{# } }}
-            <a class="layui-btn layui-btn-xs btn-field-config" data-table="{{item.tableName}}" title="字段配置">字段配置</a>
+            <a class="layui-btn layui-btn-xs btn-field-config" data-table="{{item.tableName}}" title="字段配置" style="margin-top: 8px;">字段配置</a>
         </li>
 
         {{# } }}

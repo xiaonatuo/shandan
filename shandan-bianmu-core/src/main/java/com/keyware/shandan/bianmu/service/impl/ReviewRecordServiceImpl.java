@@ -11,6 +11,7 @@ import com.keyware.shandan.bianmu.mapper.ReviewRecordMapper;
 import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.bianmu.service.MetadataService;
 import com.keyware.shandan.bianmu.service.ReviewRecordService;
+import com.keyware.shandan.common.enums.NotificationType;
 import com.keyware.shandan.common.service.BaseServiceImpl;
 import com.keyware.shandan.system.utils.NotificationUtil;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
@@ -109,8 +110,19 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
         String content = genNotificationContent(record);
         String receiveIds = judgingReceiver(record);
         if(record.getEntityType() == ReviewEntityType.METADATA){
+            if(record.getReviewOperate() == ReviewStatus.PASS){
+                return NotificationUtil.newNotification(NotificationType.METADATA_REVIEW_PASS, null, content, receiveIds);
+            }else if(record.getReviewOperate() == ReviewStatus.FAIL){
+                return NotificationUtil.newNotification(NotificationType.METADATA_REVIEW_FAIL, null, content, receiveIds);
+            }
+
             return NotificationUtil.newMetadataReviewNotify(content, receiveIds);
         }else{
+            if(record.getReviewOperate() == ReviewStatus.PASS){
+                return NotificationUtil.newNotification(NotificationType.DIRECTORY_REVIEW_PASS, null, content, receiveIds);
+            }else if(record.getReviewOperate() == ReviewStatus.FAIL){
+                return NotificationUtil.newNotification(NotificationType.DIRECTORY_REVIEW_FAIL, null, content, receiveIds);
+            }
             return NotificationUtil.newDirectoryReviewNotify(content, receiveIds);
         }
     }

@@ -44,6 +44,27 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
     private DirectoryService directoryService;
 
 
+
+    /**
+     * 目录审核页面
+     *
+     * @return
+     */
+    @GetMapping("/directory")
+    public ModelAndView directoryReview() {
+        return new ModelAndView("business/review/directoryReview");
+    }
+
+    /**
+     * 元数据审核页面
+     *
+     * @return
+     */
+    @GetMapping("/metadata")
+    public ModelAndView metadataReview() {
+        return new ModelAndView("business/review/metadataReview");
+    }
+
     /**
      * 元数据待审核数据列表
      * @param page

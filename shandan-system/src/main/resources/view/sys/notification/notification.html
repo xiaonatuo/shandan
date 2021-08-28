@@ -86,6 +86,7 @@
                             let htm = '';
                             const records = res.data.records;
                             layui.each(records, function (index, item) {
+                                console.info(item);
                                 const timeAgo = util.timeAgo(new Date(item.createTime).getTime());
                                 htm += `<li class="notification-item">
                                     <p style="text-align: left;">【${item.title}】${item.content}<a href="javascript:void(0);" data-id="${item.id}" data-type="${id}" style="color: #01AAED; margin-left: 10px;">查看</a></p>
@@ -112,9 +113,12 @@
                                 }
                                 if (data.type === 'METADATA_REVIEW') {
                                     parent.open(`${ctx}/business/review/metadata`);
-                                } else {
+                                } else if(data.type === 'DIRECTORY_REVIEW') {
                                     parent.open(`${ctx}/business/review/directory`)
-
+                                } else if(data.type === 'METADATA_REVIEW_PASS' || data.type === 'METADATA_REVIEW_FAIL') {
+                                    parent.open(`${ctx}/business/metadata/`);
+                                } else if(data.type === 'DIRECTORY_REVIEW_PASS' || data.type === 'DIRECTORY_REVIEW_FAIL') {
+                                    parent.open(`${ctx}/business/directory/`);
                                 }
                             });
                         }
