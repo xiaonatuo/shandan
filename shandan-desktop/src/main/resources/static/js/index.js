@@ -22,7 +22,7 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
             openSettingLayer()
         } else {
             layer.prompt({title: '请输入管理员（admin）的密码', formType: 1}, function (pass, index) {
-                $.post(`${ctx}/desktop/auth`, {pwd: pass}, function (res) {
+                Util.post(`/desktop/auth`, {pwd: pass}).then(res =>{
                     if (res.flag) {
                         if (res.data) {
                             sessionStorage.setItem(AUTH_KEY, res.data + '');
@@ -32,9 +32,9 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
                             layer.msg('密码错误', {icon: 5});
                         }
                     } else {
-                        layer.msg('服务异常', {icon: 5});
+                        layer.msg(res.msg, {icon: 5});
                     }
-                });
+                })
             });
         }
     });

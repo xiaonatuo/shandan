@@ -44,12 +44,12 @@ public class DesktopController {
         modelAndView.setViewName("index");
 
         Map<String, String> setting = new HashMap<>();
-        setting.put("sysApiEncrypt", String.valueOf(true));
+        setting.put("sysApiEncrypt", String.valueOf(false));
         //系统信息
         modelAndView.addObject("sys", setting);
         //后端公钥
-        String publicKey = RsaUtil.getPublicKey();
-        modelAndView.addObject("publicKey", publicKey);
+        /*String publicKey = RsaUtil.getPublicKey();
+        modelAndView.addObject("publicKey", publicKey);*/
 
         modelAndView.addObject("appList", appInfoService.list());
         return modelAndView;
