@@ -1,5 +1,5 @@
 layui.extend({
-    permisConfig: '{/}/js/sys/permissions/permisConfig' // {/}的意思即代表采用自有路径，即不跟随 base 路径
+    permisConfig: `{/}${ctx}/js/sys/permissions/permisConfig` // {/}的意思即代表采用自有路径，即不跟随 base 路径
 })
 layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
     let layer = layui.layer,

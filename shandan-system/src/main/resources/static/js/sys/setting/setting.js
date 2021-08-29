@@ -7,13 +7,13 @@ layui.use(['form', 'gtable', 'dropdown'], function () {
         url: `${ctx}/sys/sysSetting/list`,
         method: 'post',
         toolbar: '#tableToolBar',
-        height: '216',
+        height: 'full-125',
         page: false,
         cols: [[
             {field: 'id', title: '系统标识'},
             {field: 'sysName', title: '系统名称', edit: 'text'},
             {field: 'sysAddress', title: '系统访问地址', edit: 'text'},
-            {field: 'sysLogo', title: '系统logo', edit: 'text'},
+            {field: 'sysLogo', title: '系统logo', edit: 'text', hide: true},
             {field: 'userInitPassword', title: '初始密码'},
             {field: 'modifyTime', title: '上一次修改时间'}
         ]],

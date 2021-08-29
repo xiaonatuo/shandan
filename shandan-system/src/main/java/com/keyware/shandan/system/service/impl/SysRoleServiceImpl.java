@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRole, String> implements SysRoleService {
+
+    private final static String[] SYS_ROLE = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SA", "3fb1c570496d4c09ab99b8d31b06ccc", "3fb1c570496d4c09ab99b8d31b06xxx", "3fb1c570496d4c09ab99b8d31b06zzz"};
 
     @Autowired
     private MyFilterInvocationSecurityMetadataSource myFilterInvocationSecurityMetadataSource;
@@ -42,6 +45,9 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRole, 
 
     @Override
     public Result<Boolean> deleteById(String id) {
+        if (Arrays.asList(SYS_ROLE).contains(id)) {
+            return Result.of(null, false, "系统默认角色，不可删除");
+        }
         SysUserRole userRole = new SysUserRole();
         userRole.setRoleId(id);
         sysUserRoleService.remove(new QueryWrapper<>(userRole));
@@ -54,16 +60,17 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRole, 
 
     /**
      * 获取用户角色列表
+     *
      * @param userId
      * @return
      */
     @Override
-    public List<SysRole> getUserRoles(String userId){
+    public List<SysRole> getUserRoles(String userId) {
         SysUserRole sysUserRole = new SysUserRole();
         sysUserRole.setUserId(userId);
         List<SysUserRole> userRoleList = sysUserRoleService.list(new QueryWrapper<>(sysUserRole));
 
-        if(userRoleList.size() == 0){
+        if (userRoleList.size() == 0) {
             return new ArrayList<>();
         }
         return listByIds(userRoleList.stream().map(SysUserRole::getRoleId).collect(Collectors.toList()));

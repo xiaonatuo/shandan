@@ -1,5 +1,5 @@
 layui.extend({
-    orgSelector: '{/}/js/sys/org/orgSelector', // {/}的意思即代表采用自有路径，即不跟随 base 路径
+    orgSelector: `{/}${ctx}/js/sys/org/orgSelector`, // {/}的意思即代表采用自有路径，即不跟随 base 路径
 })
 layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
     const template = `
