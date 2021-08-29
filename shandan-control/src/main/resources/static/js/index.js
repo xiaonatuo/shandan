@@ -75,7 +75,7 @@ layui.use(['element', 'flow', 'util', 'notification'], function () {
         if(menus && Array.isArray(menus)) {
             for (let menu of menus) {
                 htm += `<li class="layui-nav-item">
-                        <a data-url="${menu.menuPath}" data-child-length="${menu.children.length}"
+                        <a data-url="${ctx + menu.menuPath}" data-child-length="${menu.children.length}"
                            data-id="${menu.menuId}" href="javascript:;">${menu.menuName}</a>
                     </li>`;
             }
