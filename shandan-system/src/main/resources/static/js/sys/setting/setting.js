@@ -51,7 +51,7 @@ layui.use(['form', 'gtable', 'dropdown'], function () {
         if (modifyData.length != 0) {
             let ok = false;
             for (let item of modifyData) {
-                await Util.post(`${ctx}/sys/sysSetting/save`, item).then(res => ok = res.flag).catch(err => {
+                await Util.post(`/sys/sysSetting/save`, item).then(res => ok = res.flag).catch(err => {
                 })
             }
             if (ok) {
@@ -80,10 +80,10 @@ layui.use(['form', 'gtable', 'dropdown'], function () {
                     layer.close(c_index);
                     layer.prompt({title: '请输入超级管理员密码，以确认操作', formType: 1}, function (password, index) {
                         // 验证密码
-                        Util.post(`${ctx}/sys/sysSetting/pwd/verify`, {password}).then(res => { // todo 验证请求
+                        Util.post(`/sys/sysSetting/pwd/verify`, {password}).then(res => { // todo 验证请求
                             if (res.flag) {
                                 layer.close(index);
-                                Util.post(`${ctx}/sys/sysSetting/data/clear`, {type: id}).then(res => { // todo 清除请求
+                                Util.post(`/sys/sysSetting/data/clear`, {type: id}).then(res => { // todo 清除请求
                                     if (res.flag) {
                                         layer.alert('操作成功');
                                     } else {

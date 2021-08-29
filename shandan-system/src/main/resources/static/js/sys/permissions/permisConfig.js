@@ -136,7 +136,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
      * @returns {Promise<unknown>}
      */
     async function getConfigs(permisId, type) {
-        return await Util.get(`${ctx}/sys/permissions/config/get/${type}/${permisId}`).catch(err => {
+        return await Util.get(`/sys/permissions/config/get/${type}/${permisId}`).catch(err => {
             console.error(err);
             showErrorMsg();
         });
@@ -186,7 +186,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
      */
     async function saveOrgConfig(permisId, orgIds) {
         const data = {permisId, orgIds}
-        return await Util.post(`${ctx}/sys/permissions/config/org`, data);
+        return await Util.post(`/sys/permissions/config/org`, data);
     }
 
     /**
@@ -197,7 +197,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
      */
     async function saveDirConfig(permisId, dirIds) {
         const data = {permisId, dirIds}
-        return await Util.post(`${ctx}/sys/permissions/config/dir`, data);
+        return await Util.post(`/sys/permissions/config/dir`, data);
     }
 
     /**

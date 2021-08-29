@@ -21,3 +21,5 @@ spring:
 project:
   #是否需要输入验证码
   captcha-enable: false
+  browser:
+    dbtool-address: http://172.16.36.224:18300/dbtool/
