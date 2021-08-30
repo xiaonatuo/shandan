@@ -71,6 +71,11 @@ public class DataSourceController extends BaseController<DataSourceService, Data
             return Result.of(null, false, "datasourceId 参数不能为空");
         }
 
+        DataSourceVo dataSource = dataSourceService.getById(datasourceId);
+        if(dataSource == null){
+            return Result.of(null, false, "数据源配置不存在");
+        }
+        table.setOwner(dataSource.getJdbcSchema());
         return Result.of(dynamicDataSourceService.getDBTablesPage(page, table, datasourceId));
     }
 }
