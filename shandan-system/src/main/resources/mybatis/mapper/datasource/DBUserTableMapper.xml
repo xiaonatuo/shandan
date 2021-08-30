@@ -4,32 +4,26 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.keyware.shandan.datasource.entity.DBUserTableVo">
+        <result column="OWNER" property="owner"/>
         <result column="TABLE_NAME" property="tableName"/>
         <result column="TABLESPACE_NAME" property="tablespaceName"/>
-        <result column="STATUS" property="status"/>
-        <result column="BACKED_UP" property="backedUp"/>
-        <result column="NUM_ROWS" property="numRows"/>
-        <result column="PARTITIONED" property="partitioned"/>
-        <result column="NESTED" property="nested"/>
-        <association property="tablePrimaryColumn" column="TABLE_NAME" select="selectPrimaryColumn"/>
-        <association property="tableComment" column="TABLE_NAME" select="selectComment"/>
+        <result column="PRIMARY_COLUMN" property="tablePrimaryColumn"/>
+        <result column="COMMENTS" property="tableComment"/>
         <collection property="columnList" column="TABLE_NAME"
                     select="com.keyware.shandan.datasource.mapper.DBTableColumnMapper.selectColumnsByTableName"/>
     </resultMap>
 
-    <!-- 查询主键列 -->
-    <select id="selectPrimaryColumn" resultType="string">
-        select top 1 col.COLUMN_NAME
-        from USER_CONSTRAINTS con
-                 left join USER_CONS_COLUMNS col on con.CONSTRAINT_NAME = col.CONSTRAINT_NAME
-        where con.CONSTRAINT_TYPE = 'P'
-          and con.TABLE_NAME = #{tableName};
-    </select>
-
-    <!-- 查询表注释 -->
-    <select id="selectComment" resultType="string">
-        select top 1 COMMENTS
-        from USER_TAB_COMMENTS
-        where TABLE_NAME = #{tableName}
+    <select id="dbTablePageByOwner" resultMap="BaseResultMap">
+        select TAB.OWNER, TAB.TABLE_NAME, TAB.TABLESPACE_NAME, COMM.TABLE_TYPE, COMM.COMMENTS,
+        wm_concat(CCONS.COLUMN_NAME) as PRIMARY_COLUMN
+        from DBA_TABLES TAB
+        left join DBA_TAB_COMMENTS COMM on TAB.TABLE_NAME = COMM.TABLE_NAME and TAB.OWNER = COMM.OWNER
+        left join DBA_CONSTRAINTS CONS on TAB.OWNER = CONS.OWNER and TAB.TABLE_NAME = CONS.TABLE_NAME and CONSTRAINT_TYPE = 'P'
+        left join DBA_CONS_COLUMNS CCONS on CONS.CONSTRAINT_NAME = CCONS.CONSTRAINT_NAME
+        where TAB.STATUS = 'VALID' and TAB.OWNER = #{owner}
+        <if test="tableName != null and tableName != ''">
+            and TAB.TABLE_NAME like #{tableName}
+        </if>
+        group by TAB.OWNER, TAB.TABLE_NAME, TAB.TABLESPACE_NAME, COMM.TABLE_TYPE, COMM.COMMENTS,TAB.TABLE_NAME
     </select>
 </mapper>

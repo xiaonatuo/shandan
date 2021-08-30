@@ -1,9 +1,9 @@
 package com.keyware.shandan.datasource.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.keyware.shandan.datasource.entity.DBTableColumnVo;
 import com.keyware.shandan.datasource.entity.DBUserTableVo;
+import com.keyware.shandan.datasource.entity.DataSourceVo;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @author Administrator
  * @since 2021/5/26
  */
-public interface DynamicDataSourceService extends IService<DBUserTableVo> {
+public interface DynamicDataSourceService {
     /**
      * 分页查询数据表
      *
@@ -32,6 +32,6 @@ public interface DynamicDataSourceService extends IService<DBUserTableVo> {
      * @param sourceId
      * @return
      */
-    List<DBTableColumnVo> getColumnListByTable(String tableName, String sourceId);
+    List<DBTableColumnVo> getColumnListByTable(String tableName, DataSourceVo dataSource);
 
 }

@@ -18,6 +18,7 @@ import com.keyware.shandan.common.service.BaseServiceImpl;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.datasource.entity.DataSourceVo;
 import com.keyware.shandan.datasource.mapper.DynamicDatasourceMapper;
+import com.keyware.shandan.datasource.service.DataSourceService;
 import com.keyware.shandan.datasource.service.DynamicDataSourceService;
 import com.keyware.shandan.frame.annotation.DataPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,9 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
 
     @Autowired
     private DynamicDatasourceMapper dynamicDatasourceMapper;
+
+    @Autowired
+    private DataSourceService dataSourceService;
 
     @Override
     @DataPermissions
@@ -119,9 +123,9 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     /**
      * 获取元数据表的示例数据
      *
-     * @param metadataBasic
-     * @param sourceId
-     * @return
+     * @param metadataBasic -
+     * @param dataSource -
+     * @return -
      */
     @Override
     @DS("#metadataBasic.dataSourceId")
@@ -184,10 +188,12 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
         MetadataBasicVo result = getById(id);
         List<MetadataDetailsVo> details = result.getMetadataDetailsList();
 
+        DataSourceVo dataSource = dataSourceService.getById(result.getDataSourceId());
+
         // 查询每个详情对象的数据表的列
         if (!ObjectUtils.isEmpty(details)) {
             result.setMetadataDetailsList(details.stream().peek(detail -> {
-                detail.setColumnList(dynamicDataSourceService.getColumnListByTable(detail.getTableName(), result.getDataSourceId()));
+                detail.setColumnList(dynamicDataSourceService.getColumnListByTable(detail.getTableName(), dataSource));
             }).collect(Collectors.toList()));
         }
         return Result.of(result);

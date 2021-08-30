@@ -4,6 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.keyware.shandan.datasource.entity.DBTableColumnVo">
+        <result column="OWNER" property="owner"/>
         <result column="TABLE_NAME" property="tableName"/>
         <result column="COLUMN_NAME" property="columnName"/>
         <result column="DATA_TYPE" property="dataType"/>
@@ -11,20 +12,23 @@
         <result column="DATA_PRECISION" property="dataPrecision"/>
         <result column="DATA_SCALE" property="dataScale"/>
         <result column="NULLABLE" property="nullAble"/>
-        <result column="DEFAULT_LENGTH" property="defaultLength"/>
         <result column="DATA_DEFAULT" property="dataDefault"/>
-        <result column="DENSITY" property="density"/>
-        <result column="AVG_COL_LEN" property="avgColLen"/>
-        <result column="CHAR_LENGTH" property="charLength"/>
-        <result column="QUALIFIED_COL_NAME" property="qualifiedColName"/>
         <result column="COMMENTS" property="comment"/>
     </resultMap>
 
     <select id="selectColumnsByTableName" resultMap="BaseResultMap">
-        select COLS.*, COMS.COMMENTS
-        from USER_TAB_COLS COLS
-                 left join USER_COL_COMMENTS COMS
-                           on COLS.TABLE_NAME = COMS.TABLE_NAME and COLS.COLUMN_NAME = COMS.COLUMN_NAME
-        where COLS.TABLE_NAME = #{tableName}
+        select TAB.OWNER, TAB.TABLE_NAME, TAB.TABLESPACE_NAME, COL.COLUMN_NAME, COL.DATA_TYPE, COL.DATA_LENGTH, COL.DATA_PRECISION, COL.DATA_SCALE, COL.NULLABLE, COL.DATA_DEFAULT, COMM.COMMENTS
+        from DBA_TABLES TAB
+                 left join DBA_TAB_COLUMNS COL on TAB.TABLE_NAME = COL.TABLE_NAME and TAB.OWNER = COl.OWNER
+                 left join DBA_COL_COMMENTS COMM on COL.COLUMN_NAME = COMM.COLUMN_NAME and COMM.OWNER = TAB.OWNER and COL.TABLE_NAME = COMM.TABLE_NAME
+        where TAB.STATUS = 'VALID' and TAB.TABLE_NAME = #{tableName}
+    </select>
+
+    <select id="selectColumnsByTableNameAndOwner" resultMap="BaseResultMap">
+        select TAB.OWNER, TAB.TABLE_NAME, TAB.TABLESPACE_NAME, COL.COLUMN_NAME, COL.DATA_TYPE, COL.DATA_LENGTH, COL.DATA_PRECISION, COL.DATA_SCALE, COL.NULLABLE, COL.DATA_DEFAULT, COMM.COMMENTS
+        from DBA_TABLES TAB
+        left join DBA_TAB_COLUMNS COL on TAB.TABLE_NAME = COL.TABLE_NAME and TAB.OWNER = COl.OWNER
+        left join DBA_COL_COMMENTS COMM on COL.COLUMN_NAME = COMM.COLUMN_NAME and COMM.OWNER = TAB.OWNER and COL.TABLE_NAME = COMM.TABLE_NAME
+        where TAB.STATUS = 'VALID' and TAB.TABLE_NAME = #{tableName} and TAB.OWNER = #{owner}
     </select>
 </mapper>

@@ -19,40 +19,21 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName(value = "USER_ALL_TABLES", resultMap = "BaseResultMap")
 public class DBUserTableVo implements Serializable {
     private static final long serialVersionUID = 1556682373051584100L;
 
-    @TableField(value = "TABLE_NAME", condition = SqlCondition.LIKE)
-    private String tableName;// VARCHAR(128) 表名
+    private String owner;
 
-    @TableField("TABLESPACE_NAME")
-    private String tablespaceName;// VARCHAR(128) 表所在表空间名。，临时表和索引组织表为 NULL
+    private String tableName;
 
-    @TableField("STATUS")
-    private String status; //VARCHAR(8) 表的状态。UNUSABLE 无效，VALID 有效
+    private String tablespaceName;
 
-    @TableField("BACKED_UP")
-    private String backedUp; // VARCHAR(1) 最后一次修改后表是否已备份，Y 是，N 否
+    private String tablePrimaryColumn;
 
-    @TableField("NUM_ROWS")
-    private String numRows; // NUMBER 表里的记录数
-
-    @TableField("PARTITIONED")
-    private String partitioned; // VARCHAR(3) 是否为分区表，YES 是，NO 否 34 IOT_TYPE VARCHAR(8) 堆表为 NULL，其他类型表为 IOT
-
-    @TableField("NESTED")
-    private String nested; // VARCHAR(1) 是否为嵌套表，YES 是，NO 否
-
-    @TableField(exist = false)
-    private String tablePrimaryColumn; // 主键列
-
-    @TableField(exist = false)
-    private String tableComment; // 注释
+    private String tableComment;
 
     /**
      * 表的字段列集合
      */
-    @TableField(exist = false)
     private List<DBTableColumnVo> columnList;
 }

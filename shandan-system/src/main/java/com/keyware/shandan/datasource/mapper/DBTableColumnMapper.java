@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2021/5/26
  */
 @Mapper
-public interface DBTableColumnMapper extends BaseMapper<DBTableColumnVo> {
+public interface DBTableColumnMapper {
 
     /**
      * 根据表名查询列集合
@@ -24,4 +24,6 @@ public interface DBTableColumnMapper extends BaseMapper<DBTableColumnVo> {
      * @return 列集合
      */
     List<DBTableColumnVo> selectColumnsByTableName(String tableName);
+
+    List<DBTableColumnVo> selectColumnsByTableNameAndOwner(String tableName, String owner);
 }
