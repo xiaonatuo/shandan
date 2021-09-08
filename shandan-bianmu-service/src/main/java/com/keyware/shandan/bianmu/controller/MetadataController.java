@@ -21,10 +21,7 @@ import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
@@ -93,6 +90,11 @@ public class MetadataController extends BaseController<MetadataService, Metadata
      */
     @PostMapping("/save/full")
     public Result<Boolean> saveFull(MetadataBasicVo metadataBasic) {
+        return Result.of(metadataService.saveMetadataBasicAndDetailsList(metadataBasic));
+    }
+
+    @PostMapping("/save/full/test")
+    public Result<Boolean> saveFullTest(@RequestBody MetadataBasicVo metadataBasic) {
         return Result.of(metadataService.saveMetadataBasicAndDetailsList(metadataBasic));
     }
 
