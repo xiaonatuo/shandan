@@ -120,10 +120,11 @@ public class SearchServiceImpl implements SearchService {
                     e.printStackTrace();
                 }
             } else if ("metadataId".equals(item.getField())) {
-                request.types(item.getValue());
+                MetadataBasicVo metadata = metadataService.getById(item.getField());
+                boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE", metadata.getMetadataName()));
             } else if ("directoryId".equals(item.getField()) && !item.getField().equals("-")) {
                 // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的元数据表
-                request.types(getMetadataIdsByDirId(item.getValue()));
+                boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE", getMetadataIdsByDirId(item.getValue())));
                 //因为目录中也包含file类型，所以需要单独对file类型的数据做过滤
                 String[] dirids = getDirectoryAllChildIds(item.getValue());
                 if (dirids != null) {

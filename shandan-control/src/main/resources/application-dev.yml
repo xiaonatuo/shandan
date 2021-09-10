@@ -19,6 +19,10 @@ spring:
       enabled: true
       additional-paths: src/java/main
 
+  elasticsearch:
+    rest:
+      uris: http://192.168.146.128:9200
+
 project:
   #是否需要输入验证码
   captcha-enable: false

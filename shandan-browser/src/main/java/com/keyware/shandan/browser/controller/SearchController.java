@@ -8,6 +8,7 @@ import com.keyware.shandan.frame.annotation.AppLog;
 import com.keyware.shandan.system.entity.SysFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +37,18 @@ public class SearchController {
     @AppLog(operate = "全文检索分页查询")
     @PostMapping("/full")
     public Result<PageVo> fullSearch(ConditionVo condition) {
+
+        try {
+            return Result.of(searchService.esSearch(condition));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.of(null, false, "数据查询异常");
+        }
+    }
+
+
+    @PostMapping("/full/test")
+    public Result<PageVo> fullSearchTest(@RequestBody ConditionVo condition) {
 
         try {
             return Result.of(searchService.esSearch(condition));

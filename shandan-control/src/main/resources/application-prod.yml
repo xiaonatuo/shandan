@@ -14,6 +14,10 @@ spring:
           driver-class-name: dm.jdbc.driver.DmDriver
     sql-script-encoding: UTF-8
 
+  elasticsearch:
+    rest:
+      uris: http://172.16.36.218:19200
+
 project:
   #是否需要输入验证码
   captcha-enable: false
