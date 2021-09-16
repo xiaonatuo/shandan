@@ -301,6 +301,12 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             console.info(res);
             if (res.flag) {
                 const result = res.data;
+                let index = 0;
+                result.records = result.records.map(item=>{
+                    item.id = item.id || index;
+                    index ++;
+                    return item;
+                })
                 // 渲染列表
                 renderResultList(result.records);
                 // 渲染分页
@@ -322,12 +328,12 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         $('#result-list-content').html('');
         let htm = '';
         for (let item of list) {
-            let title = '';
+            let title = item.title;
             if (item.fileName) {
                 title = item.fileName + item.fileSuffix;
             }
-            let text = item.text;
-
+            let text = item.text || '';
+            item.commonText = item.commonText || '';
             htm += `<div class="result-item" data-id="${item.id}">
                         <p class="result-item-title">${title}</p>
                         <p class="result-item-content">
@@ -376,43 +382,43 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 <ul class="details-data-common">
                     <li>
                         <div class="details-label">任务代号</div>
-                        <span>${data.taskCode}</span>
+                        <span>${data.TASKCODE || '无数据'}</span>
                     </li>
                     <li>
                         <div class="details-label">任务性质</div>
-                        <span>${data.taskNature}</span>
+                        <span>${data.TASKNATURE || '无数据'}</span>
                     </li>
                     <li>
                         <div class="details-label">收文日期</div>
-                        <span>${data.inputDate}</span>
+                        <span>${data.INPUTDATE || '无数据'}</span>
                     </li>
                 </ul>
                 <ul class="details-data-common">
                     <li>
                         <div class="details-label">装备型号</div>
-                        <span>${data.equipmentModel}</span>
+                        <span>${data.EQUIPMENTMODEL || '无数据'}</span>
                     </li>
                     <li>
                         <div class="details-label">文件来源</div>
-                        <span>${data.source}</span>
+                        <span>${data.SOURCE || '无数据'}</span>
                     </li>
                     <li>
                         <div class="details-label">录入人员</div>
-                        <span>${data.entryStaff}</span>
+                        <span>${data.ENTRYSTAFF || '无数据'}</span>
                     </li>
                 </ul>
                 <ul class="details-data-common" >
                     <li>
                         <div class="details-label">部队代号</div>
-                        <span>${data.troopCode}</span>
+                        <span>${data.TROOPCODE || '无数据'}</span>
                     </li>
                     <li>
                         <div class="details-label">目标编号</div>
-                        <span>${data.targetNumber}</span>
+                        <span>${data.TARGETNUMBER || '无数据'}</span>
                     </li>
                     <li>
                         <div class="details-label">导弹编号</div>
-                        <span>${data.missileNumber}</span>
+                        <span>${data.MISSILENUMBER || '无数据'}</span>
                     </li>
                 </ul>
                 <ul class="details-data-private">##COLS##</ul>

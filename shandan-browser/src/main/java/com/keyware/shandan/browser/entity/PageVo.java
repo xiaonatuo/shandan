@@ -79,7 +79,10 @@ public class PageVo implements Serializable {
         Map<String, Object> source = hit.getSourceAsMap();
 
         // 数据类型,具体对应实际数据中的表名或者文件类型
-        String type = hit.getType();
+        if(source.get("META_TYPE") == null){
+            return source;
+        }
+        String type = source.get("META_TYPE").toString();
         String tableComment = BianmuDataCache.getComment(type);
         source.put("columns", BianmuDataCache.getColumns(type));
 
@@ -91,7 +94,7 @@ public class PageVo implements Serializable {
         }
 
         // 设置标题
-        if (!type.equals("file") && !type.equals("_doc")) {
+        if (!type.equals("file")) {
             if (StringUtils.isNotBlank(tableComment)) {
                 tableComment += "|";
             }
@@ -104,7 +107,11 @@ public class PageVo implements Serializable {
         StringBuilder commonText = new StringBuilder();
         for (Map.Entry<String, String> entry : CommonFields.entrySet()) {
             if (entry.getKey() != null) {
-                commonText.append("<label style=\"font-weight: bold;\">").append(entry.getValue()).append("</label>:").append(source.get(entry.getKey())).append(";");
+                Object value = source.get(entry.getKey());
+                if(value == null){
+                    value = source.get(entry.getKey().toUpperCase());
+                }
+                commonText.append("<label style=\"font-weight: bold;\">").append(entry.getValue()).append("</label>:").append(value == null ? "未知" : value).append(";");
             }
         }
         source.put("commonText", commonText);

@@ -55,87 +55,98 @@
                                 <div class="layui-inline">
                                     <label class="layui-form-label">收文时间</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" id="input-date-begin" name="inputDate" autocomplete="off" class="layui-input input-date" placeholder="选择日期范围"/>
+                                        <input type="text" id="input-date-begin" name="INPUTDATE" autocomplete="off" class="layui-input input-date" placeholder="选择日期范围"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">录入人员</label>
                                     <div class="layui-input-inline">
-                                        <select name="logic-entryStaff" lay-verify="select-condition">
+                                        <select name="logic-ENTRYSTAFF" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
                                             <option value="like">包含</option>
                                         </select>
-                                        <input type="text" name="entryStaff" class="layui-input" placeholder="录入人员"/>
+                                        <input type="text" name="ENTRYSTAFF" class="layui-input" placeholder="录入人员"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">文件来源</label>
                                     <div class="layui-input-inline">
-                                        <select name="logic-source" lay-verify="select-condition">
+                                        <select name="logic-SOURCE" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
                                             <option value="like">包含</option>
                                         </select>
-                                        <input type="text" name="source" class="layui-input" placeholder="文件来源"/>
+                                        <input type="text" name="SOURCE" class="layui-input" placeholder="文件来源"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">任务代号</label>
                                     <div class="layui-input-inline">
-                                        <select name="logic-taskCode" lay-verify="select-condition">
+                                        <select name="logic-TASKCODE" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
                                             <option value="like">包含</option>
                                         </select>
-                                        <input type="text" name="taskCode" class="layui-input" placeholder="任务代号"/>
+                                        <input type="text" name="TASKCODE" class="layui-input" placeholder="任务代号"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">任务性质</label>
                                     <div class="layui-input-inline">
-                                        <select name="logic-taskNature" lay-verify="select-condition">
+                                        <select name="logic-TASKNATURE" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
                                             <option value="like">包含</option>
                                         </select>
-                                        <input type="text" name="taskNature" class="layui-input" placeholder="任务性质"/>
+                                        <input type="text" name="TASKNATURE" class="layui-input" placeholder="任务性质"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">目标编号</label>
                                     <div class="layui-input-inline">
-                                        <select name="logic-targetNumber" lay-verify="select-condition">
+                                        <select name="logic-TARGETNUMBER" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
                                             <option value="like">包含</option>
                                         </select>
-                                        <input type="text" name="targetNumber" class="layui-input" placeholder="目标编号"/>
+                                        <input type="text" name="TARGETNUMBER" class="layui-input" placeholder="目标编号"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">部队代号</label>
                                     <div class="layui-input-inline">
-                                        <select name="logic-troopCode" lay-verify="select-condition">
+                                        <select name="logic-TROOPCODE" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
                                             <option value="like">包含</option>
                                         </select>
-                                        <input type="text" name="troopCode" class="layui-input" placeholder="部队代号"/>
+                                        <input type="text" name="TROOPCODE" class="layui-input" placeholder="部队代号"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">装备型号</label>
                                     <div class="layui-input-inline">
-                                        <select name="logic-equipmentModel" lay-verify="select-condition">
+                                        <select name="logic-EQUIPMENTMODEL" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
                                             <option value="like">包含</option>
                                         </select>
-                                        <input type="text" name="equipmentModel" class="layui-input" placeholder="装备型号"/>
+                                        <input type="text" name="EQUIPMENTMODEL" class="layui-input" placeholder="装备型号"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
+                                    <label class="layui-form-label">导弹编号</label>
+                                    <div class="layui-input-inline">
+                                        <select name="logic-MISSILENUMBER" lay-verify="select-condition">
+                                            <option value="eq" selected>等于</option>
+                                            <option value="nq">不等于</option>
+                                            <option value="like">包含</option>
+                                        </select>
+                                        <input type="text" name="MISSILENUMBER" class="layui-input" placeholder="导弹编号"/>
+                                    </div>
+                                </div>
+                                <!--<div class="layui-inline">
                                     <label class="layui-form-label">导弹编号</label>
                                     <div class="layui-input-inline">
                                         <select name="logic-missileNumber" lay-verify="select-condition">
@@ -145,33 +156,22 @@
                                         </select>
                                         <input type="text" name="missileNumber" class="layui-input" placeholder="导弹编号"/>
                                     </div>
-                                </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">导弹编号</label>
-                                    <div class="layui-input-inline">
-                                        <select name="logic-missileNumber" lay-verify="select-condition">
-                                            <option value="eq" selected>等于</option>
-                                            <option value="nq">不等于</option>
-                                            <option value="like">包含</option>
-                                        </select>
-                                        <input type="text" name="missileNumber" class="layui-input" placeholder="导弹编号"/>
-                                    </div>
-                                </div>
+                                </div>-->
                                 <div class="layui-inline">
                                     <label class="layui-form-label">数据类型</label>
                                     <div class="layui-input-inline">
-                                        <select name="logic-dataType" lay-verify="select-condition">
+                                        <select name="logic-DATATYPE" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
                                             <option value="like">包含</option>
                                         </select>
-                                        <input type="text" name="dataType" class="layui-input" placeholder="数据类型"/>
+                                        <input type="text" name="DATATYPE" class="layui-input" placeholder="数据类型"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">数据密级</label>
                                     <div class="layui-input-inline" style="width: 80px;height: 38px; margin-right: -1px;">
-                                        <select name="logic-secretLevel" lay-verify="select-condition">
+                                        <select name="logic-SECRETLEVEL" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
                                             <option value="gt">大于</option>
@@ -179,7 +179,7 @@
                                         </select>
                                     </div>
                                     <div class="layui-input-inline" id="secretLevel">
-                                        <select name="secretLevel" lay-verify="select-secretLevel" style="width: 300px">
+                                        <select name="SECRETLEVEL" lay-verify="select-secretLevel" style="width: 300px">
                                             <option value="">请选择</option>
                                             <option value="0">公开</option>
                                             <option value="1">内部</option>

@@ -71,6 +71,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * 统计报表聚合查询
+     *
      * @param report 统计类型
      * @return -
      * @throws IOException
@@ -101,6 +102,8 @@ public class SearchServiceImpl implements SearchService {
 
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         List<ConditionItem> conditionItems = condition.getConditions();
+
+        Boolean metaFlag = false;
         for (ConditionItem item : conditionItems) {
             if (StringUtils.isBlank(item.getValue().trim())) {
                 continue;
@@ -120,15 +123,17 @@ public class SearchServiceImpl implements SearchService {
                     e.printStackTrace();
                 }
             } else if ("metadataId".equals(item.getField())) {
-                MetadataBasicVo metadata = metadataService.getById(item.getField());
-                boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE", metadata.getMetadataName()));
+                MetadataBasicVo metadata = metadataService.getById(item.getValue());
+                boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE.keyword", metadata.getMetadataName()));
+                metaFlag = true;
             } else if ("directoryId".equals(item.getField()) && !item.getField().equals("-")) {
+                metaFlag = true;
                 // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的元数据表
-                boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE", getMetadataIdsByDirId(item.getValue())));
+                boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE.keyword", getMetadataIdsByDirId(item.getValue())));
                 //因为目录中也包含file类型，所以需要单独对file类型的数据做过滤
                 String[] dirids = getDirectoryAllChildIds(item.getValue());
                 if (dirids != null) {
-                    boolQueryBuilder.filter(QueryBuilders.termsQuery("entityId", dirids));
+                    boolQueryBuilder.should(QueryBuilders.termsQuery("entityId", dirids));
                 }
             } else {
                 if (item.getLogic() == ConditionLogic.eq) {
@@ -144,11 +149,14 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
         }
-        if(request.types().length == 0){
-            request.types(getAccessibleMetadata());
+        if (!metaFlag) {
+            String[] metaIds = getAccessibleMetadata();
+            if (metaIds != null && metaIds.length > 0) {
+                boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE.keyword", metaIds));
+            }
             String[] entityIds = getAccessibleDirectory();
-            if(entityIds.length > 0){
-                boolQueryBuilder.filter(QueryBuilders.termsQuery("entityId", entityIds));
+            if (entityIds != null && entityIds.length > 0) {
+                boolQueryBuilder.should(QueryBuilders.termsQuery("entityId", entityIds));
             }
         }
         searchSourceBuilder.query(boolQueryBuilder).highlighter(buildHighlightBuilder());
@@ -194,12 +202,9 @@ public class SearchServiceImpl implements SearchService {
      */
     private String[] getMetadataIdsByDirId(String dirId) {
         List<MetadataBasicVo> list = directoryService.directoryAllMetadata(dirId);
-        String[] types = new String[list.size() + 1];
-        types[0] = "file";
-        for (int i = 1; i <= list.size(); i++) {
-            types[i] = list.get(i - 1).getMetadataName();
-        }
-        return types;
+        String[] metadataNames = list.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList()).toArray(new String[list.size() + 1]);
+        metadataNames[list.size()] = "file";
+        return metadataNames;
     }
 
     /**
@@ -226,24 +231,26 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * 获取有访问权限的元数据信息
+     *
      * @return
      */
-    public String[] getAccessibleMetadata(){
+    public String[] getAccessibleMetadata() {
         SysUser user = SecurityUtil.getLoginSysUser();
         if (user != null && (user.getLoginName().equals("sa") || user.getLoginName().equals("admin"))) {
             return Strings.EMPTY_ARRAY;
         }
         List<MetadataBasicVo> metadataList = metadataService.list(new QueryWrapper<>());
-        String[] metadataNames = metadataList.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList()).toArray(new String[metadataList.size()+1]);
+        String[] metadataNames = metadataList.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList()).toArray(new String[metadataList.size() + 1]);
         metadataNames[metadataList.size()] = "file";
         return metadataNames;
     }
 
     /**
      * 获取有访问权限的目录信息
+     *
      * @return
      */
-    public String[] getAccessibleDirectory(){
+    public String[] getAccessibleDirectory() {
         SysUser user = SecurityUtil.getLoginSysUser();
         if (user != null && (user.getLoginName().equals("sa") || user.getLoginName().equals("admin"))) {
             return Strings.EMPTY_ARRAY;

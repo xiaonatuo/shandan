@@ -1,5 +1,6 @@
 package com.keyware.shandan.browser.config;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keyware.shandan.bianmu.entity.MetadataDetailsVo;
 
@@ -57,11 +58,11 @@ public class BianmuDataCache {
      * @param table 表名
      * @return -
      */
-    public static JSONObject getColumns(String table) {
-        JSONObject json = new JSONObject();
+    public static JSONArray getColumns(String table) {
+        JSONArray json = new JSONArray();
         MetadataDetailsVo vo = cache.get(table);
         if (vo != null) {
-            return JSONObject.parseObject(vo.getTableColumns());
+            return JSONArray.parseArray(vo.getTableColumns());
         }
         return json;
     }

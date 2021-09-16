@@ -147,7 +147,7 @@ public class MetadataUtils {
         String tableColumns = detail.getTableColumns();
         // 如果字段中没有配置的列，则添加全部列
         if (StringUtils.isBlank(tableColumns)) {
-            columns.addAll(detail.getColumnList().stream().map(column -> JSONObject.toJSON(column)).collect(Collectors.toList()));
+            columns.addAll(detail.getColumnList().stream().map(JSONObject::toJSON).collect(Collectors.toList()));
         } else {
             JSONArray arr = JSONArray.parseArray(tableColumns);
             if (arr != null) {

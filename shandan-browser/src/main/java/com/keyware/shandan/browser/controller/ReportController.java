@@ -45,7 +45,7 @@ public class ReportController {
     @Autowired
     private SearchService searchService;
 
-    private ExportParam exportParam;
+    private static ExportParam tempExportParam;
 
     /**
      * 查询元数据表的字段
@@ -86,22 +86,22 @@ public class ReportController {
      */
     @PostMapping("/export/word")
     public Result<Object> exportWord(ExportParam exportParam) {
-        this.exportParam = exportParam;
+        tempExportParam = exportParam;
         return Result.of(null);
     }
 
     @GetMapping("/download/word")
     public void downloadWord(HttpServletResponse response) {
-        if (exportParam == null) {
+        if (tempExportParam == null) {
             return;
         }
         File tempDoc = null;
         BufferedInputStream bis = null;
         try {
-            tempDoc = createDoc(convertData(exportParam));
+            tempDoc = createDoc(convertData(tempExportParam));
             bis = new BufferedInputStream(new FileInputStream(tempDoc));
 
-            byte[] fileNameBytes = exportParam.getTitle().getBytes(StandardCharsets.UTF_8);
+            byte[] fileNameBytes = tempExportParam.getTitle().getBytes(StandardCharsets.UTF_8);
             String fileName = new String(fileNameBytes, 0, fileNameBytes.length, StandardCharsets.ISO_8859_1);
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/octet-stream");
@@ -124,7 +124,7 @@ public class ReportController {
                 e.printStackTrace();
             }
             if (tempDoc != null) tempDoc.delete(); // 删除临时文件
-            exportParam = null;
+            tempExportParam = null;
         }
     }
 

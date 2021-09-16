@@ -31,7 +31,7 @@ public class StringTermsReportAggregation extends ReportAggregation<ParsedTerms>
 
     @Override
     public AggregationBuilder builder() {
-        return AggregationBuilders.terms(alias).field(report.getFieldX());
+        return AggregationBuilders.terms(alias).field(report.getFieldX()+".keyword");
     }
 
 }
