@@ -76,15 +76,21 @@ public class PageVo implements Serializable {
      * @return -
      */
     private static Map<String, Object> fillMetadata(SearchHit hit) {
+        SearchResultRow resultRow = new SearchResultRow();
         Map<String, Object> source = hit.getSourceAsMap();
+        resultRow.putAll(source);
 
         // 数据类型,具体对应实际数据中的表名或者文件类型
-        if(source.get("META_TYPE") == null){
+        Object metaTypeObj = source.get("META_TYPE");
+        if(metaTypeObj == null){
             return source;
         }
-        String type = source.get("META_TYPE").toString();
-        String tableComment = BianmuDataCache.getComment(type);
-        source.put("columns", BianmuDataCache.getColumns(type));
+        // 元数据表类型
+        String metaType = metaTypeObj.toString();
+        //表注释
+        String tableComment = BianmuDataCache.getComment(metaType);
+        //表字段配置
+        source.put("columns", BianmuDataCache.getColumns(metaType));
 
         // 时间戳类型处理
         if(source.get("inputDate") != null){
@@ -94,11 +100,11 @@ public class PageVo implements Serializable {
         }
 
         // 设置标题
-        if (!type.equals("file")) {
+        if (!metaType.equals("file")) {
             if (StringUtils.isNotBlank(tableComment)) {
                 tableComment += "|";
             }
-            source.put("title", tableComment + type);
+            source.put("title", tableComment + metaType);
         }else{
             source.put("title", source.get("fileName"));
         }
@@ -130,7 +136,7 @@ public class PageVo implements Serializable {
             //高亮标题覆盖原标题
             source.put(entry.getKey(), fragmentText(entry.getValue()));
         }
-        return source;
+        return resultRow;
     }
 
     /**

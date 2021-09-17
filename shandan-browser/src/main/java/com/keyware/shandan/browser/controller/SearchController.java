@@ -47,6 +47,12 @@ public class SearchController {
     }
 
 
+    /**
+     * 测试接口
+     *
+     * @param condition
+     * @return
+     */
     @PostMapping("/full/test")
     public Result<PageVo> fullSearchTest(@RequestBody ConditionVo condition) {
 
@@ -57,4 +63,18 @@ public class SearchController {
             return Result.of(null, false, "数据查询异常");
         }
     }
+
+    /**
+     * 查询指定元数据表的分页数据
+     *
+     * @param metadataId 元数据表ID
+     * @param condition  查询条件
+     * @return 分页数据
+     */
+    @PostMapping("/metadata/page")
+    public Result<PageVo> dataPageByMetadata(String metadataId, ConditionVo condition) {
+
+        return Result.of(null, false);
+    }
+
 }
