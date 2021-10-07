@@ -8,7 +8,7 @@
  */
 // 当前页数据
 let currPageData = new Map;
-layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'laypage'], function () {
+layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'laypage', 'gtable'], function () {
     const tree = layui.globalTree,
         layer = layui.layer,
         form = layui.form,
@@ -29,7 +29,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     renderPageComponent();
     beginSearch();
     $('#btn-report').on('click', function () {
-        if(currPageData.size <= 0){
+        if (currPageData.size <= 0) {
             layer.msg('当前没有数据可用，请查询到数据后再点击')
             return;
         }
@@ -53,7 +53,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             id: 'directory-tree',
             url: `${ctx}/browser/dir/tree`,
             data: [{id: '-', parentId: '', title: '根目录', leaf: false, last: false, spread: false}],
-            load:false,
+            load: false,
             cache: false,
             done: function (nodes, elem) {
                 // 模拟鼠标点击事件展开第一层目录
@@ -62,11 +62,11 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             onClick: function (obj) {
                 const {basicData} = obj.param;
                 const formVal = form.val('search-form');
-                if(basicData){
-                    if(basicData.fileName){
+                if (basicData) {
+                    if (basicData.fileName) {
                         fileViewer(basicData);
                         return;
-                    }else if(basicData.metadataName){
+                    } else if (basicData.metadataName) {
                         if (formVal.metadataId === basicData.id) {
                             formVal.metadataId = '';
                             dirTree.cancelNavThis(obj.dom)
@@ -74,7 +74,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                             formVal.directoryId = '';
                             formVal.metadataId = basicData.id
                         }
-                    }else{
+                    } else {
                         if (formVal.directoryId === basicData.id) {
                             formVal.directoryId = '';
                             dirTree.cancelNavThis(obj.dom)
@@ -83,7 +83,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                             formVal.directoryId = basicData.id
                         }
                     }
-                }else{
+                } else {
                     formVal.directoryId = '';
                     formVal.metadataId = '';
                 }
@@ -238,7 +238,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                         condition = '包含';
                 }
 
-                if(key == 'secretLevel'){
+                if (key == 'secretLevel') {
                     val = $(`select[name="secretLevel"] option[value="${val}"]`).text();
                 }
                 htm += `<li data-key="${key}" style="color:#009688"><label style="color:#333">${title}</label><label style="color:gray;margin-left:5px">${condition}</label>: ${val}</li>`
@@ -297,14 +297,14 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
 
         reportComponent.setConditions(data.conditions)
 
-        Util.post(`/search/full`, data).then(res=>{
+        Util.post(`/search/full`, data).then(res => {
             console.info(res);
             if (res.flag) {
                 const result = res.data;
                 let index = 0;
-                result.records = result.records.map(item=>{
+                result.records = result.records.map(item => {
                     item.id = item.id || index;
-                    index ++;
+                    index++;
                     return item;
                 })
                 // 渲染列表
@@ -424,8 +424,8 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 <ul class="details-data-private">##COLS##</ul>
             </div>`;
         let cols_content = '';
-        if(data.columns.length > 0){
-            for(let col of data.columns){
+        if (data.columns.length > 0) {
+            for (let col of data.columns) {
                 let col_name = col.comment || col.columnName;
                 let val = data[col.columnName];
                 cols_content += `
@@ -443,6 +443,30 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             success: function (layerObj, index) {
                 layer.full(index);
             }
+        });
+    }
+
+    /**
+     * 渲染数据表格
+     */
+    function renderTable(data) {
+        let table = layui.gtable.init({
+            elem: 'result-table'
+            , height: '100%'
+            , url: '${ctx}/search/full'
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'id', title: 'ID', width: 80, hide: true}
+                , {field: 'TASKCODE', title: '任务代号', width: 80, sort: true}
+                , {field: 'TASKNATURE', title: '任务性质', width: 80, sort: true}
+                , {field: 'TROOPCODE', title: '部队代号', width: 200, sort: true}
+                , {field: 'TARGETNUMBER', title: '目标编号', width: 80, sort: true}
+                , {field: 'EQUIPMENTMODEL', title: '装备型号', width: 80, sort: true}
+                , {field: 'MISSILENUMBER', title: '导弹编号', width: 80, sort: true}
+                , {field: 'SOURCE', title: '文件来源', width: 80, sort: true}
+                , {field: 'ENTRYSTAFF', title: '录入人员', width: 80, sort: true}
+                , {field: 'INPUTDATE', title: '收文时间', width: 135, sort: true}
+            ]]
         });
     }
 });
