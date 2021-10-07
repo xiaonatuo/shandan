@@ -277,7 +277,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             $('#condition-div').slideToggle('fast');
         }
 
-        let data = {conditions: [], page, size};
+        let data = {conditions: []};
         for (let key in formVal) {
             // 如果key是条件下拉框，则跳过
             if (key.startsWith('logic-')) continue;
@@ -296,8 +296,8 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         }
 
         reportComponent.setConditions(data.conditions)
-
-        Util.post(`/search/full`, data).then(res => {
+        renderTable(data)
+        /*Util.post(`/search/full`, data).then(res => {
             console.info(res);
             if (res.flag) {
                 const result = res.data;
@@ -317,7 +317,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                     currPageData.set(item.id, item);
                 }
             }
-        });
+        });*/
     }
 
     /**
@@ -449,24 +449,82 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     /**
      * 渲染数据表格
      */
-    function renderTable(data) {
+    function renderTable(params) {
         let table = layui.gtable.init({
-            elem: 'result-table'
-            , height: '100%'
-            , url: '${ctx}/search/full'
-            , page: true //开启分页
-            , cols: [[ //表头
+            id: 'result-table',
+            height: 'full-179',
+            url: `${ctx}/search/full`,
+            toolbar: false,
+            where: params,
+            cellMinWidth: 110,
+            page: true, //开启分页
+            limit: 30,
+            limits: [30, 50, 100, 200],
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                , limitName: 'size' //每页数据量的参数名，默认：limit
+            },
+            autoSort: false,
+            cols: [[ //表头
                 {field: 'id', title: 'ID', width: 80, hide: true}
-                , {field: 'TASKCODE', title: '任务代号', width: 80, sort: true}
-                , {field: 'TASKNATURE', title: '任务性质', width: 80, sort: true}
-                , {field: 'TROOPCODE', title: '部队代号', width: 200, sort: true}
-                , {field: 'TARGETNUMBER', title: '目标编号', width: 80, sort: true}
-                , {field: 'EQUIPMENTMODEL', title: '装备型号', width: 80, sort: true}
-                , {field: 'MISSILENUMBER', title: '导弹编号', width: 80, sort: true}
-                , {field: 'SOURCE', title: '文件来源', width: 80, sort: true}
-                , {field: 'ENTRYSTAFF', title: '录入人员', width: 80, sort: true}
-                , {field: 'INPUTDATE', title: '收文时间', width: 135, sort: true}
-            ]]
+                , {
+                    field: 'META_TYPE', title: '元数据表', sort: true, templet: data => {
+                        if (data.META_TYPE == 'file') {
+                            return `<lable title="">非结构化数据</lable>`;
+                        }
+                        return `<lable title="${data.META_TYPE}">${data.tableComment}</lable>`;
+                    }
+                }
+                , {field: 'TASKCODE', title: '任务代号', sort: true}
+                , {field: 'TASKNATURE', title: '任务性质', sort: true}
+                , {field: 'TROOPCODE', title: '部队代号', minWidth: 200, sort: true}
+                , {field: 'TARGETNUMBER', title: '目标编号', sort: true}
+                , {field: 'EQUIPMENTMODEL', title: '装备型号', sort: true}
+                , {field: 'MISSILENUMBER', title: '导弹编号', sort: true}
+                , {field: 'SOURCE', title: '文件来源', sort: true}
+                , {field: 'ENTRYSTAFF', title: '录入人员', sort: true}
+                , {field: 'INPUTDATE', title: '收文时间', width: 150, sort: true}
+                , {fixed: 'right', title: '操作', width: 65, align: 'center', toolbar: '#tableRowTool'}
+            ]],
+            done: (res) => {
+                console.info(res);
+                if (res.flag) {
+                    const result = res;
+                    let index = 0;
+                    result.records = result.records.map(item => {
+                        item.id = item.id || index;
+                        index++;
+                        return item;
+                    })
+
+                    // 更新当前页数据的缓存
+                    currPageData.clear();
+                    for (let item of result.records) {
+                        currPageData.set(item.id, item);
+                    }
+                }
+            },
+            onToolBarRow: ({data, event}) =>{
+                if (event == 'detail') {
+                    if(data.META_TYPE == 'file'){
+                        fileViewer(data);
+                    }else{
+                        viewMetadata(data)
+                    }
+                }
+            }
+        });
+
+        layui.gtable.on('sort(result-table)', function (obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            let where = $.extend({}, params);
+            if (obj.type) {
+                where.sortFiled = obj.field == 'INPUTDATE' ? obj.field : obj.field + '.keyword';
+                where.sort = obj.type.toUpperCase();
+            }
+            table.reload({
+                initSort: obj, //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                where
+            });
         });
     }
 });

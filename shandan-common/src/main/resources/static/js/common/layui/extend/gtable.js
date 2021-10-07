@@ -99,7 +99,7 @@ layui.define(['table'], function (exports) {
      * @param opt
      */
     gtable.reload = function (opt) {
-        gtable.init(opt);
+        table.reload(options.id, opt);
     };
 
     /**

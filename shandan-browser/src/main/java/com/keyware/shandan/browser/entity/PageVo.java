@@ -89,18 +89,19 @@ public class PageVo implements Serializable {
         String metaType = metaTypeObj.toString();
         //表注释
         String tableComment = BianmuDataCache.getComment(metaType);
+        resultRow.put("tableComment", tableComment);
         //表字段配置
-        source.put("columns", BianmuDataCache.getColumns(metaType));
+        resultRow.put("columns", BianmuDataCache.getColumns(metaType));
 
         // 时间戳类型处理
-        if(source.get("inputDate") != null){
-            long date = (long) source.get("inputDate");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            source.put("inputDate", sdf.format(new Date(date)));
+        if(source.get("INPUTDATE") != null){
+            long date = (long) source.get("INPUTDATE");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            resultRow.put("INPUTDATE", sdf.format(new Date(date)));
         }
 
         // 设置标题
-        if (!metaType.equals("file")) {
+        /*if (!metaType.equals("file")) {
             if (StringUtils.isNotBlank(tableComment)) {
                 tableComment += "|";
             }
@@ -120,22 +121,22 @@ public class PageVo implements Serializable {
                 commonText.append("<label style=\"font-weight: bold;\">").append(entry.getValue()).append("</label>:").append(value == null ? "未知" : value).append(";");
             }
         }
-        source.put("commonText", commonText);
+        source.put("commonText", commonText);*/
 
         // 对大文本text字段长度进行预处理，最大长度不超过200个字符
-        if(source.get("text") != null){
+        /*if(source.get("text") != null){
             String text = (String) source.get("text");
             if(text.length() > 200){
                 source.put("text", text.substring(0, 200));
             }
-        }
+        }*/
 
         //解析高亮字段
-        Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+        /*Map<String, HighlightField> highlightFields = hit.getHighlightFields();
         for (Map.Entry<String, HighlightField> entry : highlightFields.entrySet()) {
             //高亮标题覆盖原标题
             source.put(entry.getKey(), fragmentText(entry.getValue()));
-        }
+        }*/
         return resultRow;
     }
 

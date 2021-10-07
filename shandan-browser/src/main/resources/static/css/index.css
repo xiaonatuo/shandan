@@ -97,7 +97,7 @@
 .result-content{
     overflow-y: auto;
     height: inherit;
-    padding: 0 2px;
+    padding: 0;
 }
 .result-item{
     padding: 10px;

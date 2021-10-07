@@ -10,8 +10,17 @@
         const bianmuServer = /*[[${bianmuServer}]]*/ '';
     </script>
     <style>
-        #secretLevel .layui-form-select {width: 300px;}
-        #secretLevel .layui-form-select .layui-select-title input{width: 300px}
+        #secretLevel .layui-form-select {
+            width: 300px;
+        }
+
+        #secretLevel .layui-form-select .layui-select-title input {
+            width: 300px
+        }
+
+        .layui-table-view {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -36,7 +45,7 @@
                                 <input type="hidden" name="metadataId" value=""/>
                                 <input type="hidden" name="logic-searchInput" value="like"/>
                                 <input type="text" name="searchInput" id="search-input" class="layui-input"
-                                       placeholder="输入关键词进行搜索。。。" />
+                                       placeholder="输入关键词进行搜索。。。"/>
                             </div>
                             <div class="layui-input-inline">
                                 <button class="layui-btn" id="begin-search-btn">开始搜索</button>
@@ -45,7 +54,8 @@
                                 <button class="layui-btn layui-btn-primary layui-border-green" style="border: 0"
                                         id="condition-btn">更多条件<i class="layui-icon layui-icon-down"></i>
                                 </button>
-                                <button class="layui-btn layui-btn-primary layui-border-green" style="border: 0;padding:0;margin:0"
+                                <button class="layui-btn layui-btn-primary layui-border-green"
+                                        style="border: 0;padding:0;margin:0"
                                         id="condition-clear-btn">重置
                                 </button>
                             </div>
@@ -55,7 +65,8 @@
                                 <div class="layui-inline">
                                     <label class="layui-form-label">收文时间</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" id="input-date-begin" name="INPUTDATE" autocomplete="off" class="layui-input input-date" placeholder="选择日期范围"/>
+                                        <input type="text" id="input-date-begin" name="INPUTDATE" autocomplete="off"
+                                               class="layui-input input-date" placeholder="选择日期范围"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
@@ -132,7 +143,8 @@
                                             <option value="nq">不等于</option>
                                             <option value="like">包含</option>
                                         </select>
-                                        <input type="text" name="EQUIPMENTMODEL" class="layui-input" placeholder="装备型号"/>
+                                        <input type="text" name="EQUIPMENTMODEL" class="layui-input"
+                                               placeholder="装备型号"/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
@@ -170,7 +182,8 @@
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">数据密级</label>
-                                    <div class="layui-input-inline" style="width: 80px;height: 38px; margin-right: -1px;">
+                                    <div class="layui-input-inline"
+                                         style="width: 80px;height: 38px; margin-right: -1px;">
                                         <select name="logic-SECRETLEVEL" lay-verify="select-condition">
                                             <option value="eq" selected>等于</option>
                                             <option value="nq">不等于</option>
@@ -191,7 +204,10 @@
                                 </div>
                             </div>
                             <div class="layui-form-item" style="justify-content: flex-end">
-                                <button class="layui-btn layui-btn-primary layui-border-green" style="border: 0;padding:0;margin:0;height: 16px;line-height: 16px;" onclick="$(`#condition-btn`).click()">确定</button>
+                                <button class="layui-btn layui-btn-primary layui-border-green"
+                                        style="border: 0;padding:0;margin:0;height: 16px;line-height: 16px;"
+                                        onclick="$(`#condition-btn`).click()">确定
+                                </button>
                             </div>
                         </div>
                         <div class="layui-tab" lay-allowClose="true" id="condition-tab" lay-filter="condition-tab">
@@ -205,8 +221,10 @@
                         <div class="layui-card-header b-result-head">
                             <p style="color: gray !important;">查询结果</p>
                             <p>
-                                <a id="btn-sorting" class="layui-btn layui-btn-primary layui-border-green layui-btn-xs" style="border: 0">排序</a>
-                                <a id="btn-report" class="layui-btn layui-btn-primary layui-border-green layui-btn-xs" style="border: 0">
+                                <!--<a id="btn-sorting" class="layui-btn layui-btn-primary layui-border-green layui-btn-xs"
+                                   style="border: 0">排序</a>-->
+                                <a id="btn-report" class="layui-btn layui-btn-primary layui-border-green layui-btn-xs"
+                                   style="border: 0">
                                     <i class="layui-icon layui-icon-chart"></i>统计报表</a>
                             </p>
                             <div id="sorting-layer" style="display: none">
@@ -215,76 +233,97 @@
                                         <li class="sorting-item">
                                             <div class="layui-menu-body-title">收文时间</div>
                                             <div data-field="inputDate">
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="ASC" style="border: 0">升序</a>
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="DESC" style="border: 0">降序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="ASC" style="border: 0">升序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="DESC" style="border: 0">降序</a>
                                             </div>
                                         </li>
                                         <li class="sorting-item">
                                             <div class="layui-menu-body-title">录入人员</div>
                                             <div data-field="entryStaff">
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="asc" style="border: 0">升序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="desc" style="border: 0">降序</a>
                                             </div>
                                         </li>
                                         <li class="sorting-item">
                                             <div class="layui-menu-body-title">文件来源</div>
                                             <div data-field="source">
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="asc" style="border: 0">升序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="desc" style="border: 0">降序</a>
                                             </div>
                                         </li>
                                         <li class="sorting-item">
                                             <div class="layui-menu-body-title">任务代号</div>
                                             <div data-field="taskCode">
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="asc" style="border: 0">升序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="desc" style="border: 0">降序</a>
                                             </div>
                                         </li>
                                         <li class="sorting-item">
                                             <div class="layui-menu-body-title">任务性质</div>
                                             <div data-field="taskNature">
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="asc" style="border: 0">升序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="desc" style="border: 0">降序</a>
                                             </div>
                                         </li>
                                         <li class="sorting-item">
                                             <div class="layui-menu-body-title">目标编号</div>
                                             <div data-field="targetNumber">
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="asc" style="border: 0">升序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="desc" style="border: 0">降序</a>
                                             </div>
                                         </li>
                                         <li class="sorting-item">
                                             <div class="layui-menu-body-title">部队代号</div>
                                             <div data-field="troopCode">
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="asc" style="border: 0">升序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="desc" style="border: 0">降序</a>
                                             </div>
                                         </li>
                                         <li class="sorting-item">
                                             <div class="layui-menu-body-title">装备型号</div>
                                             <div data-field="equipmentModel">
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="asc" style="border: 0">升序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="desc" style="border: 0">降序</a>
                                             </div>
                                         </li>
                                         <li class="sorting-item">
                                             <div class="layui-menu-body-title">导弹编号</div>
                                             <div data-field="missileNumber">
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="asc" style="border: 0">升序</a>
-                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting" data-sort="desc" style="border: 0">降序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="asc" style="border: 0">升序</a>
+                                                <a class="layui-btn layui-btn-primary layui-btn-xs btn-sorting"
+                                                   data-sort="desc" style="border: 0">降序</a>
                                             </div>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="layui-card-body" style="height: auto !important;">
+                        <div class="layui-card-body" style="height: auto !important; padding: 0">
                             <div class="result-content" id="result-list-content">
                                 <!--<p style="text-align: center; color:gray;margin-top: 20px;">没有查询到数据</p>-->
                                 <table class="layui-hide" id="result-table" lay-filter="result-table"></table>
+                                <script type="text/html" id="tableRowTool">
+                                    <a class="layui-btn layui-btn-primary layui-border-green layui-btn-xs" lay-event="detail" style="border: 0">查看</a>
+                                </script>
                             </div>
-                            <div id="page-component" style="position: absolute; bottom: 0"></div>
+                            <!--<div id="page-component" style="position: absolute; bottom: 0"></div>-->
                         </div>
                     </div>
                 </div>
@@ -299,14 +338,14 @@
 <script type="text/javascript">
     const sizeInit = () => {
         $(".layui-card-body").height(window.innerHeight - 60 - 3);
-        $(".search-result-div .layui-card-body").height(window.innerHeight - 153 -45);
+        $(".search-result-div .layui-card-body").height(window.innerHeight - 153 - 26);
 
         const formItemWidth = $('#search-input').parent().parent().innerWidth();
         $('#search-input').parent().width(formItemWidth - 300);
 
         $('#search-result-div').height($(".layui-card-body").innerHeight() - 105);
 
-        $('.result-content').height($(".search-result-div .layui-card-body").innerHeight() - 70)
+        $('.result-content').height($(".search-result-div .layui-card-body").innerHeight())
     }
     window.onresize = sizeInit;
     sizeInit();
