@@ -29,7 +29,7 @@ public interface DynamicDataSourceService {
      * 查询数据表的列
      *
      * @param tableName
-     * @param sourceId
+     * @param dataSource
      * @return
      */
     List<DBTableColumnVo> getColumnListByTable(String tableName, DataSourceVo dataSource);

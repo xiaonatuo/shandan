@@ -31,7 +31,7 @@ layui.define(['table'], function (exports) {
             return {
                 "flag": res.flag, //解析接口状态
                 "msg": res.msg, //解析提示文本
-                "records": data.records || data, //解析数据长度
+                "records": data.records || res.records || data, //解析数据长度
                 "total": data.total || data.length //解析数据列表
             };
         },

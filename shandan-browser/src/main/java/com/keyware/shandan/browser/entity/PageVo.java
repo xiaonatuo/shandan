@@ -1,10 +1,9 @@
 package com.keyware.shandan.browser.entity;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.browser.config.BianmuDataCache;
-import com.keyware.shandan.browser.constants.CommonFields;
-import com.keyware.shandan.common.util.DateUtil;
-import com.keyware.shandan.common.util.StringUtils;
 import lombok.Data;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.SearchHit;
@@ -13,10 +12,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +49,16 @@ public class PageVo implements Serializable {
      * 记录数
      */
     private List<Object> records;
+
+    public static PageVo pageConvert(Page<HashMap<String, Object>> page) {
+        PageVo pageVo = new PageVo();
+        pageVo.setPage((int) page.getCurrent());
+        pageVo.setSize((int) page.getSize());
+        pageVo.setPageTotal((int) page.getPages());
+        pageVo.setTotal(page.getTotal());
+        pageVo.setRecords(new ArrayList<>(page.getRecords()));
+        return pageVo;
+    }
 
     /**
      * 根据ES检索结果设置分页数据

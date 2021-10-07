@@ -153,10 +153,14 @@ public class MetadataUtils {
             if (arr != null) {
                 arr.forEach(item -> {
                     JSONObject obj = (JSONObject) item;
-                    for (DBTableColumnVo col : detail.getColumnList()) {
-                        if (col.getColumnName().equals(obj.getString("columnName"))) {
-                            columns.add(JSONObject.toJSON(col));
-                            break;
+                    if(detail.getColumnList() == null){
+                        columns.add(obj);
+                    }else{
+                        for (DBTableColumnVo col : detail.getColumnList()) {
+                            if (col.getColumnName().equals(obj.getString("columnName"))) {
+                                columns.add(JSONObject.toJSON(col));
+                                break;
+                            }
                         }
                     }
                 });

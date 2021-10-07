@@ -41,6 +41,8 @@ public interface MetadataService extends IBaseService<MetadataBasicVo, String> {
      */
     Page<HashMap<String, Object>> getExampleData(MetadataBasicVo metadataBasic, DataSourceVo dataSource);
 
+    Page<HashMap<String, Object>> getDynamicData(MetadataBasicVo metadata, int page, int size, String orderField, String order);
+
     /**
      * 获取元数据的列
      * @param metadataId

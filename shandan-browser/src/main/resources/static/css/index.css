@@ -142,9 +142,11 @@
     margin: 15px 0 0 0;
 }
 .details-container .details-data-private{
-    border-top: 1px solid #e2e2e2;
+    /*border-top: 1px solid #e2e2e2;*/
     flex-direction: column;
     align-content: center;
+    margin-top: 20px;
+    padding: 0 5px;
 }
 .details-container ul li {
     display: flex;

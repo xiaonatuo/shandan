@@ -154,6 +154,35 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
         return page;
     }
 
+    @Override
+    public Page<HashMap<String, Object>> getDynamicData(MetadataBasicVo metadata, int page, int size, String orderField, String order) {
+        Optional<MetadataDetailsVo> optional = metadata.getMetadataDetailsList().stream().filter(MetadataDetailsVo::getMaster).findFirst();
+        if (!optional.isPresent()) {
+            return new Page<>();
+        }
+        DataSourceVo dataSource = dataSourceService.getById(metadata.getDataSourceId());
+        String sql = MetadataUtils.generateSql(metadata, dataSource);
+        if(!StringUtils.isBlankAny(orderField, order)){
+            sql += " order by " + orderField + " " + order;
+        }
+
+        Page<HashMap<String, Object>> pageResult = dynamicDatasourceMapper.page(new Page(page, size), sql);
+        pageResult.getRecords().stream().peek(data -> {
+            data.entrySet().stream().peek(entry -> {
+                if (entry.getValue() instanceof Clob) {
+                    Clob clob = (Clob) entry.getValue();
+                    try {
+                        entry.setValue(clob.getSubString(1, (int) clob.length()));
+                    } catch (SQLException ignored) {
+                    }
+                }
+            }).collect(Collectors.toSet());
+        }).collect(Collectors.toList());
+
+        return pageResult;
+    }
+
+
     /**
      * 获取元数据的列
      *

@@ -1,6 +1,8 @@
 package com.keyware.shandan.datasource.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,4 +19,8 @@ import java.util.List;
 public interface DynamicDatasourceMapper {
 
     List<HashMap<String, Object>> list(String sqlStr);
+
+    @Select("${sql}")
+    Page<HashMap<String, Object>> page(Page page, String sql);
+
 }

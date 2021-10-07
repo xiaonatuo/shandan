@@ -378,7 +378,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
         console.info(data)
         const container = `
             <div class="details-container">
-                <p class="details-title">${data.title}</p>
+                <p class="details-title">${data.tableComment}(${data.META_TYPE})</p>
                 <ul class="details-data-common">
                     <li>
                         <div class="details-label">任务代号</div>
@@ -421,27 +421,63 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                         <span>${data.MISSILENUMBER || '无数据'}</span>
                     </li>
                 </ul>
-                <ul class="details-data-private">##COLS##</ul>
+                <div class="details-data-private" >
+                    <table id="detail-table" lay-filter="detail-table"></table>
+                </div>
             </div>`;
-        let cols_content = '';
-        if (data.columns.length > 0) {
-            for (let col of data.columns) {
-                let col_name = col.comment || col.columnName;
-                let val = data[col.columnName];
-                cols_content += `
-                    <li>
-                        <div class="details-label">${col_name}</div>
-                        <span>${val}</span>
-                    </li>`;
-            }
-        }
 
         layer.open({
             title: '查看数据',
             type: 1,
-            content: container.replace('##COLS##', cols_content),
+            content: container,
             success: function (layerObj, index) {
                 layer.full(index);
+                Util.get(`/search/metadata/columns?metaTable=${data.META_TYPE}`).then(res => {
+                    console.info(res);
+                    if (!res.flag) {
+                        showErrorMsg('查询字段数据异常');
+                        return
+                    }
+                    let cols = [];
+                    for (let item of res.data.field) {
+                        cols.push({field: item.columnName, title: item.comment, sort: true})
+                    }
+                    let where = {metaID: res.data.id}
+                    let table = layui.gtable.init({
+                        id: 'detail-table',
+                        height: 'full-280',
+                        url: `${ctx}/search/metadata/page`,
+                        toolbar: true,
+                        cellMinWidth: 110,
+                        page: true, //开启分页
+                        limit: 30,
+                        limits: [30, 50, 100, 200],
+                        defaultToolbar: ['filter'],
+                        request: {
+                            pageName: 'page' //页码的参数名称，默认：page
+                            , limitName: 'size' //每页数据量的参数名，默认：limit
+                        },
+                        where,
+                        autoSort: false,
+                        cols: [cols],
+                        done: (res) => {
+                            console.info(' 555', res);
+                        }
+                    });
+
+                    layui.gtable.on('sort(detail-table)', function (obj) {
+                        if (obj.type) {
+                            where.orderField = obj.field;
+                            where.order = obj.type.toUpperCase();
+                        }
+                        table.reload({
+                            initSort: obj, //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                            where
+                        });
+                    });
+                })
+
+
             }
         });
     }
@@ -504,11 +540,11 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                     }
                 }
             },
-            onToolBarRow: ({data, event}) =>{
+            onToolBarRow: ({data, event}) => {
                 if (event == 'detail') {
-                    if(data.META_TYPE == 'file'){
+                    if (data.META_TYPE == 'file') {
                         fileViewer(data);
-                    }else{
+                    } else {
                         viewMetadata(data)
                     }
                 }
