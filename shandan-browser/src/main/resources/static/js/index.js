@@ -432,51 +432,54 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             content: container,
             success: function (layerObj, index) {
                 layer.full(index);
-                Util.get(`/search/metadata/columns?metaTable=${data.META_TYPE}`).then(res => {
-                    console.info(res);
-                    if (!res.flag) {
-                        showErrorMsg('查询字段数据异常');
-                        return
-                    }
-                    let cols = [];
-                    for (let item of res.data.field) {
-                        cols.push({field: item.columnName, title: item.comment, sort: true})
-                    }
-                    let where = {metaID: res.data.id}
-                    let table = layui.gtable.init({
-                        id: 'detail-table',
-                        height: 'full-280',
-                        url: `${ctx}/search/metadata/page`,
-                        toolbar: true,
-                        cellMinWidth: 110,
-                        page: true, //开启分页
-                        limit: 30,
-                        limits: [30, 50, 100, 200],
-                        defaultToolbar: ['filter'],
-                        request: {
-                            pageName: 'page' //页码的参数名称，默认：page
-                            , limitName: 'size' //每页数据量的参数名，默认：limit
-                        },
-                        where,
-                        autoSort: false,
-                        cols: [cols],
-                        done: (res) => {
-                            console.info(' 555', res);
-                        }
-                    });
+                Util.sleep(100).then(()=>{
 
-                    layui.gtable.on('sort(detail-table)', function (obj) {
-                        if (obj.type) {
-                            where.orderField = obj.field;
-                            where.order = obj.type.toUpperCase();
+                    Util.get(`/search/metadata/columns?metaTable=${data.META_TYPE}`).then(res => {
+                        console.info(res);
+                        if (!res.flag) {
+                            showErrorMsg('查询字段数据异常');
+                            return
                         }
-                        table.reload({
-                            initSort: obj, //记录初始排序，如果不设的话，将无法标记表头的排序状态。
-                            where
+                        let cols = [];
+                        for (let item of res.data.field) {
+                            cols.push({field: item.columnName, title: item.comment, sort: true})
+                        }
+                        let where = {metaID: res.data.id}
+                        let table = layui.gtable.init({
+                            id: 'detail-table',
+                            height: 'full-280',
+                            url: `${ctx}/search/metadata/page`,
+                            toolbar: true,
+                            cellMinWidth: 110,
+                            page: true, //开启分页
+                            limit: 30,
+                            limits: [30, 50, 100, 200],
+                            defaultToolbar: ['filter'],
+                            request: {
+                                pageName: 'page' //页码的参数名称，默认：page
+                                , limitName: 'size' //每页数据量的参数名，默认：limit
+                            },
+                            where,
+                            autoSort: false,
+                            cols: [cols],
+                            done: (res) => {
+                                console.info(' 555', res);
+                            }
                         });
-                    });
-                })
 
+                        layui.gtable.on('sort(detail-table)', function (obj) {
+                            if (obj.type) {
+                                where.orderField = obj.field;
+                                where.order = obj.type.toUpperCase();
+                            }
+                            table.reload({
+                                initSort: obj, //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                                where
+                            });
+                        });
+                    })
+
+                })
 
             }
         });
@@ -488,7 +491,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     function renderTable(params) {
         let table = layui.gtable.init({
             id: 'result-table',
-            height: 'full-179',
+            height: 'full-162',
             url: `${ctx}/search/full`,
             toolbar: false,
             where: params,
