@@ -159,6 +159,7 @@ public class SearchServiceImpl implements SearchService {
                 boolQueryBuilder.should(QueryBuilders.termsQuery("entityId", entityIds));
             }
         }
+        boolQueryBuilder.must(QueryBuilders.existsQuery("META_TYPE"));
         searchSourceBuilder.query(boolQueryBuilder).highlighter(buildHighlightBuilder());
         if (StringUtils.isNotBlank(condition.getSortFiled())) {
             searchSourceBuilder.sort(condition.getSortFiled(), condition.getSort());

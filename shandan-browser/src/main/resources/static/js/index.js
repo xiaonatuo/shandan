@@ -382,43 +382,43 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 <ul class="details-data-common">
                     <li>
                         <div class="details-label">任务代号</div>
-                        <span>${data.TASKCODE || '无数据'}</span>
+                        <span>${data.TASKCODE || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                     <li>
                         <div class="details-label">任务性质</div>
-                        <span>${data.TASKNATURE || '无数据'}</span>
+                        <span>${data.TASKNATURE || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                     <li>
                         <div class="details-label">收文日期</div>
-                        <span>${data.INPUTDATE || '无数据'}</span>
+                        <span>${data.INPUTDATE || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                 </ul>
                 <ul class="details-data-common">
                     <li>
                         <div class="details-label">装备型号</div>
-                        <span>${data.EQUIPMENTMODEL || '无数据'}</span>
+                        <span>${data.EQUIPMENTMODEL || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                     <li>
                         <div class="details-label">文件来源</div>
-                        <span>${data.SOURCE || '无数据'}</span>
+                        <span>${data.SOURCE || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                     <li>
                         <div class="details-label">录入人员</div>
-                        <span>${data.ENTRYSTAFF || '无数据'}</span>
+                        <span>${data.ENTRYSTAFF || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                 </ul>
                 <ul class="details-data-common" >
                     <li>
                         <div class="details-label">部队代号</div>
-                        <span>${data.TROOPCODE || '无数据'}</span>
+                        <span>${data.TROOPCODE || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                     <li>
                         <div class="details-label">目标编号</div>
-                        <span>${data.TARGETNUMBER || '无数据'}</span>
+                        <span>${data.TARGETNUMBER || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                     <li>
                         <div class="details-label">导弹编号</div>
-                        <span>${data.MISSILENUMBER || '无数据'}</span>
+                        <span>${data.MISSILENUMBER || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                 </ul>
                 <div class="details-data-private" >

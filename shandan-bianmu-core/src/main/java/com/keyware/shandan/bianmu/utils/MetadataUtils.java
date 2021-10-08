@@ -51,12 +51,15 @@ public class MetadataUtils {
                 StringBuilder columnsBuilder = new StringBuilder();
                 StringBuilder wheresBuilder = new StringBuilder();
 
+                List<String> columnTemp = new ArrayList<>();
+
                 // 主表
                 String master_table = masterTable.getTableName();
                 // 主表列
                 masterColumns.forEach(o -> {
                     JSONObject obj = (JSONObject) o;
                     columnsBuilder.append(MASTER_TABLE_ALIAS).append(".\"").append(obj.getString("columnName")).append("\",");
+                    columnTemp.add(obj.getString("columnName"));
                 });
                 // 主表表名
                 tableNameBuilder.append(schema).append("\"").append(master_table).append("\" as ").append(MASTER_TABLE_ALIAS);
@@ -74,7 +77,9 @@ public class MetadataUtils {
 
                     getColumns(table).forEach(obj -> {
                         JSONObject col = (JSONObject) obj;
-                        columnsBuilder.append(rightTableAlias).append(".\"").append(col.getString("columnName")).append("\",");
+                        if(!columnTemp.contains(col.getString("columnName"))){
+                            columnsBuilder.append(rightTableAlias).append(".\"").append(col.getString("columnName")).append("\",");
+                        }
                     });
 
                     // where 条件
