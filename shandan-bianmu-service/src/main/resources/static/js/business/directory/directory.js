@@ -440,7 +440,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                     let param = {
                         entityId: node.id,
                         entityType: ReviewEntityType.DIRECTORY,
-                        status: ReviewStatus.SUBMITTED
+                        status: ReviewStatus.PASS
                     };
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
                         if (res.flag) {
