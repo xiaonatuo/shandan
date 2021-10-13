@@ -71,7 +71,6 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
      */
     @GetMapping("/list/metadata")
     public Result<Page<MetadataBasicVo>> metadataReviewPageList(Page<MetadataBasicVo> page, MetadataBasicVo vo){
-        vo.setReviewStatus(ReviewStatus.SUBMITTED);
         return Result.of(metadataService.page(page, new QueryWrapper<>(vo)));
     }
 
@@ -83,7 +82,7 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
      */
     @GetMapping("/list/directory")
     public Result<Page<DirectoryVo>> directoryReviewPageList(Page<DirectoryVo> page, DirectoryVo vo) {
-        vo.setReviewStatus(ReviewStatus.SUBMITTED);
+        //vo.setReviewStatus(ReviewStatus.SUBMITTED);
         vo.setDirectoryType(DirectoryType.METADATA);
         return Result.of(directoryService.page(page, new QueryWrapper<>(vo)));
     }

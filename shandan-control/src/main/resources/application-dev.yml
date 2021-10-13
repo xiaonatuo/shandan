@@ -14,10 +14,10 @@ spring:
   thymeleaf:
     cache: false
   #热部署设置
-  devtools:
-    restart:
-      enabled: true
-      additional-paths: src/java/main
+#  devtools:
+#    restart:
+#      enabled: true
+#      additional-paths: src/java/main
 
   elasticsearch:
     rest:

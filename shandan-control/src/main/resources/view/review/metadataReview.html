@@ -8,7 +8,7 @@
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
 </head>
-<body>
+<body class="layui-form" lay-filter="reviewForm">
 <div class="layui-row layui-col-space15">
     <!-- 树 -->
     <div class="layui-col-md12">
@@ -19,14 +19,26 @@
                 <table class="layui-hide" id="reviewTable" lay-filter="reviewTable"></table>
                 <!-- 模板 -->
                 <script type="text/html" id="tableToolBar">
-                    <div class="layui-btn-container">
+                    <div class="layui-btn-container layui-form" lay-filter="tableToolForm">
                         <input type="text" id="searchKeyInput" name="searchKeyInput" autocomplete="off"
                                placeholder="请输入元数据名称" class="layui-input layui-btn-sm">
                         <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">审核状态</label>
+                            <div class="layui-input-inline">
+                                <input type="radio" name="reviewStatus" value="PASS" title="已发布"
+                                       lay-filter="statusRadio">
+                                <input type="radio" name="reviewStatus" value="FAIL" title="已退回"
+                                       lay-filter="statusRadio">
+                            </div>
+                        </div>
                     </div>
                 </script>
                 <script type="text/html" id="rowToolBar">
-                    <a class="layui-btn layui-btn-xs" lay-event="review">审核</a>
+                    {{#
+                        let disable = d.reviewStatus != 'FAIL';
+                    }}
+                        <a class="layui-btn layui-btn-xs {{disable ? '' : 'layui-disabled'}}" lay-event="{{disable ? 'review' : ''}}">退回</a>
                 </script>
             </div>
         </div>
@@ -34,21 +46,12 @@
 </div>
 </body>
 <script type="text/html" id="reviewLayer">
-    <div class="layui-form" lay-filter="reviewForm" style="padding-right: 20px">
-        <div class="layui-form-item">
-            <label class="layui-form-label">审核</label>
-            <div class="layui-input-block">
-                <input type="radio" name="status" value="PASS" title="通过" lay-verify="required">
-                <input type="radio" name="status" value="FAIL" title="不通过" lay-verify="required">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">审核意见</label>
-            <div class="layui-input-block">
-                <textarea class="layui-textarea" name="opinion" cols="4" lay-verify="required" placeholder="请输入审核意见..." style="width: 450px"/>
-            </div>
-        </div>
-        <button id="btn-submit" class="layui-btn" lay-submit lay-filter="reviewForm" style="position: absolute; left:-1000px"/>
+    <div class="layui-form" lay-filter="reviewForm" style="padding: 20px">
+        <input type="hidden" name="status" value="FAIL">
+        <textarea class="layui-textarea" name="opinion" cols="4" lay-verify="required" placeholder="请输入退回原因..."
+                  style="width: 450px"/>
+        <button id="btn-submit" class="layui-btn" lay-submit lay-filter="reviewForm"
+                style="position: absolute; left:-1000px"/>
     </div>
 </script>
 <!-- js -->

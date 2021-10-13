@@ -21,7 +21,7 @@ const cols = {
         {field: 'themeTask', title: '主题任务'},
         {field: 'modifyUserName', title: '提交人'},
         {field: 'collectionTime', title: '采集时间'},
-        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width:80}
+        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 80}
     ]],
     DIRECTORY: [[
         {field: 'id', title: 'ID', hide: true},
@@ -29,10 +29,11 @@ const cols = {
         {field: 'directoryPath', title: '目录路径'},
         {field: 'modifyUserName', title: '提交人'},
         {field: 'modifyTime', title: '提交时间'},
-        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width:80}
+        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 80}
     ]]
 }
 let reviewForm;
+
 class Review {
     options = {
         entityType: '', // 数据实体类型
@@ -45,7 +46,7 @@ class Review {
     /**
      * 初始化组件
      */
-    init(){
+    init() {
         const _this = this;
         let opt = $.extend({}, _this.options);
 
@@ -55,22 +56,40 @@ class Review {
             reviewForm = layui.form;
             const type = opt.entityType.toLowerCase();
 
+            let reviewStatus = 'PASS';
+            /*let reviewStatus = function (){
+                return reviewForm.val('tableToolForm').reviewStatus;
+            }*/
+
             // 数据表格
             const listPage = ListPage.init({
                 table: {
                     id: 'reviewTable',
                     url: `${ctx}/business/review/list/${type}`,
                     method: 'get',
+                    searchFieldNames: 'metadataName',
+                    where: {reviewStatus: reviewStatus},
                     cols: cols[opt.entityType],
                     done: function (res) {
-                        //console.info('数据表格加载完成', res);
+                        reviewForm.val('tableToolForm', {reviewStatus:reviewStatus})
+                        reviewForm.render('radio', 'tableToolForm');
                     }
                 }
             })
 
             // 绑定审核按钮点击事件
             listPage.addTableRowEvent('review', function (data) {
-                _this.reviewOperate(data,() => listPage.reloadTable());
+                _this.reviewOperate(data, () => listPage.reloadTable());
+            })
+
+            reviewForm.on('radio(statusRadio)', function (data) {
+                reviewStatus = data.value;
+                let options = {
+                    table: {
+                        where: {reviewStatus}
+                    }
+                }
+                listPage.reloadTable(options)
             })
         });
     }
@@ -84,14 +103,14 @@ class Review {
         const _this = this;
         layer.open({
             type: 1,
-            title: '资源审核',
+            title: '退回',
             area: ['auto'],
-            btn:['确定','取消'],
+            btn: ['退回', '取消'],
             content: $('#reviewLayer').html(),
             success: function (_layer, index) {
                 reviewForm.render();
-                reviewForm.on('submit(reviewForm)', function({elem, field}){
-                    if(!field.status){
+                reviewForm.on('submit(reviewForm)', function ({elem, field}) {
+                    if (!field.status) {
                         layer.msg('请选择审核通过或者不通过！')
                         return false;
                     }
@@ -110,7 +129,7 @@ class Review {
                     return false;
                 });
             },
-            yes:function(){
+            yes: function () {
                 $('#btn-submit').click();
             }
         });

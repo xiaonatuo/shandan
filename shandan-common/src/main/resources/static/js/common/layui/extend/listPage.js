@@ -17,12 +17,10 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
     // 默认事件
     let events = {
         query: function (data, _this) {
-            console.info(_this.table);
             searchText = $(`#${_this.table.searchInput}`).val().trim();
             let where; // 需要保留初始化时的参数
 
             let fieldNames = _this.table.searchFieldNames;
-            if(!fieldNames){console.error('listPage.table.searchFieldNames is undefined!')}
             if (fieldNames) {
                 if (Array.isArray(fieldNames)) {
                     for (let field of fieldNames) {
@@ -144,10 +142,9 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
     }
 
     ListPage.prototype.reloadTable = function (options) {
-        options = options || {table: {}};
         const tableOps = $.extend(true, {}, this.table, options.table);
         // 对where条件做特殊处理, 不参与深层拷贝
-        tableOps.where = options.table.where;
+        tableOps.where = $.extend(tableOps.where, options.table.where);
         this.initTable({table: tableOps});
     }
 
