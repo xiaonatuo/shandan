@@ -6,7 +6,7 @@ spring:
       primary: master
       datasource:
         master:
-          url: jdbc:dm://localhost:5236
+          url: jdbc:dm://172.16.36.134:5236
           username: BIANMU
           password: 123456789
           driver-class-name: dm.jdbc.driver.DmDriver

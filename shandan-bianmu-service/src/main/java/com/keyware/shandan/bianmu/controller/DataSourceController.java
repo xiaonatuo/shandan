@@ -35,7 +35,7 @@ public class DataSourceController extends BaseController<DataSourceService, Data
 
     @GetMapping("/selectTableLayer")
     public ModelAndView selectTable(){
-        return new ModelAndView("/business/datasource/selectTableLayer");
+        return new ModelAndView("business/datasource/selectTableLayer");
     }
 
     /**
