@@ -13,7 +13,7 @@ public class CommonFields {
     static {
         FIELDS.put("entryStaff", "录入人员");
         FIELDS.put("equipmentModel", "装备型号");
-        FIELDS.put("inputDate", "收文时间");
+        FIELDS.put("inputDate", "任务时间");
         FIELDS.put("source", "文件来源");
         FIELDS.put("taskCode", "任务代号");
         FIELDS.put("taskNature", "任务性质");

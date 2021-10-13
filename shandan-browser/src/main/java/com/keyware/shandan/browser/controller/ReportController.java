@@ -157,7 +157,7 @@ public class ReportController {
                         conditions.add("元数据表："+ tableName);
                     }
                 }else if(item.getField().equals("inputDate")){
-                    conditions.add("收文时间："+ item.getValue());
+                    conditions.add("任务时间："+ item.getValue());
                 } else {
                     String filedComment = fields.get(item.getField());
                     String logic = item.getLogic().getText();

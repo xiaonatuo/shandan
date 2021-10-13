@@ -50,7 +50,7 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     private String equipmentModel;
 
     /**
-     * 收文时间
+     * 任务时间
      */
     @Field(type = FieldType.Date)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

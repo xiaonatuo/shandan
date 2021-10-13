@@ -522,7 +522,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 , {field: 'MISSILENUMBER', title: '导弹编号', sort: true}
                 , {field: 'SOURCE', title: '文件来源', sort: true}
                 , {field: 'ENTRYSTAFF', title: '录入人员', sort: true}
-                , {field: 'INPUTDATE', title: '收文时间', width: 150, sort: true}
+                , {field: 'INPUTDATE', title: '任务时间', width: 150, sort: true}
                 , {fixed: 'right', title: '操作', width: 65, align: 'center', toolbar: '#tableRowTool'}
             ]],
             done: (res) => {
