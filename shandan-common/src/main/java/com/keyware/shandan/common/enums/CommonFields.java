@@ -19,7 +19,7 @@ public enum CommonFields {
     SOURCE("文件来源"),
     ENTRYSTAFF("录入人员"),
     TROOPCODE("部队代号"),
-    TARGETNUMBER("目标编号"),
+    TARGETNUMBER("目标/靶标类型"),
     MISSILENUMBER("导弹编号");
 
     private final String desc;

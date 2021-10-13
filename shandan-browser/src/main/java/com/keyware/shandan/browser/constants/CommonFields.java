@@ -18,7 +18,7 @@ public class CommonFields {
         FIELDS.put("taskCode", "任务代号");
         FIELDS.put("taskNature", "任务性质");
         FIELDS.put("troopCode", "部队代号");
-        FIELDS.put("targetNumber", "目标编号");
+        FIELDS.put("targetNumber", "目标/靶标类型");
         FIELDS.put("missileNumber", "导弹编号");
     }
 

@@ -413,7 +413,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                         <span>${data.TROOPCODE || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                     <li>
-                        <div class="details-label">目标编号</div>
+                        <div class="details-label">目标/靶标类型</div>
                         <span>${data.TARGETNUMBER || '<label style="color: #b5b5b5">无数据</label>'}</span>
                     </li>
                     <li>
@@ -517,7 +517,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 , {field: 'TASKCODE', title: '任务代号', sort: true}
                 , {field: 'TASKNATURE', title: '任务性质', sort: true}
                 , {field: 'TROOPCODE', title: '部队代号', minWidth: 200, sort: true}
-                , {field: 'TARGETNUMBER', title: '目标编号', sort: true}
+                , {field: 'TARGETNUMBER', title: '目标/靶标类型', sort: true}
                 , {field: 'EQUIPMENTMODEL', title: '装备型号', sort: true}
                 , {field: 'MISSILENUMBER', title: '导弹编号', sort: true}
                 , {field: 'SOURCE', title: '文件来源', sort: true}

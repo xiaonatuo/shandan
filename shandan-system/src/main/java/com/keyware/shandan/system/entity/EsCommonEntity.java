@@ -86,7 +86,7 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     private String troopCode;
 
     /**
-     * 目标编号
+     * 目标/靶标类型
      */
     @Field(type = FieldType.Keyword)
     @TableField("TARGETNUMBER")
