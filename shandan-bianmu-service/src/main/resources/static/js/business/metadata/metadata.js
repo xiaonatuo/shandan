@@ -93,7 +93,7 @@ layui.use(['layer', 'listPage', 'form'], function () {
         let param = {
             entityId: data.id,
             entityType: ReviewEntityType.METADATA,
-            status: ReviewStatus.SUBMITTED
+            status: ReviewStatus.PASS
         };
         $.post(`${ctx}/business/review/operate`, param, function (res) {
             if (res.flag) {
