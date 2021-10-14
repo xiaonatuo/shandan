@@ -15,13 +15,6 @@ spring:
     # 页面缓存配置
     cache: false
 
-  #热部署设置
-  devtools:
-    restart:
-      enabled: true
-      additional-paths: src/java/main
-
-
 project:
   upload-path: D:\BIANMU
 

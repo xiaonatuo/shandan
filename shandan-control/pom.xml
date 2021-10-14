@@ -45,14 +45,6 @@
             <artifactId>mybatis-plus-generator-ui</artifactId>
         </dependency>
 
-        <!--热部署工具dev-tools-->
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-            &lt;!&ndash;<scope>runtime</scope>&ndash;&gt;
-        </dependency>-->
-
         <dependency>
             <groupId>com.keyware.shandan</groupId>
             <artifactId>shandan-bianmu-core</artifactId>

@@ -11,18 +11,13 @@ spring:
           password: 123456789
           driver-class-name: dm.jdbc.driver.DmDriver
 
-  thymeleaf:
-    # 页面缓存配置
-    cache: false
   elasticsearch:
     rest:
       uris: http://192.168.146.128:9200
 
-  #热部署设置
-  devtools:
-    restart:
-      enabled: true
-      additional-paths: src/java/main
+  thymeleaf:
+    # 页面缓存配置
+    cache: false
 
 project:
   #是否需要输入验证码
