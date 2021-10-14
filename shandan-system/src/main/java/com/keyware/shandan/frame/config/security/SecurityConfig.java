@@ -48,6 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private MyFilterInvocationSecurityMetadataSource myFilterInvocationSecurityMetadataSource;
 
     @Autowired
+    private AjaxAuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
     private DataSource dataSource;
 
     //无需权限访问的URL，不建议用/**/与/*.后缀同时去适配，有可以会受到CaptchaFilterConfig判断的影响
@@ -120,6 +123,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userConfig)
                 .and();
+
+        http.exceptionHandling()
+                .defaultAuthenticationEntryPointFor(authenticationEntryPoint, new AjaxRequestMatcher());
     }
 
     @Bean

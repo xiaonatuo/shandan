@@ -282,6 +282,12 @@ jQueryExtend = {
                         }
                         //先获取明文aesKey，再用明文key去解密数据
                         fn.success(data, textStatus, request);
+                    },
+                    error: function (res){
+                        if(res.status == 401){
+                            window.location.replace(`${ctx}/loginPage`)
+                        }
+                        fn.error(res)
                     }
                 });
                 return _ajax(_opt);
