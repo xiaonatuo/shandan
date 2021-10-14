@@ -6,7 +6,7 @@
  */
 function fileViewer(file){
     const layerContainer = `
-                    <div class="file-viewer" id="fileViewer" style="height: 100%">
+                    <div class="file-viewer" id="fileViewer" style="height: ${window.innerHeight-51}px">
                         <!-- 图片轮播组件 -->
                         <div id="file-viewer-image" class="file-viewer layui-hide" style="height: 100%;text-align: center;">
                         </div>
@@ -34,22 +34,26 @@ function fileViewer(file){
                         </div>
                     </div>`
     let player;
-    layui.use(['layer'], function(){
+    layui.use(['layer','laytpl'], function(){
         const layer = layui.layer;
         console.info('文件预览');
-        layer.open({
-            title: '文件预览',
-            type: 1,
-            content: layerContainer,
+        layer.tab({
+            area: [window.innerWidth +'px', window.innerHeight+'px'],
+            tab: [{
+                title: '文件预览',
+                content: layerContainer
+            }, {
+                title: '文件属性',
+                content: '<div id="fileProperties" style="padding:20px;">TAB2该说些啥</div>'
+            }],
             success: function (layerObj, index) {
-                layer.full(index);
-                commonUtil.sleep(50).then(()=>{
-                    viewFile(file);
+                //layer.full(index);
+                viewFile(file);
+                layui.laytpl($("#filePropertiesTemplate").html()).render(file, function (html) {
+                    $("#fileProperties").html(html);
                 })
-
             }
-        })
-
+        });
         /**
          * 预览文件
          * @param file
