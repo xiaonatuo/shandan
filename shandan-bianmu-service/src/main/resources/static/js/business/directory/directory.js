@@ -119,7 +119,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             layer.open({
                 id: 'fileUploadLayer',
                 type: 2,
-                area: ['800px', '600px'],
+                area: ['850px', '600px'],
                 btn: ['开始上传', '取消'],
                 content: `${ctx}/sys/file/layer?directoryId=${basicData.id}`,
                 success: function (layero, index) {
@@ -436,15 +436,23 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             {
                 toolbarId: "reviewToolbar",
                 icon: "layui-icon layui-icon-release",
-                title: "发布", handler: function (node) {
+                title: "发布", handler: function (node, elem) {
+                    console.info(node, elem);
                     let param = {
                         entityId: node.id,
                         entityType: ReviewEntityType.DIRECTORY,
                         status: ReviewStatus.PASS
                     };
+
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
                         if (res.flag) {
                             layer.msg('发布成功');
+                            let tempNode = Object.assign({}, node)
+                            tempNode.basicData.reviewStatus = ReviewStatus.PASS;
+                            tempNode.title = tempNode.context;
+                            tempNode.title = formatterTitle(tempNode);
+                            tempNode.iconClass = 'dtree-icon-fenzhijigou';
+                            dirTree.partialRefreshEdit(elem, tempNode)
                             metaListTable.reloadTable();
                         } else {
                             layer.msg('发布失败,' + res.msg);
@@ -486,16 +494,20 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         ],
         formatter: {
             title: function (data) { // 文字过滤，返回null,"",undefined之后，都不会改变原有的内容返回。
-                let {title, basicData} = data;
-                if (basicData && basicData.directoryType === ReviewEntityType.METADATA) {
-                    const reviewStatus = data.basicData.reviewStatus;
-                    title += ReviewStatusIcon[reviewStatus].replace('##id##', basicData.id);
-                }
-                return title;
+                return formatterTitle(data);
             }
         }
     }
     dirTree = globalTree.init(treeOps);
+
+    function formatterTitle(data){
+        let {title, basicData} = data;
+        if (basicData && basicData.directoryType === ReviewEntityType.METADATA) {
+            const reviewStatus = data.basicData.reviewStatus;
+            title += ReviewStatusIcon[reviewStatus].replace('##id##', basicData.id);
+        }
+        return title;
+    }
 
     let player;
 

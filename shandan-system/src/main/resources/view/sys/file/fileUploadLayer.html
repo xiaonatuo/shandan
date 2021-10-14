@@ -8,7 +8,12 @@
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
     <style>
-        .layui-form-item .layui-input-inline{width: 270px}
+        .layui-form-label {
+            width: 90px;
+        }
+        .layui-form-item .layui-input-inline {
+            width: 260px;
+        }
     </style>
 </head>
 <body>
@@ -27,7 +32,7 @@
                             </div>
                             <label class="layui-form-label">任务时间</label>
                             <div class="layui-input-inline">
-                                <input class="layui-input" id="input-data" name="inputDate" type="text" readonly disabled>
+                                <input class="layui-input" id="input-data" name="inputDate" type="text">
                             </div>
                         </div>
                     </div>

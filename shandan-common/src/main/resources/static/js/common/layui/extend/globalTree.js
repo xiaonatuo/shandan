@@ -130,6 +130,10 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         dtreeObj.cancelNavThis(dom);
     }
 
+    GlobalTree.prototype.partialRefreshEdit = (dom, obj)=>{
+        dtreeObj.partialRefreshEdit(dom, obj)
+    }
+
     // 为了可继承dtree的内部方法，将dtree拷贝到一个新的对象
     let globalTree = $.extend({}, dtree);
 
@@ -165,6 +169,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
     globalTree.chooseDataInit = function (ids) {
         tree.chooseDataInit(ids);
     }
+
 
     /**
      * 将数组转换为树形组件数据
