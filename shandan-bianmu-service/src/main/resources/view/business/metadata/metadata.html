@@ -35,10 +35,10 @@
                                 <div class="layui-input-inline">
                                     <select name="reviewStatusSelect" lay-filter="reviewStatusSelect">
                                         <option value="">不限</option>
-                                        <option value="UN_SUBMIT">未提交</option>
-                                        <option value="SUBMITTED">待审核</option>
-                                        <option value="PASS">通过审核</option>
-                                        <option value="FAIL">未通过审核</option>
+                                        <option value="UN_SUBMIT">未发布</option>
+                                        <!--<option value="SUBMITTED">待审核</option>-->
+                                        <option value="PASS">已发布</option>
+                                        <option value="FAIL">被退回</option>
                                     </select>
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                     let isDisabled = (d.reviewStatus == ReviewStatus.UN_SUBMIT || d.reviewStatus == ReviewStatus.FAIL) ? '' : 'disabled';
                     let disableClass = (d.reviewStatus == ReviewStatus.UN_SUBMIT || d.reviewStatus == ReviewStatus.FAIL) ? '' : 'layui-btn-disabled';
                     }}
-                    <button class="layui-btn layui-btn-xs {{disableClass}}" lay-event="submitReview" {{isDisabled}} title="提交审核"><i
+                    <button class="layui-btn layui-btn-xs {{disableClass}}" lay-event="submitReview" {{isDisabled}} title="发布"><i
                             class="layui-icon layui-icon-release"></i></button>
                     <button class="layui-btn layui-btn-xs {{disableClass}}" lay-event="edit" {{isDisabled}} title="编辑"><i
                             class="layui-icon layui-icon-edit"></i></button>

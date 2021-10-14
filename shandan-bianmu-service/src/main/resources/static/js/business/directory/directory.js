@@ -436,7 +436,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             {
                 toolbarId: "reviewToolbar",
                 icon: "layui-icon layui-icon-release",
-                title: "提交审核", handler: function (node) {
+                title: "发布", handler: function (node) {
                     let param = {
                         entityId: node.id,
                         entityType: ReviewEntityType.DIRECTORY,
@@ -444,10 +444,10 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                     };
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
                         if (res.flag) {
-                            layer.msg('提交成功');
+                            layer.msg('发布成功');
                             metaListTable.reloadTable();
                         } else {
-                            layer.msg('提交失败,' + res.msg);
+                            layer.msg('发布失败,' + res.msg);
                         }
                     });
                 }
