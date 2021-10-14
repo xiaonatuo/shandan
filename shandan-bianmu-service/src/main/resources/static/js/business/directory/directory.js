@@ -517,7 +517,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
      */
     function viewFile(file) {
         const fileSuffix = file.fileSuffix.toLowerCase();
-
+        laytpl($("#filePropertiesTemplate").html()).render(file, function (html) {
+            $("#fileProperties").html(html);
+        })
         const filePath = `${ctx}/upload/${file.path}`;
         if (viewType.image.includes(fileSuffix)) {
             let htm = `<img id="image-viewer" src="${filePath}" style="max-height: ${imageHeight}px; max-width: ${imageWidth}px"/>`
