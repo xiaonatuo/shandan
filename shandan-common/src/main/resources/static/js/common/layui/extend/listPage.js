@@ -142,6 +142,7 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
     }
 
     ListPage.prototype.reloadTable = function (options) {
+        options = options || {table: {}};
         const tableOps = $.extend(true, {}, this.table, options.table);
         // 对where条件做特殊处理, 不参与深层拷贝
         tableOps.where = $.extend(tableOps.where, options.table.where);

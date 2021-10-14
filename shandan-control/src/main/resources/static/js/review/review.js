@@ -57,9 +57,6 @@ class Review {
             const type = opt.entityType.toLowerCase();
 
             let reviewStatus = 'PASS';
-            /*let reviewStatus = function (){
-                return reviewForm.val('tableToolForm').reviewStatus;
-            }*/
 
             // 数据表格
             const listPage = ListPage.init({
@@ -67,7 +64,7 @@ class Review {
                     id: 'reviewTable',
                     url: `${ctx}/business/review/list/${type}`,
                     method: 'get',
-                    searchFieldNames: 'metadataName',
+                    searchFieldNames: opt.entityType == ReviewEntityType.METADATA ? 'metadataName' : 'directoryName',
                     where: {reviewStatus: reviewStatus},
                     cols: cols[opt.entityType],
                     done: function (res) {

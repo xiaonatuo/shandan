@@ -33,7 +33,7 @@ public class DirectoryVo extends BaseEntity{
     /**
      * 目录名称
      */
-    @TableField("DIRECTORY_NAME")
+    @TableField(value = "DIRECTORY_NAME", condition = SqlCondition.LIKE)
     private String directoryName;
 
     /**
