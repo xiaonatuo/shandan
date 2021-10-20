@@ -23,7 +23,9 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,12 +131,21 @@ public class SearchServiceImpl implements SearchService {
             } else if ("directoryId".equals(item.getField()) && !item.getField().equals("-")) {
                 metaFlag = true;
                 // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的元数据表
-                boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE.keyword", getMetadataIdsByDirId(item.getValue())));
+                BoolQueryBuilder bool = QueryBuilders.boolQuery();
+                bool.should(QueryBuilders.termsQuery("META_TYPE.keyword", getMetadataIdsByDirId(item.getValue())));
+                //boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE.keyword", getMetadataIdsByDirId(item.getValue())));
+
                 //因为目录中也包含file类型，所以需要单独对file类型的数据做过滤
                 String[] dirids = getDirectoryAllChildIds(item.getValue());
                 if (dirids != null) {
-                    boolQueryBuilder.should(QueryBuilders.termsQuery("entityId", dirids));
+                    BoolQueryBuilder mustQuery = QueryBuilders.boolQuery();
+                    mustQuery.must(QueryBuilders.termsQuery("entityId", dirids));
+                    mustQuery.must(QueryBuilders.termsQuery("META_TYPE.keyword", "file"));
+                    bool.should(mustQuery);
+
                 }
+                boolQueryBuilder.should(bool);
+
             } else {
                 if (item.getLogic() == ConditionLogic.eq) {
                     boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(item.getField(), item.getValue()));
@@ -202,8 +213,8 @@ public class SearchServiceImpl implements SearchService {
      */
     private String[] getMetadataIdsByDirId(String dirId) {
         List<MetadataBasicVo> list = directoryService.directoryAllMetadata(dirId);
-        String[] metadataNames = list.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList()).toArray(new String[list.size() + 1]);
-        metadataNames[list.size()] = "file";
+        String[] metadataNames = list.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList()).toArray(new String[list.size()]);
+       // metadataNames[list.size()] = "file";
         return metadataNames;
     }
 
@@ -240,6 +251,7 @@ public class SearchServiceImpl implements SearchService {
             List<MetadataBasicVo> list = metadataService.list();
             if(list.size() > 0){
                 List<String> ids = list.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList());
+                ids.add("file");
                 return ids.toArray(new String[ids.size()]);
             }else{
                 return new String[]{"-"};

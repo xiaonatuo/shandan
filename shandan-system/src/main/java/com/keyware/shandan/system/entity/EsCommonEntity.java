@@ -38,71 +38,71 @@ public class EsCommonEntity extends BaseEntity implements Serializable {
     /**
      * 录入人员
      */
-    @Field(type = FieldType.Keyword)
+    @Field(value = "ENTRYSTAFF", type = FieldType.Keyword)
     @TableField("ENTRYSTAFF")
     private String entryStaff;
 
     /**
      * 装备型号
      */
-    @Field(type = FieldType.Keyword)
+    @Field(value = "EQUIPMENTMODEL", type = FieldType.Keyword)
     @TableField("EQUIPMENTMODEL")
     private String equipmentModel;
 
     /**
      * 任务时间
      */
-    @Field(type = FieldType.Date)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Field(value = "INPUTDATE", type = FieldType.Date)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @TableField(value = "INPUTDATE")
     private Date inputDate;
 
     /**
      * 文件来源
      */
-    @Field(type = FieldType.Keyword)
+    @Field(value = "SOURCE", type = FieldType.Keyword)
     @TableField("SOURCE")
     private String source;
 
     /**
      * 任务代号
      */
-    @Field(type = FieldType.Keyword)
+    @Field(value = "TASKCODE", type = FieldType.Keyword)
     @TableField("TASKCODE")
     private String taskCode;
 
     /**
      * 任务性质
      */
-    @Field(type = FieldType.Keyword)
+    @Field(value = "TASKNATURE", type = FieldType.Keyword)
     @TableField("TASKNATURE")
     private String taskNature;
 
     /**
      * 部队代号
      */
-    @Field(type = FieldType.Keyword)
+    @Field(value = "TROOPCODE", type = FieldType.Keyword)
     @TableField("TROOPCODE")
     private String troopCode;
 
     /**
      * 目标/靶标类型
      */
-    @Field(type = FieldType.Keyword)
+    @Field(value = "TARGETNUMBER", type = FieldType.Keyword)
     @TableField("TARGETNUMBER")
     private String targetNumber;
 
     /**
      * 导弹编号
      */
-    @Field(type = FieldType.Keyword)
+    @Field(value = "MISSILENUMBER", type = FieldType.Keyword)
     @TableField("MISSILENUMBER")
     private String missileNumber;
 
     /**
      * 大文本字段，用于保存文件中的文本信息
      */
-    @Field(type = FieldType.Text)
+    @Field(value = "text", type = FieldType.Text)
     @TableField(exist = false)
     private String text;
 

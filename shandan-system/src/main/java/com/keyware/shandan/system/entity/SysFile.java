@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.keyware.shandan.common.util.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,8 +27,8 @@ public class SysFile extends EsCommonEntity {
 
     private static final long serialVersionUID = 9146049308480231565L;
 
-    @Field(value = "META_TYPE", type=FieldType.Keyword)
     @TableField(exist = false)
+    @Field(value = "META_TYPE")
     private String metaType = "file";
 
     /**
