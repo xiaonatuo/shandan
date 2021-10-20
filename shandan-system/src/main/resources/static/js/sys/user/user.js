@@ -19,8 +19,8 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
         title: '用户列表',
         cols: [[
             {field: 'userId', title: 'ID', hide: true}
-            , {field: 'userName', title: '用户名称'}
-            , {field: 'loginName', title: '登录名'}
+            , {field: 'loginName', title: '账户'}
+            , {field: 'userName', title: '姓名'}
             , {field: 'orgName', title: '所属部门', templet: data => data.org ? data.org.orgName : ''}
             , {field: 'valid', title: '是否允许登录系统', hide: true}
             , {field: 'limitMultiLogin', title: '是否允许多人在线', hide: true}
@@ -97,7 +97,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             id: 'roleLayer',
             type: 2,
             title: '选择角色',
-            area: ['300px', '330px'],
+            area: ['300px', '400px'],
             content: ctx + `/sys/role/layer?userId=${userId}`,
             btn: ['确定'],
             success: function (layero, index) {
