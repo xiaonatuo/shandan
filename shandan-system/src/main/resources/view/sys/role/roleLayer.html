@@ -13,13 +13,13 @@
     <!-- 操作表单 -->
     <div class="layui-col-md12">
         <div class="layui-card">
-            <div class="layui-card-body layui-form">
+            <div class="layui-card-body layui-form" style="overflow-y: auto;">
                 <div class="layui-text" lay-filter="form-role">
                     <p class="layui-form-item" th:each="role:${roleList}">
                         <input lay-skin="primary" type="checkbox"
                                th:data-role-id="${role.roleId}"
                                th:data-user-id="${userId}"
-                               th:text="${role.roleRemark}+'('+${role.roleName}+')'"
+                               th:text="${role.roleRemark}"
                                th:checked="${#lists.contains(userRoleIds, role.roleId)}">
                     </p>
                 </div>
