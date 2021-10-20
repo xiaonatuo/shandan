@@ -103,7 +103,7 @@ public class SearchServiceImpl implements SearchService {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         List<ConditionItem> conditionItems = condition.getConditions();
 
-        Boolean metaFlag = false;
+        boolean metaFlag = false;
         for (ConditionItem item : conditionItems) {
             if (StringUtils.isBlank(item.getValue().trim())) {
                 continue;
@@ -112,12 +112,12 @@ public class SearchServiceImpl implements SearchService {
             if ("searchInput".equals(item.getField())) {
 
                 boolQueryBuilder.must(QueryBuilders.queryStringQuery(item.getValue()));
-            } else if ("inputDate".equals(item.getField())) {
+            } else if ("INPUTDATE".equals(item.getField())) {
                 String[] dates = item.getValue().split("至");
                 try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Date begin = sdf.parse(dates[0].trim());
-                    Date end = sdf.parse(dates[1].trim());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date begin = sdf.parse(dates[0].trim() + " 00:00:00");
+                    Date end = sdf.parse(dates[1].trim() + " 23:59:59");
                     boolQueryBuilder.must(QueryBuilders.rangeQuery(item.getField()).gte(begin.getTime()).lte(end.getTime()));
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -159,7 +159,6 @@ public class SearchServiceImpl implements SearchService {
                 boolQueryBuilder.should(QueryBuilders.termsQuery("entityId", entityIds));
             }
         }
-        boolQueryBuilder.must(QueryBuilders.existsQuery("META_TYPE"));
         searchSourceBuilder.query(boolQueryBuilder).highlighter(buildHighlightBuilder());
         if (StringUtils.isNotBlank(condition.getSortFiled())) {
             searchSourceBuilder.sort(condition.getSortFiled(), condition.getSort());
@@ -238,7 +237,13 @@ public class SearchServiceImpl implements SearchService {
     public String[] getAccessibleMetadata() {
         SysUser user = SecurityUtil.getLoginSysUser();
         if (user != null && (user.getLoginName().equals("sa") || user.getLoginName().equals("admin"))) {
-            return Strings.EMPTY_ARRAY;
+            List<MetadataBasicVo> list = metadataService.list();
+            if(list.size() > 0){
+                List<String> ids = list.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList());
+                return ids.toArray(new String[ids.size()]);
+            }else{
+                return new String[]{"-"};
+            }
         }
         List<MetadataBasicVo> metadataList = metadataService.list(new QueryWrapper<>());
         String[] metadataNames = metadataList.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList()).toArray(new String[metadataList.size() + 1]);
