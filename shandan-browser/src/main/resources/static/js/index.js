@@ -344,7 +344,6 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
      * @param data
      */
     function viewMetadata(data) {
-        console.info(data)
         const container = `
             <div class="details-container">
                 <p class="details-title">${data.tableComment}(${data.META_TYPE})</p>
@@ -404,7 +403,6 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 Util.sleep(100).then(() => {
 
                     Util.get(`/search/metadata/columns?metaTable=${data.META_TYPE}`).then(res => {
-                        console.info(res);
                         if (!res.flag) {
                             showErrorMsg('查询字段数据异常');
                             return
@@ -433,7 +431,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                             autoSort: false,
                             cols: [cols],
                             done: (res) => {
-                                console.info(' 555', res);
+                                //console.info(' 555', res);
                             }
                         });
 
@@ -496,7 +494,6 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 , {fixed: 'right', title: '操作', width: 65, align: 'center', toolbar: '#tableRowTool'}
             ]],
             done: (res) => {
-                console.info(res);
                 if (res.flag) {
                     const result = res;
                     let index = 0;
