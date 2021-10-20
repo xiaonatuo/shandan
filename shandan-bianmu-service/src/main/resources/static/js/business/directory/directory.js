@@ -336,6 +336,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 })
             },
             editTreeNode: function (node, elem) { // 目录树右键编辑菜单-点击确定后的回调
+                let parent = $(`div[data-id='${node.parentId}'][dtree-id='directoryTree']`);
                 const data = {
                     id: node.id,
                     directoryName: node.editNodeName,
@@ -343,7 +344,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 };
                 $.post(`${ctx}/business/directory/save`, data, function (res) {
                     if (res.flag) {
-                        dirTree.changeTreeNodeEdit(true);
+                        dirTree.clickSpread(parent);
+                        dirTree.clickSpread(parent);
                     } else {
                         dirTree.changeTreeNodeEdit(false);
                         layer.msg('保存失败');
