@@ -34,7 +34,7 @@ public class SysPermissionsController extends BaseController<SysPermissionsServi
     @GetMapping("/")
     public ModelAndView index(ModelAndView modelAndView) {
 
-        modelAndView.setViewName("/sys/permissions/permissions");
+        modelAndView.setViewName("sys/permissions/permissions");
         return modelAndView;
     }
 
@@ -53,7 +53,7 @@ public class SysPermissionsController extends BaseController<SysPermissionsServi
             return json;
         }).collect(Collectors.toList()));
         modelAndView.addObject("permis", permis);
-        modelAndView.setViewName("/sys/permissions/permissionsEdit");
+        modelAndView.setViewName("sys/permissions/permissionsEdit");
         return modelAndView;
     }
 
