@@ -477,7 +477,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                 , {
                     field: 'META_TYPE', title: '资源名称', sort: true, templet: data => {
                         let title = data.META_TYPE, lable = data.tableComment;
-                        title = data.META_TYPE == 'file' ? '' : data.META_TYPE;
+                        title = data.META_TYPE == 'file' ? data.fileName : data.META_TYPE;
                         lable = lable || title;
                         return `<lable title="${title}">${lable}</lable>`;
                     }
