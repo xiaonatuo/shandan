@@ -23,77 +23,45 @@
                                    class="layui-input" lay-verify="required">
                         </div>
                     </div>
+                    <input type="hidden" name="type" value="0">
+                    <input type="hidden" name="dbType" value="DM">
+                    <input type="hidden" name="jdbcDriverClass" value="dm.jdbc.driver.DmDriver">
                     <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">数据源类型</label>
-                            <div class="layui-input-inline">
-                                <select name="type" lay-verify="required">
-                                    <option value="0" selected>关系型数据库</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">数据库类型</label>
-                            <div class="layui-input-inline">
-                                <select name="dbType" lay-verify="required">
-                                    <option value="DM" selected>达梦</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <!--<div class="layui-form-item">
-                            <label class="layui-form-label">数据库版本</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="dbVersion" autocomplete="off" placeholder="数据库版本"
-                                           class="layui-input">
-                                </div>
-                        </div>-->
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">数据库驱动</label>
+                        <label class="layui-form-label">数据库连接</label>
                         <div class="layui-input-block">
-                            <input type="text" name="jdbcDriverClass" autocomplete="off" placeholder="JDBC数据库驱动"
+                            <input type="text" name="jdbcUrl" autocomplete="off"
+                                   value="jdbc:dm://localhost:5236/"
+                                   placeholder="jdbc:**://127.0.0.1:0000"
                                    class="layui-input" lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">数据库连接</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="jdbcUrl" autocomplete="off"
-                                       placeholder="jdbc:**://127.0.0.1:0000"
-                                       class="layui-input" lay-verify="required">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">模式</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="jdbcSchema" autocomplete="off"
-                                       placeholder="JDBC数据库模式/数据库名称"
-                                       class="layui-input" lay-verify="required">
-                            </div>
+                        <label class="layui-form-label">模式</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="jdbcSchema" autocomplete="off"
+                                   placeholder="JDBC数据库模式/数据库名称"
+                                   class="layui-input" lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">数据库用户名</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="jdbcUserName" autocomplete="off" placeholder="JDBC数据库用户名"
-                                       class="layui-input" lay-verify="required">
-                            </div>
+                        <label class="layui-form-label">数据库用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="jdbcUserName" autocomplete="off" placeholder="JDBC数据库用户名"
+                                   class="layui-input" lay-verify="required">
                         </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">密码</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="jdbcPassword" autocomplete="off" placeholder="JDBC数据库密码"
-                                       class="layui-input" lay-verify="required">
-                            </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="jdbcPassword" autocomplete="off" placeholder="JDBC数据库密码"
+                                   class="layui-input" lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">描述</label>
                         <div class="layui-input-block">
-                            <textarea  name="remark" autocomplete="off" placeholder="描述"
-                                       class="layui-textarea"> </textarea>
+                                <textarea name="remark" autocomplete="off" placeholder="描述"
+                                          class="layui-textarea"> </textarea>
                         </div>
                     </div>
                     <!-- 隐藏域 -->

@@ -22,7 +22,7 @@ layui.use(['layer', 'gtable'], function () {
             id: 'menuEdit',
             type: 2,
             title: '数据源编辑',
-            area:['800px', '565px'],
+            area:['600px', '550px'],
             content: `${ctx}/control/datasource/edit?id=${id}`,
             btn: ['确定', '取消', '连接测试'],
             success: function (layero, index) {
