@@ -20,7 +20,7 @@ layui.use(['layer', 'listPage', 'form'], function () {
             url: `${ctx}/business/metadata/page`,
             cols: [[
                 {field: 'id', title: 'ID', hide: true},
-                {field: 'metadataName', title: '元数据表名'},
+                {field: 'metadataName', title: '数据表'},
                 {field: 'metadataComment', title: '中文注释'},
                 {field: 'secretLevel', title: '密级', templet: data => SecretLevel[data.secretLevel]},
                 {field: 'themeTask', title: '主题任务'},
@@ -78,7 +78,7 @@ layui.use(['layer', 'listPage', 'form'], function () {
         },
         editPage: {
             content: `${ctx}/business/metadata/edit`,
-            area: ['950px', '800px']
+            area: ['880px', '600px']
         }
     });
     listPage.addTableRowEvent('exampleData', function (data) {

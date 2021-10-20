@@ -154,7 +154,7 @@ public class ReportController {
                     MetadataBasicVo metadata = metadataService.getById(item.getValue());
                     if(metadata != null){
                         String tableName = StringUtils.isNotBlank(metadata.getMetadataComment()) ? metadata.getMetadataComment() : metadata.getMetadataName();
-                        conditions.add("元数据表："+ tableName);
+                        conditions.add("数据表："+ tableName);
                     }
                 }else if(item.getField().equals("inputDate")){
                     conditions.add("任务时间："+ item.getValue());

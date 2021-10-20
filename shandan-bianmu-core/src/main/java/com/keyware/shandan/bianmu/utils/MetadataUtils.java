@@ -94,7 +94,7 @@ public class MetadataUtils {
                 throw new IllegalArgumentException("没有找到表的列数据");
             }
         } else {
-            throw new IllegalArgumentException("没有在元数据中找到主表");
+            throw new IllegalArgumentException("没有在数据表信息中找到主表");
         }
 
         return builder.toString();

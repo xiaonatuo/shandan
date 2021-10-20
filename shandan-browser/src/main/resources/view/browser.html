@@ -48,10 +48,26 @@
 <body>
 <div class="layui-row">
     <div class="layui-col-md2">
-        <div class="layui-card">
-            <div class="layui-card-header">目录树</div>
-            <div class="layui-card-body" style="overflow: auto;padding-bottom: 0;">
-                <div id="directory-tree"></div>
+        <div class="layui-tab layui-tab-brief" style="background: #FFF; margin-top: 0">
+            <ul class="layui-tab-title" style="float: none">
+                <li class="layui-this">目录</li>
+                <li>视图</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div id="directory-tree"></div>
+                </div>
+                <div class="layui-tab-item layui-form">
+                    <div class="layui-form-item" style="margin: 0 16px">
+                        <select name="viewType" lay-filter="viewTypeSelector">
+                            <option value="year">年度视图</option>
+                            <option value="org">部门视图</option>
+                            <option value="troop">部队编号视图</option>
+                            <option value="equipment">武器型号视图</option>
+                            <option value="task">任务代号视图</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -415,11 +431,12 @@
 </script>
 </body>
 <script th:replace="report"></script>
-<script th:src="@{/js/fileViewer.js}" type="text/javascript"></script>
 <script th:src="@{/js/index.js}" type="text/javascript"></script>
+<script th:src="@{/js/fileViewer.js}" type="text/javascript"></script>
+<script th:src="@{/js/view.js}" type="text/javascript"></script>
 <script type="text/javascript">
     const sizeInit = () => {
-        $(".layui-card-body").height(window.innerHeight - 50 - 3);
+        $(".layui-card-body, .layui-tab-content").height(window.innerHeight - 50 - 3);
         $(".search-result-div .layui-card-body").height(window.innerHeight - 153 - 9);
 
         const formItemWidth = $('#search-input').parent().parent().innerWidth();

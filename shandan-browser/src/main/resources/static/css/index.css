@@ -37,11 +37,14 @@
 }
 
 .b-search-slide-div .layui-form-label {
-    width: 60px
+    width: 60px;
+    text-align-last: justify;
 }
 
 .b-search-slide-div .layui-form-item .layui-inline {
-    margin-bottom: 10px
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
 }
 .b-search-slide-div .layui-form-item .layui-input-inline input{margin-left: 78px; width:300px}
 .b-search-slide-div .layui-form-select{width: 80px;float: left; position: absolute;}

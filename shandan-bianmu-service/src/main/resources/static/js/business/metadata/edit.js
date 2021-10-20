@@ -106,14 +106,14 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
         const datasourceId = $('#dataSourcesSelect').val();
         let layerWin;
         if (datasourceId) {
-            layer.open({
+            parent.layer.open({
                 id: 'selectTable',
                 type: 2,
-                area: ['550px', '680px'],
+                area: ['550px', '550px'],
                 content: `${ctx}/business/datasource/selectTableLayer?datasourceId=${datasourceId}`,
                 btn: ['确定', '取消'],
                 success: function (layerObj) {
-                    layerWin = window[layerObj.find('iframe')[0]['name']]
+                    layerWin = parent.window[layerObj.find('iframe')[0]['name']]
                 },
                 yes: function (index) {
                     layerWin.ok().then((data) => {
@@ -122,7 +122,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                         data.forEach((value, key)=>metadataTableMap.set(key, value))*/
                         renderMetadataTablesTab();
                     })
-                    layer.close(index);
+                    parent.layer.close(index);
                 }
             });
         } else {

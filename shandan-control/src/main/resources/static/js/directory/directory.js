@@ -25,7 +25,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     //目录树右键添加和编辑菜单弹框显示的其他内容
     const dirAddLayer = [{
         label: "目录类型", name: "directoryType", type: "select", optionsData: function () {
-            return {"DIRECTORY": "结构目录", "METADATA": "元数据目录"}
+            return {"DIRECTORY": "结构目录", "METADATA": "资源目录"}
         }
     }];
     const dirEditLayer = $.extend(dirAddLayer, [])
@@ -86,7 +86,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 method: 'get',
                 cols: [[
                     {field: 'id', title: 'ID', hide: true},
-                    {field: 'metadataName', title: '元数据表名'},
+                    {field: 'metadataName', title: '数据表'},
                     {field: 'metadataComment', title: '中文注释'},
                     {field: 'themeTask', title: '主题任务'},
                     {field: 'dataFrom', title: '数据来源'},
@@ -360,7 +360,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             {
                 toolbarId: "addMetadataToolbar",
                 icon: "layui-icon layui-icon-link",
-                title: "关联元数据",
+                title: "关联数据表",
                 handler: function (node, elem) {
                     const {basicData, id, parentId, context} = node;
                     openAddMetadataLayer(basicData, function () {

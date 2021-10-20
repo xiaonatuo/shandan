@@ -16,7 +16,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DirectoryType {
     DIRECTORY("DIRECTORY","结构目录"),
-    METADATA("METADATA","元数据目录");
+    METADATA("METADATA","资源目录");
 
     /*DirectoryType( String remark){
         this.remark = remark;

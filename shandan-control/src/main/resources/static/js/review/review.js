@@ -16,7 +16,7 @@ const reviewOps = {};
 const cols = {
     METADATA: [[
         {field: 'id', title: 'ID', hide: true},
-        {field: 'metadataName', title: '元数据表名'},
+        {field: 'metadataName', title: '数据表'},
         {field: 'metadataComment', title: '中文注释'},
         {field: 'themeTask', title: '主题任务'},
         {field: 'modifyUserName', title: '提交人'},
