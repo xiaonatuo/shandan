@@ -67,21 +67,11 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                         fileViewer(basicData);
                         return;
                     } else if (basicData.metadataName) {
-                        if (formVal.metadataId === basicData.id) {
-                            formVal.metadataId = '';
-                            dirTree.cancelNavThis(obj.dom)
-                        } else {
-                            formVal.directoryId = '';
-                            formVal.metadataId = basicData.id
-                        }
+                        formVal.directoryId = '';
+                        formVal.metadataId = basicData.id
                     } else {
-                        if (formVal.directoryId === basicData.id) {
-                            formVal.directoryId = '';
-                            dirTree.cancelNavThis(obj.dom)
-                        } else {
-                            formVal.metadataId = '';
-                            formVal.directoryId = basicData.id
-                        }
+                        formVal.metadataId = '';
+                        formVal.directoryId = basicData.id
                     }
                 } else {
                     formVal.directoryId = '';
@@ -297,27 +287,6 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
 
         reportComponent.setConditions(data.conditions)
         renderTable(data)
-        /*Util.post(`/search/full`, data).then(res => {
-            console.info(res);
-            if (res.flag) {
-                const result = res.data;
-                let index = 0;
-                result.records = result.records.map(item => {
-                    item.id = item.id || index;
-                    index++;
-                    return item;
-                })
-                // 渲染列表
-                renderResultList(result.records);
-                // 渲染分页
-                renderPageComponent(result)
-                // 更新当前页数据的缓存
-                currPageData.clear();
-                for (let item of result.records) {
-                    currPageData.set(item.id, item);
-                }
-            }
-        });*/
     }
 
     /**
@@ -432,7 +401,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             content: container,
             success: function (layerObj, index) {
                 layer.full(index);
-                Util.sleep(100).then(()=>{
+                Util.sleep(100).then(() => {
 
                     Util.get(`/search/metadata/columns?metaTable=${data.META_TYPE}`).then(res => {
                         console.info(res);
@@ -442,7 +411,8 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
                         }
                         let cols = [];
                         for (let item of res.data.field) {
-                            cols.push({field: item.columnName, title: item.comment, sort: true})
+                            let title = item.comment || item.columnName;
+                            cols.push({field: item.columnName, title, sort: true})
                         }
                         let where = {metaID: res.data.id}
                         let table = layui.gtable.init({
@@ -507,11 +477,11 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
             cols: [[ //表头
                 {field: 'id', title: 'ID', width: 80, hide: true}
                 , {
-                    field: 'META_TYPE', title: '元数据表', sort: true, templet: data => {
-                        if (data.META_TYPE == 'file') {
-                            return `<lable title="">非结构化数据</lable>`;
-                        }
-                        return `<lable title="${data.META_TYPE}">${data.tableComment}</lable>`;
+                    field: 'META_TYPE', title: '资源名称', sort: true, templet: data => {
+                        let title = data.META_TYPE, lable = data.tableComment;
+                        title = data.META_TYPE == 'file' ? '' : data.META_TYPE;
+                        lable = lable || title;
+                        return `<lable title="${title}">${lable}</lable>`;
                     }
                 }
                 , {field: 'TASKCODE', title: '任务代号', sort: true}
