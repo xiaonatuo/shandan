@@ -15,10 +15,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ReviewStatus  {
-    UN_SUBMIT("UN_SUBMIT", "未提交"),
-    SUBMITTED("SUBMITTED", "已提交"),
-    PASS("PASS", "审核通过"),
-    FAIL("FAIL", "审核不通过");
+    UN_SUBMIT("UN_SUBMIT", "未发布"),
+    SUBMITTED("SUBMITTED", "待审核"),
+    PASS("PASS", "已发布"),
+    FAIL("FAIL", "被退回");
 
     @EnumValue
     private final String value;
