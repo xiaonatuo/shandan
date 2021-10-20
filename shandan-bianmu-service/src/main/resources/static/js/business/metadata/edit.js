@@ -77,7 +77,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
      * 渲染元数据表标签组件
      */
     const renderMetadataTablesTab = function (initData) {
-        if (metadataTableMap.size == 0) return;
+        //if (metadataTableMap.size == 0) return;
         laytpl($("#checkedTableTemplate").html()).render(metadataTableMap, function (html) {
             $("#metadataTablesTab").html(html);
         })
@@ -168,10 +168,12 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
             })
         } else {
             const firstValue = metadataTableMap.values().next().value;
-            console.info(firstValue)
-            firstValue.master = true;
-            const metadataName = firstValue.tableName;
-            const metadataComment = firstValue.tableComment;
+            let metadataName = '', metadataComment = '';
+            if(firstValue){
+                firstValue.master = true;
+                metadataName = firstValue.tableName;
+                metadataComment = firstValue.tableComment;
+            }
             form.val('metadataForm', {master: metadataName, metadataName, metadataComment})
         }
     }

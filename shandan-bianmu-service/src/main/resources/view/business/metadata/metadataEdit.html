@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <div id="metadataTablesTab"></div>
+                        <div id="metadataTablesTab"><label style="color: red">* 请先选择数据表</label></div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">数据表</label>
@@ -86,6 +86,9 @@
 </body>
 <!-- 已选择的元数据表标签模板 -->
 <script id="checkedTableTemplate" type="text/html">
+    {{# if(d.size == 0){ }}
+        <label style="color: red">* 请先选择数据表</label>
+    {{# }else{ }}
     <ul class="metadata-table-list">
         {{# for(let [index, item] of d){ }}
         <li class="metadata-table-list-item">
@@ -120,6 +123,7 @@
 
         {{# } }}
     </ul>
+    {{# } }}
 </script>
 <!-- js -->
 <script th:src="@{/js/business/metadata/edit.js}"></script>
