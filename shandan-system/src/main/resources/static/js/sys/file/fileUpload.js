@@ -115,6 +115,7 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
     function getFormVal(){
         let formVal = form.val('file-form');
         formVal.entityId = param.directoryId;
+        formVal.inputDate = formVal.inputDate ? formVal.inputDate + '.000' : '';
         return formVal;
     }
 //日期选择器
