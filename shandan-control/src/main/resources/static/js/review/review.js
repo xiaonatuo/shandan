@@ -10,6 +10,30 @@
 const reviewOps = {};
 
 /**
+ * 审核操作窗口html模板
+ * @type {string}
+ */
+const reviewLayerHtml = `
+    <div class="layui-form" lay-filter="reviewForm" style="padding: 20px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="PASS" title="通过" lay-verify="required" lay-filter="reviewStatusRadio">
+                <input type="radio" name="status" value="FAIL" title="不通过" lay-verify="required" lay-filter="reviewStatusRadio">
+                <input type="radio" name="status" value="REJECTED" title="驳回" lay-verify="required" lay-filter="reviewStatusRadio">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核意见</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" name="opinion" cols="4" lay-verify="required" placeholder="请输入审核意见..." style="width: 450px"/>
+            </div>
+        </div>
+        <button id="btn-submit" class="layui-btn" lay-submit lay-filter="reviewForm"
+                style="position: absolute; left:-1000px"/>
+    </div>
+`;
+/**
  * 定义数据表格字段列
  * @type {{DIRECTORY: [{hide: boolean, field: string, title: string}, {field: string, title: string}, {field: string, title: string}, {field: string, title: string}, {field: string, title: string}, null][], METADATA: [{hide: boolean, field: string, title: string}, {field: string, title: string}, {field: string, title: string}, {field: string, title: string}, {field: string, title: string}, null, null][]}}
  */
@@ -56,7 +80,7 @@ class Review {
             reviewForm = layui.form;
             const type = opt.entityType.toLowerCase();
 
-            let reviewStatus = 'PASS';
+            let reviewStatus = 'SUBMITTED';
 
             // 数据表格
             const listPage = ListPage.init({
@@ -100,17 +124,17 @@ class Review {
         const _this = this;
         layer.open({
             type: 1,
-            title: '退回',
+            title: '审核操作',
             area: ['auto'],
-            btn: ['退回', '取消'],
-            content: $('#reviewLayer').html(),
+            btn: ['确定', '取消'],
+            content: reviewLayerHtml,
             success: function (_layer, index) {
                 reviewForm.render();
+                reviewForm.on('radio(reviewStatusRadio)', function ({value}) {
+                    let opinion = value == 'PASS' ? '同意' : '';
+                    reviewForm.val('reviewForm', {opinion});
+                })
                 reviewForm.on('submit(reviewForm)', function ({elem, field}) {
-                    if (!field.status) {
-                        layer.msg('请选择审核通过或者不通过！')
-                        return false;
-                    }
                     let param = $.extend({}, field);
                     param.entityId = data.id;
                     param.entityType = _this.options.entityType
@@ -127,7 +151,13 @@ class Review {
                 });
             },
             yes: function () {
-                $('#btn-submit').click();
+                let formData = reviewForm.val('reviewForm');
+                if(formData.status){
+                    $('#btn-submit').click();
+                }else{
+                    layer.msg('请选择审核操作选项！');
+                    return false;
+                }
             }
         });
 
