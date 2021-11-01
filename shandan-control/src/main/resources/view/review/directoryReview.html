@@ -30,6 +30,8 @@
                                        lay-filter="statusRadio">
                                 <input type="radio" name="reviewStatus" value="FAIL" title="已退回"
                                        lay-filter="statusRadio">
+                                <input type="radio" name="reviewStatus" value="REJECTED" title="已驳回"
+                                       lay-filter="statusRadio">
                             </div>
                         </div>
                     </div>
@@ -38,7 +40,8 @@
                     {{#
                     let disable = d.reviewStatus != 'FAIL';
                     }}
-                    <a class="layui-btn layui-btn-xs {{disable ? '' : 'layui-disabled'}}" lay-event="{{disable ? 'review' : ''}}">退回</a>
+                    <a class="layui-btn layui-btn-xs {{disable ? '' : 'layui-disabled'}}"
+                       lay-event="{{disable ? 'review' : ''}}">退回</a>
                 </script>
             </div>
         </div>
@@ -48,8 +51,10 @@
 <script type="text/html" id="reviewLayer">
     <div class="layui-form" lay-filter="reviewForm" style="padding: 20px">
         <input type="hidden" name="status" value="FAIL">
-        <textarea class="layui-textarea" name="opinion" cols="4" lay-verify="required" placeholder="请输入退回原因..." style="width: 450px"/>
-        <button id="btn-submit" class="layui-btn" lay-submit lay-filter="reviewForm" style="position: absolute; left:-1000px"/>
+        <textarea class="layui-textarea" name="opinion" cols="4" lay-verify="required" placeholder="请输入退回原因..."
+                  style="width: 450px"/>
+        <button id="btn-submit" class="layui-btn" lay-submit lay-filter="reviewForm"
+                style="position: absolute; left:-1000px"/>
     </div>
 </script>
 <!-- js -->

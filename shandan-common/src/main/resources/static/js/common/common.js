@@ -6,7 +6,8 @@ const ReviewStatus = {
     UN_SUBMIT: 'UN_SUBMIT',
     SUBMITTED: 'SUBMITTED', // 提交
     PASS: 'PASS', // 通过
-    FAIL: 'FAIL' // 不通过
+    FAIL: 'FAIL', // 不通过
+    REJECTED: 'REJECTED' //已驳回
 }
 /**
  * 审核状态中文释义
@@ -15,15 +16,17 @@ const ReviewStatus = {
 const ReviewStatusMsg = {
     UN_SUBMIT: '未发布',
     SUBMITTED: '待审核',
-    PASS: '已发布',
-    FAIL: '被退回'
+    PASS: '审核通过',
+    FAIL: '审核不通过',
+    REJECTED: '已驳回'
 };
 // 审核状态图标
 const ReviewStatusIcon = {
     UN_SUBMIT: `<i class="layui-icon dtree-icon-circle1" title="未发布" id="##id##" data-id="##id##" style="margin-left: 5px;color: #1E9FFF;font-size: 14px;"></i>`,
     SUBMITTED: `<i class="layui-icon dtree-icon-jian1" title="等待审核" id="##id##" data-id="##id##" style="margin-left: 5px;color: orange;font-size: 14px;"></i>`,
-    PASS: `<i class="layui-icon dtree-icon-roundcheck" title="已发布" id="##id##" data-id="##id##" style="margin-left: 5px;color: green;font-size: 14px;"></i>`,
-    FAIL: `<i class="layui-icon dtree-icon-roundclose icon-fail" title="被退回" id="tips-rw-##id##" data-id="##id##" style="margin-left: 5px;color: red;font-size: 14px;"></i>`,
+    PASS: `<i class="layui-icon dtree-icon-roundcheck" title="审核通过" id="##id##" data-id="##id##" style="margin-left: 5px;color: green;font-size: 14px;"></i>`,
+    FAIL: `<i class="layui-icon dtree-icon-roundclose icon-fail" title="审核不通过" id="tips-rw-##id##" data-id="##id##" style="margin-left: 5px;color: red;font-size: 14px;"></i>`,
+    REJECTED: `<i class="layui-icon dtree-icon-roundclose icon-fail" title="已驳回" id="tips-rw-##id##" data-id="##id##" style="margin-left: 5px;color: red;font-size: 14px;"></i>`,
 }
 
 // 可预览的文件类型

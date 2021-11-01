@@ -17,8 +17,9 @@ import lombok.Getter;
 public enum ReviewStatus  {
     UN_SUBMIT("UN_SUBMIT", "未发布"),
     SUBMITTED("SUBMITTED", "待审核"),
-    PASS("PASS", "已发布"),
-    FAIL("FAIL", "被退回");
+    PASS("PASS", "审核通过"),
+    FAIL("FAIL", "审核不通过"),
+    REJECTED("REJECTED", "已驳回");
 
     @EnumValue
     private final String value;

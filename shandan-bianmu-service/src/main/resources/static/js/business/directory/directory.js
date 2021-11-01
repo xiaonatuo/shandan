@@ -438,17 +438,17 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             {
                 toolbarId: "reviewToolbar",
                 icon: "layui-icon layui-icon-release",
-                title: "发布", handler: function (node, elem) {
+                title: "提交审核", handler: function (node, elem) {
                     console.info(node, elem);
                     let param = {
                         entityId: node.id,
                         entityType: ReviewEntityType.DIRECTORY,
-                        status: ReviewStatus.PASS
+                        status: ReviewStatus.SUBMITTED
                     };
 
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
                         if (res.flag) {
-                            layer.msg('发布成功');
+                            layer.msg('提交成功');
                             let tempNode = Object.assign({}, node)
                             tempNode.basicData.reviewStatus = ReviewStatus.PASS;
                             tempNode.title = tempNode.context;
@@ -457,7 +457,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                             dirTree.partialRefreshEdit(elem, tempNode)
                             metaListTable.reloadTable();
                         } else {
-                            layer.msg('发布失败,' + res.msg);
+                            layer.msg('提交失败,' + res.msg);
                         }
                     });
                 }
