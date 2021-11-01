@@ -37,7 +37,6 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
      * @param data 权限数据
      */
     Clazz.prototype.showLayer = function (data) {
-        console.info(data);
         this.permisData = data;
         const _this = this;
         const _config = this.config;
@@ -91,6 +90,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
                         res.data = res.data || [];
                         _this.orgIds = res.data.join(',');
                         orgTree.chooseDataInit(res.data);
+                        orgTree.initNoAllCheck();
                     }
                 });
             }
