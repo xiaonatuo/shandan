@@ -75,6 +75,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
         let orgTree = layui.orgTree.init({
             id: 'org-config',
             checkbar: true,
+            checkbarType: 'no-all',
             // 复选框回调配置
             checkbarFun: {
                 // 选中后回调
@@ -86,7 +87,6 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
             done: () => {
                 let id = _this.permisData.permisId;
                 getConfigs(id, 'org').then(res => {
-                    console.info('org', res)
                     if (res.flag) {
                         res.data = res.data || [];
                         _this.orgIds = res.data.join(',');

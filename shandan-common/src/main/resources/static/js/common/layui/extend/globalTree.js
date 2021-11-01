@@ -100,6 +100,10 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         dtree.chooseDataInit(this.id, ids);
     }
 
+    GlobalTree.prototype.initNoAllCheck = function () {
+        dtree.initNoAllCheck(this.id)
+    }
+
     GlobalTree.prototype.changeTreeNodeAdd = function (op) {
         dtreeObj.changeTreeNodeAdd(op)
     }
