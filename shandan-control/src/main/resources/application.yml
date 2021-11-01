@@ -93,11 +93,11 @@ spring:
         # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
         connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
         #是否超时关闭连接 默认为false ,若为true 就算数据库恢复连接，也无法连接上
-        break-after-acquire-failure: true
+        break-after-acquire-failure: false
         #设置获取连接出错时的自动重连次数
-        connection-error-retry-attempts: 0
+        connection-error-retry-attempts: 10
         #设置获取连接时的重试次数，-1为不重试
-        not-full-timeout-retry-count: -1
+        not-full-timeout-retry-count: 10
         # 设置获取连接出错时是否马上返回错误，true为马上返回
         fail-fast: true
         #属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有：
