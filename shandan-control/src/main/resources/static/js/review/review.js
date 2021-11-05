@@ -45,7 +45,7 @@ const cols = {
         {field: 'themeTask', title: '主题任务'},
         {field: 'modifyUserName', title: '提交人'},
         {field: 'collectionTime', title: '采集时间'},
-        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 80}
+        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 120, align:'center'}
     ]],
     DIRECTORY: [[
         {field: 'id', title: 'ID', hide: true},
@@ -53,7 +53,7 @@ const cols = {
         {field: 'directoryPath', title: '目录路径'},
         {field: 'modifyUserName', title: '提交人'},
         {field: 'modifyTime', title: '提交时间'},
-        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 80}
+        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 120, align:'center'}
     ]]
 }
 let reviewForm;
@@ -102,6 +102,16 @@ class Review {
             listPage.addTableRowEvent('review', function (data) {
                 _this.reviewOperate(data, () => listPage.reloadTable());
             })
+
+            listPage.addTableRowEvent('details', function (data) {
+                console.info(data);
+                if(data.metadataName){ // 数据资源类型数据
+                    window.location.href = `${ctx}/bianmu/core/details/metadata/${data.id}`;
+                    //console.info(window.location.href);
+                }else{ // 目录类型数据
+
+                }
+            });
 
             reviewForm.on('radio(statusRadio)', function (data) {
                 reviewStatus = data.value;

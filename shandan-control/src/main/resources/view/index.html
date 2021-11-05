@@ -64,7 +64,7 @@
 <script th:inline="javascript">
     const frameHeight = $(".layui-body")[0].offsetHeight;
     $("#containerFrame").attr("height", frameHeight + "px")
-    $('#notification_layer div:first').css('height', frameHeight - 51 + 'px');
+    $('#notification_layer div:first').css('height', frameHeight + 'px');
 
     const error = /*[[${ERROR}]]*/ '';
     if (error) {

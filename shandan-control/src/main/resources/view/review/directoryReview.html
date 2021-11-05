@@ -9,7 +9,7 @@
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<div class="layui-row layui-col-space15">
+<div class="layui-row">
     <!-- 树 -->
     <div class="layui-col-md12">
         <div class="layui-card">
@@ -42,6 +42,7 @@
                     {{#
                     let disable = d.reviewStatus == 'SUBMITTED';
                     }}
+                    <a class="layui-btn layui-btn-xs " lay-event="details">查看</a>
                     <a class="layui-btn layui-btn-xs {{disable ? '' : 'layui-disabled'}}"
                        lay-event="{{disable ? 'review' : ''}}">审核</a>
                 </script>
