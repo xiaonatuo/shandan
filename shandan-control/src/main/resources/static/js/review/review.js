@@ -104,13 +104,24 @@ class Review {
             })
 
             listPage.addTableRowEvent('details', function (data) {
-                console.info(data);
+                let url;
                 if(data.metadataName){ // 数据资源类型数据
-                    window.location.href = `${ctx}/bianmu/core/details/metadata/${data.id}`;
-                    //console.info(window.location.href);
+                    url = `${ctx}/business/metadata/details/${data.id}`;
                 }else{ // 目录类型数据
 
                 }
+                layer.open({
+                    title: false,
+                    closeBtn: false,
+                    type:2,
+                    area:[window.innerWidth+'px', window.innerHeight+'px'],
+                    content: url,
+                    success: function (layerObj, index) {
+                        window.closeDetailsLayer = function () {
+                            layer.close(index);
+                        };
+                    }
+                })
             });
 
             reviewForm.on('radio(statusRadio)', function (data) {
@@ -127,10 +138,11 @@ class Review {
 
     /**
      * 审核操作
-     * @param data 需要审核的数据
+     * @param id 需要审核的数据
      * @param callback 回调
+     * @param status 审核状态
      */
-    reviewOperate(data, callback) {
+    reviewOperate(id, callback, status) {
         const _this = this;
         layer.open({
             type: 1,
@@ -146,7 +158,7 @@ class Review {
                 })
                 reviewForm.on('submit(reviewForm)', function ({elem, field}) {
                     let param = $.extend({}, field);
-                    param.entityId = data.id;
+                    param.entityId = id;
                     param.entityType = _this.options.entityType
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
                         if (res.flag) {
@@ -159,6 +171,12 @@ class Review {
                     });
                     return false;
                 });
+
+                if(status){
+                    setTimeout(()=>{
+                        $(`input[type="radio"][name="status"][value="${status}"]`).next().click();
+                    }, 100)
+                }
             },
             yes: function () {
                 let formData = reviewForm.val('reviewForm');
@@ -173,3 +191,31 @@ class Review {
 
     }
 }
+
+layui.define([], function (exports) {
+
+    const component = {
+        reviewComponent: undefined,
+        renderMetadataList: function(){
+            const review = new Review();
+            review.options.entityType = ReviewEntityType.METADATA;
+            review.init()
+            this.reviewComponent = review;
+        },
+        renderDirectoryList: function () {
+            const review = new Review();
+            review.options.entityType = ReviewEntityType.DIRECTORY;
+            review.init()
+            this.reviewComponent = review;
+        },
+        openReviewLayer: function (id, status, callback) {
+            this.reviewComponent.reviewOperate(id, ()=>{
+                callback && callback()
+                //window.location.reload();
+            }, status);
+        }
+
+    };
+
+    exports('ReviewComponent', component);
+});

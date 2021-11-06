@@ -55,8 +55,9 @@
 <!-- js -->
 <script th:src="@{/js/review/review.js}"></script>
 <script>
-    const review = new Review();
-    review.options.entityType = ReviewEntityType.METADATA;
-    review.init()
+    layui.use(['ReviewComponent'], function () {
+        window.ReviewComponent = layui.ReviewComponent;
+        ReviewComponent.renderMetadataList();
+    });
 </script>
 </html>

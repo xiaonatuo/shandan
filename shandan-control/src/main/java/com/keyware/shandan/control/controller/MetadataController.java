@@ -10,21 +10,16 @@ import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.enums.SecretLevel;
 import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.datasource.entity.DBTableColumnVo;
 import com.keyware.shandan.datasource.entity.DataSourceVo;
 import com.keyware.shandan.datasource.service.DataSourceService;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -90,4 +85,28 @@ public class MetadataController extends BaseController<MetadataService, Metadata
         return Result.of(metadataService.pageListByDirectory(page, directoryId, metadataName));
     }
 
+    /**
+     * 数据资源详细信息页面
+     * @param mav
+     * @param id
+     * @return
+     */
+    @GetMapping("/details/{id}")
+    public ModelAndView metadataDetails(ModelAndView mav, @PathVariable String id){
+        mav.setViewName("review/metadataDetails");
+        MetadataBasicVo metadata = metadataService.get(id).getData();
+        mav.addObject("detailsData", metadata);
+
+        // 查询字段列
+        List<DBTableColumnVo> columnVoList = new ArrayList<>();
+        metadata.getMetadataDetailsList().forEach(list -> columnVoList.addAll(list.getColumnList()));
+        mav.addObject("columnList", columnVoList);
+
+        // 查询示例数据
+        DataSourceVo dataSourceVo = dataSourceService.getById(metadata.getDataSourceId());
+        Page<HashMap<String, Object>> exampleData = metadataService.getExampleData(metadata, dataSourceVo);
+        mav.addObject("exampleList", exampleData.getRecords());
+
+        return mav;
+    }
 }

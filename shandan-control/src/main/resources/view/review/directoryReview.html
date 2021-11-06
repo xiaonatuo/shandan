@@ -55,8 +55,8 @@
 <!-- js -->
 <script th:src="@{/js/review/review.js}"></script>
 <script>
-    const review = new Review();
-    review.options.entityType = ReviewEntityType.DIRECTORY;
-    review.init()
+    layui.use(['ReviewComponent'], function () {
+        layui.ReviewComponent.renderDirectoryList();
+    });
 </script>
 </html>

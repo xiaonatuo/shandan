@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <script th:inline="javascript">
+        const data = /*[[${detailsData}]]*/ {};
+        const columnList = /*[[${columnList}]]*/ {};
+        const exampleList = /*[[${exampleList}]]*/ {};
+    </script>
+</head>
+<body>
+<div class="layui-row">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <div style=" float: left;">
+                    <a class="layui-btn layui-btn-sm layui-btn-primary layui-border-green layui-font-14" href="javascript:void(0)" style="border:0; padding:0;text-decoration: underline;" id="backBtn">返回审核列表</a>
+                </div>
+                <div style="float: right;" id="reviewBtnBox">
+                    <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'PASS'">
+                        <span class="layui-font-green layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-ok-circle"></i>审核通过</span>
+                    </th:block>
+                    <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'FAIL'">
+                        <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>审核不通过</span>
+                    </th:block>
+                    <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'REJECTED'">
+                        <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>驳回</span>
+                    </th:block>
+                    <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'SUBMITTED'">
+                        <button class="layui-btn layui-btn-sm" data-status="PASS">审核通过</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-red" data-status="FAIL">审核不通过</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-black" data-status="REJECTED">驳回</button>
+                    </th:block>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-tab layui-tab-brief" id="metadataCardBody" lay-filter="metadataCardBody">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">基础信息</li>
+                        <li class="db-source">字段信息</li>
+                        <li class="db-source">示例数据</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <!-- 基础信息 -->
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-form" lay-filter="details-form">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">数据表名</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" readonly class="layui-input" name="metadataName"
+                                               th:value="${detailsData.metadataName}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">中文注释</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" readonly class="layui-input" name="metadataComment"
+                                               th:value="${detailsData.metadataComment}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">数据密级</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" readonly class="layui-input" name="secretLevel"
+                                               th:value="${detailsData.secretLevelStr}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">主题任务</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" readonly class="layui-input" name="themeTask"
+                                               th:value="${detailsData.themeTask}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">数据来源</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" readonly class="layui-input" name="dataFrom"
+                                               th:value="${detailsData.dataFrom}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">采集时间</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" readonly class="layui-input" name="collectionTime"
+                                               th:value="${#dates.format(detailsData.collectionTime, 'yyyy-MM-dd HH:mm:ss')}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 字段信息 -->
+                        <div class="layui-tab-item">
+                            <table class="layui-table">
+                                <thead>
+                                <tr>
+                                    <th>列名</th>
+                                    <th>注释</th>
+                                    <th>数据类型</th>
+                                    <th>列长度</th>
+                                    <th>数值刻度</th>
+                                    <th>数值精度</th>
+                                    <th>允许为NULL</th>
+                                    <th>默认值</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="column : ${columnList}">
+                                    <td th:text="${column.columnName}"></td>
+                                    <td th:text="${column.comment}"></td>
+                                    <td th:text="${column.dataType}"></td>
+                                    <td th:text="${column.dataLength}"></td>
+                                    <td th:text="${column.dataScale}"></td>
+                                    <td th:text="${column.dataPrecision}"></td>
+                                    <td th:text="${column.nullAble}"></td>
+                                    <td th:text="${column.dataDefault}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 示例数据 -->
+                        <div class="layui-tab-item">
+                            <table class="layui-hide" id="metadataExampleTable"
+                                   lay-filter="metadataExampleTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/review/review.js}"></script>
+<script type="text/javascript">
+    layui.use(['form', 'listPage'], function () {
+
+        // 加载示例数据
+        let columns = [];
+            for (let {columnName, comment} of columnList) {
+                columns.push({field: columnName, title: comment || columnName, minWidth: 120});
+            }
+        const tableOptions = {
+            id: 'metadataExampleTable',
+            data: exampleList,
+            cols: [columns],
+            page: false,
+            toolbar: true,
+            defaultToolbar: ['filter'],
+            height: 'full-155',
+        }
+        layui.listPage.init({
+            table: tableOptions
+        })
+
+        //审核按钮组点击事件监听
+        $('#reviewBtnBox button').on('click', function () {
+            let status = $(this).data('status');
+            switch (status) {
+                case 'PASS':
+                    break;
+                case 'FAIL':
+                    break;
+                case 'REJECTED':
+
+            }
+            window.parent.ReviewComponent.openReviewLayer(data.id, status, ()=>{
+                window.location.reload();
+            });
+
+        });
+
+        //返回列表页
+        $('#backBtn').on('click', function () {
+            window.parent.closeDetailsLayer();
+        });
+    });
+</script>
+</html>

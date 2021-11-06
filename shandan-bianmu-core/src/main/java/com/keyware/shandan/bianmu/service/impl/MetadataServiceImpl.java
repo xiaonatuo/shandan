@@ -222,7 +222,7 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
         // 查询每个详情对象的数据表的列
         if (!ObjectUtils.isEmpty(details)) {
             result.setMetadataDetailsList(details.stream().peek(detail -> {
-                detail.setColumnList(dynamicDataSourceService.getColumnListByTable(detail.getTableName(), dataSource));
+                detail.setColumnList(dynamicDataSourceService.getColumnListByTable(detail.getTableName(), dataSource).stream().filter(col ->detailsHasColumn(detail.getTableColumns(), col.getColumnName())).collect(Collectors.toList()));
             }).collect(Collectors.toList()));
         }
         return Result.of(result);
@@ -252,4 +252,17 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
         }
     }
 
+    /**
+     * 判断详情字段列中是否配置了某字段
+     * @param detailsCols
+     * @param col
+     * @return
+     */
+    private boolean detailsHasColumn(String detailsCols, String col){
+        JSONArray detailsColsJson = JSONArray.parseArray(detailsCols);
+        return detailsColsJson.stream().anyMatch(item ->{
+            JSONObject json = (JSONObject) item;
+            return col.equalsIgnoreCase(json.getString("columnName"));
+        });
+    }
 }
