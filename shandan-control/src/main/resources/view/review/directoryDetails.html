@@ -7,10 +7,18 @@
     <script th:replace="common/head::static"></script>
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .layui-card-body {
+            padding: 0 10px 15px 10px;
+            line-height: 24px;
+        }
+        .layui-tab-content{padding: 0}
+    </style>
     <script th:inline="javascript">
-        const data = /*[[${detailsData}]]*/ {};
-        const columnList = /*[[${columnList}]]*/ {};
-        const exampleList = /*[[${exampleList}]]*/ {};
+        const bianmuAddress = /*[[${bianmuAddress}]]*/ '';
+        const data = /*[[${directory}]]*/ {};
+        const treeData = /*[[${treeData}]]*/ {};
+        console.info(treeData);
     </script>
 </head>
 <body>
@@ -22,110 +30,129 @@
                     <a class="layui-btn layui-btn-sm layui-btn-primary layui-border-green layui-font-14" href="javascript:void(0)" style="border:0; padding:0;text-decoration: underline;" id="backBtn">返回审核列表</a>
                 </div>
                 <div style="float: right;" id="reviewBtnBox">
-                    <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'PASS'">
+                    <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'PASS'">
                         <span class="layui-font-green layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-ok-circle"></i>审核通过</span>
                     </th:block>
-                    <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'FAIL'">
+                    <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'FAIL'">
                         <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>审核不通过</span>
                     </th:block>
-                    <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'REJECTED'">
+                    <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'REJECTED'">
                         <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>驳回</span>
                     </th:block>
-                    <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'SUBMITTED'">
+                    <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'SUBMITTED'">
                         <button class="layui-btn layui-btn-sm" data-status="PASS">审核通过</button>
                         <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-red" data-status="FAIL">审核不通过</button>
                         <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-black" data-status="REJECTED">驳回</button>
                     </th:block>
                 </div>
             </div>
-            <div class="layui-card-body">
-                <div class="layui-tab layui-tab-brief" id="metadataCardBody" lay-filter="metadataCardBody">
-                    <ul class="layui-tab-title">
-                        <li class="layui-this">基础信息</li>
-                        <li class="db-source">字段信息</li>
-                        <li class="db-source">示例数据</li>
-                    </ul>
-                    <div class="layui-tab-content">
-                        <!-- 基础信息 -->
-                        <div class="layui-tab-item layui-show">
-                            <div class="layui-form" lay-filter="details-form">
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">数据表名</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" readonly class="layui-input" name="metadataName"
-                                               th:value="${detailsData.metadataName}">
+            <div class="layui-card-body" style="padding: 0">
+                <div class="layui-row">
+                    <!-- 树 -->
+                    <div class="layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">目录树</div>
+                            <div class="layui-card-body" style="overflow: auto; padding-left: 0">
+                                <ul id="directoryTree" class="dtree" data-id="ROOT" data-value="ROOT"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 数据表格 -->
+                    <div class="layui-col-md9">
+                        <div class="layui-card">
+                            <div class="layui-card-body right-card">
+                                <div class="layui-tab layui-tab-brief" id="metadataListCardBody" lay-filter="metadataListCardBody">
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this metadata-table">资源列表</li>
+                                    </ul>
+                                    <div class="layui-tab-content">
+                                        <div class="layui-tab-item layui-show">
+                                            <table class="layui-hide" id="dirMetadataTable" lay-filter="dirMetadataTable"></table>
+                                            <script type="text/html" id="tableToolBar">
+                                                <div class="layui-btn-container">
+                                                    <div class="layui-form-item">
+                                                        <div class="layui-inline">
+                                                            <!--<button class="layui-btn layui-btn-sm {{d.hideFunBtn ? 'layui-hide' : ''}}" lay-event="addLink">关联元数据</button>
+                                                            <button class="layui-btn layui-btn-sm  {{d.hideFunBtn ? 'layui-hide' : ''}}" lay-event="addFile"><i
+                                                                    class="layui-icon">&#xe67c;</i>上传文件
+                                                            </button>-->
+                                                        </div>
+                                                        <div class="layui-inline">
+                                                            <input type="text" id="searchKeyInput" name="searchKeyInput"
+                                                                   autocomplete="off"
+                                                                   placeholder="请输入关键字查询" class="layui-input layui-btn-sm">
+                                                            <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </script>
+                                            <script type="text/html" id="rowToolBar">
+                                                <div class="layui-btn-container">
+                                                    <!--<button class="layui-btn layui-btn-sm remove-link" lay-event="removeLink">解除关联</button>-->
+                                                </div>
+                                            </script>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">中文注释</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" readonly class="layui-input" name="metadataComment"
-                                               th:value="${detailsData.metadataComment}">
+                                <div class="layui-tab layui-tab-brief layui-hide" id="metadataCardBody" lay-filter="metadataCardBody">
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this">基础信息</li>
+                                        <li class="db-source">字段信息</li>
+                                        <li class="db-source">示例数据</li>
+                                    </ul>
+                                    <div class="layui-tab-content">
+                                        <!-- 基础信息 -->
+                                        <div class="layui-tab-item layui-show">
+                                            <div id="metadataBasicTab" style="padding-top: 10px;"></div>
+                                        </div>
+                                        <!-- 字段信息 -->
+                                        <div class="layui-tab-item">
+                                            <table class="layui-hide" id="metadataColumnTable" lay-filter="metadataColumnTable"></table>
+                                        </div>
+                                        <!-- 示例数据 -->
+                                        <div class="layui-tab-item">
+                                            <table class="layui-hide" id="metadataExampleTable"
+                                                   lay-filter="metadataExampleTable"></table>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">数据密级</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" readonly class="layui-input" name="secretLevel"
-                                               th:value="${detailsData.secretLevelStr}">
-                                    </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">主题任务</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" readonly class="layui-input" name="themeTask"
-                                               th:value="${detailsData.themeTask}">
-                                    </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">数据来源</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" readonly class="layui-input" name="dataFrom"
-                                               th:value="${detailsData.dataFrom}">
-                                    </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">采集时间</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" readonly class="layui-input" name="collectionTime"
-                                               th:value="${#dates.format(detailsData.collectionTime, 'yyyy-MM-dd HH:mm:ss')}">
+                                <div class="layui-tab layui-tab-brief layui-hide" id="fileCardBody" lay-filter="fileCardBody">
+                                    <ul class="layui-tab-title">
+                                        <li class="file-source layui-this">文件预览</li>
+                                    </ul>
+                                    <div class="layui-tab-content" id="fileViewer">
+                                        <!-- 文件预览 -->
+                                        <div class="layui-tab-item layui-show" style="padding-top: 10px;">
+                                            <!-- 图片轮播组件 -->
+                                            <div id="file-viewer-image" class="file-viewer layui-hide" style="height: 100%;text-align: center;">
+                                            </div>
+                                            <!-- video-js视频播放器 -->
+                                            <div id="file-viewer-video" class="file-viewer layui-hide" style="height: 100%">
+                                                <video id="videoPlayer" class="video-js" controls preload="auto" style="width: 100%; height: 100%">
+                                                    <p class="vjs-no-js">
+                                                        要观看此视频，请启用 JavaScript，并考虑升级到
+                                                        <a href="https:videojs.comhtml5-video-support" target="_blank">支持 HTML5 视频</a>
+                                                        的网络浏览器
+                                                    </p>
+                                                </video>
+                                            </div>
+                                            <!-- pdf浏览组件 -->
+                                            <div id="file-viewer-pdf" class="file-viewer layui-hide" style="height: 100%">
+                                                <iframe id="pdfViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                                            </div>
+                                            <!-- 文本文件浏览组件 -->
+                                            <div id="file-viewer-text" class="file-viewer layui-hide" style="height: 100%">
+                                                <iframe id="txtViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                                            </div>
+                                            <!-- 不至于预览的文件 -->
+                                            <div id="file-viewer-other" class="file-viewer layui-hide" style="height: 100%;text-align: center;">
+                                                <p>该文件不支持预览，可下载后查看。</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- 字段信息 -->
-                        <div class="layui-tab-item">
-                            <table class="layui-table">
-                                <thead>
-                                <tr>
-                                    <th>列名</th>
-                                    <th>注释</th>
-                                    <th>数据类型</th>
-                                    <th>列长度</th>
-                                    <th>数值刻度</th>
-                                    <th>数值精度</th>
-                                    <th>允许为NULL</th>
-                                    <th>默认值</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="column : ${columnList}">
-                                    <td th:text="${column.columnName}"></td>
-                                    <td th:text="${column.comment}"></td>
-                                    <td th:text="${column.dataType}"></td>
-                                    <td th:text="${column.dataLength}"></td>
-                                    <td th:text="${column.dataScale}"></td>
-                                    <td th:text="${column.dataPrecision}"></td>
-                                    <td th:text="${column.nullAble}"></td>
-                                    <td th:text="${column.dataDefault}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- 示例数据 -->
-                        <div class="layui-tab-item">
-                            <table class="layui-hide" id="metadataExampleTable"
-                                   lay-filter="metadataExampleTable"></table>
                         </div>
                     </div>
                 </div>
@@ -134,39 +161,58 @@
     </div>
 </div>
 </body>
+<!-- 基础信息 -->
+<script type="text/html" id="metadataBasicTemplate">
+    {{#
+    let {data, flag, msg} = d;
+    }}
+    <div class="layui-form">
+        {{# if(flag) { }}
+        <div class="layui-form-item">
+            <label class="layui-form-label">数据表</label>
+            <div class="layui-input-block">
+                <input type="text" readonly class="layui-input" value="{{data.metadataName}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">中文注释</label>
+            <div class="layui-input-block">
+                <input type="text" readonly class="layui-input" value="{{data.metadataComment}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">主题任务</label>
+            <div class="layui-input-block">
+                <input type="text" readonly class="layui-input" value="{{data.themeTask}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数据来源</label>
+            <div class="layui-input-block">
+                <input type="text" readonly class="layui-input" value="{{data.dataFrom}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">采集时间</label>
+            <div class="layui-input-block">
+                <input type="text" readonly class="layui-input" value="{{data.collectionTime}}">
+            </div>
+        </div>
+        {{# } else { }}
+        <div class="layui-form-item">
+            数据加载失败
+        </div>
+        {{# } }}
+    </div>
+</script>
 <script th:src="@{/js/review/review.js}"></script>
+<script th:src="@{/js/review/directoryDetails.js}"></script>
 <script type="text/javascript">
-    layui.use(['form', 'listPage'], function () {
-
-        // 加载示例数据
-        let columns = [];
-            for (let {columnName, comment} of columnList) {
-                columns.push({field: columnName, title: comment || columnName, minWidth: 120});
-            }
-        const tableOptions = {
-            id: 'metadataExampleTable',
-            data: exampleList,
-            cols: [columns],
-            page: false,
-            toolbar: true,
-            defaultToolbar: ['filter'],
-            height: 'full-155',
-        }
-        layui.listPage.init({
-            table: tableOptions
-        })
+    layui.use(['form'], function () {
 
         //审核按钮组点击事件监听
         $('#reviewBtnBox button').on('click', function () {
             let status = $(this).data('status');
-            switch (status) {
-                case 'PASS':
-                    break;
-                case 'FAIL':
-                    break;
-                case 'REJECTED':
-
-            }
             window.parent.ReviewComponent.openReviewLayer(data.id, status, ()=>{
                 window.location.reload();
             });
@@ -178,5 +224,42 @@
             window.parent.closeDetailsLayer();
         });
     });
+
+    const toggleRightCard = (showType, callback) => {
+        if (showType === 'metadata') {
+            $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
+            $("#metadataCardBody").removeClass('layui-hide').addClass('layui-show');
+        } else if(showType === 'directory'){
+            $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
+            $("#metadataListCardBody").removeClass('layui-hide').addClass('layui-show');
+        }else if(showType === 'file'){
+            $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
+            $("#fileCardBody").removeClass('layui-hide').addClass('layui-show');
+        }
+        callback && callback();
+    }
+
+    /**
+     * 切换显示文件展示区域
+     * @param type 展示类型
+     */
+    function showFileViewer(type){
+        $('#fileViewer .file-viewer').addClass('layui-hide');
+        $(`#file-viewer-${type}`).removeClass('layui-hide');
+    }
+
+    let imageWidth;
+    let imageHeight;
+    const sizeInit = () => {
+        $(".layui-card-body").height(window.innerHeight - 102);
+        $(".layui-card-body.right-card").height(window.innerHeight - 58 );
+        $('#fileCardBody').height(window.innerHeight - 105)
+        $('#fileViewer .file-viewer').height(window.innerHeight - 105)
+        imageWidth = $('.layui-col-md9:first').innerWidth() - 54;
+        imageHeight = $('#file-viewer-image').innerHeight();
+    }
+    window.onresize = sizeInit;
+    sizeInit();
+
 </script>
 </html>

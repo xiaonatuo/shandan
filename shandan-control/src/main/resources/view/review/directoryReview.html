@@ -56,7 +56,8 @@
 <script th:src="@{/js/review/review.js}"></script>
 <script>
     layui.use(['ReviewComponent'], function () {
-        layui.ReviewComponent.renderDirectoryList();
+        window.ReviewComponent = layui.ReviewComponent;
+        ReviewComponent.renderDirectoryList();
     });
 </script>
 </html>

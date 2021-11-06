@@ -108,7 +108,7 @@ class Review {
                 if(data.metadataName){ // 数据资源类型数据
                     url = `${ctx}/business/metadata/details/${data.id}`;
                 }else{ // 目录类型数据
-
+                    url = `${ctx}/business/directory/details/${data.id}`;
                 }
                 layer.open({
                     title: false,
