@@ -81,6 +81,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 hideFunBtn: basicData.directoryType == 'DIRECTORY' || basicData.reviewStatus == ReviewStatus.SUBMITTED || basicData.reviewStatus == ReviewStatus.PASS,
                 id: 'dirMetadataTable',
                 toolbar: '#tableToolBar',
+                height: 'full-102',
                 searchFieldNames: 'metadataName',
                 url: `${ctx}/business/metadata/list/directory?directoryId=${basicData.id}`,
                 method: 'get',
@@ -126,7 +127,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             url: `${ctx}/business/metadata/columns?id=${basicData.id}`,
             method: 'get',
             toolbar: '',
-            height: 'full-136',
+            height: 'full-102',
             page: false,
             cols: [[
                 {field: 'tableName', title: 'tableName', hide: true},
@@ -158,7 +159,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 page: false,
                 toolbar: true,
                 defaultToolbar: ['filter'],
-                height: 'full-135',
+                height: 'full-102',
             }
             layui.listPage.init({
                 table: tableOptions
@@ -179,7 +180,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 ]],
                 page: false,
                 toolbar: false,
-                height: 'full-135'
+                height: 'full-102'
             },
         });
         fileListTable.addTableRowEvent('download', function (obj) {
