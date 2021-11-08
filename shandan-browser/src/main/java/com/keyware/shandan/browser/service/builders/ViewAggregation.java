@@ -85,13 +85,13 @@ public abstract class ViewAggregation {
      *
      * @return -
      */
-    public ViewVo aggregation() throws IOException {
+    public ViewVo<ViewVo.View> aggregation() throws IOException {
         if(Objects.isNull(this.response)){
             search();
         }
         ParsedMultiBucketAggregation histogram = response.getAggregations().get(alias);
 
-        ViewVo view = new ViewVo(this.type);
+        ViewVo<ViewVo.View> view = new ViewVo<>(this.type);
         histogram.getBuckets().forEach(bucket -> {
             String key = bucket.getKeyAsString();
             if(StringUtils.isNotBlank(key)){

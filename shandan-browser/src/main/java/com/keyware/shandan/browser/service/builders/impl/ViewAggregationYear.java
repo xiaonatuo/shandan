@@ -50,12 +50,12 @@ public class ViewAggregationYear extends ViewAggregation {
      * @return -
      */
     @Override
-    public ViewVo aggregation() throws IOException {
+    public ViewVo<ViewVo.View> aggregation() throws IOException {
         if(Objects.isNull(this.response)){
             search();
         }
         ParsedMultiBucketAggregation histogram = response.getAggregations().get(alias);
-        ViewVo view = new ViewVo(this.getType());
+        ViewVo<ViewVo.View> view = new ViewVo<>(this.getType());
         histogram.getBuckets().forEach(bucket -> {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
             DateTime time = (DateTime) bucket.getKey();

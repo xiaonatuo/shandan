@@ -14,9 +14,7 @@ import com.keyware.shandan.system.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -96,6 +94,17 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
             }
         }
         return leaders;
+    }
+
+    @Override
+    @DataPermissions(orgColumn = "ID")
+    public List<SysOrg> tree(String parentId) {
+        QueryWrapper<SysOrg> wrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(parentId)) {
+            wrapper.like("ORG_PATH", "%" + parentId + "%");
+        }
+        List<SysOrg> list = list(wrapper);
+        return generateTree(list);
     }
 
     /**
@@ -182,5 +191,40 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
         }
 
         return allChild;
+    }
+
+    /**
+     * 构建部门树
+     * @param list
+     * @return
+     */
+    private List<SysOrg> generateTree(List<SysOrg> list){
+        Set<SysOrg> allOrgSet = new HashSet<>(list);
+
+        list.stream()
+                // 找到当前部门列表的根部门
+                .filter(org -> list.stream().noneMatch(o -> o.getId().equals(org.getOrgParentId())))
+                // 根据当前根部门查找所有父部门
+                .forEach(org -> allOrgSet.addAll(listByIds(Arrays.asList(org.getOrgPath().split("\\|")))));
+
+        return allOrgSet.stream()
+                // 找到根部门
+                .filter(org -> allOrgSet.stream().noneMatch(o -> o.getId().equals(org.getOrgParentId())))
+                // 递归子部门
+                .peek(org-> findChildren(org, new ArrayList<>(allOrgSet)))
+                // 转换List
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 递归子部门
+     * @param org
+     * @param list
+     */
+    private void findChildren(SysOrg org, List<SysOrg> list){
+        org.setChildren(list.stream().filter(o -> org.getId().equals(o.getOrgParentId())).collect(Collectors.toList()));
+        if(org.getChildren().size() > 0){
+            org.getChildren().stream().peek(o -> findChildren(o, list)).collect(Collectors.toList());
+        }
     }
 }

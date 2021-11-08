@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-public class ViewVo implements Serializable {
+public class ViewVo<T> implements Serializable {
 
     private static final long serialVersionUID = -3073840524238749044L;
 
@@ -28,9 +28,9 @@ public class ViewVo implements Serializable {
     /**
      * 视图数据
      */
-    private List<View> views;
+    private List<T> views;
 
-    public void addView(View view) {
+    public void addView(T view) {
         if(Objects.isNull(views)) views = new ArrayList<>();
         views.add(view);
     }

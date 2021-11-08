@@ -37,4 +37,6 @@ public interface SysOrgService extends IBaseService<SysOrg, String> {
      * @return
      */
     List<SysUser> getOrgAdmins(String orgId);
+
+    List<SysOrg> tree(String parentId);
 }
