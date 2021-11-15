@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>云平台与安防系统-登录</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/default.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/index.css}">
+</head>
+<body class="bg1">
+<div class="wraper">
+    <div class="logo">
+        <p>云平台与安防系统</p>
+    </div>
+    <div class="ad_img">
+        <div class="ad_img_r">
+            <form th:action="@{/login}" method="post" th:method="post" class="mt-1">
+                <!--选项卡-->
+                <div class="tb_">用户登录</div>
+                <div class="ctt">
+                    <div class="dis" id="tbc_01">
+                        <div class="inp_bg1">
+                            <input class="login1" type="text" name="username" id="username" placeholder="请输入用户名" required
+                                   autocomplete="on">
+                        </div>
+                        <div class=" inp_bg2">
+                            <input class="login1" type="password" name="password" id="password" placeholder="请输入密码" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="login2">登录</button>
+            </form>
+            <div class="zhuceq" style="display: none">
+                <p class="fl">忘记密码？</p><p class="fr">去注册&gt;&gt;</p>
+            </div>
+            <div th:if="${param.error != null}">
+                <p th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null}" th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}" style="color: red; margin-top: 20px"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer" style="display: none">
+        <div class="foot">
+            <p></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

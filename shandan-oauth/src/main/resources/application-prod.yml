@@ -1,0 +1,15 @@
+##### prod 配置 #######
+server:
+  port: 18888
+
+spring:
+  #数据库配置
+  datasource:
+    dynamic:
+      primary: master
+      datasource:
+        master:
+          url: jdbc:dm://172.16.36.240:5236
+          username: BIANMU
+          password: admin1234
+          driver-class-name: dm.jdbc.driver.DmDriver
