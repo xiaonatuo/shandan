@@ -25,7 +25,7 @@ security:
   oauth2:
     client:
       client-id: control
-      client-secret: control123456
+      client-secret: control_123456
       access-token-uri: ${oauth.server}/oauth/token
       user-authorization-uri: ${oauth.server}/oauth/authorize
     resource:

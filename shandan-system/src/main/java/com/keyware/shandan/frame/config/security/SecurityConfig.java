@@ -52,9 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     //无需权限访问的URL，不建议用/**/与/*.后缀同时去适配，有可以会受到CaptchaFilterConfig判断的影响
     public static final String[] MATCHERS_PERMITALL_URL = {
-            "/login",
             "/logout",
-            "/loginPage",
             "/favicon.ico",
             "/js/**",
             "/css/**",
@@ -82,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().headers().frameOptions().disable();
 
 
-        http
+        /*http
                // 登录处理
                 .formLogin()
                 .loginProcessingUrl("/login")
@@ -90,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/loginPage")
                 .failureHandler(loginFailureHandlerConfig)
                 .successHandler(loginSuccessHandlerConfig)
-                .permitAll();
+                .permitAll();*/
         http
                 //登出处理
                 .logout()
