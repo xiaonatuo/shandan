@@ -69,16 +69,16 @@ public class BrowserIndexController {
     public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
         modelAndView.addObject("appName", SysSettingUtil.getCurrentSysSetting().getSysName());
-        modelAndView.addObject("user", SecurityUtil.getLoginSysUser());
+        //登录用户
+        SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
+        user.setPassword(null);//隐藏部分属性
+        modelAndView.addObject("loginUser", user);
+        modelAndView.addObject("user", user);
         //系统信息
         modelAndView.addObject("sys", SysSettingUtil.getCurrentSysSetting());
         //后端公钥
         String publicKey = RsaUtil.getPublicKey();
         modelAndView.addObject("publicKey", publicKey);
-        //登录用户
-        SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
-        user.setPassword(null);//隐藏部分属性
-        modelAndView.addObject("loginUser", user);
 
         SysSetting bianmuSetting = SysSettingUtil.getSysSetting(SystemTypes.BIANMU.name());
         modelAndView.addObject("bianmuServer", bianmuSetting.getSysAddress());

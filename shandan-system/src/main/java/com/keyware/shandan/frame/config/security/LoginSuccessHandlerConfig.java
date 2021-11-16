@@ -17,11 +17,13 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -42,9 +44,15 @@ public class LoginSuccessHandlerConfig implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
 
         //查询当前与系统交互的用户，存储在本地线程安全上下文，校验账号有效性
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SysUser sysUser = null;
+        if(principal instanceof User){
+            User user = (User) principal;
+            sysUser = sysUserService.findByLoginName(user.getUsername()).getData();
+        }else{
+            sysUser = sysUserService.findByLoginName((String) principal).getData();
+        }
 
-        SysUser sysUser = sysUserService.findByLoginName(user.getUsername()).getData();
 
         //默认登陆成功
         String msg = "{\"code\":\"300\",\"msg\":\"登录成功\",\"url\":\"/index\"}";
@@ -82,11 +90,10 @@ public class LoginSuccessHandlerConfig implements AuthenticationSuccessHandler {
             SecurityContextHolder.clearContext();
 
             //清除remember-me持久化tokens
-            securityUtil.rememberMeRemoveUserTokens(user.getUsername());
-        }
-        else{
+            //securityUtil.rememberMeRemoveUserTokens(user.getUsername());
+        } else{
             //校验通过，注册session
-            securityUtil.sessionRegistryAddUser(httpServletRequest.getSession().getId(),user);
+            //securityUtil.sessionRegistryAddUser(httpServletRequest.getSession().getId(),user);
         }
 
         //判断api加密开关是否开启
@@ -123,5 +130,10 @@ public class LoginSuccessHandlerConfig implements AuthenticationSuccessHandler {
         out.flush();
         out.close();
         httpServletResponse.flushBuffer();
+    }
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+        AuthenticationSuccessHandler.super.onAuthenticationSuccess(request, response, chain, authentication);
     }
 }

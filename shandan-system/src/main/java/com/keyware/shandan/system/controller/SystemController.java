@@ -68,20 +68,6 @@ public class SystemController {
     }
 
     /**
-     * 跳转首页
-     */
-    @GetMapping("")
-    public void index1(HttpServletResponse response) {
-        //内部重定向
-        try {
-            response.sendRedirect("/index");
-        } catch (IOException e) {
-            //输出到日志文件中
-            log.error(ErrorUtil.errorInfoToString(e));
-        }
-    }
-
-    /**
      * 获取验证码图片和文本(验证码文本会保存在HttpSession中)
      */
     @RequestMapping("getVerifyCodeImage")

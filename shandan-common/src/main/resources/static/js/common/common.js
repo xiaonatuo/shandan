@@ -448,7 +448,7 @@ window.jsPublicKey = genKeyPair.publicKey;
 window.jsPrivateKey = genKeyPair.privateKey;
 
 //重写jq的ajax加密
-//jQueryExtend.ajaxExtend();
+jQueryExtend.ajaxExtend();
 
 /**
  * layui组件扩展

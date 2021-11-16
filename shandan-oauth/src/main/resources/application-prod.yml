@@ -13,3 +13,7 @@ spring:
           username: BIANMU
           password: admin1234
           driver-class-name: dm.jdbc.driver.DmDriver
+
+oauth:
+  logout:
+    success-url: http://localost:18000/desktop/

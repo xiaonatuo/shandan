@@ -3,28 +3,25 @@ package com.keyware.shandan.frame.config.security;
 import com.keyware.shandan.system.entity.SysRole;
 import com.keyware.shandan.system.service.SysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.RoleVoter;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@EnableOAuth2Sso
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private CaptchaFilterConfig captchaFilterConfig;
 
     @Autowired
     private UserConfig userConfig;
@@ -68,45 +65,43 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/sys/file/download/**"
     };
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                //用户认证处理
-                .userDetailsService(userConfig)
-                //密码处理
-                .passwordEncoder(passwordConfig);
-    }
+   @Override
+   public void configure(WebSecurity web) throws Exception {
+       super.configure(web);
+
+   }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                // 关闭csrf防护
-                .csrf().disable()
-                .headers().frameOptions().disable()
-                .and();
+        http.antMatcher("/**")
+                .authorizeRequests()
+                .antMatchers(MATCHERS_PERMITALL_URL).permitAll()
+                .anyRequest()
+                .authenticated();
+
+        http.csrf().disable().headers().frameOptions().disable();
+
 
         http
-                //登录处理
-                .addFilterBefore(captchaFilterConfig, UsernamePasswordAuthenticationFilter.class)
+               // 登录处理
                 .formLogin()
                 .loginProcessingUrl("/login")
                 //未登录时默认跳转页面
                 .loginPage("/loginPage")
                 .failureHandler(loginFailureHandlerConfig)
                 .successHandler(loginSuccessHandlerConfig)
-                .permitAll()
-                .and();
+                .permitAll();
         http
                 //登出处理
                 .logout()
                 .addLogoutHandler(logoutHandlerConfig)
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/loginPage")
+                .logoutSuccessUrl("/login")
                 .permitAll()
                 .and();
-        http
+        /*http
                 //定制url访问权限，动态权限读取，参考：https://www.jianshu.com/p/0a06496e75ea
-                .addFilterAfter(dynamicallyUrlInterceptor(), FilterSecurityInterceptor.class)
+                //.addFilterAfter(dynamicallyUrlInterceptor(), FilterSecurityInterceptor.class)
                 .authorizeRequests()
 
                 //无需权限访问
@@ -114,31 +109,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //其他接口需要登录后才能访问
                 .anyRequest().authenticated()
-                .and();
+                .and();*/
 
-        http
+        /*http
                 //开启记住我
                 .rememberMe()
                 .tokenValiditySeconds(60 * 60 * 24)
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userConfig)
-                .and();
+                .and();*/
 
-        http.exceptionHandling()
-                .defaultAuthenticationEntryPointFor(authenticationEntryPoint, new AjaxRequestMatcher());
+        /*http.exceptionHandling()
+                .defaultAuthenticationEntryPointFor(authenticationEntryPoint, new AjaxRequestMatcher());*/
     }
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
-        /*JdbcTokenRepositoryImpl persistentTokenRepository = new JdbcTokenRepositoryImpl();
-        persistentTokenRepository.setDataSource(dataSource);
-        return persistentTokenRepository;*/
         return new InMemoryTokenRepositoryImpl();
     }
 
     //配置filter
-    @Bean
-    public DynamicallyUrlInterceptor dynamicallyUrlInterceptor(){
+    //@Bean
+    /*public DynamicallyUrlInterceptor dynamicallyUrlInterceptor(){
         //首次获取
         List<SysRole> roleList = sysRoleService.list();
         myFilterInvocationSecurityMetadataSource.setRequestMap(roleList);
@@ -153,5 +145,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //设置认证决策管理器
         interceptor.setAccessDecisionManager(new MyAccessDecisionManager(decisionVoters));
         return interceptor;
-    }
+    }*/
 }

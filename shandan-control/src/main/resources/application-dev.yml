@@ -1,4 +1,7 @@
 ##### dev 配置 #######
+oauth:
+  server: http://localhost:8888/oauth-server
+
 spring:
   #数据库配置
   datasource:
@@ -18,6 +21,17 @@ spring:
     rest:
       uris: http://192.168.1.11:9200
 
+security:
+  oauth2:
+    client:
+      client-id: control
+      client-secret: control123456
+      access-token-uri: ${oauth.server}/oauth/token
+      user-authorization-uri: ${oauth.server}/oauth/authorize
+    resource:
+      user-info-uri: ${oauth.server}/user/info
+      jwt:
+        key-uri: ${oauth.server}/oauth/token_key
 project:
   #是否需要输入验证码
   captcha-enable: false

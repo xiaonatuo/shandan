@@ -7,63 +7,52 @@
 <!-- 通用头部模板 -->
 <head th:fragment="static">
     <!-- thymeleaf内联js-->
-    <head>
-        <script th:inline="javascript">
-            //项目根路径
-            // ctx = /*[[@{/}]]*/'';
-            ctx = [[${#request.getContextPath()}]];//应用路径
-            user = [[${loginUser}]];
-            sessionStorage.setItem('login_user', JSON.stringify(user));
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+        user = [[${loginUser}]];
+        sessionStorage.setItem('login_user', JSON.stringify(user));
 
-            //获取api加密开关并存到sessionStorage
-            let sys = /*[[${sys}]]*/ undefined;
-            if(sys){
-                sessionStorage.setItem('sysApiEncrypt', sys.sysApiEncrypt);
+        //获取api加密开关并存到sessionStorage
+        let sys = /*[[${sys}]]*/ undefined;
+        if (sys) {
+            sessionStorage.setItem('sysApiEncrypt', sys.sysApiEncrypt);
 
-                //获取后端RSA公钥并存到sessionStorage
-                let publicKey = /*[[${publicKey}]]*/ undefined;
-                if(publicKey){
-                    sessionStorage.setItem('javaPublicKey', publicKey);
-                }
-
+            //获取后端RSA公钥并存到sessionStorage
+            let publicKey = /*[[${publicKey}]]*/ undefined;
+            if (publicKey) {
+                sessionStorage.setItem('javaPublicKey', publicKey);
             }
-        </script>
-    </head>
+
+        }
+    </script>
 
     <!-- 引入公用库 -->
-    <head>
-        <!-- Jquery -->
-        <script th:src="@{/js/common/jquery/jquery.js}"></script>
+    <!-- Jquery -->
+    <script th:src="@{/js/common/jquery/jquery.js}"></script>
 
-        <!-- Layui -->
-        <link th:href="@{/js/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
-        <link th:href="@{/js/common/layui/extend/dtree/dtree.css}" rel="stylesheet" type="text/css"/>
-        <link th:href="@{/js/common/layui/extend/dtree/font/dtreefont.css}" rel="stylesheet" type="text/css"/>
-        <script th:src="@{/js/common/layui/layui.js}"></script>
+    <!-- Layui -->
+    <link th:href="@{/js/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/js/common/layui/extend/dtree/dtree.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/js/common/layui/extend/dtree/font/dtreefont.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/js/common/layui/layui.js}"></script>
 
-        <!-- echarts-5.1.2 -->
-        <script th:src="@{/js/common/echarts/echarts.min.js}"></script>
+    <!-- echarts-5.1.2 -->
+    <script th:src="@{/js/common/echarts/echarts.min.js}"></script>
 
-        <!-- video-js -->
-        <link th:href="@{/js/common/video-js/video-js.css}" rel="stylesheet" type="text/css"/>
-        <script th:src="@{/js/common/video-js/video.js}"></script>
+    <!-- video-js -->
+    <link th:href="@{/js/common/video-js/video-js.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/js/common/video-js/video.js}"></script>
 
-        <!--CryptoJS jsencrypt -->
-        <script th:src="@{/js/common/encrypt/cryptojs.js}"></script>
-        <script th:src="@{/js/common/encrypt/jsencrypt.js}"></script>
-    </head>
+    <!--CryptoJS jsencrypt -->
+    <script th:src="@{/js/common/encrypt/cryptojs.js}"></script>
+    <script th:src="@{/js/common/encrypt/jsencrypt.js}"></script>
 
     <!-- 最后引入common.js、common.css -->
-    <head>
-        <link th:href="@{/css/common/common.css}" rel="stylesheet" type="text/css"/>
-        <script th:src="@{/js/common/Store.js}"></script>
-        <script th:src="@{/js/common/common.js}"></script>
-    </head>
-
-    <script th:inline="javascript">
-        //重写jq的ajax加密
-        jQueryExtend.ajaxExtend();
-    </script>
+    <link th:href="@{/css/common/common.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/js/common/Store.js}"></script>
+    <script th:src="@{/js/common/common.js}"></script>
 </head>
 
 <!-- 递归用户系统菜单模板 -->

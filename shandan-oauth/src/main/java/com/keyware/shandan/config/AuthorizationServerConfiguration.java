@@ -48,14 +48,22 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .and()
 
                 // client crm application
-                .withClient("crm")
-                .secret(passwordEncoder.encode("crm_secret"))
+                .withClient("control")
+                .secret(passwordEncoder.encode("control123456"))
                 .scopes("all")
                 .authorizedGrantTypes("authorization_code", "refresh_token")
-                .redirectUris("http://localhost:8090/crm/login")
+                .redirectUris("http://localhost:8100/control/login")
                 .accessTokenValiditySeconds(7200)
                 .autoApprove(true)
 
+                .and()
+                .withClient("bianmu")
+                .secret(passwordEncoder.encode("bianmu123456"))
+                .scopes("all")
+                .authorizedGrantTypes("authorization_code", "refresh_token")
+                .redirectUris("http://localhost:8080/bianmu/login")
+                .accessTokenValiditySeconds(7200)
+                .autoApprove(true)
                 .and()
                 .build();
     }

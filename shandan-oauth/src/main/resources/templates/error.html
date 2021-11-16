@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" th:inline="javascript">
+        let ctx = /*[[${#request.getContextPath()}]]*/ '/';
+        window.location.href = ctx;
+    </script>
+</head>
+<body>
+
+</body>
+</html>

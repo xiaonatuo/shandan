@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 @Data
@@ -77,4 +78,7 @@ public class UserVo implements Serializable {
     @TableLogic(value = "0", delval = "1")
     @TableField(value = "IS_DELETE")
     private Boolean deleted;
+
+    @TableField(exist = false)
+    private List<RoleVo> roles;
 }

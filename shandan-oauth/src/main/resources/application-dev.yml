@@ -18,3 +18,7 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+oauth:
+  logout:
+    success-url: /login?logout

@@ -77,8 +77,9 @@ public class DynamicallyUrlInterceptor extends AbstractSecurityInterceptor imple
 
             try {
                 fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
-            }
-            finally {
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
                 super.finallyInvocation(token);
             }
 

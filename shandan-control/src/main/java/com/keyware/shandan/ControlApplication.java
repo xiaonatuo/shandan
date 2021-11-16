@@ -53,7 +53,7 @@ public class ControlApplication {
      * 首页前端控制器
      */
     @Controller
-    @RequestMapping("/control")
+    @RequestMapping
     public class IndexController{
 
         @Autowired

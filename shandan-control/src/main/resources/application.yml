@@ -6,6 +6,9 @@ server:
   servlet:
     #应用路径，配置应用路径，可方便进行反向代理
     context-path: /control
+    session:
+      cookie:
+        name: AUTH_SESSION_CONTROL
   # 修改tomact吞吐量，这里不限制
   tomcat:
     max-swallow-size: -1

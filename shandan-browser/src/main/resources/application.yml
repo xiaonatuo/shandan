@@ -2,7 +2,9 @@ server:
   port: 8090
   servlet:
     context-path: /browser
-
+    session:
+      cookie:
+        name: AUTH_SESSION_BROWSER
 spring:
   application:
     name: shandan-browser

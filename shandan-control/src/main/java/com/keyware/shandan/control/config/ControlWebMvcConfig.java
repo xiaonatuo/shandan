@@ -12,9 +12,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class ControlWebMvcConfig implements WebMvcConfigurer {
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/index").setViewName("forward:/control/index");
-        WebMvcConfigurer.super.addViewControllers(registry);
-    }
+
 }

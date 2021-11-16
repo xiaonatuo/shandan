@@ -1,4 +1,7 @@
 ##### dev 配置 #######
+oauth:
+  server: http://localhost:8888/oauth-server
+
 spring:
   #数据库配置
   datasource:
@@ -13,11 +16,25 @@ spring:
 
   elasticsearch:
     rest:
-      uris: http://192.168.146.128:9200
+      uris: http://192.168.1.11:9200
 
   thymeleaf:
     # 页面缓存配置
     cache: false
+
+security:
+  oauth2:
+    client:
+      client-id: browser
+      client-secret: secret
+      access-token-uri: ${oauth.server}/oauth/token
+      user-authorization-uri: ${oauth.server}/oauth/authorize
+    resource:
+      user-info-uri: ${oauth.server}/user/info
+      jwt:
+        key-uri: ${oauth.server}/oauth/token_key
+
+
 
 project:
   #是否需要输入验证码

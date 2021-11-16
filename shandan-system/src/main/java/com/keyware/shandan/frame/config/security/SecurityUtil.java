@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -47,8 +48,20 @@ public class SecurityUtil {
         Authentication auth = ctx.getAuthentication();
         if (auth.getPrincipal() instanceof UserDetails) {
             user = (User) auth.getPrincipal();
+        }else if(auth.getPrincipal() instanceof String){
+            String username = (String) auth.getPrincipal();
+            user = new User(username, "", new ArrayList<>());
         }
         return user;
+    }
+
+    public static String getLoginUsername(){
+        SecurityContext ctx = SecurityContextHolder.getContext();
+        Authentication auth = ctx.getAuthentication();
+        if (auth.getPrincipal() instanceof String) {
+            return (String) auth.getPrincipal();
+        }
+        return null;
     }
 
     /**
