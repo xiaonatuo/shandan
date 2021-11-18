@@ -40,14 +40,9 @@ function save() {
  * @returns {Promise<boolean|boolean|*>}
  */
 async function getSaveStatus() {
-    await sleep(100);
+    await Util.sleep(100);
     if (saveFlag.done) {
         return saveFlag.ok;
     }
     return getSaveStatus();
-
-}
-
-function sleep(delay) {
-    return new Promise(resolve => setTimeout(resolve, delay));
 }

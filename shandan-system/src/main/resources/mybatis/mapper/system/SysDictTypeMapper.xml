@@ -4,8 +4,8 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.keyware.shandan.system.entity.SysDictType">
-        <id column="ID" property="ID" />
-        <result column="NAME" property="NAME" />
+        <id column="ID" property="id" />
+        <result column="NAME" property="name" />
         <result column="CREATE_USER" property="createUser" />
         <result column="CREATE_TIME" property="createTime" />
         <result column="MODIFY_USER" property="modifyUser" />

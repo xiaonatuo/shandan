@@ -10,7 +10,7 @@
     <link th:href="@{/css/sys/role/role.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<div class="layui-row layui-col-space15">
+<div class="layui-row">
     <!-- 树 -->
     <div class="layui-col-md6">
         <div class="layui-card">
@@ -65,7 +65,7 @@
                 </div>
             </div>
         </div>
-        <div class="layui-row layui-col-space10 config-row" style="margin-top:10px">
+        <div class="layui-row config-row" style="margin-top:10px">
             <div class="layui-col-md6">
                 <div class="layui-card">
                     <div class="layui-card-header">菜单配置</div>
@@ -93,11 +93,11 @@
 <script th:src="@{/js/sys/role/role.js}"></script>
 <script type="text/javascript">
     const sizeInit = function () {
-        let leftColHeight = window.innerHeight - 43 - 40 - 20
+        let leftColHeight = window.innerHeight - 43 - 20
         $(".simple-table").height(leftColHeight);
 
         let rightTopRowHeiht = $(".from-card").height();
-        $(".config-row .layui-card-body").height(leftColHeight - rightTopRowHeiht - 18)
+        $(".config-row .layui-card-body").height(leftColHeight - rightTopRowHeiht - 20)
     }
     window.onresize = sizeInit;
     sizeInit();

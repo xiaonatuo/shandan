@@ -4,21 +4,20 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.keyware.shandan.system.entity.SysDict">
-        <id column="ID" property="ID"/>
-        <result column="CODE" property="CODE"/>
+        <id column="ID" property="id"/>
+        <result column="DICT_CODE" property="dictCode"/>
         <result column="TYPE_ID" property="typeId"/>
-        <result column="NAME" property="NAME"/>
-        <result column="VALUE" property="VALUE"/>
-        <result column="DESC" property="DESC"/>
-        <result column="ORDER" property="ORDER"/>
-        <result column="STATE" property="STATE"/>
+        <result column="DICT_NAME" property="dictName"/>
+        <result column="DICT_VALUE" property="dictValue"/>
+        <result column="DICT_DESC" property="dictDesc"/>
+        <result column="DICT_ORDER" property="dictOrder"/>
+        <result column="DICT_STATE" property="dictState"/>
         <result column="CREATE_USER" property="createUser"/>
         <result column="CREATE_TIME" property="createTime"/>
         <result column="MODIFY_USER" property="modifyUser"/>
         <result column="MODIFY_TIME" property="modifyTime"/>
 
         <association property="type" column="TYPE_ID"
-                     javaType="com.keyware.shandan.system.entity.SysDictType"
                      select="com.keyware.shandan.system.mapper.SysDictTypeMapper.selectById"/>
     </resultMap>
 </mapper>

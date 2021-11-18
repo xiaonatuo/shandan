@@ -10,7 +10,7 @@
     <link th:href="@{/css/sys/menu/menu.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<div class="layui-row layui-col-space15">
+<div class="layui-row">
     <!-- 树 -->
     <div class="layui-col-md4">
         <div class="layui-card">
@@ -52,7 +52,7 @@
 <!-- js -->
 <script th:src="@{/js/sys/menu/menu.js}"></script>
 <script type="text/javascript">
-    const sizeInit = ()=> $(".layui-card-body").height(window.innerHeight - 43 - 40 - 20);
+    const sizeInit = ()=> $(".layui-card-body").height(window.innerHeight - 43 - 20);
     window.onresize = sizeInit;
     sizeInit();
 </script>

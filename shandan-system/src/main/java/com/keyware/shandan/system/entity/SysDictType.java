@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("SYS_DICT_TYPE")
+@TableName(value = "SYS_DICT_TYPE", resultMap = "BaseResultMap")
 public class SysDictType extends BaseEntity {
     private static final long serialVersionUID = 4551403110917711366L;
 

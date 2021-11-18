@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("SYS_DICT")
+@TableName(value = "SYS_DICT", resultMap = "BaseResultMap")
 public class SysDict extends BaseEntity {
 
     private static final long serialVersionUID = 4370118195317042167L;
@@ -31,8 +31,8 @@ public class SysDict extends BaseEntity {
     /**
      * 字典编码
      */
-    @TableField("CODE")
-    private String code;
+    @TableField("DICT_CODE")
+    private String dictCode;
 
     /**
      * 字典类型ID
@@ -43,32 +43,32 @@ public class SysDict extends BaseEntity {
     /**
      * 字典名称
      */
-    @TableField("NAME")
-    private String name;
+    @TableField("DICT_NAME")
+    private String dictName;
 
     /**
      * 字典值
      */
-    @TableField("VALUE")
-    private String value;
+    @TableField("DICT_VALUE")
+    private String dictValue;
 
     /**
      * 字典描述
      */
-    @TableField("DESC")
-    private String desc;
+    @TableField("DICT_DESC")
+    private String dictDesc;
 
     /**
      * 排序
      */
-    @TableField("ORDER")
-    private Integer order;
+    @TableField("DICT_ORDER")
+    private Integer dictOrder;
 
     /**
      * 状态，0：停用，1：启用
      */
-    @TableField("STATE")
-    private Boolean state;
+    @TableField("DICT_STATE")
+    private Boolean dictState;
 
     /**
      * 数据字典类型对象

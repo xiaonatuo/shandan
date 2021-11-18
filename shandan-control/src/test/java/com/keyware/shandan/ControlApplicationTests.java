@@ -1,4 +1,4 @@
-package com.keywaer.shandan;
+package com.keyware.shandan;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
