@@ -75,6 +75,12 @@ public class SysFile extends EsCommonEntity {
     @TableField("PATH")
     private String path;
 
+    /**
+     * 文件描述
+     */
+    @TableField("REMARK")
+    private String remark;
+
     public SysFile() {
     }
 

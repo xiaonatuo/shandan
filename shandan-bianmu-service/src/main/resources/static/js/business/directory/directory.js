@@ -124,7 +124,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 content: `${ctx}/sys/file/layer?directoryId=${basicData.id}`,
                 success: function (layero, index) {
                     fileUploadLayerWin = window[layero.find('iframe')[0]['name']];
-                    layer.iframeAuto(index)
+                    //layer.iframeAuto(index)
                 },
                 yes: function (index) {
                     fileUploadLayerWin.save().then(ok => {
