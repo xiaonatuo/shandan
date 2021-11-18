@@ -1,9 +1,8 @@
 package com.keyware.shandan.system.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.keyware.shandan.common.entity.BaseEntity;
+import com.keyware.shandan.common.util.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,8 +24,8 @@ public class SysDict extends BaseEntity {
     /**
      * 主键
      */
-    @TableId("ID")
-    private Integer id;
+    @TableId(value = "ID", type = IdType.ASSIGN_ID)
+    private String id;
 
     /**
      * 字典编码
@@ -38,6 +37,7 @@ public class SysDict extends BaseEntity {
      * 字典类型ID
      */
     @TableField("TYPE_ID")
+    @OrderBy(isDesc = false, sort = 1)
     private Integer typeId;
 
     /**
@@ -62,6 +62,7 @@ public class SysDict extends BaseEntity {
      * 排序
      */
     @TableField("DICT_ORDER")
+    @OrderBy(isDesc = false, sort = 2)
     private Integer dictOrder;
 
     /**
@@ -82,5 +83,16 @@ public class SysDict extends BaseEntity {
     public String getTypeName() {
         if (type != null) return this.type.getName();
         return "";
+    }
+
+    /**
+     *
+     * @return 获取字典值，如果dictValue为空，则返回dictCode
+     */
+    public String getValue(){
+        if(StringUtils.isBlank(this.dictValue)){
+            return this.dictCode;
+        }
+        return this.dictValue;
     }
 }

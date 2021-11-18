@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-11-17
  */
 @Service
-public class SysDictServiceImpl extends BaseServiceImpl<SysDictMapper, SysDict, Integer> implements SysDictService {
+public class SysDictServiceImpl extends BaseServiceImpl<SysDictMapper, SysDict, String> implements SysDictService {
 
 }

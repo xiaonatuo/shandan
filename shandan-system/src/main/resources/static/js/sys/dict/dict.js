@@ -22,7 +22,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
         layer.open({
             id: 'dictEdit',
             type: 2,
-            title: '权限编辑',
+            title: '数据字典编辑',
             area: ['550px', '530px'],
             content: ctx + `/sys/dict/edit?id=${id}`,
             btn: ['确定', '取消'],
@@ -43,12 +43,12 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
     }
 
     /**
-     * 删除角色
+     * 删除
      * @param id
      * @param callback
      */
     function deleteDict(id, callback) {
-        $.delete(`${ctx}/sys/dict/delete/${id}`, {}, function (res) {
+        /*$.delete(`${ctx}/sys/dict/delete/${id}`, {}, function (res) {
             res.msg = res.flag ? '删除成功' : '删除失败';
             let icon = res.flag ? 1 : 5;
             layer.msg(res.msg, {icon, time: 2000}, function () {
@@ -57,7 +57,17 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
                 }
             });
             callback && callback();
-        });
+        });*/
+        Util.send(`/sys/dict/delete/${id}`, {}, 'delete').then(res =>{
+            res.msg = res.flag ? '删除成功' : '删除失败';
+            let icon = res.flag ? 1 : 5;
+            layer.msg(res.msg, {icon, time: 2000}, function () {
+                if (res.flag) {
+                    gtable.reload();
+                }
+            });
+            callback && callback();
+        }).catch(err=>{console.info(err)})
     }
 
     /**
@@ -75,7 +85,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
                 openEditLayer(rowData.id);
                 break;
             case 'delete':
-                layer.confirm('确定要删除该权限吗？', function (index) {
+                layer.confirm('确定要删除该字典数据吗？', function (index) {
                     deleteDict(rowData.id, () => layer.close(index));
                 });
                 break;
@@ -101,7 +111,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
             id: 'dictTable',
             url: ctx + '/sys/dict/page',
             toolbar: '#tableToolBar',
-            title: '权限列表',
+            title: '数据字典列表',
             cols: [[
                 {field: 'dictCode', title: '字典编码'},
                 {field: 'typeName', title: '字典类型'},

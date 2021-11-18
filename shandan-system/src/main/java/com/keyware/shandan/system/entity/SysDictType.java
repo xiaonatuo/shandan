@@ -1,5 +1,6 @@
 package com.keyware.shandan.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -24,8 +25,8 @@ public class SysDictType extends BaseEntity {
     /**
      * 主键
      */
-    @TableId("ID")
-    private Integer id;
+    @TableId(value = "ID", type = IdType.INPUT)
+    private String id;
 
     /**
      * 字典编码

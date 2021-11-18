@@ -21,6 +21,10 @@ spring:
     rest:
       uris: http://192.168.1.11:9200
 
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 security:
   oauth2:
     client:

@@ -11,6 +11,6 @@ import com.keyware.shandan.system.entity.SysDict;
  * @author GuoXin
  * @since 2021-11-17
  */
-public interface SysDictService extends IBaseService<SysDict, Integer> {
+public interface SysDictService extends IBaseService<SysDict, String> {
 
 }

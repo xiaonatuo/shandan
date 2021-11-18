@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/sys/dict")
-public class SysDictController extends BaseController<SysDictService, SysDict, Integer> {
+public class SysDictController extends BaseController<SysDictService, SysDict, String> {
 
 
     @Autowired

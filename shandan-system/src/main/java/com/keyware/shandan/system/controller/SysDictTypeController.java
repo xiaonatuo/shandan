@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/sys/dict/type")
-public class SysDictTypeController extends BaseController<SysDictTypeService, SysDictType, Integer> {
+public class SysDictTypeController extends BaseController<SysDictTypeService, SysDictType, String> {
 
 
     @GetMapping("/")
