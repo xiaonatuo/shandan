@@ -466,6 +466,35 @@ window.jsPrivateKey = genKeyPair.privateKey;
 //重写jq的ajax加密
 jQueryExtend.ajaxExtend();
 
+
+const dict_url = `/sys/dict/list`;
+// 储存的key
+const STORE_DICT_KEY = 'SYS_DICT_DATA'
+const STORE_DICT_INIT_TIME_KEY = 'SYS_DICT_INIT_TIME';
+// 数据字典缓存初始化时间
+let initTime = _Store.get(STORE_DICT_INIT_TIME_KEY)
+const currentTime = new Date().getTime();
+// 当上次初始化时间大于当前时间1分钟后，才可以执行初始化，避免重复请求
+if(!initTime || (currentTime - initTime) > 1000 * 60){
+    _Store.set(STORE_DICT_INIT_TIME_KEY, new Date().getTime());
+    Util.post(dict_url, {}).then(res=>{
+        closeLoading();
+        if(res.flag){
+            let data = res.data;
+            let dict = {};
+            _Store.set(STORE_DICT_KEY, dict)
+            for (let item of data) {
+                let key = item.typeId;
+                if(!dict[key]){
+                    dict[key] = [];
+                }
+                dict[key].push(item);
+            }
+            _Store.set(STORE_DICT_KEY, dict)
+        }
+    })
+}
+
 /**
  * layui组件扩展
  */
@@ -473,6 +502,7 @@ layui.config({
     base: `${ctx}/js/common/layui/extend/`
 }).extend({
     dtree: 'dtree/dtree',
+    dict: 'dict', // 数据字典组件
     globalTree: 'globalTree', // 通用树组件
     orgTree: 'orgTree', // 部门树组件
     menuTree: 'menuTree', // 菜单树组件

@@ -84,7 +84,7 @@ class Store {
     filterValue(val) {
         let vType = this.getType(val)
         let nullVal = ['null', 'undefined', 'NaN']
-        let stringVal = ['boolen', 'number', 'string']
+        let stringVal = ['boolean', 'number', 'string']
         if (nullVal.includes(vType)) return ''
         if (stringVal.includes(vType)) return val
         return JSON.stringify(val);

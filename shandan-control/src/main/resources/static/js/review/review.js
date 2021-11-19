@@ -45,7 +45,7 @@ const cols = {
         {field: 'themeTask', title: '主题任务'},
         {field: 'modifyUserName', title: '提交人'},
         {field: 'collectionTime', title: '采集时间'},
-        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 120, align:'center'}
+        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 120, align: 'center'}
     ]],
     DIRECTORY: [[
         {field: 'id', title: 'ID', hide: true},
@@ -53,7 +53,7 @@ const cols = {
         {field: 'directoryPath', title: '目录路径'},
         {field: 'modifyUserName', title: '提交人'},
         {field: 'modifyTime', title: '提交时间'},
-        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 120, align:'center'}
+        {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 120, align: 'center'}
     ]]
 }
 let reviewForm;
@@ -92,7 +92,7 @@ class Review {
                     where: {reviewStatus: reviewStatus},
                     cols: cols[opt.entityType],
                     done: function (res) {
-                        reviewForm.val('tableToolForm', {reviewStatus:reviewStatus})
+                        reviewForm.val('tableToolForm', {reviewStatus: reviewStatus})
                         reviewForm.render('radio', 'tableToolForm');
                     }
                 }
@@ -105,16 +105,16 @@ class Review {
 
             listPage.addTableRowEvent('details', function (data) {
                 let url;
-                if(data.metadataName){ // 数据资源类型数据
+                if (data.metadataName) { // 数据资源类型数据
                     url = `${ctx}/business/metadata/details/${data.id}`;
-                }else{ // 目录类型数据
+                } else { // 目录类型数据
                     url = `${ctx}/business/directory/details/${data.id}`;
                 }
                 layer.open({
                     title: false,
                     closeBtn: false,
-                    type:2,
-                    area:[window.innerWidth+'px', window.innerHeight+'px'],
+                    type: 2,
+                    area: [window.innerWidth + 'px', window.innerHeight + 'px'],
                     content: url,
                     success: function (layerObj, index) {
                         window.closeDetailsLayer = function () {
@@ -172,17 +172,17 @@ class Review {
                     return false;
                 });
 
-                if(status){
-                    setTimeout(()=>{
+                if (status) {
+                    setTimeout(() => {
                         $(`input[type="radio"][name="status"][value="${status}"]`).next().click();
                     }, 100)
                 }
             },
             yes: function () {
                 let formData = reviewForm.val('reviewForm');
-                if(formData.status){
+                if (formData.status) {
                     $('#btn-submit').click();
-                }else{
+                } else {
                     layer.msg('请选择审核操作选项！');
                     return false;
                 }
@@ -196,7 +196,7 @@ layui.define([], function (exports) {
 
     const component = {
         reviewComponent: undefined,
-        renderMetadataList: function(){
+        renderMetadataList: function () {
             const review = new Review();
             review.options.entityType = ReviewEntityType.METADATA;
             review.init()
@@ -209,7 +209,7 @@ layui.define([], function (exports) {
             this.reviewComponent = review;
         },
         openReviewLayer: function (id, status, callback) {
-            this.reviewComponent.reviewOperate(id, ()=>{
+            this.reviewComponent.reviewOperate(id, () => {
                 callback && callback()
                 //window.location.reload();
             }, status);
