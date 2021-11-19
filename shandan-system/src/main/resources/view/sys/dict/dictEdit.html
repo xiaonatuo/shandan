@@ -18,49 +18,62 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">字典编码</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dictCode" autocomplete="off" placeholder="字典编码" th:value="${dict.dictCode}"
+                            <input type="text" name="dictCode" autocomplete="off" placeholder="字典编码"
+                                   th:value="${dict.dictCode}"
                                    class="layui-input" lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">字典类型</label>
-                        <div class="layui-input-block">
-                            <select id="dictTypeSelect" name="typeId" th:value="${dict.typeId}" lay-verify="required" lay-search="" lay-filter="dictTypeSelect">
-                                <option value="">直接选择或搜索选择</option>
-                            </select>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select id="dictTypeSelect" name="typeId" th:value="${dict.typeId}"
+                                        lay-verify="required" lay-search="" lay-filter="dictTypeSelect">
+                                    <option value="">直接选择或搜索选择</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: auto; padding: 7px 15px">
+                                <a id="editDictTypeBtn" class="layui-btn layui-btn-xs layui-btn-primary"
+                                   style="border: 0; color: #5FB878;text-decoration: underline;">编辑字典类型</a>
+                            </div>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">字典名称</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dictName" autocomplete="off" placeholder="字典名称" th:value="${dict.dictName}"
+                            <input type="text" name="dictName" autocomplete="off" placeholder="字典名称"
+                                   th:value="${dict.dictName}"
                                    class="layui-input" lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">字典值</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dictValue" autocomplete="off" placeholder="字典值" th:value="${dict.dictValue}"
+                            <input type="text" name="dictValue" autocomplete="off" placeholder="字典值"
+                                   th:value="${dict.dictValue}"
                                    class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dictOrder" autocomplete="off" placeholder="排序" th:value="${dict.dictOrder}"
+                            <input type="text" name="dictOrder" autocomplete="off" placeholder="排序"
+                                   th:value="${dict.dictOrder}"
                                    class="layui-input" lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">状态</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" id="dictStateBox" lay-skin="switch" th:value="${dict.dictState}" lay-text="启用|停用" lay-filter="dictStateBox">
+                            <input type="checkbox" id="dictStateBox" lay-skin="switch" th:value="${dict.dictState}"
+                                   lay-text="启用|停用" lay-filter="dictStateBox">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">字典描述</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dictDesc" autocomplete="off" placeholder="字典描述" th:value="${dict.dictDesc}"
+                            <input type="text" name="dictDesc" autocomplete="off" placeholder="字典描述"
+                                   th:value="${dict.dictDesc}"
                                    class="layui-input">
                         </div>
                     </div>

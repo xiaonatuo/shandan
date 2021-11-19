@@ -9,7 +9,7 @@
 <div class="layui-row">
     <div class="layui-col-md12">
         <div class="layui-card">
-            <div class="layui-card-header">权限列表</div>
+            <div class="layui-card-header">数据字典</div>
             <div class="layui-card-body simple-table">
                 <!-- 表格主体 -->
                 <table class="layui-hide" id="dictTable" lay-filter="dictTable"></table>
@@ -21,7 +21,7 @@
                                 <button class="layui-btn layui-btn-sm" lay-event="add">新增</button>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label">字典类型</label>
+                                <label class="layui-form-label">字典类型：</label>
                                 <div class="layui-input-inline">
                                     <select id="dictTypeSelect" name="dictType" lay-search="" lay-filter="dictTypeSelect">
                                         <option value="">直接选择或搜索选择</option>
@@ -42,6 +42,7 @@
 </div>
 </body>
 <!-- js -->
+<script th:src="@{/js/sys/dict/dictType.js}"></script>
 <script th:src="@{/js/sys/dict/dict.js}"></script>
 <script type="text/javascript">
     const sizeInit = () => $(".simple-table").height(window.innerHeight - 43 - 20)

@@ -3,6 +3,8 @@ layui.use(['form'], function () {
     const form = layui.form;
     initDictTypeData();
     initDictStateCheckBox();
+
+
     /**
      * 初始化数据字典类型
      */
@@ -30,6 +32,9 @@ layui.use(['form'], function () {
         form.render('select');
     }
 
+    /**
+     * 初始化字典状态开关组件
+     */
     function initDictStateCheckBox(){
         if(dict.dictState == null){
             dict.dictState = true;
@@ -42,7 +47,18 @@ layui.use(['form'], function () {
     }
 
 
+    /**
+     * 编辑字典类型按钮点击事件监听
+     */
+    $('#editDictTypeBtn').on('click', function () {
+        // 这里使用父级页面的进行打开，否则弹窗的框架内容会被本级编辑页面的弹框包围而导致显示不全
+        window.parent.layui.dictType.openManagementLayer(()=>initDictTypeData());
+    });
 
+
+    /**
+     * 表单提交事件监听
+     */
     form.on('submit(dictForm)', function (elem) {
         let data = form.val('dictForm');
         $.post(ctx + "/sys/dict/save", data, function (data) {

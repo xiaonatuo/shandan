@@ -38,7 +38,7 @@ public class SysDict extends BaseEntity {
      */
     @TableField("TYPE_ID")
     @OrderBy(isDesc = false, sort = 1)
-    private Integer typeId;
+    private String typeId;
 
     /**
      * 字典名称

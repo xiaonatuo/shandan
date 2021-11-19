@@ -2,12 +2,15 @@ package com.keyware.shandan.system.controller;
 
 
 import com.keyware.shandan.common.controller.BaseController;
+import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.system.entity.SysDictType;
 import com.keyware.shandan.system.service.SysDictTypeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Arrays;
 
 /**
  * <p>
@@ -21,11 +24,22 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/sys/dict/type")
 public class SysDictTypeController extends BaseController<SysDictTypeService, SysDictType, String> {
 
+    @Autowired
+    private SysDictTypeService dictTypeService;
 
     @GetMapping("/")
-    public ModelAndView view(ModelAndView view){
+    public ModelAndView view(ModelAndView view) {
         view.setViewName("");
 
         return view;
+    }
+
+    @DeleteMapping("/delete")
+    public Result<Object> deleteByIds(String ids) {
+        if (StringUtils.isBlank(ids)) {
+            return Result.of(null, false, "参数不能为空");
+        }
+        dictTypeService.removeByIds(Arrays.asList(ids.split(",")));
+        return Result.of(true);
     }
 }

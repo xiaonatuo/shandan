@@ -48,16 +48,6 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
      * @param callback
      */
     function deleteDict(id, callback) {
-        /*$.delete(`${ctx}/sys/dict/delete/${id}`, {}, function (res) {
-            res.msg = res.flag ? '删除成功' : '删除失败';
-            let icon = res.flag ? 1 : 5;
-            layer.msg(res.msg, {icon, time: 2000}, function () {
-                if (res.flag) {
-                    gtable.reload();
-                }
-            });
-            callback && callback();
-        });*/
         Util.send(`/sys/dict/delete/${id}`, {}, 'delete').then(res =>{
             res.msg = res.flag ? '删除成功' : '删除失败';
             let icon = res.flag ? 1 : 5;
@@ -67,7 +57,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
                 }
             });
             callback && callback();
-        }).catch(err=>{console.info(err)})
+        }).catch(()=>{showErrorMsg()})
     }
 
     /**
