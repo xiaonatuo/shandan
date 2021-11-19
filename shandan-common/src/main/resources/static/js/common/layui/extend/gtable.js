@@ -81,6 +81,46 @@ layui.define(['table'], function (exports) {
 
     const gtable = $.extend({}, table);
 
+    class Gtable{
+        options = options;
+        constructor(ops) {
+            this.options = $.extend(this.options, ops);
+            this.render();
+        }
+
+        /**
+         * 渲染组件
+         */
+        render(){
+            let _table = render(this.options);
+            $.extend(this, _table);
+        }
+
+        /**
+         * 重新加载组件
+         * @param ops
+         */
+        reload(ops){
+            table.reload(this.options.id, $.extend(this.options, ops));
+        }
+
+        /**
+         * 获取选中数据行
+         * @returns {*}
+         */
+        getCheckStatus(){
+            return table.checkStatus(this.options.id);
+        }
+
+        /**
+         * 获取组件数据
+         * @returns {*}
+         */
+        getData(){
+            return table.getData(this.options.id);
+        }
+    }
+
     /**
      * 表格初始化
      * @param opt
@@ -92,7 +132,7 @@ layui.define(['table'], function (exports) {
         if (options.id.startsWith('#')) {
             options.id = options.id.substring(1)
         }
-        return render(options);
+        return new Gtable(options);
     };
     /**
      * 表格重载
