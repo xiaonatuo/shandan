@@ -311,9 +311,25 @@ window.closeLoading = () => {
         loadIndex = undefined;
     }
 }
-window.showErrorMsg = (msg = '服务器连接异常') => {
-    layer.msg(msg, {icon: 5})
+window.showWarningMsg = (msg = '警告提示') => {
+    layer.msg(msg, {icon: 0, time: 2000})
 }
+window.showOkMsg = (msg = 'OK提示') => {
+    layer.msg(msg, {icon: 1, time: 1000})
+}
+window.showErrorMsg = (msg = '系统异常') => {
+    layer.msg(msg, {icon: 2, time: 2000})
+}
+window.showConfirmMsg = (msg = '疑问提示') => {
+    layer.msg(msg, {icon: 3, time: 2000})
+}
+window.showLockMsg = (msg = '禁用提示') => {
+    layer.msg(msg, {icon: 4, time: 2000})
+}
+window.showErrorMsg2 = (msg = '服务器连接异常') => {
+    layer.msg(msg, {icon: 5, time: 2000})
+}
+window.showOkMsg2 = (msg = 'OK提示') => {layer.msg(msg, {icon: 6, time: 1000})}
 
 /**
  * 常用工具方法
