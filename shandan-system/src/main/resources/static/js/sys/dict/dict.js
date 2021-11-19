@@ -28,6 +28,11 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
             btn: ['确定', '取消'],
             success: function (layero, index) {
                 editLayerWin = window[layero.find('iframe')[0]['name']]
+                // 编辑窗口内对字典类型修改后需要的回调函数
+                window.dictTypeEditCallback = function () {
+                    //初始化字典类型数据
+                    initDictTypeData();
+                };
             },
             yes: function (index) {
                 editLayerWin && editLayerWin.save().then(ok => {
@@ -88,7 +93,6 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
      * @param res
      */
     function tableDone(res) {
-        //console.info('数据表格加载完成', res);
         $('#searchKeyInput').val(searchText);
         renderDictTypeSelect();
     }
@@ -131,6 +135,7 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
         Util.post('/sys/dict/type/list', {}).then(res => {
             if(res.flag){
                 dictTypes = res.data;
+                renderDictTypeSelect();
             }else {
                 showErrorMsg('数据字典类型初始化失败')
             }
@@ -143,8 +148,10 @@ layui.use(['form', 'menuTree', 'layer', 'gtable', 'permisConfig'], function () {
     function renderDictTypeSelect(){
         let data = dictTypes;
         let htm = '<option value="">直接选择或搜索选择</option>';
-        for(let type of data){
-            htm += `<option value="${type.id}">${type.name}</option>`
+        if(data){
+            for(let type of data){
+                htm += `<option value="${type.id}">${type.name}</option>`
+            }
         }
         $('#dictTypeSelect').html(htm);
         // 开始渲染

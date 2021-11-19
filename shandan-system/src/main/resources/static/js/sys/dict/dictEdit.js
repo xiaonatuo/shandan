@@ -52,7 +52,12 @@ layui.use(['form'], function () {
      */
     $('#editDictTypeBtn').on('click', function () {
         // 这里使用父级页面的进行打开，否则弹窗的框架内容会被本级编辑页面的弹框包围而导致显示不全
-        window.parent.layui.dictType.openManagementLayer(()=>initDictTypeData());
+        window.parent.layui.dictType.openManagementLayer(()=> {
+            // 编辑字典类型后的回调
+            initDictTypeData();
+            // 同时出触发页面的渲染回调函数
+            window.parent.dictTypeEditCallback();
+        });
     });
 
 
