@@ -109,5 +109,13 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
+
+
+        <!--达梦数据库驱动-->
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>Dm8JdbcDriver18</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

@@ -46,10 +46,10 @@
             <artifactId>mybatis-plus-generator-ui</artifactId>
         </dependency>
 
+        <!--达梦数据库驱动-->
         <dependency>
             <groupId>com.dameng</groupId>
             <artifactId>Dm8JdbcDriver18</artifactId>
-            <version>8.1.0.157</version>
         </dependency>
 
         <dependency>
