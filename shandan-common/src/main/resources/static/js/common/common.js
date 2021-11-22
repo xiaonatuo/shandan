@@ -400,27 +400,30 @@ commonUtil = {
      * get请求
      * @param url 请求地址
      * @param data 请求数据
+     * @param loading 是否显示loading状态
      * @returns {Promise<unknown>}
      */
-    get: (url, data) => Util.send(url, data),
+    get: (url, data, loading=true) => Util.send(url, data, loading),
 
     /**
      * post请求
      * @param url 请求地址
      * @param data 请求数据
+     * @param loading 是否显示loading状态
      * @returns {Promise<unknown>}
      */
-    post: (url, data) => Util.send(url, data, 'post'),
+    post: (url, data, loading=true) => Util.send(url, data, 'post',loading),
 
     /**
      * 封装ajax异步请求
      * @param url 请求地址
      * @param data 请求数据
      * @param type 请求类型
+     * @param loading 是否显示loading状态
      * @returns {Promise<unknown>}
      */
-    send: (url, data, type = 'get') => {
-        showLoading()
+    send: (url, data, type = 'get', loading=true) => {
+        if(loading) showLoading()
         let promise = new Promise(function (resolve, reject) {
             $.ajax({
                 url:`${ctx}${url}`,
@@ -437,7 +440,9 @@ commonUtil = {
                 }
             })
         })
-        promise.finally(() => closeLoading());
+        promise.finally(() => {
+            if (loading) closeLoading()
+        });
         return promise;
     },
 
@@ -477,8 +482,7 @@ const currentTime = new Date().getTime();
 // 当上次初始化时间大于当前时间1分钟后，才可以执行初始化，避免重复请求
 if(!initTime || (currentTime - initTime) > 1000 * 60){
     _Store.set(STORE_DICT_INIT_TIME_KEY, new Date().getTime());
-    Util.post(dict_url, {}).then(res=>{
-        closeLoading();
+    Util.post(dict_url, {}, false).then(res=>{
         if(res.flag){
             let data = res.data;
             let dict = {};
