@@ -159,7 +159,7 @@ layui.define(['form'], function (exports) {
                             let lay_elem = _elem.parent().find(`select[name="${this.name}"]`).next();
                             lay_elem.addClass('select-readonly').find('.layui-select-title').off('click').children().css('cursor', 'auto');
                     }
-                }, 100);
+                }, 50);
             }
 
             _cache.set(this.id, this);
