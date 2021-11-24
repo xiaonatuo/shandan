@@ -122,6 +122,46 @@ layui.define(['form'], function (exports) {
 
             // 设置默认值
             this.setData(this.data);
+
+            // 设置只读
+            if (this.readonly) {
+                setTimeout(() => {
+                    // 先添加用于覆盖layui样式的内部样式到head中
+                    $('head').append(`
+                        <style>
+                            /* 所有只读组件鼠标样式*/
+                            .readonly_cursor:hover{cursor: auto}
+                            /* 单选按钮的只读样式 */
+                            .layui-form-radio.radio-readonly i{color: #c2c2c2}
+                            .layui-form-radio.radio-readonly div{color: #000000}
+                            .layui-form-radio.radio-readonly:hover i{color: #c2c2c2 !important;}
+                            .layui-form-radio.radio-readonly:hover div{color: #000000 !important;}
+                            /* 复选框的只读样式 */
+                            .layui-form-checkbox.radio-readonly:hover i{border-color: #d2d2d2;background-color: #fff}
+                            .layui-form-checked.radio-readonly i{border-color: #b3b3b3 !important;background-color: #b3b3b3 !important;}
+                            /* 下拉框的只读样式 */
+                            .layui-form-select.select-readonly .layui-input:focus{border-color: #eee !important;}
+                            .layui-form-select.select-readonly input{color: #757575}
+                            .layui-form-select.select-readonly i{display: none}
+                        </style>`);
+
+                    switch (this.type) {
+                        case "radio":
+                        case "checkbox":
+                            let elements = _elem.parent().find(`input[type="${this.type}"][name="${this.name}"]`);
+                            $.each(elements, function (index) {
+                                let lay_elem = $(this).next();
+                                // 移除click事件监听
+                                lay_elem.off('click').addClass('radio-readonly').css('cursor', 'auto');
+                            });
+                            break;
+                        case "select":
+                            let lay_elem = _elem.parent().find(`select[name="${this.name}"]`).next();
+                            lay_elem.addClass('select-readonly').find('.layui-select-title').off('click').children().css('cursor', 'auto');
+                    }
+                }, 100);
+            }
+
             _cache.set(this.id, this);
         }
 
@@ -198,11 +238,7 @@ layui.define(['form'], function (exports) {
         }
         let nodes_html = nodes.join('');
 
-        let disabled = '';
-        if (_this.readonly && (_this.readonly == 'readonly' || _this.readonly == 'true')) {
-            disabled = 'disabled';
-        }
-        return `<select id="${_this.id}" name="${_this.name}" ${disabled} lay-filter="${_this.id}">${nodes_html}</select>`;
+        return `<select id="${_this.id}" name="${_this.name}" lay-filter="${_this.id}">${nodes_html}</select>`;
     }
 
     /**
@@ -214,14 +250,14 @@ layui.define(['form'], function (exports) {
     function normalSingleNodeDOM(_this, list) {
         let nodes = [];
 
-        let readonly = false;
+        /*let readonly = false;
         if (_this.readonly && (_this.readonly == 'readonly' || _this.readonly == 'true')) {
             readonly = true;
-        }
+        }*/
 
         for (let dict of list) {
             let disabled = '';
-            if (readonly || !dict.dictState) {
+            if (!dict.dictState) {
                 disabled = 'disabled';
             }
             nodes.push(`<input type="${_this.type}" ${disabled}  name="${_this.name}" value="${dict.dictCode}" title="${dict.dictName}" lay-skin="primary" lay-filter="${_this.id}">`)
