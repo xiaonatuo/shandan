@@ -129,8 +129,6 @@ layui.define(['form'], function (exports) {
                     // 先添加用于覆盖layui样式的内部样式到head中
                     $('head').append(`
                         <style>
-                            /* 所有只读组件鼠标样式*/
-                            .readonly_cursor:hover{cursor: auto}
                             /* 单选按钮的只读样式 */
                             .layui-form-radio.radio-readonly i{color: #c2c2c2}
                             .layui-form-radio.radio-readonly div{color: #000000}
