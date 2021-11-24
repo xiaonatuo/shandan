@@ -50,6 +50,7 @@ layui.define(['form'], function (exports) {
         dictType = '';// 数据字典类型
         data = '';// 选中的数据
         change;// 数据改变后的回调函数
+        readonly;// 是否只读
 
         constructor(type, options) {
             if (!type) {
@@ -78,6 +79,7 @@ layui.define(['form'], function (exports) {
             this.DICT = _Store.get(STORE_DICT_KEY);
             this.change = options.onchange || function () {
             };
+            this.readonly = options.readonly;
 
             // 开始渲染
             this.render();
@@ -90,7 +92,7 @@ layui.define(['form'], function (exports) {
             let dict_list;
             if (this.DICT) {
                 dict_list = this.DICT[this.dictType] || [];
-            }else{
+            } else {
                 dict_list = [];
             }
 
@@ -123,6 +125,10 @@ layui.define(['form'], function (exports) {
             _cache.set(this.id, this);
         }
 
+        /**
+         * 设置组件数据
+         * @param data
+         */
         setData(data) {
             if (!data) return;
             if (!this.formFilter) {
@@ -135,18 +141,29 @@ layui.define(['form'], function (exports) {
 
             if (this.type == 'checkbox') {
                 let values = data;
+                let elements = $(`[lay-filter="${this.formFilter}"] input[type="checkbox"][name="${this.name}"]`);
                 if (!Array.isArray(data)) {
                     values = data.split(',');
                 }
+
                 for (let val of values) {
-                    $(`[lay-filter="${this.formFilter}"] input[type="checkbox"][name="${this.name}"][value="${val}"]`).attr('checked', true);
+                    for (let index = 0; index < elements.length; index++) {
+                        let elem = elements[index];
+                        if (elem.value == val) {
+                            $(elem).attr('checked', 'checked');
+                        } else {
+                            $(elem).attr('checked', null);
+                        }
+                    }
                 }
+
             } else {
                 if (Array.isArray(data)) data = data[0]
                 let formData = {};
                 formData[this.name] = data;
                 form.val(this.formFilter, formData);
             }
+
             form.render(this.type);
         }
 
@@ -170,12 +187,22 @@ layui.define(['form'], function (exports) {
      * @returns {string}
      */
     function selectDOM(_this, list) {
+
         let nodes = [`<option value="">请选择</option>`];
         for (let dict of list) {
-            nodes.push(`<option value="${dict.dictCode}">${dict.dictName}</option>`)
+            let disabled = '';
+            if (!dict.dictState) {
+                disabled = 'disabled';
+            }
+            nodes.push(`<option ${disabled} value="${dict.dictCode}">${dict.dictName}</option>`)
         }
         let nodes_html = nodes.join('');
-        return `<select id="${_this.id}" name="${_this.name}" lay-filter="${_this.id}">${nodes_html}</select>`;
+
+        let disabled = '';
+        if (_this.readonly && (_this.readonly == 'readonly' || _this.readonly == 'true')) {
+            disabled = 'disabled';
+        }
+        return `<select id="${_this.id}" name="${_this.name}" ${disabled} lay-filter="${_this.id}">${nodes_html}</select>`;
     }
 
     /**
@@ -186,8 +213,18 @@ layui.define(['form'], function (exports) {
      */
     function normalSingleNodeDOM(_this, list) {
         let nodes = [];
+
+        let readonly = false;
+        if (_this.readonly && (_this.readonly == 'readonly' || _this.readonly == 'true')) {
+            readonly = true;
+        }
+
         for (let dict of list) {
-            nodes.push(`<input type="${_this.type}" name="${_this.name}" value="${dict.dictCode}" title="${dict.dictName}" lay-skin="primary" lay-filter="${_this.id}">`)
+            let disabled = '';
+            if (readonly || !dict.dictState) {
+                disabled = 'disabled';
+            }
+            nodes.push(`<input type="${_this.type}" ${disabled}  name="${_this.name}" value="${dict.dictCode}" title="${dict.dictName}" lay-skin="primary" lay-filter="${_this.id}">`)
         }
         return nodes.join('');
     }
@@ -204,9 +241,10 @@ layui.define(['form'], function (exports) {
                 name = _elem.attr('dict-name'),
                 type = _elem.attr('dict-type'),
                 dictType = _elem.attr('dict-component'),
+                readonly = _elem.attr('readonly'),
                 formFilter = getFormElementFilter(_elem);
 
-            let option = {elem, id, name, type, formFilter};
+            let option = {elem, id, name, type, formFilter, readonly};
             new DictComponent(dictType, option)
         });
     });
@@ -277,7 +315,7 @@ layui.define(['form'], function (exports) {
             let dict = _cache.get(id);
             if (dict) {
                 dict.onchange(callback);
-            }else{
+            } else {
                 console.error('组件未定义：' + id);
             }
         },
@@ -291,7 +329,7 @@ layui.define(['form'], function (exports) {
             let dict = _cache.get(id);
             if (dict) {
                 _cache.get(id).setData(data);
-            }else{
+            } else {
                 console.error('组件未定义：' + id);
             }
         }
