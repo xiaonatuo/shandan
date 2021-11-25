@@ -13,7 +13,7 @@
     </style>
 </head>
 <body onselectstart = "return false">
-<div class="layui-row layui-col-space15">
+<div class="layui-row">
     <!-- 树 -->
     <div class="layui-col-md3">
         <div class="layui-card" style="padding-top: 15px;">
@@ -146,7 +146,7 @@
     {{#
     let {data, flag, msg} = d;
     }}
-    <div class="layui-form">
+    <div class="layui-form" lay-filter="metadata-details-form">
         {{# if(flag) { }}
         <div class="layui-form-item">
             <label class="layui-form-label">数据表</label>
@@ -169,7 +169,23 @@
         <div class="layui-form-item">
             <label class="layui-form-label">数据来源</label>
             <div class="layui-input-block">
-                <input type="text" readonly class="layui-input" value="{{data.dataFrom}}">
+                <!--<input type="text" readonly class="layui-input" value="{{data.dataFrom}}">-->
+                <div dict-component="select" readonly dict-type="data_source" dict-name="dataFrom" id="dict-data-type" data="{{data.dataFrom}}"></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数据类型</label>
+            <div class="layui-input-block">
+                <!--<input type="text" readonly class="layui-input" value="{{data.dataType}}">-->
+                <div dict-component="select" readonly dict-type="data_type" dict-name="dataType" id="dict-data-type" data="{{data.dataType}}"></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密级</label>
+            <div class="layui-input-block">
+                <!--<input type="text" readonly class="layui-input" value="{{data.secretLevel}}">-->
+                <div dict-component="select" readonly dict-type="secret_level" dict-name="secretLevel" id="dict-secret-level" data="{{data.secretLevel}}"></div>
             </div>
         </div>
         <div class="layui-form-item">
@@ -281,9 +297,9 @@
     let imageHeight;
     const sizeInit = () => {
         $(".layui-card-body").height(window.innerHeight - 43 - 10 - 43 - 40 - 20);
-        $(".layui-card-body.right-card").height(window.innerHeight - 40 - 20);
-        $('#fileCardBody').height(window.innerHeight - 40 - 20)
-        $('#fileViewer .file-viewer').height(window.innerHeight - 40 - 20 - 80)
+        $(".layui-card-body.right-card").height(window.innerHeight - 20);
+        $('#fileCardBody').height(window.innerHeight - 40 - 20);
+        $('#fileViewer .file-viewer').height(window.innerHeight - 40 - 20 - 80);
         imageWidth = $('.layui-col-md9:first').innerWidth() - 54;
         imageHeight = $('#file-viewer-image').innerHeight();
     }

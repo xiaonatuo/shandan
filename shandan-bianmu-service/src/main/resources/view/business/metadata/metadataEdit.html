@@ -10,7 +10,7 @@
     <link th:href="@{/css/business/metadata/metadata.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<div class="layui-row layui-col-space15">
+<div class="layui-row">
     <!-- 操作表单 -->
     <div class="layui-col-md12">
         <div class="layui-card">
@@ -47,23 +47,19 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">数据来源</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dataFrom" autocomplete="off" placeholder="数据来源"
-                                   class="layui-input">
+                            <div dict-component="select" dict-type="data_source" dict-name="dataFrom" id="dict-data-form"></div>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">数据类型</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dataType" autocomplete="off" placeholder="数据类型"
-                                   class="layui-input">
+                            <div dict-component="select" dict-type="data_type" dict-name="dataType" id="dict-data-type"></div>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">数据密级</label>
                         <div class="layui-input-block">
-                            <select name="secretLevel" lay-filter="secretLevel">
-                                <option th:each="secret: ${SecretLevel}" th:value="${secret.name()}" th:text="${secret.desc}"></option>
-                            </select>
+                            <div dict-component="select" dict-type="secret_level" dict-name="secretLevel" id="dict-secret-level"></div>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -116,7 +112,7 @@
                     <option value="{{ i }}" {{selected}} >{{ i }}</option>
                     {{# } }}
                 </select>
-                <input type="radio" name="master" value="{{item.tableName}}" lay-skin="primary" title="主表">
+                <input type="radio" name="master" value="{{item.tableName}}" lay-skin="primary" title="主表" lay-filter="master-radio">
             {{# } }}
             <a class="layui-btn layui-btn-xs btn-field-config" data-table="{{item.tableName}}" title="字段配置" style="margin-top: 8px;">字段配置</a>
         </li>

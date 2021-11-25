@@ -6,7 +6,7 @@
  * @author Administrator
  * @since 2021/5/24
  */
-layui.use(['layer', 'listPage', 'form'], function () {
+layui.use(['layer', 'listPage', 'form', 'dict'], function () {
     const layer = layui.layer;
     const form = layui.form;
 
@@ -22,9 +22,9 @@ layui.use(['layer', 'listPage', 'form'], function () {
                 {field: 'id', title: 'ID', hide: true},
                 {field: 'metadataName', title: '数据表'},
                 {field: 'metadataComment', title: '中文注释'},
-                {field: 'secretLevel', title: '密级', templet: data => SecretLevel[data.secretLevel]},
+                {field: 'secretLevel', title: '密级', templet: data => layui.dict.getDictDesc('secret_level', data.secretLevel)},
                 {field: 'themeTask', title: '主题任务'},
-                {field: 'dataFrom', title: '数据来源', width: 100},
+                {field: 'dataFrom', title: '数据来源', width: 100, templet: data => layui.dict.getDictDesc('data_source', data.dataFrom)},
                 {field: 'collectionTime', title: '采集时间', width: 180, align: 'center'},
                 {
                     field: 'reviewStatus', title: '状态', width: 120, align: 'center', templet: (data) => {

@@ -37,7 +37,7 @@ layui.define(['table'], function (exports) {
         },
         defaultToolbar: ['', '', ''],
         page: true,
-        height: 'full-84',
+        height: 'full-74',
         cellMinWidth: 80,
         cols: [[{}]],
         done: function (res) {},//加载完成

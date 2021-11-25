@@ -63,7 +63,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     @GetMapping("/edit")
     public ModelAndView edit(ModelAndView mov) {
         mov.setViewName("business/metadata/metadataEdit");
-        mov.addObject("SecretLevel", SecretLevel.values());
+        //mov.addObject("SecretLevel", SecretLevel.values());
         return mov;
     }
 

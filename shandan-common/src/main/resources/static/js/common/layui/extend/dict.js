@@ -35,6 +35,7 @@
 layui.define(['form'], function (exports) {
     let form = layui.form;
     const _cache = new Map();
+    const DICT_DATA = _Store.get(STORE_DICT_KEY) || {};
 
     /**
      * 数据字典组件对象
@@ -76,7 +77,7 @@ layui.define(['form'], function (exports) {
             this.formFilter = options.formFilter;
             this.data = options.data;
             this.dictType = options.type;
-            this.DICT = _Store.get(STORE_DICT_KEY);
+            this.DICT = DICT_DATA[this.dictType];//_Store.get(STORE_DICT_KEY);
             this.change = options.onchange || function () {
             };
             this.readonly = options.readonly;
@@ -89,23 +90,17 @@ layui.define(['form'], function (exports) {
          * 渲染组件
          */
         render() {
-            let dict_list;
-            if (this.DICT) {
-                dict_list = this.DICT[this.dictType] || [];
-            } else {
-                dict_list = [];
-            }
-
+            this.DICT = this.DICT || [];
             let _elem = this.getElement();
             _elem.addClass('layui-hide');
             let template = '';
             switch (this.type) {
                 case 'select':
-                    template = selectDOM(this, dict_list);
+                    template = selectDOM(this, this.DICT);
                     break;
                 case 'radio':
                 case 'checkbox':
-                    template = normalSingleNodeDOM(this, dict_list);
+                    template = normalSingleNodeDOM(this, this.DICT);
                     break;
             }
             _elem.after(template);
@@ -241,8 +236,8 @@ layui.define(['form'], function (exports) {
      * @returns {string}
      */
     function selectDOM(_this, list) {
+        let nodes = _this.readonly ? [`<option value="">-</option>`] : [`<option value="">请选择</option>`];
 
-        let nodes = [`<option value="">请选择</option>`];
         for (let dict of list) {
             let disabled = '';
             if (!dict.dictState) {
@@ -280,26 +275,6 @@ layui.define(['form'], function (exports) {
     }
 
     /**
-     * 自动渲染
-     */
-    $(function () {
-        let elements = $(`[dict-component]`);
-        elements.each(function (index) {
-            let _elem = $(this);
-            let elem = this,
-                id = _elem.attr('id'),
-                name = _elem.attr('dict-name'),
-                type = _elem.attr('dict-type'),
-                dictType = _elem.attr('dict-component'),
-                readonly = _elem.attr('readonly'),
-                formFilter = getFormElementFilter(_elem);
-
-            let option = {elem, id, name, type, formFilter, readonly};
-            new DictComponent(dictType, option)
-        });
-    });
-
-    /**
      * 获取元素所在form表单的layui过滤器名称
      * @param $elem
      * @returns {string|*|jQuery}
@@ -313,6 +288,31 @@ layui.define(['form'], function (exports) {
         }
         return '';
     }
+
+    /**
+     * 自动渲染
+     */
+    function autoRender(){
+        let elements = $(`[dict-component]`);
+        elements.each(function (index) {
+            let _elem = $(this);
+            let elem = this,
+                id = _elem.attr('id'),
+                name = _elem.attr('dict-name'),
+                type = _elem.attr('dict-type'),
+                dictType = _elem.attr('dict-component'),
+                readonly = _elem.attr('readonly'),
+                data = _elem.attr('data'),
+                formFilter = getFormElementFilter(_elem);
+
+            let option = {elem, id, name, type, formFilter, readonly, data};
+            new DictComponent(dictType, option)
+        });
+    }
+
+    $(function () {
+        autoRender();
+    });
 
 
     /**
@@ -382,7 +382,23 @@ layui.define(['form'], function (exports) {
             } else {
                 console.error('组件未定义：' + id);
             }
-        }
+        },
+        /**
+         * 获取字典项的描述
+         * @param type 字典类型
+         * @param code 字典项代码
+         * @returns {string|*}
+         */
+        getDictDesc(type, code) {
+            let dicts = DICT_DATA[type] || [];
+            for (let dict of dicts) {
+                if (dict.dictCode == code) {
+                    return dict.dictName;
+                }
+            }
+            return '';
+        },
+        render: autoRender
 
     };
     exports('dict', component);

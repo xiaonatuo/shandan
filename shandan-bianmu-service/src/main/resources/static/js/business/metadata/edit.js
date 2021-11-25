@@ -8,7 +8,7 @@
  */
 let editPage;
 let layer;
-layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table'], function () {
+layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table', 'dict'], function () {
     let form = layui.form,
         laytpl = layui.laytpl,
         laydate = layui.laydate,
@@ -45,6 +45,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
             return response
         },
         formInitDone: function (data) {
+            initDictData(data);
             // 表单初始化完成后，查询数据源列表，并渲染选择数据源下拉框
             $.post(`${ctx}/business/datasource/list`, {}, function (res) {
                 $('#dataSourcesSelect').html(`<option value="" selected>请选择数据源</option>`)
@@ -155,7 +156,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
      * @param initData
      */
     function renderMasterTableRadio(initData){
-        form.on('radio', obj => metadataTableMap.forEach((value, key) => {
+        form.on('radio(master-radio)', obj => metadataTableMap.forEach((value, key) => {
             value.master = key == obj.value;
             form.val('metadataForm', {metadataName: obj.value})
         }));
@@ -225,7 +226,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
         layer.open({
             title: '配置字段',
             type: 1,
-            area:['800px', '600px'],
+            area:['800px', '480px'],
             btn:['确定','取消'],
             content: `<table id="field-config-table" lay-filter="field-config-table"></table>`,
             success:function(){
@@ -254,6 +255,15 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table']
                 layer.close(index);
             }
         });
+    }
+
+    /**
+     * 初始化字典项数据
+     */
+    function initDictData(data){
+        layui.dict.setData('dict-data-type', data);
+        layui.dict.setData('dict-data-form', data);
+        layui.dict.setData('dict-secret-level', data);
     }
 
     //日期选择器

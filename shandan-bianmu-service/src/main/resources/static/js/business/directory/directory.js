@@ -8,7 +8,7 @@
  */
 // 目录树数据缓存
 const dirCache = new Map();
-layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], function () {
+layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'], function () {
     const layer = layui.layer,
         listPage = layui.listPage,
         globalTree = layui.globalTree,
@@ -155,6 +155,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         $.get(`${ctx}/business/metadata/get/${basicData.id}`, function (res) {
             laytpl($("#metadataBasicTemplate").html()).render(res, function (html) {
                 $("#metadataBasicTab").html(html);
+                layui.dict.render();
             })
         });
 
@@ -184,8 +185,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
         $.get(`${ctx}/business/metadata/columns?id=${basicData.id}`, function (res) {
             let columns = [];
             if (res.flag) {
-                for (let {columnName} of res.data) {
-                    columns.push({field: columnName, title: columnName, minWidth: 150});
+                for (let {columnName, comment} of res.data) {
+                    columns.push({field: columnName, title: comment || columnName, minWidth: 150});
                 }
             }
             const tableOptions = {
@@ -196,7 +197,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 page: false,
                 toolbar: true,
                 defaultToolbar: ['filter'],
-                height: 'full-135',
+                height: 'full-105',
             }
             layui.listPage.init({
                 table: tableOptions

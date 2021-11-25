@@ -69,7 +69,7 @@ public class MetadataBasicVo extends BaseEntity implements Serializable {
      * 数据密级
      */
     @TableField("SECRET_LEVEL")
-    private SecretLevel secretLevel;
+    private Integer secretLevel;
 
     /**
      * 采集时间
@@ -102,6 +102,6 @@ public class MetadataBasicVo extends BaseEntity implements Serializable {
     private List<MetadataDetailsVo> metadataDetailsList;
 
     public String getSecretLevelStr(){
-        return this.secretLevel.getDesc();
+        return "";//this.secretLevel.getDesc();
     }
 }
