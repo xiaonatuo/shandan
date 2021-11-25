@@ -96,14 +96,7 @@ layui.define(['form'], function (exports) {
                 dict_list = [];
             }
 
-            let _elem;
-            if (typeof this.elem == 'string') {
-                // 如果为string类型，则认为是ID选择器，判断是否有#，没有则加上
-                _elem = this.elem.startsWith('#') ? $(this.elem) : $(`#${this.elem}`);
-            } else {
-                // 如果不是jquery对象，则包装为jquery对象
-                _elem = this.elem instanceof jQuery ? this.elem : $(this.elem);
-            }
+            let _elem = this.getElement();
             _elem.addClass('layui-hide');
             let template = '';
             switch (this.type) {
@@ -123,8 +116,60 @@ layui.define(['form'], function (exports) {
             // 设置默认值
             this.setData(this.data);
 
+            _cache.set(this.id, this);
+        }
+
+        /**
+         * 设置组件数据
+         * @param data
+         */
+        setData(data) {
+            if (data) {
+                if (!this.formFilter) {
+                    console.error('options中没有设置formFilter');
+                    return;
+                }
+                if (typeof data == 'object') {
+                    data = data[this.name] || '';
+                }
+
+                if (this.type == 'checkbox') {
+                    let values = data;
+                    let elements = $(`[lay-filter="${this.formFilter}"] input[type="checkbox"][name="${this.name}"]`);
+                    if (!Array.isArray(data)) {
+                        values = data.split(',');
+                    }
+
+                    for (let val of values) {
+                        for (let index = 0; index < elements.length; index++) {
+                            let elem = elements[index];
+                            if (elem.value == val) {
+                                $(elem).attr('checked', 'checked');
+                            } else {
+                                $(elem).attr('checked', null);
+                            }
+                        }
+                    }
+
+                } else {
+                    if (Array.isArray(data)) data = data[0]
+                    let formData = {};
+                    formData[this.name] = data;
+                    form.val(this.formFilter, formData);
+                }
+                form.render(this.type);
+            }
+
             // 设置只读
+            this.setReadonly();
+        }
+
+        /**
+         * 设置组件已读
+         */
+        setReadonly() {
             if (this.readonly) {
+                // 设置延迟执行，确保在所有组件渲染完成后再设置只读，否则被layui的render方法执行后会将该只读设置重写覆盖而导致失效
                 setTimeout(() => {
                     // 先添加用于覆盖layui样式的内部样式到head中
                     $('head').append(`
@@ -140,9 +185,9 @@ layui.define(['form'], function (exports) {
                             /* 下拉框的只读样式 */
                             .layui-form-select.select-readonly .layui-input:focus{border-color: #eee !important;}
                             .layui-form-select.select-readonly input{color: #757575}
-                            .layui-form-select.select-readonly i{display: none}
                         </style>`);
 
+                    let _elem = this.getElement();
                     switch (this.type) {
                         case "radio":
                         case "checkbox":
@@ -155,54 +200,25 @@ layui.define(['form'], function (exports) {
                             break;
                         case "select":
                             let lay_elem = _elem.parent().find(`select[name="${this.name}"]`).next();
-                            lay_elem.addClass('select-readonly').find('.layui-select-title').off('click').children().css('cursor', 'auto');
+                            lay_elem.addClass('select-readonly');
+                            lay_elem.find('.layui-select-title').off('click').children().css('cursor', 'auto');
                     }
-                }, 50);
+                }, 150);
             }
-
-            _cache.set(this.id, this);
         }
 
         /**
-         * 设置组件数据
-         * @param data
+         * 获取渲染目标元素
+         * @returns {Window.jQuery|HTMLElement}
          */
-        setData(data) {
-            if (!data) return;
-            if (!this.formFilter) {
-                console.error('options中没有设置formFilter');
-                return;
+        getElement() {
+            if (typeof this.elem == 'string') {
+                // 如果为string类型，则认为是ID选择器，判断是否有#，没有则加上
+                return this.elem.startsWith('#') ? $(this.elem) : $(`#${this.elem}`);
             }
-            if (typeof data == 'object') {
-                data = data[this.name] || '';
-            }
+            // 如果不是jquery对象，则包装为jquery对象
+            return this.elem instanceof jQuery ? this.elem : $(this.elem);
 
-            if (this.type == 'checkbox') {
-                let values = data;
-                let elements = $(`[lay-filter="${this.formFilter}"] input[type="checkbox"][name="${this.name}"]`);
-                if (!Array.isArray(data)) {
-                    values = data.split(',');
-                }
-
-                for (let val of values) {
-                    for (let index = 0; index < elements.length; index++) {
-                        let elem = elements[index];
-                        if (elem.value == val) {
-                            $(elem).attr('checked', 'checked');
-                        } else {
-                            $(elem).attr('checked', null);
-                        }
-                    }
-                }
-
-            } else {
-                if (Array.isArray(data)) data = data[0]
-                let formData = {};
-                formData[this.name] = data;
-                form.val(this.formFilter, formData);
-            }
-
-            form.render(this.type);
         }
 
         /**
