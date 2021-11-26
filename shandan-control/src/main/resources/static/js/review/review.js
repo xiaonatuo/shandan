@@ -88,6 +88,7 @@ class Review {
                     id: 'reviewTable',
                     url: `${ctx}/business/review/list/${type}`,
                     method: 'get',
+                    height: 'full-84',
                     searchFieldNames: opt.entityType == ReviewEntityType.METADATA ? 'metadataName' : 'directoryName',
                     where: {reviewStatus: reviewStatus},
                     cols: cols[opt.entityType],

@@ -38,7 +38,7 @@
                     </th:block>
                 </div>
             </div>
-            <div class="layui-card-body">
+            <div class="layui-card-body" style="padding: 0 15px">
                 <div class="layui-tab layui-tab-brief" id="metadataCardBody" lay-filter="metadataCardBody">
                     <ul class="layui-tab-title">
                         <li class="layui-this">基础信息</li>
@@ -66,8 +66,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">数据密级</label>
                                     <div class="layui-input-block">
-                                        <input type="text" readonly class="layui-input" name="secretLevel"
-                                               th:value="${detailsData.secretLevelStr}">
+                                        <div dict-component="select" readonly dict-type="secret_level" dict-name="secretLevel" th:data="${detailsData.secretLevel}" id="dict-secret-level"></div>
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
@@ -78,10 +77,15 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
+                                    <label class="layui-form-label">数据类型</label>
+                                    <div class="layui-input-block">
+                                        <div dict-component="select" readonly dict-type="data_type" dict-name="dataType" th:data="${detailsData.dataType}" id="dict-data-type"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
                                     <label class="layui-form-label">数据来源</label>
                                     <div class="layui-input-block">
-                                        <input type="text" readonly class="layui-input" name="dataFrom"
-                                               th:value="${detailsData.dataFrom}">
+                                        <div dict-component="select" readonly dict-type="data_source" dict-name="dataFrom" th:data="${detailsData.dataFrom}" id="dict-data-form"></div>
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
@@ -95,17 +99,17 @@
                         </div>
                         <!-- 字段信息 -->
                         <div class="layui-tab-item">
-                            <table class="layui-table">
+                            <table  lay-filter="columns-table">
                                 <thead>
                                 <tr>
-                                    <th>列名</th>
-                                    <th>注释</th>
-                                    <th>数据类型</th>
-                                    <th>列长度</th>
-                                    <th>数值刻度</th>
-                                    <th>数值精度</th>
-                                    <th>允许为NULL</th>
-                                    <th>默认值</th>
+                                    <th lay-data="{field:'columnName'}">列名</th>
+                                    <th lay-data="{field:'comment'}">注释</th>
+                                    <th lay-data="{field:'dataType'}">数据类型</th>
+                                    <th lay-data="{field:'dataLength'}">列长度</th>
+                                    <th lay-data="{field:'dataScale'}">数值刻度</th>
+                                    <th lay-data="{field:'dataPrecision'}">数值精度</th>
+                                    <th lay-data="{field:'nullAble'}">允许为NULL</th>
+                                    <th lay-data="{field:'dataDefault'}">默认值</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -136,7 +140,11 @@
 </body>
 <script th:src="@{/js/review/review.js}"></script>
 <script type="text/javascript">
-    layui.use(['form', 'listPage'], function () {
+    layui.use(['form', 'listPage', 'dict', 'table'], function () {
+        layui.table.init('columns-table',{
+            height: 'full-140',
+            limit: 200
+        });
 
         // 加载示例数据
         let columns = [];

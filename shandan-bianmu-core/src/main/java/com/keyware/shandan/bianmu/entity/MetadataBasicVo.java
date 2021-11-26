@@ -101,7 +101,4 @@ public class MetadataBasicVo extends BaseEntity implements Serializable {
     @TableField(exist = false)
     private List<MetadataDetailsVo> metadataDetailsList;
 
-    public String getSecretLevelStr(){
-        return "";//this.secretLevel.getDesc();
-    }
 }
