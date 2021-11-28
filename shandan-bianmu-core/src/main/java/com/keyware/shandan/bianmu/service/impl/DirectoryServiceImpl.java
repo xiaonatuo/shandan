@@ -49,6 +49,12 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
         DirectoryVo parent = getById(entity.getParentId());
         entity.setDirectoryPath(parent == null ? "/".concat(entity.getDirectoryName()) : parent.getDirectoryPath().concat("/").concat(entity.getDirectoryName()));
 
+        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
+        wrapper.eq("DIRECTORY_PATH", entity.getDirectoryPath());
+        if(list(wrapper).size() > 0){
+            return Result.of(null, false, "目录已经存在！");
+        }
+
         //如果审核通过则需要把目录下文件保存到ES
         if (entity.getReviewStatus() == ReviewStatus.PASS) {
             SysFile condition = new SysFile();
