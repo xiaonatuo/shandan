@@ -2571,6 +2571,40 @@ layui.define(['jquery','layer','form'], function(exports) {
         _this.initNodeParam();
     }
 
+    /***
+     * @Desc: 搜索节点，保留上级节点
+     * @param： value： 传入的节点名称
+     * layui-dtree群友： 没水平的水瓶提供。
+     */
+    DTree.prototype.fuzzySearch = function (value) {
+        var _this = this;
+        //
+        if (value.trim() == '') {
+            _this.obj.find("li").removeClass("layui-hide").attr("dtree-hide", false)
+            return
+        }
+        _this.obj.find("li").addClass("layui-hide").attr("dtree-hide", true)
+
+        var cites = []
+        var filterMode = _this.filterMode
+        /*if (filterMode == 'default') {
+            cites = _this.obj.find("li>div cite:contains('" + value + "')");
+        }*/
+        cites = _this.obj.find("li>div cite:contains('" + value + "')");
+        cites.each(function (index, cite) {
+            var li = $(cite).parent().parent();
+            //if(index == 0){
+                _this.clickSpread($(cite).parent());
+            //}
+            var curNode = _this.getParam(li.attr("data-id"));
+            li.removeClass("layui-hide").attr("dtree-hide", false);
+            // 显示所有子级
+            li.find('ul li').removeClass("layui-hide").attr("dtree-hide", false);
+            // 显示所有父级
+            li.parents('li').removeClass("layui-hide").attr("dtree-hide", false);
+        })
+    }
+
     /******************** 复选框区域 ********************/
     // 初始化复选框的值
     DTree.prototype.chooseDataInit = function(chooseIds){
@@ -4482,7 +4516,7 @@ layui.define(['jquery','layer','form'], function(exports) {
                 node = _this.getNodeParam($div);
 
             _this.toolbarHide();
-            _this.navThis($div);
+            //_this.navThis($div);
             _this.clickSpread($div);	// 展开或隐藏节点
 
             // 树状态改变后，用户自定义想做的事情
