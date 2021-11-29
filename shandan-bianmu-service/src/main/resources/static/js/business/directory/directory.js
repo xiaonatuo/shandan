@@ -255,7 +255,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         toolbar: true,
         toolbarShow: [], //置空默认菜单项
         onDbClick: function ({dom}) {
-            //dirTree.clickSpread(dom);
             dom.find('cite').click();
         },
         sendSuccess: function (res) {
@@ -282,7 +281,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             }
         },
         done: function (nodes, elem) {
-            console.info(nodes);
+            //console.info(nodes);
             // 模拟鼠标点击事件展开第一层目录
             $('i.dtree-icon-jia[data-id="-"]').click();
         },
@@ -330,8 +329,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         toolbarFun: {
             // 显示右键菜单之前的回调，用于设置显示哪些菜单
             loadToolbarBefore: function (buttons, param, $div) {
-                console.info(param);
-                const {id, parentId, context, basicData} = param;
+                const {basicData} = param;
                 if (basicData) {
                     switch (basicData.reviewStatus) {
                         case ReviewStatus.SUBMITTED:
