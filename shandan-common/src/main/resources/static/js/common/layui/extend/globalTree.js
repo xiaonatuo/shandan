@@ -15,7 +15,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         this.data = undefined;
         this.method = 'GET';
         this.type = 'load';
-        this.width = '100%';
+        this.width = 'auto';
         this.ficon = ["1", "-1"];
         this.initLevel = 2;
         this.record = true;

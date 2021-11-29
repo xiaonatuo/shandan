@@ -2164,10 +2164,18 @@ layui.define(['jquery','layer','form'], function(exports) {
         var _this = this,
             rootId = _this.obj[0].id;
 
+        let scrollWidth;
+        if(_this.scroll){
+             scrollWidth = $(_this.scroll).width();
+        }
+
         var dom = _this.getDom(treeId, parentId, title, fmtTitle, last, ficonClass, iconClass, checkArr, level, spread, disabled, hide);
         basicData = (basicData == "{}") ? "" : basicData;
         recordData = (recordData == "{}") ? "" : recordData;
         var div = "<div class='"+LI_DIV_ITEM+" "+_this.style.item+"' data-id='"+treeId+"' dtree-id='"+rootId+"' dtree-click='"+eventName.itemNodeClick+"' data-basic='"+basicData+"' data-record='"+recordData+"' dtree-disabled='"+disabled+"' dtree-hide='"+hide+"' ";
+        if(scrollWidth){
+            div += "style='max-width:" + scrollWidth + "px;' ";
+        }
         if(_this.toolbar){
             if(_this.toolbarWay == "contextmenu") {
                 if(_this.toolbarLoad == "node") { div += " d-contextmenu='true'>"; }
