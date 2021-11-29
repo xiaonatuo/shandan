@@ -9,9 +9,12 @@ import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.enums.DirectoryType;
 import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
 import com.keyware.shandan.bianmu.service.DirectoryService;
+import com.keyware.shandan.bianmu.utils.DirectoryUtil;
 import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.common.entity.TreeVo;
 import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.common.util.TreeUtil;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +63,21 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
      * @return
      */
     @GetMapping("/tree")
-    public Result<DirectoryVo> tree() {
-        return Result.of(directoryService.getById("ROOT"));
+    public Result<List<TreeVo>> tree(String id) {
+        DirectoryVo parent = null;
+        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(id) && !"-".equals(id)) {
+            parent = directoryService.getById(id);
+            if (parent == null) {
+                return Result.of(null, false, "目录未找到");
+
+            }
+            wrapper.likeRight("DIRECTORY_PATH", parent.getDirectoryPath());
+        }
+
+        List<DirectoryVo> directoryList = directoryService.list(wrapper);
+
+        return Result.of(TreeUtil.buildDirTree(directoryList.stream().map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
     }
 
     /**
