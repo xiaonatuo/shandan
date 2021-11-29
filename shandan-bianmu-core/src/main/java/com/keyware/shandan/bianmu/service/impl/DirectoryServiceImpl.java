@@ -1,6 +1,7 @@
 package com.keyware.shandan.bianmu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
@@ -14,6 +15,7 @@ import com.keyware.shandan.frame.annotation.DataPermissions;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.queue.provider.EsSysFileProvider;
 import com.keyware.shandan.system.service.SysFileService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -42,17 +44,26 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
 
     @Override
     public Result<DirectoryVo> updateOrSave(DirectoryVo entity) {
+        DirectoryVo oldDir = null;
         if (StringUtils.isBlank(entity.getId())) {
             entity.setReviewStatus(ReviewStatus.UN_SUBMIT);
+        } else {
+            oldDir = getById(entity.getId());
         }
+
         // 查询父目录，并设置目录路径
         DirectoryVo parent = getById(entity.getParentId());
         entity.setDirectoryPath(parent == null ? "/".concat(entity.getDirectoryName()) : parent.getDirectoryPath().concat("/").concat(entity.getDirectoryName()));
 
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
         wrapper.eq("DIRECTORY_PATH", entity.getDirectoryPath());
-        if(list(wrapper).size() > 0){
+        if (list(wrapper).size() > 0) {
             return Result.of(null, false, "目录已经存在！");
+        }
+
+        // 同时更新所有子级目录的路径
+        if (oldDir != null) {
+            directoryMapper.updateDirectoryPath(oldDir.getDirectoryPath()+"/", entity.getDirectoryPath()+"/");
         }
 
         //如果审核通过则需要把目录下文件保存到ES
@@ -83,6 +94,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
 
     /**
      * 获取树的子节点
+     *
      * @param vo
      * @return
      */
@@ -96,6 +108,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
 
     /**
      * 获取目录下的元数据
+     *
      * @param id 目录ID
      * @return
      */
@@ -111,14 +124,15 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
 
     /**
      * 递归更新所有父级目录为PASS
+     *
      * @param dir 目录
      */
-    private void updateParentsToPass(DirectoryVo dir){
+    private void updateParentsToPass(DirectoryVo dir) {
         DirectoryVo parent = getById(dir.getParentId());
-        if(parent != null){
+        if (parent != null) {
             parent.setReviewStatus(ReviewStatus.PASS);
             updateOrSave(parent);
-            if(!"-".equals(parent.getParentId())){
+            if (!"-".equals(parent.getParentId())) {
                 updateParentsToPass(parent);
             }
         }

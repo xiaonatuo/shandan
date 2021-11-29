@@ -4,6 +4,7 @@ import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.common.mapper.IBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -31,4 +32,7 @@ public interface DirectoryMapper extends IBaseMapper<DirectoryVo> {
      * @return -
      */
     List<MetadataBasicVo> selectAllMetadataByDirectory(String id);
+
+    @Update("update B_DIRECTORY set DIRECTORY_PATH = REPLACE(DIRECTORY_PATH, '${oldPath}', '${newPath}') where DIRECTORY_PATH like '${oldPath}%'")
+    void updateDirectoryPath(String oldPath, String newPath);
 }
