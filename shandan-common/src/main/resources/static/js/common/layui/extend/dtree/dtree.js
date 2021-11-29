@@ -4528,10 +4528,10 @@ layui.define(['jquery','layer','form'], function(exports) {
         });
 
         // 绑定所有子节点div的单击事件，点击时触发加载iframe或用户自定义想做的事情
-        _this.obj.on("click", "div[dtree-click='"+eventName.itemNodeClick+"'][dtree-disabled='false']", function(event) {
+        _this.obj.on("click", "div[dtree-click='"+eventName.itemNodeClick+"'][dtree-disabled='false'] cite", function(event) {
             event.stopPropagation();
-            var $div = $(this),
-                $cite = $div.find("cite"),
+            var $div = $(this).parent(),
+                $cite = $div,
                 node = _this.getNodeParam($div);
             _this.toolbarHide();
             _this.navThis($div);
