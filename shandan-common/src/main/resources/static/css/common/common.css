@@ -47,3 +47,22 @@ body, html {
     min-height: 58px;
 }
 .layui-table-view{background: #FFF}
+.current-position{color: #999}
+.current-position label{color: #666}
+
+.dtree-toolbar{box-shadow: 5px 3px 3px -3px black;}
+.dtree-toolbar .layui-nav-child dd a i {
+    margin-right: 5px;
+    font-size: 16px;
+    display: inline-block;
+}
+.dtree-toolbar .layui-nav-child dd a i:hover {
+    font-weight: normal;
+}
+.dtree-toolbar .layui-nav-child dd {
+    cursor: pointer;
+    padding: 0 10px;
+}
+.dtree-toolbar .layui-nav-child dd a{
+    padding: 0;
+}

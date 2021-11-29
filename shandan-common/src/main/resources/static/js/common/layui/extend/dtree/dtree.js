@@ -4629,9 +4629,11 @@ layui.define(['jquery','layer','form'], function(exports) {
         if(_this.toolbar) {
             if(_this.toolbarWay == "contextmenu") {
                 //绑定所有子节点div的右键点击事件，用于显示toolbar
-                _this.obj.on("contextmenu", "div[dtree-click='"+eventName.itemNodeClick+"'][d-contextmenu='true'][dtree-disabled='false']", function(e){
-                    var $div = $(this),
+                _this.obj.on("contextmenu", "div[dtree-click='"+eventName.itemNodeClick+"'][d-contextmenu='true'][dtree-disabled='false'] cite", function(e){
+                    var $div = $(this).parent(),
                         node = _this.getNodeParam($div);
+                    // 触发点击事件
+                    $(this).click();
 
                     _this.toolbarHide();
                     // toolbar加载前执行的方法，执行完毕之后创建按钮
@@ -4639,9 +4641,9 @@ layui.define(['jquery','layer','form'], function(exports) {
 
                     var e = e || window.event,
                         mx = e.pageX - $div.offset().left +45 ,
-                        my = $div.offset().top - _this.obj.closest(_this.scroll).offset().top +15;
+                        my = $div.offset().top - _this.obj.closest(_this.scroll).offset().top +15 + 122;
 
-                    _this.navThis($div);
+                    //_this.navThis($div);
                     var $toolBarDiv = _this.obj.prevAll('div#dtree_toolbar_'+_this.obj[0].id);
                     $toolBarDiv.find(".layui-nav-child").addClass('layui-anim-fadein layui-show');
                     $toolBarDiv.css({'left':mx+'px','top':my+'px'});
@@ -4658,6 +4660,9 @@ layui.define(['jquery','layer','form'], function(exports) {
                 // 绑定toolbar的点击事件
                 _this.obj.prevAll('div#dtree_toolbar_'+_this.obj[0].id).on("click", "a[dtree-tool]", function(event) {
                     event.stopPropagation();
+                    if($(this).hasClass('layui-disabled')){
+                        return false;
+                    }
                     var $div = _this.getNodeDom().nowOrRootDiv(),
                         node = _this.getNodeParam($div);
                     _this.toolbarHide();

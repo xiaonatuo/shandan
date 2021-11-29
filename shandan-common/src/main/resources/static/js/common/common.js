@@ -431,13 +431,7 @@ commonUtil = {
                 data: data,
                 dataType: 'json',
                 success: resolve,
-                error: err => {
-                    if(reject){
-                        reject(err)
-                    }else{
-                        showErrorMsg();
-                    }
-                }
+                error: reject
             })
         })
         promise.finally(() => {

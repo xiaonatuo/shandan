@@ -36,7 +36,8 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         this.done = undefined; // function (nodes, elem) {};
         this.onClick = undefined; // function (node) {}
         this.onDbClick = undefined;
-        this.render(options);
+        this.none = '没有找到数据';
+        //this.render(options);
     }
 
     /**
@@ -63,6 +64,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         _this.elem = `#${_this.id}`;
 
         dtreeObj = dtree.render(_this);
+        return dtreeObj;
     }
 
     /**
@@ -77,65 +79,28 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
      * 获取当前选中值
      * @returns {|*}
      */
-    GlobalTree.prototype.getNowParam = function () {
+    GlobalTree.prototype.getNowParam2 = function () {
         return dtree.getNowParam(this.id);
     }
 
-    /**
-     * 展开指定节点
-     * @param dom 节点dom对象
-     */
-    GlobalTree.prototype.clickSpread = function (dom) {
-        dtreeObj.clickSpread(dom)
-    }
 
     /**
      * 选中指定的树节点
      * @param ids id集合，可以是数组，也可以是,拼接的的字符串
      */
-    GlobalTree.prototype.chooseDataInit = function (ids) {
+    GlobalTree.prototype.chooseDataInit2 = function (ids) {
         if (Array.isArray(ids)) {
             ids = ids.join(',')
         }
         dtree.chooseDataInit(this.id, ids);
     }
 
-    GlobalTree.prototype.initNoAllCheck = function () {
+    GlobalTree.prototype.getParentParam2 = function(id){
+        dtree.getParentParam(this.id, id);
+    };
+
+    GlobalTree.prototype.initNoAllCheck2 = function () {
         dtree.initNoAllCheck(this.id)
-    }
-
-    GlobalTree.prototype.changeTreeNodeAdd = function (op) {
-        dtreeObj.changeTreeNodeAdd(op)
-    }
-
-    GlobalTree.prototype.changeTreeNodeDel = function (p) {
-        dtreeObj.changeTreeNodeDel(p);
-    }
-
-    GlobalTree.prototype.changeTreeNodeEdit = function (p) {
-        dtreeObj.changeTreeNodeEdit(p);
-    }
-
-    GlobalTree.prototype.changeTreeNodeDone = function (p) {
-        dtreeObj.changeTreeNodeDone(p);
-    }
-
-    GlobalTree.prototype.partialRefreshAdd = function (dom, obj) {
-        dtreeObj.partialRefreshAdd(dom, obj);
-    }
-
-    GlobalTree.prototype.partialRefreshDel = function (dom) {
-        dtreeObj.partialRefreshDel(dom);
-    }
-    GlobalTree.prototype.clickSpread = function(dom){
-        dtreeObj.clickSpread(dom);
-    }
-    GlobalTree.prototype.cancelNavThis = function(dom){
-        dtreeObj.cancelNavThis(dom);
-    }
-
-    GlobalTree.prototype.partialRefreshEdit = (dom, obj)=>{
-        dtreeObj.partialRefreshEdit(dom, obj)
     }
 
     // 为了可继承dtree的内部方法，将dtree拷贝到一个新的对象
@@ -146,8 +111,9 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
      * @param options
      */
     globalTree.init = function (options) {
-        tree = new GlobalTree(options);
-        return tree;
+        tree = new GlobalTree();
+        let dtreeObj = tree.render(options)
+        return $.extend(tree, dtreeObj);
     }
 
     /**
@@ -163,7 +129,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
      * @returns {|*}
      */
     globalTree.getNowParam = function () {
-        return tree.getNowParam();
+        return tree.getNowParam2();
     }
 
     /**
@@ -171,7 +137,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
      * @param ids id集合，可以是数组，也可以是,拼接的的字符串
      */
     globalTree.chooseDataInit = function (ids) {
-        tree.chooseDataInit(ids);
+        tree.chooseDataInit2(ids);
     }
 
 

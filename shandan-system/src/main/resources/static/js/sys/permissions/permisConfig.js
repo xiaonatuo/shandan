@@ -90,7 +90,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
                         res.data = res.data || [];
                         _this.orgIds = res.data.join(',');
                         orgTree.chooseDataInit(res.data);
-                        orgTree.initNoAllCheck();
+                        orgTree.initNoAllCheck2();
                     }
                 });
             }

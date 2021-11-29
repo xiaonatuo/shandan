@@ -34,7 +34,7 @@ public class TreeUtil {
                 // 将父级节点从nodes中移除
                 List<TreeVo> newNodes = nodes.stream().filter(node-> !node.getId().equals(parentNode.getId())).collect(Collectors.toList());
                 // 根据父级节点ID查找子级节点
-                List<TreeVo> childrenNodes = newNodes.stream().filter(node -> node.getParentId().equals(parentNode.getId())).collect(Collectors.toList());
+                List<TreeVo> childrenNodes = newNodes.stream().filter(node -> parentNode.getId().equals(node.getParentId())).collect(Collectors.toList());
 
                 tree = childrenNodes.stream().peek(children -> children.setChildren(buildDirTree(newNodes, children.getId()))).collect(Collectors.toList());
             }

@@ -77,6 +77,10 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
 
         List<DirectoryVo> directoryList = directoryService.list(wrapper);
 
+        // 如果父目录存在，则从查询到的集合中将自己过滤掉
+        if(parent != null){
+            directoryList = directoryList.stream().filter(dir-> !id.equals(dir.getId())).collect(Collectors.toList());
+        }
         return Result.of(TreeUtil.buildDirTree(directoryList.stream().map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
     }
 

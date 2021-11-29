@@ -83,6 +83,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 toolbar: '#tableToolBar',
                 searchFieldNames: 'metadataName',
                 url: `${ctx}/business/metadata/list/directory?directoryId=${basicData.id}`,
+                height: 'full-110',
                 method: 'get',
                 cols: [[
                     {field: 'id', title: 'ID', hide: true},
@@ -239,20 +240,23 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         })
     }
 
+    let tempNode;
     // 加载并渲染目录树
-    let treeChildrenUrl = `${ctx}/business/directory/tree/children`
+    let treeChildrenUrl = `${ctx}/business/directory/tree`
     let treeOps = {
         id: 'directoryTree',
         url: treeChildrenUrl,
-        data: [{id: '-', parentId: '', title: '根目录', leaf: false, last: false, spread: false}],
-        cache: false,
-        initLevel: 3, // 默认展开一级
+        data: [{id: '-', parentId: '', title: '资源目录', leaf: false, last: false, spread: false}],
+        cache: true,
+        type: 'load',
+        initLevel: 1, // 默认展开一级
+        scroll: '#tree-toobar-div',
+        width: 'fit-content',
         toolbar: true,
-        toolbarStyle: {title: "目录", area: ["600px", "350px"]},
-        toolbarShow: ["add", "edit", "delete"],
-        toolbarBtn: [dirAddLayer, dirEditLayer],
+        toolbarShow: [], //置空默认菜单项
         onDbClick: function ({dom}) {
-            dirTree.clickSpread(dom);
+            //dirTree.clickSpread(dom);
+            dom.find('cite').click();
         },
         sendSuccess: function (res) {
             if (res.flag) {
@@ -260,12 +264,15 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                     dirCache.set(item.id, item);
                 })
                 initLiHoverEvent();
+
                 async function initLiHoverEvent() {
                     setTimeout(() => {
-                        $('.dtree-nav-div.dtree-theme-item').each((index, elem)=>{
+                        $('.dtree-nav-div.dtree-theme-item').each((index, elem) => {
                             let data = $(elem).data('basic');
                             if (data) {
-                                if(typeof data === 'string'){data = JSON.parse(data);}
+                                if (typeof data === 'string') {
+                                    data = JSON.parse(data);
+                                }
                                 let title = data.metadataComment || data.directoryName || data.fileName + data.fileSuffix;
                                 $(elem).attr('title', title)
                             }
@@ -275,12 +282,19 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             }
         },
         done: function (nodes, elem) {
+            console.info(nodes);
             // 模拟鼠标点击事件展开第一层目录
             $('i.dtree-icon-jia[data-id="-"]').click();
         },
         onClick: function (node) {
+            tempNode = node;
             currentTreeNode = node.dom;
             const {basicData} = node.param;
+            if (!basicData) return false;
+            if (basicData.directoryPath) {
+                let path = basicData.directoryPath.replaceAll('/', ' / ');
+                $('#currentPosition').text(path);
+            }
             let showType = 'directory';
             let callback = () => {
                 loadMetadataList(node.param)
@@ -314,121 +328,85 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             })
         },
         toolbarFun: {
-            editTreeLoad: function (node) { // 目录树右键编辑菜单显示弹窗后的回调
-                $('.layui-layer .dtree-toolbar-tool .layui-form-item:first').addClass('layui-hide');
-                const {directoryName, directoryType} = node.basicData;
-                dirTree.changeTreeNodeDone({directoryName, directoryType, editNodeName: directoryName});
-            },
-            addTreeNode: function (node, elem) { // 目录树右键新增菜单-点击保存后的回调
-                const data = {
-                    parentId: node.parentId,
-                    directoryName: node.addNodeName,
-                    directoryType: node.directoryType
-                };
-                $.post(`${ctx}/business/directory/save`, data, function (res) {
-                    if (res.flag) {
-                        dirTree.changeTreeNodeAdd("refresh");
-                        let self = dirCache.get(node.parentId)
-                        self.basicData.hasChild = true;
-                        dirCache.set(node.parentId, self);
-                    } else {
-                        layer.msg('保存失败');
-                    }
-                })
-            },
-            editTreeNode: function (node, elem) { // 目录树右键编辑菜单-点击确定后的回调
-                let parent = $(`div[data-id='${node.parentId}'][dtree-id='directoryTree']`);
-                const data = {
-                    id: node.id,
-                    directoryName: node.editNodeName,
-                    directoryType: node.directoryType
-                };
-                $.post(`${ctx}/business/directory/save`, data, function (res) {
-                    if (res.flag) {
-                        dirTree.clickSpread(parent);
-                        dirTree.clickSpread(parent);
-                    } else {
-                        dirTree.changeTreeNodeEdit(false);
-                        layer.msg('保存失败');
-                    }
-                })
-            },
-            delTreeNode: function (node, elem) {  // 目录树右键删除菜单-点击确定后的回调
-                $.delete(`${ctx}/business/directory/delete/${node.id}`, {}, function (res) {
-                    if (res.flag) {
-                        dirCache.delete(node.id);
-                        dirTree.changeTreeNodeDel(true);
-                        // 需要判断父级目录是否还保存子目录
-                        // 遍历缓存数据，如果数据中不包含parentId为node.parentId的数据，则证明没有子目录，需要更新父目录hasChild字段
-                        let parent = dirCache.get(node.parentId)
-                        let hasChild = false;
-                        dirCache.forEach((value, key) => {
-                            if (value.parentId === node.parentId) {
-                                hasChild = true
-                            }
-                        })
-                        parent.basicData.hasChild = hasChild;
-                        dirCache.set(node.parentId, parent);
-                    } else {
-                        layer.msg('删除失败');
-                    }
-                });
-            },
             // 显示右键菜单之前的回调，用于设置显示哪些菜单
             loadToolbarBefore: function (buttons, param, $div) {
-                const {id, parentId, context} = param;
-                let btns = {};
-                // 根目录只显示添加
-                if (id === '-' || parentId === -1 || context === '根目录') {
-                    btns = {addToolbar: buttons.addToolbar};
+                console.info(param);
+                const {id, parentId, context, basicData} = param;
+                if (basicData) {
+                    switch (basicData.reviewStatus) {
+                        case ReviewStatus.SUBMITTED:
+                        case ReviewStatus.PASS:
+                            setDisabledButtons(['toolbar_dir_add', 'toolbar_dir_rename', 'toolbar_dir_delete', 'toolbar_dir_link', 'toolbar_dir_submit']);
+                            break;
+                        case ReviewStatus.UN_SUBMIT:
+                        case ReviewStatus.FAIL:
+                            setDisabledButtons();
+                            break
+                        case ReviewStatus.REJECTED:
+                            setDisabledButtons(['toolbar_dir_add', 'toolbar_dir_rename', 'toolbar_dir_link', 'toolbar_dir_submit']);
+                    }
                 } else {
-                    const basicData = dirCache.get(id).basicData;
-                    if (basicData) {
-                        // 元数据 或者文件
-                        if (basicData.metadataName || basicData.entityId) {
-                            const parent = dirCache.get(parentId).basicData;
-                            let status = parent.reviewStatus;
-                            // 审核状态为已提交或者审核通过时，不显示菜单
-                            if (status === ReviewStatus.SUBMITTED || status === ReviewStatus.PASS) {
-                                btns = {noneToolbar: buttons.noneToolbar};
-                            } else {
-                                btns = {removeLinkToolbar: buttons.removeLinkToolbar};
-                            }
-                        } else { // 目录
-                            let status = basicData.reviewStatus; // 目录审核状态
+                    setDisabledButtons(['toolbar_dir_rename', 'toolbar_dir_delete', 'toolbar_dir_link', 'toolbar_dir_submit']);
+                }
 
-                            // 目录类型为结构目录时
-                            if (basicData.directoryType === ReviewEntityType.DIRECTORY) {
-                                // 显示新增目录
-                                btns.addToolbar = buttons.addToolbar;
-                                if (!basicData.hasChild) {
-                                    btns.editToolbar = buttons.editToolbar;
-                                    btns.delToolbar = buttons.delToolbar;
-                                }
-                            } else { // 目录类型为元数据时， 判断对象为父目录
-                                // 审核状态为已提交或者审核通过时，不显示菜单
-                                if (status === ReviewStatus.SUBMITTED || status === ReviewStatus.PASS) {
-                                    btns = {noneToolbar: buttons.noneToolbar};
-                                } else {
-                                    btns.editToolbar = buttons.editToolbar;
-                                    btns.delToolbar = buttons.delToolbar;
-                                    btns.addMetadataToolbar = buttons.addMetadataToolbar;
-                                    btns.reviewToolbar = buttons.reviewToolbar;
-                                }
-                            }
-                        }
-                    } else {
-                        btns = {noneToolbar: buttons.noneToolbar}
+                /**
+                 * 设置需要禁用的按钮
+                 * @param buttonIds 按钮ID数组
+                 */
+                function setDisabledButtons(buttonIds = []) {
+                    for (let btnName of buttonIds) {
+                        let $btn = $(buttons[btnName]);
+                        let $a = $btn.find('a').addClass('layui-disabled');
+                        $btn.html($a[0]);
+                        buttons[btnName] = $btn[0];
                     }
                 }
-                return btns;
+
+                return buttons;
             }
         },
         toolbarExt: [
             {
-                toolbarId: "addMetadataToolbar",
+                toolbarId: "toolbar_dir_add",
+                icon: "dtreefont dtree-icon-weibiaoti5",
+                title: "新建目录",
+                handler: function (node) {
+                    const {id} = node;
+                    openDirectoryEditLayer({parentId: id})
+                }
+            },
+            {
+                toolbarId: "toolbar_dir_rename",
+                icon: "dtreefont dtree-icon-bianji",
+                title: "重命名目录",
+                handler: function (node) {
+                    const {basicData} = node;
+                    openDirectoryEditLayer(basicData)
+                }
+            },
+            {
+                toolbarId: "toolbar_dir_delete",
+                icon: "dtreefont dtree-icon-delete1",
+                title: "删除目录",
+                handler: function (node) {
+                    const {id, parentId} = node;
+                    layer.confirm('是否确定删除该目录？', function (index) {
+                        Util.send(`/business/directory/delete/${id}`, {}, 'delete').then(res => {
+                            if (res.flag) {
+                                let $dom = $(`div[data-id='${parentId}'][dtree-id='directoryTree']`);
+                                dirTree.getChild($dom);
+                                layer.close(index);
+                            } else {
+                                showErrorMsg(res.msg);
+                            }
+                        }).catch(() => showErrorMsg());
+                    });
+                }
+            },
+            {
+                toolbarId: "toolbar_dir_link",
                 icon: "layui-icon layui-icon-link",
-                title: "关联数据表",
+                title: "关联数据资源",
                 handler: function (node, elem) {
                     const {basicData, id, parentId, context} = node;
                     openAddMetadataLayer(basicData, function () {
@@ -437,7 +415,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 }
             },
             {
-                toolbarId: "reviewToolbar",
+                toolbarId: "toolbar_dir_submit",
                 icon: "layui-icon layui-icon-release",
                 title: "提交审核", handler: function (node, elem) {
                     console.info(node, elem);
@@ -463,37 +441,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                     });
                 }
             },
-            {
-                toolbarId: "removeLinkToolbar",
-                icon: "layui-icon layui-icon-unlink",
-                title: "解除关联", handler: function (node, dom) {
-                    layer.confirm('是否要解除该条数据的关联？', {}, function (index) {
-                        const {basicData, parentId} = node;
-                        let data, url;
-                        if (basicData.metadataName) {
-                            url = `${ctx}/business/directory/remove/metadata`
-                            data = {directoryId: parentId, metadataId: basicData.id};
-                        } else {
-                            url = `${ctx}/business/directory/remove/file`
-                            data = {fileId: basicData.id};
-                        }
-                        $.post(url, data, function (res) {
-                            if (res.flag) {
-                                dirTree.partialRefreshDel(dom);
-                            } else {
-                                layer.msg('解除关联失败')
-                            }
-                            layer.close(index);
-                        })
-                    })
-                }
-            },
-            {
-                toolbarId: "noneToolbar",
-                icon: "",
-                title: "无可操作选项", handler: function (node) {
-                }
-            },
         ],
         formatter: {
             title: function (data) { // 文字过滤，返回null,"",undefined之后，都不会改变原有的内容返回。
@@ -503,13 +450,60 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
     }
     dirTree = globalTree.init(treeOps);
 
-    function formatterTitle(data){
+    function formatterTitle(data) {
         let {title, basicData} = data;
         if (basicData && basicData.directoryType === ReviewEntityType.METADATA) {
             const reviewStatus = data.basicData.reviewStatus;
             title += ReviewStatusIcon[reviewStatus].replace('##id##', basicData.id);
         }
         return title;
+    }
+
+    /**
+     * 打开目录编辑窗口
+     * @param data
+     */
+    function openDirectoryEditLayer(data) {
+        const isEdit = data.id;
+        layer.open({
+            type: 1,
+            title: data.id ? '重命名目录' : '新建目录',
+            area: ['300px', '180px'],
+            btn: ['保存', '取消'],
+            content: `<div class="layui-form" lay-filter="directoryEditForm">
+                        <div class="layui-form-item" style="margin-bottom: 0">
+                            <div class="layui-inline" style="width: 90%; margin:15px">
+                                <input type="hidden" name="id" value="${data.id || ''}">
+                                <input type="hidden" name="parentId" value="${data.parentId}" />
+                                <input type="hidden" name="directoryType" value="DIRECTORY" />
+                                <input class="layui-input" type="text" name="directoryName" autocomplete="off" value="${data.directoryName || ''}" placeholder="请输入目录名称" lay-verify="required">
+                                <a lay-submit lay-filter="directoryEditForm" id="directoryEditFormSubmit" style=""></a>
+                            </div>
+                        </div>
+                    </div>`,
+            success: function (layerObj, index) {
+                //form.render();
+            },
+            yes: function (index) {
+                form.on('submit(directoryEditForm)', function ({elem, field}) {
+                    if (field.directoryName == tempNode.param.context) {
+                        layer.close(index);
+                    } else {
+                        Util.post(`/business/directory/save`, field, true).then(res => {
+                            if (res.flag) {
+                                let $dom = isEdit ? $(`div[data-id='${field.parentId}'][dtree-id='directoryTree']`) : tempNode.dom;
+                                dirTree.getChild($dom);
+                                layer.close(index);
+                            } else {
+                                showErrorMsg(res.msg);
+                            }
+                        });
+                    }
+                    return false;
+                });
+                $('#directoryEditFormSubmit').click();
+            }
+        })
     }
 
     let player;
@@ -564,12 +558,17 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
     }
 
     // 目录树筛选条件
-    form.on('select(reviewStatusSelect)', function ({elem, othis, value}) {
+    /*form.on('select(reviewStatusSelect)', function ({elem, othis, value}) {
         reviewStatusSearch = value;
         const treeOps = {request: {}}
         if (value) {
             treeOps.request = {reviewStatus: value};
         }
         globalTree.reload(treeOps)
-    });
+    });*/
+    $('#directoryTreeSearchBox').on('keyup', function () {
+        setTimeout(() => {
+            dirTree.fuzzySearch(this.value);
+        }, 500)
+    })
 })

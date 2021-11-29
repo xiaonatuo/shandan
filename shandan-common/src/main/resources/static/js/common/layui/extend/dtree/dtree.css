@@ -45,7 +45,7 @@
 .dtree-toolbar{position: absolute;z-index: 940520;padding: 0;background-color: #eceaeb;}
 .dtree-toolbar .layui-nav-child{position: static;}
 .dtree-toolbar .layui-nav-child dd{cursor: pointer;}
-.dtree-toolbar .layui-nav-child dd a i{font-size:16px;display: inline-block;margin: 0px 1px;color:#fe7786;}
+.dtree-toolbar .layui-nav-child dd a i{font-size:16px;display: inline-block;margin: 0px 1px;}
 .dtree-toolbar .layui-nav-child dd a i:hover{font-weight: bold;}
 .dtree-toolbar .layui-nav-bar{display: none!important;}
 .dtree-toolbar-tool{padding: 30px;}
