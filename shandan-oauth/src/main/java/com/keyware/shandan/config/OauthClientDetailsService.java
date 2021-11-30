@@ -44,7 +44,7 @@ public class OauthClientDetailsService extends JdbcClientDetailsService {
 
             details.setAuthorizedGrantTypes(baseDetails.getAuthorizedGrantTypes());
 
-            details.setRegisteredRedirectUri(baseDetails.getRegisteredRedirectUri());
+            details.setRegisteredRedirectUris(baseDetails.getRegisteredRedirectUri());
 
             details.setAutoApproveScopes(baseDetails.getAutoApproveScopes());
 
