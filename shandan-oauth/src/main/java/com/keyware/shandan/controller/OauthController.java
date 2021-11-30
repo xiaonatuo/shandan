@@ -1,7 +1,12 @@
 package com.keyware.shandan.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.keyware.shandan.beans.ClientDetailsDTO;
+import com.keyware.shandan.config.OauthClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +16,9 @@ import java.security.Principal;
 @Controller
 @RequestMapping()
 public class OauthController {
+
+    @Autowired
+    private OauthClientDetailsService oauthClientDetailsService;
 
     @Autowired
     private ConsumerTokenServices consumerTokenServices;
@@ -31,4 +39,9 @@ public class OauthController {
         return consumerTokenServices.revokeToken(access_token);
     }
 
+    @PostMapping("/oauth/client/register")
+    public ResponseEntity<Object> clientRegister(@RequestBody ClientDetailsDTO details){
+        oauthClientDetailsService.addClientDetails(details);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
