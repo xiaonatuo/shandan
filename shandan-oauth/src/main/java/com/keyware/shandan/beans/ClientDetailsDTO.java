@@ -1,60 +1,78 @@
 package com.keyware.shandan.beans;
 
-import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * ClientDetailsDTO
+ * 客户端详情数据传输类
  *
- * @author Administrator
+ * @author Guoxin
  * @since 2021/11/30
  */
 @Data
 public class ClientDetailsDTO implements ClientDetails {
     private static final long serialVersionUID = 1878566448352148025L;
 
+    /**
+     * 客户端ID
+     */
     private String clientId;
 
+    /**
+     * 客户端密码
+     */
     private String clientSecret;
 
-    private String resourceIds;
+    /**
+     * 资源ID
+     */
+    private Set<String> resourceIds = Collections.emptySet();
 
-    private String scope;
+    /**
+     * 权限范围
+     */
+    private Set<String> scope = Collections.emptySet();
 
-    private String authorizedGrantTypes;
+    /**
+     * 授权类型
+     */
+    private Set<String> authorizedGrantTypes = Collections.emptySet();
 
-    private String registeredRedirectUri;
+    /**
+     * 登录成功调整地址
+     */
+    private Set<String> registeredRedirectUris = Collections.emptySet();
 
+    /**
+     * token有效时长
+     */
     private Integer accessTokenValiditySeconds;
 
+    /**
+     * token刷新时间
+     */
     private Integer refreshTokenValiditySeconds;
 
-    private String autoApproveScopes;
+    /**
+     * 自动授权的范围，该范围会与scope字段做比对，比对上了则会自动授权，否则手动授权，设置为true则全部自动授权
+     */
+    private Set<String> autoApproveScopes = Collections.emptySet();
 
-    private List<GrantedAuthority> authorities = Collections.emptyList();
+    /**
+     * 权限集合
+     */
+    private Set<GrantedAuthorityDTO> authorities = Collections.emptySet();
 
-    private String additionalInformation;
-
-    @Override
-    public Set<String> getScope() {
-        if(StringUtils.hasText(scope)){
-            return new HashSet<>(Arrays.asList(scope.split(",")));
-        }
-        return Collections.emptySet();
-    }
-
-    @Override
-    public Set<String> getResourceIds() {
-        if(StringUtils.hasText(resourceIds)){
-            return new HashSet<>(Arrays.asList(resourceIds.split(",")));
-        }
-        return Collections.emptySet();
-    }
+    /**
+     * 其他条件信息
+     */
+    private Map<String, Object> additionalInformation;
 
     @Override
     public boolean isSecretRequired() {
@@ -67,19 +85,8 @@ public class ClientDetailsDTO implements ClientDetails {
     }
 
     @Override
-    public Set<String> getAuthorizedGrantTypes() {
-        if(StringUtils.hasText(authorizedGrantTypes)){
-            return new HashSet<>(Arrays.asList(authorizedGrantTypes.split(",")));
-        }
-        return Collections.emptySet();
-    }
-
-    @Override
     public Set<String> getRegisteredRedirectUri() {
-        if(StringUtils.hasText(registeredRedirectUri)){
-            return new HashSet<>(Arrays.asList(registeredRedirectUri.split(",")));
-        }
-        return Collections.emptySet();
+        return this.registeredRedirectUris;
     }
 
     @Override
@@ -87,32 +94,18 @@ public class ClientDetailsDTO implements ClientDetails {
         return null;
     }
 
-    public Set<String> getAutoApproveScopes(){
-        if(StringUtils.hasText(autoApproveScopes)){
-            return new HashSet<>(Arrays.asList(autoApproveScopes.split(",")));
-        }
-        return Collections.emptySet();
-    }
+
 
     @Override
     public boolean isAutoApprove(String scope) {
         if (autoApproveScopes == null) {
             return false;
         }
-        for (String auto : getAutoApproveScopes()) {
+        for (String auto : autoApproveScopes) {
             if (auto.equals("true") || scope.matches(auto)) {
                 return true;
             }
         }
         return false;
-    }
-
-    @Override
-    public Map<String, Object> getAdditionalInformation() {
-        if(StringUtils.hasText(additionalInformation)){
-            JSONObject json = JSONObject.parseObject(additionalInformation);
-            return json.getInnerMap();
-        }
-        return null;
     }
 }

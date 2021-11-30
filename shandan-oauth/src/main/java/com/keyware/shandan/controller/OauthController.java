@@ -18,9 +18,6 @@ import java.security.Principal;
 public class OauthController {
 
     @Autowired
-    private OauthClientDetailsService oauthClientDetailsService;
-
-    @Autowired
     private ConsumerTokenServices consumerTokenServices;
 
     @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
@@ -39,14 +36,4 @@ public class OauthController {
         return consumerTokenServices.revokeToken(access_token);
     }
 
-    /**
-     * 客户端注册接口
-     * @param details 客户端详情
-     * @return 响应
-     */
-    @PostMapping("/oauth/client/register")
-    public ResponseEntity<Object> clientRegister(@RequestBody ClientDetailsDTO details){
-        oauthClientDetailsService.addClientDetails(details);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
