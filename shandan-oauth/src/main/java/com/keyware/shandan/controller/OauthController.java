@@ -2,11 +2,12 @@ package com.keyware.shandan.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@RestController
+@Controller
 @RequestMapping()
 public class OauthController {
 
