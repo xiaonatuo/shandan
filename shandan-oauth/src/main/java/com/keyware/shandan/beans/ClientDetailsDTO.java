@@ -45,7 +45,7 @@ public class ClientDetailsDTO implements ClientDetails {
     private Set<String> authorizedGrantTypes = Collections.emptySet();
 
     /**
-     * 登录成功调整地址
+     * 登录成功重定向地址
      */
     private Set<String> registeredRedirectUris = Collections.emptySet();
 
