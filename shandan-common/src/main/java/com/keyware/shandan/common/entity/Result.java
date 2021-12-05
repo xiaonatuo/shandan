@@ -11,6 +11,7 @@ import java.io.Serializable;
 
 @Data
 public class Result<T> implements Serializable {
+    private static final long serialVersionUID = -7394683620129440596L;
     /**
      * 通信数据
      */
