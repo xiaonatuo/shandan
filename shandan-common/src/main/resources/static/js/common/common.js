@@ -425,8 +425,9 @@ commonUtil = {
     send: (url, data, type = 'get', loading=true) => {
         if(loading) showLoading()
         let promise = new Promise(function (resolve, reject) {
+            url = url.startsWith("http://") || url.startsWith("https://") ? url : `${ctx}${url}`
             $.ajax({
-                url:`${ctx}${url}`,
+                url,
                 type: type,
                 data: data,
                 dataType: 'json',
