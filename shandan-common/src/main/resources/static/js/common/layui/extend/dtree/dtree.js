@@ -4640,9 +4640,9 @@ layui.define(['jquery','layer','form'], function(exports) {
                     _this.setToolbarDom().setToolbarPlace(_this.toolbarFun.loadToolbarBefore(event.cloneObj(_this.toolbarMenu), _this.getRequestParam(node), $div));
 
                     var e = e || window.event,
-                        mx = e.pageX - $div.offset().left +45 ,
+                        mx =  $div.offset().left -  _this.obj.closest(_this.scroll).offset().left + 45,
                         my = $div.offset().top - _this.obj.closest(_this.scroll).offset().top +15 + 122;
-
+                    console.info(e.pageX, $div.offset())
                     //_this.navThis($div);
                     var $toolBarDiv = _this.obj.prevAll('div#dtree_toolbar_'+_this.obj[0].id);
                     $toolBarDiv.find(".layui-nav-child").addClass('layui-anim-fadein layui-show');
