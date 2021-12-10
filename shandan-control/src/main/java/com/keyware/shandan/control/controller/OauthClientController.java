@@ -50,26 +50,4 @@ public class OauthClientController extends BaseController<OauthClientDetailsServ
         return modelAndView;
     }
 
-
-    /**
-     * 根据客户端ID查询所有数据表
-     * @param id
-     * @return
-     */
-    @PostMapping("/table/list")
-    public Result<OauthClientDetails> tableList(OauthClientDetails table, String id){
-        if(StringUtils.isBlank(id)){
-            return Result.of(null, false, "id 参数不能为空");
-        }
-        OauthClientDetails oauthClientDetails = oauthClientDetailsService.getById(id);
-        if(oauthClientDetails == null){
-            return Result.of(null, false, "客户端不存在");
-        }
-        return Result.of(oauthClientDetails);
-    }
-
-
-
-
-
 }
