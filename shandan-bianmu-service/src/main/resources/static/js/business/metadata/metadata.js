@@ -25,7 +25,7 @@ layui.use(['layer', 'listPage', 'form', 'dict'], function () {
                 {field: 'secretLevel', title: '密级', templet: data => layui.dict.getDictDesc('secret_level', data.secretLevel)},
                 {field: 'themeTask', title: '主题任务'},
                 {field: 'dataFrom', title: '数据来源', width: 100, templet: data => layui.dict.getDictDesc('data_source', data.dataFrom)},
-                {field: 'collectionTime', title: '采集时间', width: 180, align: 'center'},
+                {field: 'createTime', title: '注册时间', width: 180, align: 'center'},
                 {
                     field: 'reviewStatus', title: '状态', width: 120, align: 'center', templet: (data) => {
                         let colorClass = 'layui-bg-blue';
@@ -69,7 +69,7 @@ layui.use(['layer', 'listPage', 'form', 'dict'], function () {
                         $.get(`${ctx}/business/review/get/entity?entityId=${id}`, {}, function(res){
                             if(res.flag){
                                 const reviewData = res.data;
-                                layer.tips(reviewData.reviewOpinion, `#tips-${id}`, {tips: [3]});
+                                layer.tips(reviewData.reviewOpinion || '没有数据', `#tips-${id}`, {tips: [3]});
                             }
                         })
                     }
