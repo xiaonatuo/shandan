@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <!--<div class="layui-card-header">操作表单</div>-->
+            <div class="layui-card-body">
+                <form id="clientForm" class="layui-form layui-form-pane" lay-filter="clientForm">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">客户端名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="id" autocomplete="off" placeholder="客户端名称"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">权限范围</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="scope" autocomplete="off" placeholder="all"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">访问模式</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="authorizedGrantTypes" autocomplete="off"
+                                   placeholder="authorization_code/refresh_token"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">客户端重定向URI</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="webServerRedirectUri" autocomplete="off" placeholder="客户端重定向URI"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">权限</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="authorities" autocomplete="off" placeholder="ROLE_ADMIN/ROLE_USER"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">访问令牌有效时间</label>
+                        <div class="layui-input-block">
+                                <input name="accessTokenValidity" autocomplete="off" placeholder="访问令牌有效时间"
+                                          class="layui-input"> </input>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">刷新令牌有效时间</label>
+                        <div class="layui-input-block">
+                                <input name="refreshTokenValidity" autocomplete="off" placeholder="刷新令牌有效时间"
+                                          class="layui-input"> </input>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">许可</label>
+                        <div class="layui-input-block">
+                                <input name="autoapprove" autocomplete="off" placeholder="许可"
+                                          class="layui-input"> </input>
+                        </div>
+                    </div>
+                    <!-- 隐藏域 -->
+                    <!--<input type="text" name="id" hidden="hidden"/>-->
+                    <button id="btn_submit" lay-submit lay-filter="*"
+                            style="position: absolute; left: -100px"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/client/clientEdit.js}"></script>
+</html>

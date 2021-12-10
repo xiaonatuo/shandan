@@ -13,7 +13,7 @@
     <!-- 树 -->
     <div class="layui-col-md12">
         <div class="layui-card">
-            <div class="layui-card-header">数据源管理</div>
+            <div class="layui-card-header">客户端管理</div>
             <div class="layui-card-body" style="padding-top: 0;">
                 <!-- 表格主体 -->
                 <table class="layui-hide" id="dsTable" lay-filter="dsTable"></table>
@@ -36,7 +36,7 @@
 </div>
 </body>
 <!-- js -->
-<script th:src="@{/js/datasource/datasource.js}"></script>
+<script th:src="@{/js/client/client.js}"></script>
 <script>
     const sizeInit = () => {
         $(".layui-card-body").height(window.innerHeight -  43 - 20);
