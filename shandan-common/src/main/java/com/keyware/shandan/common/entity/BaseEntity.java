@@ -1,6 +1,7 @@
 package com.keyware.shandan.common.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.OrderBy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class BaseEntity implements Serializable {
      * 创建时间
      */
     @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
+    @OrderBy()
     private Date createTime;
 
     /**

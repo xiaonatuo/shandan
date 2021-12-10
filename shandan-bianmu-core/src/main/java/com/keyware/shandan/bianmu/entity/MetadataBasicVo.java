@@ -87,6 +87,7 @@ public class MetadataBasicVo extends BaseEntity implements Serializable {
      * 数据审核状态（'UN_SUBMIT'：未提交，'SUBMITTED'：已提交，'PASS'：审核通过，'FAIL'：审核未通过）
      */
     @TableField("REVIEW_STATUS")
+    @OrderBy()
     private ReviewStatus reviewStatus;
 
     @TableField(exist = false)

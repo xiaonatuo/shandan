@@ -28,6 +28,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.sql.Clob;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +72,15 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     @Override
     @DataPermissions
     public Page<MetadataBasicVo> page(Page<MetadataBasicVo> page, QueryWrapper<MetadataBasicVo> wrapper) {
-        return super.page(page, wrapper);
+        MetadataBasicVo metaData = wrapper.getEntity();
+        if(StringUtils.isNotBlank(metaData.getMetadataName())){
+            wrapper.like("METADATA_NAME", metaData.getMetadataName());
+        }
+        if(metaData.getReviewStatus() != null){
+            wrapper.eq("REVIEW_STATUS", metaData.getReviewStatus().getValue());
+        }
+
+        return metadataBasicMapper.selectPage(page, wrapper);
     }
 
     /**
