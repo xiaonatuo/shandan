@@ -32,7 +32,7 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
             } else {
                 _this.table.where.name = searchText
             }
-            gtable.reload(_this.table);
+            _this.reloadTable(_this)
         },
         add: function (data, _this) {
             if (_this.table.btnAdd) {
@@ -146,7 +146,7 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
         const tableOps = $.extend(true, {}, this.table, options.table);
         // 对where条件做特殊处理, 不参与深层拷贝
         tableOps.where = $.extend(tableOps.where, options.table.where);
-        this.initTable({table: tableOps});
+        this.initTable(options);
     }
 
     /**

@@ -48,9 +48,9 @@ layui.use(['layer', 'listPage', 'form', 'dict'], function () {
                 form.val('metadataSearchForm', {reviewStatusSelect: reviewStatusSearch});
                 form.on('select(reviewStatusSelect)', function ({elem, othis, value}) {
                     reviewStatusSearch = value;
-                    const table = {where: {current: 1}}
+                    const table = {where: {}}
                     if (value) {
-                        table.where.reviewStatus = value;
+                       table.where.reviewStatus = value;
                     }
 
                     const searchText = $('#searchKeyInput').val();
