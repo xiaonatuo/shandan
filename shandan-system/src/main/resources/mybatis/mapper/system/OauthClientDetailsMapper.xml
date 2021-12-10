@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.system.mapper.OauthClientDetailsMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.system.entity.OauthClientDetails">
+        <id column="CLIENT_ID" property="id"/>
+        <result column="CLIENT_SECRET" property="clientSecret"/>
+        <result column="RESOURCE_IDS" property="resourceIds"/>
+        <result column="SCOPE" property="scope"/>
+        <result column="AUTHORIZED_GRANT_TYPES" property="authorizedGrantTypes"/>
+        <result column="WEB_SERVER_REDIRECT_URI" property="webServerRedirectUri"/>
+        <result column="AUTHORITIES" property="authorities"/>
+        <result column="ACCESS_TOKEN_VALIDITY" property="accessTokenValidity"/>
+        <result column="REFRESH_TOKEN_VALIDITY" property="refreshTokenValidity"/>
+        <result column="ADDITIONAL_INFORMATION" property="additionalInformation"/>
+        <result column="AUTOAPPROVE" property="autoapprove"/>
+        <result column="WEB_CLIENT_LOGOUT_URI" property="webClientLogoutUri"/>
+    </resultMap>
+</mapper>
