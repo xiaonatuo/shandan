@@ -22,10 +22,10 @@ layui.use(['layer', 'listPage'], function () {
                 {field: '',type: 'checkbox'},
                 {field: 'metadataName', title: '数据表'},
                 {field: 'metadataComment', title: '中文注释'},
-                {field: 'themeTask', title: '主题任务'},
+                /*{field: 'themeTask', title: '主题任务'},*/
                 {field: 'dataFrom', title: '数据来源'},
-                {field: 'dataType', title: '数据类型'},
-                {field: 'collectionTime', title: '采集时间'},
+                /*{field: 'dataType', title: '数据类型'},*/
+                {field: 'createTime', title: '注册时间', width: 160},
             ]],
             onChecked: function () {
                 chooseData = listPage.getCheckStatus().data;
