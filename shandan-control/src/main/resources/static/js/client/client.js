@@ -95,17 +95,31 @@ layui.use(['layer', 'gtable'], function () {
         url: `${ctx}/sys/oauth/client/page`,
         method: 'post',
         cols:[[
-            {field: 'id', title: '客户端名称'},
+            {field: 'id', title: '客户端名称',width: 150},
             {field: 'clientSecret', title: '访问密匙'},
             //{field: 'resourceIds', title: '资源ID集合'},
-            {field: 'scope', title: '权限范围,'},
+            //{field: 'scope', title: '权限范围'},
+            {
+                field: 'scope',
+                title: '权限范围',
+                width: 80,
+                align: 'center',
+                templet: data => data.scope == 'all' ? '全部' : '部分'
+            },
             {field: 'authorizedGrantTypes', title: '访问模式'},
-            {field: 'webServerRedirectUri', title: '客户端重定向URI'},
+            {field: 'webServerRedirectUri', title: '客户端访问地址'},
             {field: 'authorities', title: '权限'},
-            {field: 'accessTokenValidity', title: '访问令牌有效时间'},
-            {field: 'refreshTokenValidity', title: '刷新令牌有效时间'},
+            {field: 'accessTokenValidity', title: '访问令牌时效', width: 100},
+            {field: 'refreshTokenValidity', title: '刷新令牌时效', width: 100,},
             //{field: 'additionalInformation', title: ''},
-            {field: 'autoapprove', title: '许可'},
+            //{field: 'autoapprove', title: '许可'},
+            {
+                field: 'autoapprove',
+                title: '状态',
+                width: 80,
+                align: 'center',
+                templet: data => data.autoapprove ? '启用' : '停用'
+            },
             //{field: 'webClientLogoutUri', title: '数据库模式'},
             {fixed: 'right', align:'center', title: '操作', toolbar: '#rowToolBar', width: 150}
         ]],
