@@ -1,10 +1,10 @@
 /**
  * <p>
- *  datasource.js
+ *  client.js
  * </p>
  *
  * @author Administrator
- * @since 2021/5/24
+ * @since 2021/12/11
  */
 layui.use(['layer', 'gtable'], function () {
     const layer = layui.layer,
@@ -58,14 +58,6 @@ layui.use(['layer', 'gtable'], function () {
     }
 
 
-    /*function getUserByName() {
-        var searchKeyInput = $("#searchKeyInput").val();
-        alert(searchKeyInput);
-        let uri =`${ctx}/sys/oauth/client/table/list`;
-        $.post(uri,{"id":searchKeyInput},function (data) {
-            gtable.reload();
-        })
-    }*/
 
     /**
      * 数据表格点击事件
@@ -104,7 +96,7 @@ layui.use(['layer', 'gtable'], function () {
         method: 'post',
         cols:[[
             {field: 'id', title: '客户端名称'},
-            //{field: 'clientSecret', title: '访问密匙'},
+            {field: 'clientSecret', title: '访问密匙'},
             //{field: 'resourceIds', title: '资源ID集合'},
             {field: 'scope', title: '权限范围,'},
             {field: 'authorizedGrantTypes', title: '访问模式'},
@@ -120,7 +112,6 @@ layui.use(['layer', 'gtable'], function () {
         onToolBarTable: tableEventCallback,
         onToolBarRow: tableEventCallback,
         done: function (res) {
-            //console.info('数据表格加载完成', res);
             $('#searchKeyInput').val(searchText);
         }
     }
