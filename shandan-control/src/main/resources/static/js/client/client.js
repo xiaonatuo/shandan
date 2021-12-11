@@ -115,10 +115,10 @@ layui.use(['layer', 'gtable'], function () {
             //{field: 'autoapprove', title: '许可'},
             {
                 field: 'autoapprove',
-                title: '状态',
+                title: '许可状态',
                 width: 80,
-                align: 'center',
-                templet: data => data.autoapprove ? '启用' : '停用'
+                //align: 'center',
+                templet: data => data.autoapprove == 'true'? '允许' : '禁止'
             },
             //{field: 'webClientLogoutUri', title: '数据库模式'},
             {fixed: 'right', align:'center', title: '操作', toolbar: '#rowToolBar', width: 150}
