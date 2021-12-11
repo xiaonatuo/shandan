@@ -24,6 +24,13 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">访问密匙</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="clientSecret" autocomplete="off"
+                                   class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">权限范围</label>
                         <div class="layui-input-block">
                             <input type="text" name="scope" autocomplete="off" placeholder="all"
@@ -34,7 +41,7 @@
                         <label class="layui-form-label">访问模式</label>
                         <div class="layui-input-block">
                             <input type="text" name="authorizedGrantTypes" autocomplete="off"
-                                   placeholder="authorization_code/refresh_token"
+                                   value="authorization_code,refresh_token"
                                    class="layui-input" lay-verify="required">
                         </div>
                     </div>
@@ -48,29 +55,32 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">权限</label>
                         <div class="layui-input-block">
-                            <input type="text" name="authorities" autocomplete="off" placeholder="ROLE_ADMIN/ROLE_USER"
+                            <input type="text" name="authorities" autocomplete="off"
+                                   value="ROLE_ADMIN,ROLE_USER"
                                    class="layui-input" lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">访问令牌有效时间</label>
                         <div class="layui-input-block">
-                                <input name="accessTokenValidity" autocomplete="off" placeholder="访问令牌有效时间"
+                                <input name="accessTokenValidity" autocomplete="off"
+                                       value="7200"
                                           class="layui-input"> </input>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">刷新令牌有效时间</label>
                         <div class="layui-input-block">
-                                <input name="refreshTokenValidity" autocomplete="off" placeholder="刷新令牌有效时间"
+                                <input name="refreshTokenValidity" autocomplete="off"
+                                       value="7200"
                                           class="layui-input"> </input>
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">许可</label>
+                        <label class="layui-form-label">是否允许登录系统</label>
                         <div class="layui-input-block">
-                                <input name="autoapprove" autocomplete="off" placeholder="许可"
-                                          class="layui-input"> </input>
+                            <input type="radio" name="autoapprove" th:checked="${autoapprove}" value="true" title="是" checked="checked">
+                            <input type="radio" name="autoapprove" th:checked="${autoapprove}" value="false" title="否">
                         </div>
                     </div>
                     <!-- 隐藏域 -->
