@@ -1,12 +1,17 @@
 package com.keyware.shandan.control.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.datasource.entity.DBUserTableVo;
+import com.keyware.shandan.datasource.entity.DataSourceVo;
+import com.keyware.shandan.datasource.service.DataSourceService;
 import com.keyware.shandan.frame.config.component.HttpRestTemplate;
+import com.keyware.shandan.system.entity.OauthClientDetails;
+import com.keyware.shandan.system.service.OauthClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -17,34 +22,32 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/sys/oauth/client")
-public class OauthClientController {
+public class OauthClientController extends BaseController<OauthClientDetailsService, OauthClientDetails, Object> {
 
     @Autowired
-    private HttpRestTemplate restTemplate;
+    private  OauthClientDetailsService oauthClientDetailsService;
 
 
+    /**
+     * 跳转客户端管理首页
+     * @param mov
+     * @return
+     */
     @GetMapping("/")
     public ModelAndView client(ModelAndView mov){
         mov.setViewName("client/client");
         return mov;
     }
 
-    @GetMapping("/list")
-    public Result<Object> list(){
-
-        return Result.of(null);
+    /**
+     * 跳转客户端编辑页
+     * @param
+     * @return
+     */
+    @GetMapping("/edit")
+    public ModelAndView edit(ModelAndView modelAndView){
+        modelAndView.setViewName("client/clientEdit");
+        return modelAndView;
     }
 
-    @GetMapping("/{clientId}")
-    public Result<Object> get(@PathVariable String clientId){
-        return Result.of(null);
-    }
-
-    public Result<Object> save(){
-        return Result.of(null);
-    }
-
-    public Result<Object> delete(){
-        return Result.of(null);
-    }
 }

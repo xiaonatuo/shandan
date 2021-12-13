@@ -29,7 +29,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             , {field: 'lastChangePwdTime', title: '最近修改密码时间', hide: true}
             , {field: 'createTime', title: '创建时间', hide: true}
             , {field: 'modifyTime', title: '更新时间'}
-            , {fixed: 'right', align:'center', title: '操作', toolbar: '#userTableBarDemo', width: 220}
+            , {fixed: 'right', align:'center', title: '操作', toolbar: '#userTableBarDemo', width: 320}
         ]],
         onToolBarTable: function (obj) {
             switch (obj.event) {
@@ -82,6 +82,10 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
                 case 'role':
                     openRoleLayer(data.userId);
                     break;
+                case 'client':
+                    openClientLayer(data.userId);
+                    break;
+
             }
         }
     };
@@ -112,6 +116,34 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             }
         });
     }
+
+
+    /**
+     * 选择角色弹框
+     * @param userId
+     */
+    function openClientLayer(userId) {
+        let clientLayer;
+        layer.open({
+            id: 'clientLayer',
+            type: 2,
+            title: '选择客户端',
+            area: ['300px', '400px'],
+            content: ctx + `/sys/userClient/layer?userId=${userId}`,
+            btn: ['确定'],
+            success: function (layero, index) {
+                clientLayer = window[layero.find('iframe')[0]['name']]
+            },
+            yes: function (index) {
+                layer.close(index)
+            },
+            end: function () {
+
+            }
+        });
+    }
+
+
 
     function openEditLayer(orgId, orgName, userId) {
         if (!userId) {

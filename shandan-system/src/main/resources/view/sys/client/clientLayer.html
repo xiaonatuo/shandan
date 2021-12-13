@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="layui-row">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-body layui-form" style="overflow-y: auto;">
+                <div class="layui-text" lay-filter="form-client">
+                    <p class="layui-form-item" th:each="client:${clientList}">
+                        <input lay-skin="primary" type="checkbox"
+                               th:data-client-id="${client.id}"
+                               th:data-user-id="${userId}"
+                               th:text="${client.id}"
+                               th:checked="${#lists.contains(userClientIds, client.id)}">
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/client/clientLayer.js}"></script>
+<script>
+    $(".layui-card-body").height(window.innerHeight - 60)
+</script>
+</html>
