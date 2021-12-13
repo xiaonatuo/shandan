@@ -332,7 +332,7 @@ layui.use(['layer', 'globalTree', 'form', 'element', 'laydate', 'dropdown', 'lay
     function resultItemOnClick() {
         const id = $(this).data('id');
         const data = currPageData.get(id);
-        if (data.fileName === undefined) { // 说明数据不是文件，是元数据
+        if (data.fileName === undefined) { // 说明数据不是文件，是数据资源
             viewMetadata(data);
         } else { // 数据是文件
             fileViewer(data);

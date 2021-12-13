@@ -28,7 +28,7 @@
     layui.use(['layer', 'listPage'], function () {
         const requestParam = layui.url().search;
 
-        // 请求查询元数据表字段
+        // 请求查询数据资源表字段
         $.get(`${ctx}/business/metadata/columns?id=${requestParam.metadataId}`, function (res) {
             if (res.flag) {
                 let columns = [];

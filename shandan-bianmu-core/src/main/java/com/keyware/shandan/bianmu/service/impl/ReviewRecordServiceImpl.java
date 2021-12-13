@@ -141,7 +141,7 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
                     .stream().map(SysUser::getUserId)
                     .reduce("", (a, b) -> a + "," + b);
         } else {
-            // 元数据类型
+            // 数据资源类型
             if (reviewRecord.getEntityType() == ReviewEntityType.METADATA) {
                 receiveId = metadataService.getById(reviewRecord.getEntityId()).getCreateUser();
             } else {

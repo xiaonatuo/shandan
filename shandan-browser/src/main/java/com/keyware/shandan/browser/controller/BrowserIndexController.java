@@ -110,7 +110,7 @@ public class BrowserIndexController {
         List<JSONObject> result;
         List<DirectoryVo> directoryList = directoryService.list(new QueryWrapper<>(directory));
         if (parentDir != null && parentDir.getDirectoryType() == DirectoryType.METADATA) {
-            // 查询元数据
+            // 查询数据资源
             List<MetadataBasicVo> metadataBasicVoList = directoryService.directoryMetadata(directory.getParentId());
             result = metadataBasicVoList.stream().filter(Objects::nonNull).map(vo -> {
                 JSONObject json = treeJson(vo, "metadata", true);

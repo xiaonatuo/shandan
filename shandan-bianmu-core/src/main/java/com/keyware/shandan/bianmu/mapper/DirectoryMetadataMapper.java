@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
- * 目录与元数据关系表 Mapper 接口
+ * 目录与数据资源关系表 Mapper 接口
  * </p>
  *
  * @author GuoXin

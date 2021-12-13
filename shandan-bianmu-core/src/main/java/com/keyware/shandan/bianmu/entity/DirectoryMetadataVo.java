@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 /**
  * <p>
- * 目录与元数据关系表
+ * 目录与数据资源关系表
  * </p>
  *
  * @author GuoXin
@@ -33,7 +33,7 @@ public class DirectoryMetadataVo extends BaseEntity{
     private String directoryId;
 
     /**
-     * 元数据ID
+     * 数据资源ID
      */
     @TableField("METADATA_ID")
     private String metadataId;

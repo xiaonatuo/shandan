@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * <p>
- * 元数据表详情服务实现类
+ * 数据资源表详情服务实现类
  * </p>
  *
  * @author Administrator

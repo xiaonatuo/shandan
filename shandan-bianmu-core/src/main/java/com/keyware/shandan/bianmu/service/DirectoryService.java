@@ -24,14 +24,14 @@ public interface DirectoryService extends IBaseService<DirectoryVo, String> {
     List<DirectoryVo> treeChildren(DirectoryVo vo);
 
     /**
-     * 获取目录下的元数据
+     * 获取目录下的数据资源
      * @param id 目录ID
      * @return
      */
     List<MetadataBasicVo> directoryMetadata(String id);
 
     /**
-     * 获取目录下所有的元数据，包含子级
+     * 获取目录下所有的数据资源，包含子级
      * @param id 目录ID
      * @return
      */

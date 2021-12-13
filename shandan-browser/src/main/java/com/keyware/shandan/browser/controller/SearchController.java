@@ -87,7 +87,7 @@ public class SearchController {
     }
 
     /**
-     * 查询指定元数据表的分页数据
+     * 查询指定数据资源表的分页数据
      * @param metaID
      * @param page
      * @param size

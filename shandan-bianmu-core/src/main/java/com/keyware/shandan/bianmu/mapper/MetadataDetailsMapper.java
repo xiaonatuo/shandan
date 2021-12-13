@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- * 元数据详情表 Mapper 接口
+ * 数据资源详情表 Mapper 接口
  * </p>
  *
  * @author GuoXin

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * 元数据管理前端控制器
+ * 数据资源管理前端控制器
  * </p>
  *
  * @author Administrator
@@ -73,7 +73,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     }
 
     /**
-     * 元数据选择框页面
+     * 数据资源选择框页面
      *
      * @return
      */
@@ -83,7 +83,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     }
 
     /**
-     * 保存元数据基础信息和详情表数据
+     * 保存数据资源基础信息和详情表数据
      *
      * @param metadataBasic
      * @return
@@ -113,7 +113,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     }
 
     /**
-     * 查询元数据表字段列表
+     * 查询数据资源表字段列表
      *
      * @param id
      * @return
@@ -124,7 +124,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     }
 
     /**
-     * 根据目录ID查询元数据列表
+     * 根据目录ID查询数据资源列表
      *
      * @param directoryId
      * @return
@@ -138,9 +138,9 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     }
 
     /**
-     * 保存元数据及文件，并关联目录
+     * 保存数据资源及文件，并关联目录
      *
-     * @param metadata    元数据
+     * @param metadata    数据资源
      * @param directoryId 目录ID
      * @param fileIds     文件ID
      * @return
@@ -150,9 +150,9 @@ public class MetadataController extends BaseController<MetadataService, Metadata
         if (StringUtils.isBlankAny(directoryId, fileIds)) {
             return Result.of(null, false, "参数错误");
         }
-        // 保存元数据
+        // 保存数据资源
         if (metadataService.save(metadata)) {
-            // 保存目录元数据关系
+            // 保存目录数据资源关系
             directoryMetadataService.save(new DirectoryMetadataVo(directoryId, metadata.getId()));
             //更新文件信息
             List<SysFile> files = sysFileService.listByIds(Arrays.asList(fileIds.split(",")));

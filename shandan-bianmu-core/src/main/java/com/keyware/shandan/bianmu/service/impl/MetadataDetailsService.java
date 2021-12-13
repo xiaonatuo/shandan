@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * <p>
- * 元数据详情服务类
+ * 数据资源详情服务类
  * </p>
  *
  * @author GuoXin

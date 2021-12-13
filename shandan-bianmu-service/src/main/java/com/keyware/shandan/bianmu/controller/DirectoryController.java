@@ -85,7 +85,7 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
     }
 
     /**
-     * 保存目录与元数据关系
+     * 保存目录与数据资源关系
      *
      * @param directoryId
      * @param metadataIds
@@ -109,7 +109,7 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
     }
 
     /**
-     * 移除目录和元数据关系
+     * 移除目录和数据资源关系
      *
      * @param directoryId
      * @param metadataId
@@ -147,7 +147,7 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
         List<JSONObject> result;
         List<DirectoryVo> directoryList = directoryService.list(new QueryWrapper<>(directory));
         if (parentDir != null && parentDir.getDirectoryType() == DirectoryType.METADATA) {
-            // 查询元数据
+            // 查询数据资源
             List<MetadataBasicVo> metadataBasicVoList = directoryService.directoryMetadata(directory.getParentId());
             result = metadataBasicVoList.stream().filter(Objects::nonNull).map(vo -> {
                 JSONObject json = treeJson(vo, "metadata", true);

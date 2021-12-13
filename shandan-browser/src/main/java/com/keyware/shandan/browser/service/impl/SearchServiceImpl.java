@@ -130,7 +130,7 @@ public class SearchServiceImpl implements SearchService {
                 metaFlag = true;
             } else if ("directoryId".equals(item.getField()) && !item.getField().equals("-")) {
                 metaFlag = true;
-                // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的元数据表
+                // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的数据资源表
                 BoolQueryBuilder bool = QueryBuilders.boolQuery();
                 bool.should(QueryBuilders.termsQuery("META_TYPE.keyword", getMetadataIdsByDirId(item.getValue())));
                 //boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE.keyword", getMetadataIdsByDirId(item.getValue())));
@@ -206,7 +206,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * 找到目录下所有的元数据表
+     * 找到目录下所有的数据资源表
      *
      * @param dirId 目录ID
      * @return -
@@ -241,7 +241,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * 获取有访问权限的元数据信息
+     * 获取有访问权限的数据资源信息
      *
      * @return
      */

@@ -78,7 +78,7 @@ ReportComponent.prototype.openEchartsConfigLayer = function () {
 
 /**
  * 初始化字段下拉框数据
- * @param metadataId 元数据ID
+ * @param metadataId 数据资源ID
  */
 ReportComponent.prototype.initFieldSelect = function (metadataId) {
     const _this = this;
@@ -194,7 +194,7 @@ ReportComponent.prototype.findFieldType = function (field) {
  */
 ReportComponent.prototype.setFormData = function (value) {
     this.formData = value;
-    // 需要判断目录树是否选中了元数据，如果是，则需要查询字段，然后渲染字段下拉框
+    // 需要判断目录树是否选中了数据资源，如果是，则需要查询字段，然后渲染字段下拉框
     if (value.metadataId) {
         this.initFieldSelect(value.metadataId);
     } else {

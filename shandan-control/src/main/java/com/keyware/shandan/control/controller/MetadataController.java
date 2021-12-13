@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * 元数据管理前端控制器
+ * 数据资源管理前端控制器
  * </p>
  *
  * @author Administrator
@@ -61,7 +61,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     }
 
     /**
-     * 查询元数据表字段列表
+     * 查询数据资源表字段列表
      *
      * @param id
      * @return
@@ -72,7 +72,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     }
 
     /**
-     * 根据目录ID查询元数据列表
+     * 根据目录ID查询数据资源列表
      *
      * @param directoryId
      * @return

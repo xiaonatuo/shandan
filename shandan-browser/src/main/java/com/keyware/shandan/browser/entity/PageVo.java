@@ -76,7 +76,7 @@ public class PageVo implements Serializable {
     }
 
     /**
-     * 对搜索结果填充元数据
+     * 对搜索结果填充数据资源
      *
      * @param hit -
      * @return -
@@ -91,7 +91,7 @@ public class PageVo implements Serializable {
         if(metaTypeObj == null){
             return source;
         }
-        // 元数据表类型
+        // 数据资源表类型
         String metaType = metaTypeObj.toString();
         //表注释
         String tableComment = BianmuDataCache.getComment(metaType);

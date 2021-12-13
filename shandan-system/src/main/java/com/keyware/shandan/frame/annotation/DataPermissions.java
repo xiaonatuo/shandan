@@ -45,7 +45,7 @@ public @interface DataPermissions {
         ORG_AND_DIRECTORY,
 
         /**
-         * 元数据权限
+         * 数据资源权限
          */
         METADATA;
 

@@ -1,14 +1,10 @@
 package com.keyware.shandan.bianmu.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler;
 import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.common.entity.BaseEntity;
-import com.keyware.shandan.common.enums.SecretLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.ibatis.type.EnumOrdinalTypeHandler;
-import org.apache.ibatis.type.JdbcType;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,7 +12,7 @@ import java.util.List;
 
 /**
  * <p>
- * 元数据表
+ * 数据资源表
  * </p>
  *
  * @author GuoXin
@@ -42,13 +38,13 @@ public class MetadataBasicVo extends BaseEntity implements Serializable {
     private String dataSourceId;
 
     /**
-     * 元数据名称
+     * 数据资源名称
      */
     @TableField(value = "METADATA_NAME", condition = SqlCondition.LIKE)
     private String metadataName;
 
     /**
-     * 元数据表中文注释
+     * 数据资源表中文注释
      */
     @TableField(value = "METADATA_COMMENT", condition = SqlCondition.LIKE)
     private String metadataComment;

@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * <p>
- * 元数据详情表
+ * 数据资源详情表
  * </p>
  *
  * @author GuoXin
@@ -33,13 +33,13 @@ public class MetadataDetailsVo extends BaseEntity implements Serializable {
     private String id;
 
     /**
-     * 元数据ID
+     * 数据资源ID
      */
     @TableField("METADATA_ID")
     private String metadataId;
 
     /**
-     * 元数据对象
+     * 数据资源对象
      */
     @TableField(exist = false)
     private MetadataBasicVo basic;

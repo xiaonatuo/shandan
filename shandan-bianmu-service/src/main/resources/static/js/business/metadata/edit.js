@@ -18,7 +18,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table',
     // 获取请求参数
     const requestParam = layui.url().search;
 
-    // 元数据表map，由子页面回传
+    // 数据资源表map，由子页面回传
     let metadataTableMap = new Map();
 
     // 初始化编辑表单
@@ -60,13 +60,13 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table',
                 form.render('select');
             })
 
-            // 根据元数据详情表渲染元数据标签组件
+            // 根据数据资源详情表渲染数据资源标签组件
             if (data && data.metadataDetailsList && data.metadataDetailsList.length > 0) {
                 data.metadataDetailsList.forEach(meta => {
                     if (meta.columnList) { // 需要选中的列
                         meta.columnList.forEach(col => col.selected = meta.foreignColumn == col.columnName ? 'selected' : '')
                     }
-                    // 将数据添加到元数据map中去，用来渲染组件
+                    // 将数据添加到数据资源map中去，用来渲染组件
                     metadataTableMap.set(meta.tableName, meta)
                 });
                 renderMetadataTablesTab(data);
@@ -75,7 +75,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table',
     });
 
     /**
-     * 渲染元数据表标签组件
+     * 渲染数据资源表标签组件
      */
     const renderMetadataTablesTab = function (initData) {
         //if (metadataTableMap.size == 0) return;
@@ -84,14 +84,14 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table',
         })
         form.render();
 
-        // 删除元数据表标签，只能再渲染完成后再绑定事件监听，否则无效
+        // 删除数据资源表标签，只能再渲染完成后再绑定事件监听，否则无效
         $('#metadataTablesTab .table-tab i').click(function (elem) {
             const tableName = $(this).data('id');
             metadataTableMap.delete(tableName);
             renderMetadataTablesTab();
         });
 
-        // 添加元数据表的下拉框的事件监听
+        // 添加数据资源表的下拉框的事件监听
         metadataSelectorEventListener();
         // 设置主表单选按钮的监听
         renderMasterTableRadio();
@@ -132,7 +132,7 @@ layui.use(['form', 'layer', 'editPage', 'laytpl', 'laydate', 'element', 'table',
     });
 
     /**
-     * 元数据下拉框事件监听
+     * 数据资源下拉框事件监听
      */
     function metadataSelectorEventListener(){
         for (let [index, item] of metadataTableMap) {

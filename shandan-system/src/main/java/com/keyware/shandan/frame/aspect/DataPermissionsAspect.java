@@ -84,7 +84,7 @@ public class DataPermissionsAspect {
                                 .or(true, wp -> {
                                     wp.in(true, annotation.orgColumn(), orgIds);
 
-                                    // 查询实体为目录或者元数据时，则添加审核通wrapper.getEntity()过条件
+                                    // 查询实体为目录或者数据资源时，则添加审核通wrapper.getEntity()过条件
                                     Object entity = wrapper.getEntity();
                                     if (entity != null) {
                                         String className = entity.getClass().getName();

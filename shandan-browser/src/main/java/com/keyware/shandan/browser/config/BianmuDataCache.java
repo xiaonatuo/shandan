@@ -14,12 +14,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BianmuDataCache {
     /**
-     * 元数据表信息缓存
+     * 数据资源表信息缓存
      */
     private final static ConcurrentHashMap<String, MetadataDetailsVo> cache = new ConcurrentHashMap<>();
 
     /**
-     * 添加元数据
+     * 添加数据资源
      *
      * @param table -
      * @param vo    -
@@ -29,7 +29,7 @@ public class BianmuDataCache {
     }
 
     /**
-     * 根据元数据表ID获取主表信息
+     * 根据数据资源表ID获取主表信息
      *
      * @param id -
      * @return -
@@ -39,7 +39,7 @@ public class BianmuDataCache {
     }
 
     /**
-     * 获取元数据表注释
+     * 获取数据资源表注释
      *
      * @param table 表名
      * @return --

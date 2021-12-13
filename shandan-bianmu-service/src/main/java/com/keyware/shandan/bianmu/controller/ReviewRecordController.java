@@ -56,7 +56,7 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
     }
 
     /**
-     * 元数据审核页面
+     * 数据资源审核页面
      *
      * @return
      */
@@ -66,7 +66,7 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
     }
 
     /**
-     * 元数据待审核数据列表
+     * 数据资源待审核数据列表
      * @param page
      * @param vo
      * @return

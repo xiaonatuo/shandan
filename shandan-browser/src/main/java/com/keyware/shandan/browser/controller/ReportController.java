@@ -48,9 +48,9 @@ public class ReportController {
     private static ExportParam tempExportParam;
 
     /**
-     * 查询元数据表的字段
+     * 查询数据资源表的字段
      *
-     * @param id 元数据ID
+     * @param id 数据资源ID
      * @return
      */
     @GetMapping("/metadata/columns/{id}")

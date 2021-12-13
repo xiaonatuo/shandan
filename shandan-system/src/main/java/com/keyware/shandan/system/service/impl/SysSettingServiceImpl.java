@@ -67,9 +67,9 @@ public class SysSettingServiceImpl extends BaseServiceImpl<SysSettingMapper, Sys
 
     private void clearAllData() {
         clearRelationData();
-        // 清理元数据详情表
+        // 清理数据资源详情表
         mapper.clearSql("truncate table BIANMU.\"B_METADATA_DETAILS\"");
-        // 清理元数据表
+        // 清理数据资源表
         mapper.clearSql("truncate table BIANMU.\"B_METADATA_BASIC\"");
         // 清理数据源表
         mapper.clearSql("truncate table BIANMU.\"B_DATA_SOURCE\"");

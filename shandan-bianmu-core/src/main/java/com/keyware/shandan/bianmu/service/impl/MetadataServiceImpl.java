@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * 元数据详情表 服务实现类
+ * 数据资源详情表 服务实现类
  * </p>
  *
  * @author GuoXin
@@ -84,7 +84,7 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     }
 
     /**
-     * 保存元数据基础信息和详细信息列表
+     * 保存数据资源基础信息和详细信息列表
      *
      * @param metadata
      * @return
@@ -116,7 +116,7 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     }
 
     /**
-     * 根据目录ID查询元数据列表
+     * 根据目录ID查询数据资源列表
      *
      * @param directoryId
      * @return
@@ -130,7 +130,7 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     }
 
     /**
-     * 获取元数据表的示例数据
+     * 获取数据资源表的示例数据
      *
      * @param metadataBasic -
      * @param dataSource -
@@ -193,7 +193,7 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
 
 
     /**
-     * 获取元数据的列
+     * 获取数据资源的列
      *
      * @param metadataId
      * @return
@@ -216,7 +216,7 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     }
 
     /**
-     * 根据元数据id获取
+     * 根据数据资源id获取
      *
      * @param id
      * @return

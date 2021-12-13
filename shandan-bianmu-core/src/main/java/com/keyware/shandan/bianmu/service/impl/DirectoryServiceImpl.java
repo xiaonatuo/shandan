@@ -107,7 +107,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     }
 
     /**
-     * 获取目录下的元数据
+     * 获取目录下的数据资源
      *
      * @param id 目录ID
      * @return

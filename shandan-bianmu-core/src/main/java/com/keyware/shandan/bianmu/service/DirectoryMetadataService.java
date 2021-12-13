@@ -5,7 +5,7 @@ import com.keyware.shandan.common.service.IBaseService;
 
 /**
  * <p>
- * 目录与元数据关系表 服务类
+ * 目录与数据资源关系表 服务类
  * </p>
  *
  * @author GuoXin

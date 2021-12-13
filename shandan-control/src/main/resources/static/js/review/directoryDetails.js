@@ -58,7 +58,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     }
 
     /**
-     * 加载元数据列表
+     * 加载数据资源列表
      */
     const loadMetadataList = function (directory) {
         const {basicData} = directory;
@@ -91,7 +91,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     }
 
     /**
-     * 加载元数据详情
+     * 加载数据资源详情
      */
     const loadMetadataDetails = function (metadata) {
         const {basicData} = metadata;
@@ -106,14 +106,14 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             $('#metadataCardBody ul:first li.db-source').show()
             $('#metadataCardBody ul:first li.file-source').hide()
         }
-        // 查询元数据基础和详细信息
+        // 查询数据资源基础和详细信息
         $.get(`${ctx}/business/metadata/get/${basicData.id}`, function (res) {
             laytpl($("#metadataBasicTemplate").html()).render(res, function (html) {
                 $("#metadataBasicTab").html(html);
             })
         });
 
-        // 查询元数据字段信息
+        // 查询数据资源字段信息
         gtable.init({
             id: 'metadataColumnTable',
             url: `${ctx}/business/metadata/columns?id=${basicData.id}`,
@@ -135,7 +135,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             // done: (obj) => console.info(obj)
         });
 
-        // 查询元数据的示例数据
+        // 查询数据资源的示例数据
         $.get(`${ctx}/business/metadata/columns?id=${basicData.id}`, function (res) {
             let columns = [];
             if (res.flag) {

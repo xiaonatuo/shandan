@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * 目录与元数据关系表 服务实现类
+ * 目录与数据资源关系表 服务实现类
  * </p>
  *
  * @author GuoXin

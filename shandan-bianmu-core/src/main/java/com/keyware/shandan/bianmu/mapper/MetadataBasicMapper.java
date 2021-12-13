@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
 
 /**
  * <p>
- * 元数据表 Mapper 接口
+ * 数据资源表 Mapper 接口
  * </p>
  *
  * @author GuoXin
@@ -22,7 +22,7 @@ import org.apache.ibatis.annotations.Select;
 public interface MetadataBasicMapper extends IBaseMapper<MetadataBasicVo> {
 
     /**
-     * 根据目录ID查询元数据列表
+     * 根据目录ID查询数据资源列表
      * @param directoryId
      * @return
      */

@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 /**
  * <p>
- * 元数据详情表 服务类
+ * 数据资源详情表 服务类
  * </p>
  *
  * @author GuoXin
@@ -19,7 +19,7 @@ import java.util.HashMap;
 public interface MetadataService extends IBaseService<MetadataBasicVo, String> {
 
     /**
-     * 保存元数据基础信息和详细信息列表
+     * 保存数据资源基础信息和详细信息列表
      *
      * @param metadata
      * @return
@@ -27,7 +27,7 @@ public interface MetadataService extends IBaseService<MetadataBasicVo, String> {
     Boolean saveMetadataBasicAndDetailsList(MetadataBasicVo metadata);
 
     /**
-     * 根据目录ID查询元数据列表
+     * 根据目录ID查询数据资源列表
      * @param directoryId
      * @return
      */
@@ -44,7 +44,7 @@ public interface MetadataService extends IBaseService<MetadataBasicVo, String> {
     Page<HashMap<String, Object>> getDynamicData(MetadataBasicVo metadata, int page, int size, String orderField, String order);
 
     /**
-     * 获取元数据的列
+     * 获取数据资源的列
      * @param metadataId
      * @return
      */

@@ -49,7 +49,7 @@ public class DirectoryVo extends BaseEntity{
     private String directoryPath;
 
     /**
-     * 目录类型（0：结构目录，1：元数据目录）
+     * 目录类型（0：结构目录，1：数据资源目录）
      */
     @TableField("DIRECTORY_TYPE")
     private DirectoryType directoryType;

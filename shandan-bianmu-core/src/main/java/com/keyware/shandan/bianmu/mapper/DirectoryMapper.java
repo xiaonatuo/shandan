@@ -20,14 +20,14 @@ import java.util.List;
 public interface DirectoryMapper extends IBaseMapper<DirectoryVo> {
 
     /**
-     * 获取目录下的元数据
+     * 获取目录下的数据资源
      * @param id 目录ID
      * @return
      */
     List<MetadataBasicVo> selectMetadataByDirectory(String id);
 
     /**
-     * 获取目录下所有元数据，包含子级
+     * 获取目录下所有数据资源，包含子级
      * @param id 目录ID
      * @return -
      */

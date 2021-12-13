@@ -28,7 +28,7 @@ public class NotificationUtil {
     }
 
     /**
-     * 生成新的元数据审核通知
+     * 生成新的数据资源审核通知
      *
      * @param content    通知内容
      * @param receiveIds 接收人ID
@@ -62,7 +62,7 @@ public class NotificationUtil {
     }
 
     /**
-     * 生成新的元数据审核通知
+     * 生成新的数据资源审核通知
      *
      * @param title      通知标题
      * @param content    通知内容

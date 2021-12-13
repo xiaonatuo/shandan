@@ -55,7 +55,7 @@ public class SysNotification extends BaseEntity{
     private String content;
 
     /**
-     * 通知类型，NORMAL:普通通知（默认），METADATA_REVIEW:元数据审核，DIRECTORY_REVIEW:目录审核
+     * 通知类型，NORMAL:普通通知（默认），METADATA_REVIEW:数据资源审核，DIRECTORY_REVIEW:目录审核
      */
     @TableField("TYPE")
     private NotificationType type;
