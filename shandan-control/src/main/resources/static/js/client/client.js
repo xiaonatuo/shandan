@@ -96,7 +96,7 @@ layui.use(['layer', 'gtable'], function () {
         method: 'post',
         cols:[[
             {field: 'id', title: '客户端名称',width: 150},
-            {field: 'clientSecret', title: '访问密匙'},
+            //{field: 'clientSecret', title: '访问密匙'},
             //{field: 'resourceIds', title: '资源ID集合'},
             //{field: 'scope', title: '权限范围'},
             {
