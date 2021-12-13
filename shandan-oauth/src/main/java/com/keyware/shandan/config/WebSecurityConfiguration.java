@@ -32,7 +32,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserOauthDetailsService userOauthDetailsService;
 
-    @Value("${oauth.logout.successUrl:/login?logout}")
+    @Value("${oauth.logout.success-url:/login?logout}")
     private String logoutUrl;
 
     @Override
