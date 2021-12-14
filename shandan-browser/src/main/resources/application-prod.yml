@@ -23,3 +23,18 @@ project:
   captcha-enable: false
   browser:
     dbtool-address: http://172.16.36.224:18300/dbtool/
+
+
+oauth:
+  server: http://localhost:8888/oauth-server
+security:
+  oauth2:
+    client:
+      client-id: bianmu
+      client-secret: bianmu_123456
+      access-token-uri: ${oauth.server}/oauth/token
+      user-authorization-uri: ${oauth.server}/oauth/authorize
+    resource:
+      user-info-uri: ${oauth.server}/user/info
+      jwt:
+        key-uri: ${oauth.server}/oauth/token_key

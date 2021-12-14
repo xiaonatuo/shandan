@@ -1,6 +1,6 @@
 ##### 生产环境配置 #######
 server:
-  port: 18080
+  port: 18082
 
 spring:
   #数据库配置
@@ -9,15 +9,15 @@ spring:
       primary: master
       datasource:
         master:
-          url: jdbc:dm://172.16.36.240:5236
+          url: jdbc:dm://localhost:5236
           username: BIANMU
-          password: admin1234
+          password: 123456789
           driver-class-name: dm.jdbc.driver.DmDriver
     sql-script-encoding: UTF-8
 
   elasticsearch:
     rest:
-      uris: http://172.16.36.218:19200
+      uris: http://192.168.146.128:19200
 
 project:
   #是否需要输入验证码
@@ -25,4 +25,19 @@ project:
   # 配置文件存储方式
   file-storage:
     # 存储路径
-    path: /usr/local/shandan/bianmu/upload
+    path: ${user.home}/shandan/bianmu/upload
+
+
+oauth:
+  server: http://localhost:8888/oauth-server
+security:
+  oauth2:
+    client:
+      client-id: bianmu
+      client-secret: bianmu_123456
+      access-token-uri: ${oauth.server}/oauth/token
+      user-authorization-uri: ${oauth.server}/oauth/authorize
+    resource:
+      user-info-uri: ${oauth.server}/user/info
+      jwt:
+        key-uri: ${oauth.server}/oauth/token_key
