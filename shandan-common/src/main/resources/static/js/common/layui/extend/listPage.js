@@ -90,6 +90,7 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
             searchFieldNames: undefined, // [] 搜索框查询的字段名数组
             queryParam: undefined, // function(where){} 设置请求参数回调
             cols: [[]], // 数据表头定义
+            height:'full-74',
             done: undefined, // function (obj) {}, // 表格加载完成回调
             onToolBarTable: undefined, // function (obj) {}, // 表格头部工具栏监听回调
             onToolBarRow: undefined, //function (obj) {}, // 表格行内工具栏监听回调
@@ -143,10 +144,8 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
 
     ListPage.prototype.reloadTable = function (options) {
         options = options || {table: {}};
-        const tableOps = $.extend(true, {}, this.table, options.table);
-        // 对where条件做特殊处理, 不参与深层拷贝
-        tableOps.where = $.extend(tableOps.where, options.table.where);
-        this.initTable(options);
+        const tableOps = $.extend(this.table, options.table);
+        this.initTable({table:tableOps});
     }
 
     /**

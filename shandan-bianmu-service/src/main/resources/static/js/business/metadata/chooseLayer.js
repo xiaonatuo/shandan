@@ -17,6 +17,7 @@ layui.use(['layer', 'listPage'], function () {
             searchFieldNames: 'metadataName',
             url: `${ctx}/business/metadata/page`,
             where:{reviewStatus: 'PASS'},
+            height: 'full-40',
             cols: [[
                 {field: 'id', title: 'ID', hide: true},
                 {field: '',type: 'checkbox'},
