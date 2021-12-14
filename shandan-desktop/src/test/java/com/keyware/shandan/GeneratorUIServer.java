@@ -30,8 +30,8 @@ public class GeneratorUIServer {
                         return this.entityNameConvert(tableName) + "Controller";
                     }
                 })
-                .basePackage("com.keyware.shandan.system")
-                .port(18888)
+                .basePackage("com.keyware.shandan.desktop")
+                .port(8888)
                 .build();
         MybatisPlusToolsApplication.run(config);
     }
