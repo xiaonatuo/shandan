@@ -32,7 +32,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserOauthDetailsService userOauthDetailsService;
 
-    @Value("${oauth.logout.success-url:/login?logout}")
+    @Value("${oauth.logout.success-url:login?logout}")
     private String logoutUrl;
 
     @Override
@@ -58,6 +58,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and().csrf().disable().cors();
 
-        http.logout().logoutSuccessUrl(logoutUrl);
+        http.logout().logoutSuccessHandler((request, response, authentication) -> {
+            System.out.println("http = " + http);
+
+            response.sendRedirect(logoutUrl);
+        });
     }
 }
