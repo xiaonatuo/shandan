@@ -254,9 +254,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         width: 'fit-content',
         toolbar: true,
         toolbarShow: [], //置空默认菜单项
-        onDbClick: function ({dom}) {
-            dom.find('cite').click();
-        },
         sendSuccess: function (res) {
             if (res.flag) {
                 res.data.forEach(item => {
@@ -281,9 +278,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             }
         },
         done: function (nodes, elem) {
-            //console.info(nodes);
             // 模拟鼠标点击事件展开第一层目录
-            $('i.dtree-icon-jia[data-id="-"]').click();
+            elem.find('li:first>div:first>i:first').click();
         },
         onClick: function (node) {
             tempNode = node;
