@@ -22,7 +22,7 @@ body, html {
 .dtree-nav-item .dtree-nav-div cite{white-space: nowrap}
 .dtree-theme-item-this{background-color: #FFFFFF !important;}
 .dtree-theme-item:hover {
-    background-color: #FFFFFF!important;
+    background-color: #efefef !important;
 }
 .dtree-theme-item-this {color: orange!important;}
 .dtree-theme-item:hover cite {color: orange!important;}
