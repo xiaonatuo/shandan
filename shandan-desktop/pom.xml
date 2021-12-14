@@ -46,17 +46,25 @@
             <artifactId>mybatis-plus-generator-ui</artifactId>
         </dependency>
 
-        <!--达梦数据库驱动-->
+        <!--&lt;!&ndash;达梦数据库驱动&ndash;&gt;
         <dependency>
             <groupId>com.dameng</groupId>
             <artifactId>Dm8JdbcDriver18</artifactId>
-        </dependency>
+        </dependency>-->
 
-        <dependency>
+       <!-- <dependency>
             <groupId>com.keyware.shandan</groupId>
             <artifactId>shandan-common</artifactId>
             <version>1.0.0</version>
+        </dependency>-->
+
+        <!-- 项目模块依赖 -->
+        <dependency>
+            <groupId>com.keyware.shandan</groupId>
+            <artifactId>shandan-bianmu-core</artifactId>
+            <version>1.0.0</version>
         </dependency>
+
     </dependencies>
 
     <!--构建工具-->

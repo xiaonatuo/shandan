@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Configuration
+//@Configuration
 public class MyBatisConfig {
     /**
      * MyBatis实体类公共字段填充配置

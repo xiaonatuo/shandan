@@ -12,22 +12,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author GuoXin
  * @since 2021/7/23
  */
-@Configuration
+//@Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private ProjectProperties projectProperties;
 
-    /**
+   /* *//**
      * 配置默认跳转首页
      *
      * @param registry -
-     */
+     *//*
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("forward:/desktop/index");
         WebMvcConfigurer.super.addViewControllers(registry);
-    }
+    }*/
 
     /**
      * 文件上传资源虚拟映射

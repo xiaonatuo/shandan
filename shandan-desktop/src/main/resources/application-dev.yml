@@ -1,4 +1,6 @@
 ##### dev 配置 #######
+oauth:
+  server: http://localhost:8888/oauth-server
 spring:
   #数据库配置
   datasource:
@@ -17,7 +19,25 @@ spring:
 
 project:
   upload-path: D:\BIANMU
+  #是否需要输入验证码
+  captcha-enable: false
+  # 启用记住我，方便调试
+  remember-me-enable: true
+  browser:
+    dbtool-address: http://localhost:18300/dbtool/
 
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#mybatis-plus:
+  #configuration:
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+security:
+  oauth2:
+    client:
+      client-id: desktop
+      client-secret: desktop_123456
+      access-token-uri: ${oauth.server}/oauth/token
+      user-authorization-uri: ${oauth.server}/oauth/authorize
+    resource:
+      user-info-uri: ${oauth.server}/user/info
+      jwt:
+        key-uri: ${oauth.server}/oauth/token_key

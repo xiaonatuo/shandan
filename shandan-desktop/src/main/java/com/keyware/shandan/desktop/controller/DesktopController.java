@@ -7,13 +7,16 @@ import com.keyware.shandan.desktop.entity.AppInfo;
 import com.keyware.shandan.desktop.entity.DesktopSetting;
 import com.keyware.shandan.desktop.services.AppInfoService;
 import com.keyware.shandan.desktop.services.DesktopService;
+import com.keyware.shandan.frame.config.security.SecurityUtil;
+import com.keyware.shandan.system.entity.SysUser;
+import com.keyware.shandan.system.service.SysUserService;
+import com.keyware.shandan.system.utils.SysSettingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +27,7 @@ import java.util.Map;
  * @since 2021/7/22
  */
 @RestController
-@RequestMapping("/desktop")
+@RequestMapping("/")
 public class DesktopController {
 
     @Autowired
@@ -32,6 +35,10 @@ public class DesktopController {
 
     @Autowired
     private AppInfoService appInfoService;
+
+    @Autowired
+    private SysUserService sysUserService;
+
 
     /**
      * 首页
@@ -41,16 +48,19 @@ public class DesktopController {
      */
     @GetMapping("/index")
     public ModelAndView index(ModelAndView modelAndView) {
+        //跳转登录首页
         modelAndView.setViewName("index");
-
-        Map<String, String> setting = new HashMap<>();
-        setting.put("sysApiEncrypt", String.valueOf(false));
         //系统信息
-        modelAndView.addObject("sys", setting);
+        modelAndView.addObject("sys", SysSettingUtil.getCurrentSysSetting());
         //后端公钥
-        /*String publicKey = RsaUtil.getPublicKey();
-        modelAndView.addObject("publicKey", publicKey);*/
-
+        String publicKey = RsaUtil.getPublicKey();
+        modelAndView.addObject("publicKey", publicKey);
+        //登录用户信息
+        SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
+        user.setPassword(null);//隐藏部分属性
+        modelAndView.addObject("loginUser", user);
+        modelAndView.addObject("user", user);
+        //桌面展示信息
         modelAndView.addObject("appList", appInfoService.list());
         return modelAndView;
     }
@@ -61,7 +71,7 @@ public class DesktopController {
      * @param pwd 密码
      * @return
      */
-    @PostMapping("/auth")
+    @PostMapping("desktop/auth")
     public Result<Object> auth(String pwd) {
         if (StringUtils.isBlank(pwd)) {
             return Result.of(false, false, "密码不能为空");
@@ -72,7 +82,7 @@ public class DesktopController {
     /**
      * @return 应用列表
      */
-    @GetMapping("/apps")
+    @GetMapping("desktop/apps")
     public List<AppInfo> getAppList() {
         return appInfoService.list();
     }
@@ -83,7 +93,7 @@ public class DesktopController {
      * @param id 应用ID
      * @return -
      */
-    @GetMapping("/app/{id}")
+    @GetMapping("desktop/app/{id}")
     public Result<AppInfo> getAppInfo(@PathVariable String id) {
         return Result.of(appInfoService.getById(id));
     }
@@ -94,12 +104,12 @@ public class DesktopController {
      * @param appInfo 应用信息
      * @return 保存结果
      */
-    @PostMapping("/app/save")
+    @PostMapping("desktop/app/save")
     public Result<Object> appSave(AppInfo appInfo) {
         return Result.of(appInfoService.saveOrUpdate(appInfo));
     }
 
-    @DeleteMapping("/app/{id}")
+    @DeleteMapping("desktop/app/{id}")
     public Result<Object> appDelete(@PathVariable String id) {
         return Result.of(appInfoService.removeById(id));
     }
@@ -107,7 +117,7 @@ public class DesktopController {
     /**
      * @return 应用桌面设置
      */
-    @GetMapping("/setting")
+    @GetMapping("desktop/setting")
     public Map<String, Object> getSetting() {
         return desktopService.getSetting();
     }
@@ -118,7 +128,7 @@ public class DesktopController {
      * @param setting 设置
      * @return 保存结果
      */
-    @PostMapping("/setting/save")
+    @PostMapping("desktop/setting/save")
     public Result<Object> settingSave(DesktopSetting.Setting setting) {
         return Result.of(desktopService.saveSetting(setting));
     }
@@ -129,7 +139,7 @@ public class DesktopController {
      * @param file
      * @return
      */
-    @PostMapping("/upload/icon")
+    @PostMapping("desktop/upload/icon")
     public Result<String> iconUpload(MultipartFile file) {
 
         try {
