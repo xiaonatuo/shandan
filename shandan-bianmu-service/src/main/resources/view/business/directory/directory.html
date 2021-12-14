@@ -8,11 +8,16 @@
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
     <style>
-        .layui-card .layui-form-item{margin-bottom: 10}
-        .layui-card .layui-form-item .layui-inline button{margin-top: 10px}
+        .layui-card .layui-form-item {
+            margin-bottom: 10
+        }
+
+        .layui-card .layui-form-item .layui-inline button {
+            margin-top: 10px
+        }
     </style>
 </head>
-<body onselectstart = "return false">
+<body onselectstart="return false">
 <div class="layui-row">
     <!-- 树 -->
     <div class="layui-col-md3">
@@ -27,14 +32,18 @@
                             <div class="layui-form-item" style="margin-bottom: 0">
                                 <div class="layui-inline" style="width: 100%">
                                     <div class="layui-input-inline" style="width: 100%">
-                                        <input type="text" class="layui-input layui-icon-search" placeholder="请输入关键词检索" style="padding-right: 40px;" id="directoryTreeSearchBox">
-                                        <i class="layui-icon layui-icon-search" style="font-size: 24px;position: absolute;top: 7px;right: 10px;color: #b5b5b5;"></i>
+                                        <input type="text" class="layui-input layui-icon-search" placeholder="请输入关键词检索"
+                                               style="padding-right: 40px;" id="directoryTreeSearchBox">
+                                        <i class="layui-icon layui-icon-search"
+                                           style="font-size: 24px;position: absolute;top: 7px;right: 10px;color: #b5b5b5;"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="layui-tab-item layui-show" style="overflow: auto; padding: 10px 0" id="tree-toobar-div">
-                            <ul id="directoryTree" class="dtree" data-id="ROOT" data-value="ROOT" style="min-width: 100%"></ul>
+                        <div class="layui-tab-item layui-show" style="overflow: auto; padding: 10px 0"
+                             id="tree-toobar-div">
+                            <ul id="directoryTree" class="dtree" data-id="ROOT" data-value="ROOT"
+                                style="min-width: 100%"></ul>
                         </div>
                     </div>
                 </div>
@@ -56,19 +65,20 @@
                             <table class="layui-hide" id="dirMetadataTable" lay-filter="dirMetadataTable"></table>
                             <script type="text/html" id="tableToolBar">
                                 <div class="layui-btn-container">
-                                    <div class="layui-form-item">
-                                        <div class="layui-inline">
-                                            <button class="layui-btn layui-btn-sm {{d.hideFunBtn ? 'layui-hide' : ''}}" lay-event="addLink">关联数据表</button>
-                                            <button class="layui-btn layui-btn-sm  {{d.hideFunBtn ? 'layui-hide' : ''}}" lay-event="addFile"><i
-                                                    class="layui-icon">&#xe67c;</i>上传文件
-                                            </button>
-                                        </div>
-                                        <div class="layui-inline">
-                                            <input type="text" id="searchKeyInput" name="searchKeyInput"
-                                                   autocomplete="off"
-                                                   placeholder="请输入关键字查询" class="layui-input layui-btn-sm">
-                                            <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
-                                        </div>
+                                    <div class="layui-layout-left" style="top:10px; left: 20px">
+                                        <input type="text" id="searchKeyInput" name="searchKeyInput"
+                                               autocomplete="off"
+                                               placeholder="请输入关键字查询" class="layui-input layui-btn-sm">
+                                        <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
+                                    </div>
+                                    <div class="layui-layout-right" style="padding-right: 20px; top:10px">
+                                        <button class="layui-btn layui-btn-sm {{d.hideFunBtn ? 'layui-hide' : ''}}"
+                                                lay-event="addLink">关联数据表
+                                        </button>
+                                        <button class="layui-btn layui-btn-sm  {{d.hideFunBtn ? 'layui-hide' : ''}}"
+                                                lay-event="addFile"><i
+                                                class="layui-icon">&#xe67c;</i>上传文件
+                                        </button>
                                     </div>
                                 </div>
                             </script>
@@ -112,11 +122,13 @@
                         <!-- 文件预览 -->
                         <div class="layui-tab-item layui-show">
                             <!-- 图片轮播组件 -->
-                            <div id="file-viewer-image" class="file-viewer layui-hide" style="height: 100%;text-align: center;">
+                            <div id="file-viewer-image" class="file-viewer layui-hide"
+                                 style="height: 100%;text-align: center;">
                             </div>
                             <!-- video-js视频播放器 -->
                             <div id="file-viewer-video" class="file-viewer layui-hide" style="height: 100%">
-                                <video id="videoPlayer" class="video-js" controls preload="auto" style="width: 100%; height: 100%">
+                                <video id="videoPlayer" class="video-js" controls preload="auto"
+                                       style="width: 100%; height: 100%">
                                     <p class="vjs-no-js">
                                         要观看此视频，请启用 JavaScript，并考虑升级到
                                         <a href="https:videojs.comhtml5-video-support" target="_blank">支持 HTML5 视频</a>
@@ -133,7 +145,8 @@
                                 <iframe id="txtViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
                             </div>
                             <!-- 不至于预览的文件 -->
-                            <div id="file-viewer-other" class="file-viewer layui-hide" style="height: 100%;text-align: center;">
+                            <div id="file-viewer-other" class="file-viewer layui-hide"
+                                 style="height: 100%;text-align: center;">
                                 <p>该文件不支持预览，可下载后查看。</p>
                             </div>
                         </div>
@@ -174,7 +187,8 @@
             <label class="layui-form-label">数据来源</label>
             <div class="layui-input-block">
                 <!--<input type="text" readonly class="layui-input" value="{{data.dataFrom}}">-->
-                <div dict-component="select" readonly dict-type="data_source" dict-name="dataFrom" id="dict-data-type" data="{{data.dataFrom}}"></div>
+                <div dict-component="select" readonly dict-type="data_source" dict-name="dataFrom" id="dict-data-type"
+                     data="{{data.dataFrom}}"></div>
                 <div></div>
             </div>
         </div>
@@ -182,14 +196,16 @@
             <label class="layui-form-label">数据类型</label>
             <div class="layui-input-block">
                 <!--<input type="text" readonly class="layui-input" value="{{data.dataType}}">-->
-                <div dict-component="select" readonly dict-type="data_type" dict-name="dataType" id="dict-data-type" data="{{data.dataType}}"></div>
+                <div dict-component="select" readonly dict-type="data_type" dict-name="dataType" id="dict-data-type"
+                     data="{{data.dataType}}"></div>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">密级</label>
             <div class="layui-input-block">
                 <!--<input type="text" readonly class="layui-input" value="{{data.secretLevel}}">-->
-                <div dict-component="select" readonly dict-type="secret_level" dict-name="secretLevel" id="dict-secret-level" data="{{data.secretLevel}}"></div>
+                <div dict-component="select" readonly dict-type="secret_level" dict-name="secretLevel"
+                     id="dict-secret-level" data="{{data.secretLevel}}"></div>
             </div>
         </div>
         <div class="layui-form-item">
@@ -278,10 +294,10 @@
         if (showType === 'metadata') {
             $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
             $("#metadataCardBody").removeClass('layui-hide').addClass('layui-show');
-        } else if(showType === 'directory'){
+        } else if (showType === 'directory') {
             $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
             $("#metadataListCardBody").removeClass('layui-hide').addClass('layui-show');
-        }else if(showType === 'file'){
+        } else if (showType === 'file') {
             $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
             $("#fileCardBody").removeClass('layui-hide').addClass('layui-show');
         }
@@ -292,7 +308,7 @@
      * 切换显示文件展示区域
      * @param type 展示类型
      */
-    function showFileViewer(type){
+    function showFileViewer(type) {
         $('#fileViewer .file-viewer').addClass('layui-hide');
         $(`#file-viewer-${type}`).removeClass('layui-hide');
     }
@@ -301,7 +317,7 @@
     let imageHeight;
     const sizeInit = () => {
         $(".layui-card-body").height(window.innerHeight - 20);
-        $("#tree-toobar-div").height($(".layui-card-body").height() -40 -25 -45);
+        $("#tree-toobar-div").height($(".layui-card-body").height() - 40 - 25 - 45);
         $('#fileCardBody').height(window.innerHeight - 40 - 20);
         $('#fileViewer .file-viewer').height(window.innerHeight - 40 - 20 - 80);
         imageWidth = $('.layui-col-md9:first').innerWidth() - 54;

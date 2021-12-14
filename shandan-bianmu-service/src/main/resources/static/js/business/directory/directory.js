@@ -73,7 +73,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         if (!basicData) return;
         let operate = {}
         if (basicData.reviewStatus == ReviewStatus.UN_SUBMIT || basicData.reviewStatus == ReviewStatus.FAIL) {
-            operate = {fixed: 'right', title: '操作', toolbar: '#rowToolBar'}
+            operate = {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width:100, align: 'center'}
         }
 
         metaListTable = listPage.init({
@@ -87,11 +87,11 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 method: 'get',
                 cols: [[
                     {field: 'id', title: 'ID', hide: true},
-                    {field: 'metadataName', title: '数据表'},
+                    {field: 'metadataName', title: '数据表',width: 300},
                     {field: 'metadataComment', title: '中文注释'},
                     {field: 'themeTask', title: '主题任务'},
                     {field: 'dataFrom', title: '数据来源'},
-                    {field: 'collectionTime', title: '采集时间'},
+                    {field: 'createTime', title: '注册时间', width: 160, align: 'center'},
                     operate
                 ]],
             },

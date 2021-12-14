@@ -34,12 +34,10 @@
     </select>
 
     <select id="pageListByDirectoryId" resultType="com.keyware.shandan.bianmu.entity.MetadataBasicVo">
-        select mb.* from B_DIRECTORY dir
-            inner join B_DIRECTORY_METADATA bm on dir.ID = bm.DIRECTORY_ID
-            inner join B_METADATA_BASIC mb on bm.METADATA_ID = mb.ID
-        where dir.ID = #{directoryId}
+        select * from V_METADATA_UNION_FILE
+        where DIRECTORY_ID = #{directoryId}
           <if test="metadataName != null and metadataName != ''">
-              and mb.METADATA_NAME like #{metadataName}
+              and METADATA_NAME like #{metadataName}
           </if>
     </select>
 
