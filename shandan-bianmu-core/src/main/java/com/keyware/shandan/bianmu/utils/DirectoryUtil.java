@@ -20,7 +20,7 @@ public class DirectoryUtil {
         tree.setType("DIRECTORY");
         tree.setPath(dir.getDirectoryPath());
         tree.setBasicData(dir);
-        if(!"-".equals(dir.getParentId()) && dir.getHasChild() ==false){
+        if(!"-".equals(dir.getParentId()) && !dir.getHasChild()){
             tree.setLast(true);
         }
         return tree;
