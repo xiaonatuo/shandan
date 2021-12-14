@@ -4528,9 +4528,9 @@ layui.define(['jquery','layer','form'], function(exports) {
         });
 
         // 绑定所有子节点div的单击事件，点击时触发加载iframe或用户自定义想做的事情
-        _this.obj.on("click", "div[dtree-click='"+eventName.itemNodeClick+"'][dtree-disabled='false'] cite", function(event) {
+        _this.obj.on("click", "div[dtree-click='"+eventName.itemNodeClick+"'][dtree-disabled='false']", function(event) {
             event.stopPropagation();
-            var $div = $(this).parent(),
+            var $div = $(this),
                 $cite = $div,
                 node = _this.getNodeParam($div);
             _this.toolbarHide();
@@ -4629,8 +4629,8 @@ layui.define(['jquery','layer','form'], function(exports) {
         if(_this.toolbar) {
             if(_this.toolbarWay == "contextmenu") {
                 //绑定所有子节点div的右键点击事件，用于显示toolbar
-                _this.obj.on("contextmenu", "div[dtree-click='"+eventName.itemNodeClick+"'][d-contextmenu='true'][dtree-disabled='false'] cite", function(e){
-                    var $div = $(this).parent(),
+                _this.obj.on("contextmenu", "div[dtree-click='"+eventName.itemNodeClick+"'][d-contextmenu='true'][dtree-disabled='false']", function(e){
+                    var $div = $(this),
                         node = _this.getNodeParam($div);
                     // 触发点击事件
                     $(this).click();
@@ -4640,9 +4640,18 @@ layui.define(['jquery','layer','form'], function(exports) {
                     _this.setToolbarDom().setToolbarPlace(_this.toolbarFun.loadToolbarBefore(event.cloneObj(_this.toolbarMenu), _this.getRequestParam(node), $div));
 
                     var e = e || window.event,
-                        mx =  $div.offset().left -  _this.obj.closest(_this.scroll).offset().left + 45,
-                        my = $div.offset().top - _this.obj.closest(_this.scroll).offset().top +15 + 122;
-                    console.info(e.pageX, $div.offset())
+                        mx = e.screenX,
+                        my = e.screenY - 160;
+
+                    var scollor_offsetX = $(_this.scroll).offset().left + $(_this.scroll).innerWidth();
+                    if (e.screenX + 130 > scollor_offsetX) {
+                        //mx -= e.screenX + 130 - scollor_offsetX;
+                    }
+                    var scollor_offsetY = $(_this.scroll).offset().top + $(_this.scroll).innerHeight() - 40;
+                    if (e.screenY > scollor_offsetY) {
+                        my -= e.screenY - scollor_offsetY;
+                    }
+
                     //_this.navThis($div);
                     var $toolBarDiv = _this.obj.prevAll('div#dtree_toolbar_'+_this.obj[0].id);
                     $toolBarDiv.find(".layui-nav-child").addClass('layui-anim-fadein layui-show');

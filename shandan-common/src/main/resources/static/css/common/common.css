@@ -24,7 +24,7 @@ body, html {
 .dtree-theme-item:hover {
     background-color: #FFFFFF!important;
 }
-.dtree-theme-item-this cite{border: 1px solid orange;border-radius: 4px;padding: 2px;}
+.dtree-theme-item-this {color: orange!important;}
 .dtree-theme-item:hover cite {color: orange!important;}
 ::-webkit-scrollbar{width: 10px;height:10px;background-color:#F5F5F5;}
 /*定义滑块
