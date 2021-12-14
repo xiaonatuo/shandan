@@ -35,7 +35,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         layer.open({
             id: 'addMetadataLayer',
             type: 2,
-            area: ['800px', '800px'],
+            area: ['800px', '600px'],
             btn: ['确定', '取消'],
             content: `${ctx}/business/metadata/layer/choose?directoryId=${directory.id}`,
             success: function (layero) {
@@ -98,7 +98,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         });
         metaListTable.addTableRowEvent('addLink', function (obj) {
             openAddMetadataLayer(directory.basicData, () => {
-                dirTree.partialRefreshAdd(currentTreeNode);
+                //dirTree.partialRefreshAdd(currentTreeNode);
                 metaListTable.reloadTable();
             })
         })
@@ -107,7 +107,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 const data = {directoryId: basicData.id, metadataId: obj.id};
                 $.post(`${ctx}/business/directory/remove/metadata`, data, function (res) {
                     if (res.flag) {
-                        dirTree.partialRefreshAdd(currentTreeNode);
+                        //dirTree.partialRefreshAdd(currentTreeNode);
                         metaListTable.reloadTable();
                     } else {
                         layer.msg('解除关联失败')
@@ -408,7 +408,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 handler: function (node, elem) {
                     const {basicData, id, parentId, context} = node;
                     openAddMetadataLayer(basicData, function () {
-                        dirTree.partialRefreshAdd(elem);
+                        //dirTree.partialRefreshAdd(elem);
+                        metaListTable.reloadTable();
                     })
                 }
             },
