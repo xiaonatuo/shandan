@@ -66,3 +66,8 @@ body, html {
 .dtree-toolbar .layui-nav-child dd a{
     padding: 0;
 }
+.dtree-theme-ficon{
+    color: #b9b9b9 !important;
+}
+.layui-tab-content{padding:7px 0}
+.dtree-icon-dian.dtree-theme-ficon{color: #FFFFFF !important;}

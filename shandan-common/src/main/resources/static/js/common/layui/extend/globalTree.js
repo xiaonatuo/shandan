@@ -16,11 +16,21 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         this.method = 'GET';
         this.type = 'load';
         this.width = 'auto';
-        this.ficon = ["1", "-1"];
+        this.ficon = ["2", "8"];
+        this.icon = ['0', '0'];
+        this.nodeIconArray = {
+            "0" : {"open": "dtree-icon-weibiaoti5", "close": "dtree-icon-weibiaoti5"}, //文件夹
+            "2" : {"open": "dtree-icon-xiangxia1", "close": "dtree-icon-xiangyou"}  //三角形
+        };
         this.initLevel = 2;
         this.record = true;
         this.dataStyle = 'layuiStyle';
         this.accordion = false;
+        /*this.skin = {
+            line: false, // 无树线
+            ficon:["2","8"],  // 设定一级图标样式。0表示方形加减图标，8表示小圆点图标
+            icon: ["0","5"] // 设定二级图标样式。0表示文件夹图标，5表示叶子图标
+        }*/
         this.defaultRequest = {nodeId: 'id'};
         this.rootNode = {id: '', title: '', parentId: '0', children: []};
         this.response = {
