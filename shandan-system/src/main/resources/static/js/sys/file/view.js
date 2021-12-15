@@ -6,7 +6,7 @@
  * @author Administrator
  * @since 2021/6/10
  */
-layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
+layui.use(['layer', 'laytpl', 'dropdown', 'carousel', 'form'], function () {
     const layer = layui.layer,
         laytpl = layui.laytpl,
         dropdown = layui.dropdown,
@@ -38,10 +38,10 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
             list: viewFiles
         }, html => $('#viewFileList').html(html));
         // 不可预览文件列表
-        laytpl(templateHtml).render({
+        /*laytpl(templateHtml).render({
             fileListID: 'noViewFileListMenu',
             list: noViewFiles
-        }, html => $('#noViewFileList').html(html));
+        }, html => $('#noViewFileList').html(html));*/
 
         // 列表点击事件绑定
         dropdown.on('click(viewFileListMenu)', fileListItemClick);
@@ -57,6 +57,7 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
      * @param file 文件信息
      */
     function fileListItemClick(file) {
+        layui.form.val('file-form', file);
         const fileSuffix = file.fileSuffix.toLowerCase();
 
         if (viewType.image.includes(fileSuffix)) {
@@ -80,6 +81,16 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
         } else if (viewType.text.includes(fileSuffix)) {
             $('#txtViewer').attr('src', `${ctx}/upload/${file.path}`);
             showFileViewer('text');
+        }else{
+            let htm = `<p>该文件不支持预览，可下载后查看。</p>
+                        <a href="javascript:void(0)"  id="download-file" data-id="${file.id}" style="color: blue; text-decoration: underline;">下载文件</a>`;
+            $('#file-viewer-other').html(htm)
+            $('#download-file').off('click')
+            $('#download-file').on('click', function ({target}) {
+                let fileId = $(target).data('id')
+                window.open(`${ctx}/sys/file/download/${fileId}`)
+            })
+            showFileViewer('other');
         }
     }
 
@@ -108,8 +119,9 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
             elem: '#image-carousel',
             width: '100%', //设置容器宽度
             height: '100%',
-            arrow: 'hover', //始终显示箭头
-            autoplay: false
+            arrow: 'none', //始终显示箭头
+            autoplay: false,
+            indicator:'none'
         });
         //触发轮播切换事件
         carousel.on('change(image-carousel)', function ({index}) { //test1来源于对应HTML容器的 lay-filter="test1" 属性值
@@ -135,8 +147,9 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
                 success: function (res) {
                     layer.close(loadIndex);
                     if (res.flag) {
+                        viewFiles = res.data;
                         // 将可预览的文件和不可预览的文件进行拆分
-                        noViewFiles = res.data;
+                        /*noViewFiles = res.data;
                         for (let type in viewType) {
                             res.data.forEach((file, index) => {
                                 if (viewType[type].includes(file.fileSuffix)) {
@@ -146,7 +159,7 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
                             })
                         }
                         // 将数组中空值过滤掉， 因为上面的遍历删除操作会使数组中产生空值
-                        noViewFiles = noViewFiles.filter(a => a);
+                        noViewFiles = noViewFiles.filter(a => a);*/
                     } else {
                         layer.alert(res.msg);
                     }

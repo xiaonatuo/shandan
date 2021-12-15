@@ -8,14 +8,56 @@
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
     <style>
-        #fileViewer{
+        #fileViewer {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+        }
+
+        ul.file-viewer-tab {
+            border-right: 1px solid #f6f6f6;
+        }
+
+        ul.file-viewer-tab li {
+            line-height: 34px;
+            writing-mode: vertical-lr;
+            margin-top: 5px;
+            height: 50px;
+            width: 34px;
+            text-align: center;
+            margin-left: 10px;
+            border: 1px solid #e7e7e7;
+            border-right: 0;
+            border-radius: 8px 0px 0px 8px;
+            cursor: pointer;
+        }
+
+        ul.file-viewer-tab li.tab-active {
+            background: #f6f6f6;
+            color: #5fb878;
+            border-right: 2px solid #5fb878;
+        }
+
+        ul.file-viewer-tab li:hover {
+            color: #5fb878;
+        }
+
+        .file-viewer-container {
+            flex: 1
+        }
+
+        .file-viewer-item {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-viewer-item.item-show {
+            display: block;
         }
     </style>
 </head>
 <body>
-<div class="layui-row layui-col-space15">
+<div class="layui-row">
     <div class="layui-col-md10">
         <div class="layui-card">
             <div class="layui-card-header">
@@ -25,34 +67,111 @@
             </div>
             <div class="layui-card-body" id="fileViewer">
                 <ul class="file-viewer-tab">
-                    <li>预览</li>
+                    <li class="tab-active">预览</li>
                     <li>属性</li>
                 </ul>
                 <div class="file-viewer-container">
-                    <!-- 图片轮播组件 -->
-                    <div id="file-viewer-image" class="file-viewer layui-hide" style="height: 100%">
-                        <div class="layui-carousel" id="image-carousel" lay-filter="image-carousel">
-                            <div carousel-item></div>
+                    <div class="file-viewer-item item-show">
+                        <!-- 图片轮播组件 -->
+                        <div id="file-viewer-image" class="file-viewer layui-hide" style="height: 100%">
+                            <div class="layui-carousel" id="image-carousel" lay-filter="image-carousel">
+                                <div carousel-item></div>
+                            </div>
+                        </div>
+                        <!-- video-js视频播放器 -->
+                        <div id="file-viewer-video" class="file-viewer layui-hide" style="height: 100%">
+                            <video id="videoPlayer" class="video-js" controls preload="auto"
+                                   style="width: 100%; height: 100%">
+                                <p class="vjs-no-js">
+                                    要观看此视频，请启用 JavaScript，并考虑升级到
+                                    <a href="https:videojs.comhtml5-video-support" target="_blank">支持 HTML5 视频</a>
+                                    的网络浏览器
+                                </p>
+                            </video>
+                        </div>
+                        <!-- pdf浏览组件 -->
+                        <div id="file-viewer-pdf" class="file-viewer layui-hide" style="height: 100%">
+                            <iframe id="pdfViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                        </div>
+                        <!-- 文本文件浏览组件 -->
+                        <div id="file-viewer-text" class="file-viewer layui-hide" style="height: 100%">
+                            <iframe id="txtViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                        </div>
+                        <!-- 不至于预览的文件 -->
+                        <div id="file-viewer-other" class="file-viewer layui-hide"
+                             style="height: 100%;text-align: center;">
+                            <p>该文件不支持预览，可下载后查看。</p>
                         </div>
                     </div>
-                    <!-- video-js视频播放器 -->
-                    <div id="file-viewer-video" class="file-viewer layui-hide" style="height: 100%">
-                        <video id="videoPlayer" class="video-js" controls preload="auto"
-                               style="width: 100%; height: 100%">
-                            <p class="vjs-no-js">
-                                要观看此视频，请启用 JavaScript，并考虑升级到
-                                <a href="https:videojs.comhtml5-video-support" target="_blank">支持 HTML5 视频</a>
-                                的网络浏览器
-                            </p>
-                        </video>
-                    </div>
-                    <!-- pdf浏览组件 -->
-                    <div id="file-viewer-pdf" class="file-viewer layui-hide" style="height: 100%">
-                        <iframe id="pdfViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
-                    </div>
-                    <!-- 文本文件浏览组件 -->
-                    <div id="file-viewer-text" class="file-viewer layui-hide" style="height: 100%">
-                        <iframe id="txtViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                    <div class="file-viewer-item">
+                        <div class="layui-form" lay-filter="file-form">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">文件名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly class="layui-input" name="fileName">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">录入人员</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly class="layui-input" name="entryStaff">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">导弹编号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly class="layui-input" name="missileNumber">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">目标编号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly class="layui-input" name="targetNumber">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">文件来源</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly class="layui-input" name="source">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">目标性质</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly class="layui-input" name="taskNature">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">部队代号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly class="layui-input" name="troopCode">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">装备型号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly class="layui-input" name="equipmentModel">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">任务时间</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly class="layui-input" name="inputDate">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">文件描述</label>
+                                <div class="layui-input-block">
+                                    <textarea class="layui-textarea" name="remark" readonly></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <input type="hidden" name="id">
+                                    <button class="layui-btn layui-btn-sm" type="button" name="download" id="download-btn">下载该文件</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -102,11 +221,12 @@
     function showFileViewer(type) {
         $('#fileViewer .file-viewer').addClass('layui-hide');
         $(`#file-viewer-${type}`).removeClass('layui-hide');
+        $('ul.file-viewer-tab li:first').click()
     }
 
     const sizeInit = () => {
         $("div.layui-card:eq(0) .layui-card-body").height(window.innerHeight - 40 - 6).css('padding', 0);
-        $("div.layui-card:eq(1) .layui-card-body").height(window.innerHeight - 43 - 40 - 20);
+        $("div.layui-card:eq(1) .layui-card-body").height(window.innerHeight - 40 - 20);
     }
     window.onresize = sizeInit;
     sizeInit();
@@ -114,6 +234,17 @@
     //返回列表页
     $('#backBtn').on('click', function () {
         window.parent.closeDetailsLayer();
+    });
+    $('ul.file-viewer-tab li').on('click', function () {
+        $(this).siblings().removeClass('tab-active');
+        $(this).addClass('tab-active');
+        let index = $('ul.file-viewer-tab li').index(this);
+        $(`#fileViewer .file-viewer-item`).removeClass('item-show');
+        $(`#fileViewer .file-viewer-item:eq(${index})`).addClass('item-show');
+    })
+    $('#download-btn').on('click', function () {
+        let fileId = $(this).prev().val();
+        window.open(`${ctx}/sys/file/download/${fileId}`)
     });
 </script>
 </html>
