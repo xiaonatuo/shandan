@@ -37,7 +37,7 @@ public class CustomProperties {
     /**
      * 文件存储配置
      */
-    private FileStorageProperties fileStorage;
+    private FileStorageProperties fileStorage = new FileStorageProperties();
 
     /**
      * 数据分类编目服务地址(弃用)

@@ -18,7 +18,10 @@ spring:
     cache: false
 
 project:
-  upload-path: D:\BIANMU
+  # 配置文件存储方式
+  file-storage:
+    # 存储路径
+    path: D:/BIANMU/image
   #是否需要输入验证码
   captcha-enable: false
   # 启用记住我，方便调试
@@ -34,7 +37,7 @@ security:
   oauth2:
     client:
       client-id: desktop
-      client-secret: desktop_123456
+      client-secret: bianmu_123456
       access-token-uri: ${oauth.server}/oauth/token
       user-authorization-uri: ${oauth.server}/oauth/authorize
     resource:

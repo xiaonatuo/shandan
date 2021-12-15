@@ -2,10 +2,10 @@ package com.keyware.shandan.system.service.impl;
 
 import com.keyware.shandan.common.util.MD5Util;
 import com.keyware.shandan.common.util.UUIDUtil;
+import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.DesktopSetting;
 import com.keyware.shandan.system.mapper.DesktopMapper;
 import com.keyware.shandan.system.service.DesktopService;
-import com.keyware.shandan.system.utils.ProjectProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +27,7 @@ public class DesktopServiceImpl implements DesktopService {
     private DesktopMapper desktopMapper;
 
     @Autowired
-    private ProjectProperties projectProperties;
+    private CustomProperties customProperties;
 
     @Override
     public Boolean auth(String pwd) {
@@ -56,7 +56,7 @@ public class DesktopServiceImpl implements DesktopService {
     }
 
     private String upload(MultipartFile multipartFile) throws IOException {
-        String uploadFile = projectProperties.getUploadPath();
+        String uploadFile = customProperties.getFileStorage().getPath();
         File dir = new File(uploadFile);
         dir.mkdirs();
 
