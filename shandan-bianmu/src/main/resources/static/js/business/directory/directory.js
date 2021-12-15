@@ -92,7 +92,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                     {field: 'themeTask', title: '主题任务'},
                     {field: 'dataFrom', title: '数据来源'},
                     {field: 'createTime', title: '注册时间', width: 160, align: 'center'},
-                    operate
+                    {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 100, align: 'center'}
                 ]],
             },
         });
