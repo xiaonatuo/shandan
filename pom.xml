@@ -211,7 +211,7 @@
         <!-- 系统模块 -->
         <module>shandan-system</module>
         <!-- 数据分类编目子系统核心模块 -->
-        <module>shandan-bianmu-core</module>
+        <!--<module>shandan-bianmu-core</module>-->
         <!-- 数据分类编目子系统 -->
         <module>shandan-bianmu-service</module>
         <!-- 数据综合浏览子系统 -->

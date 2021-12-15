@@ -23,7 +23,7 @@ layui.use(['layer', 'gtable'], function () {
             type: 2,
             title: '数据源编辑',
             area:['600px', '550px'],
-            content: `${ctx}/control/datasource/edit?id=${id}`,
+            content: `${ctx}/business/datasource/edit?id=${id}`,
             btn: ['确定', '取消', '连接测试'],
             success: function (layero, index) {
                 editLayerWin = window[layero.find('iframe')[0]['name']]
@@ -45,7 +45,7 @@ layui.use(['layer', 'gtable'], function () {
     }
 
     const deleteRow = function(id, callback){
-        $.delete(`${ctx}/control/datasource/delete/${id}`, {}, function (res) {
+        $.delete(`${ctx}/business/datasource/delete/${id}`, {}, function (res) {
             res.msg = res.flag ? '删除成功' : res.msg;
             let icon = res.flag ? 1 : 5;
             layer.msg(res.msg, {icon, time: 2000}, function () {
@@ -87,7 +87,7 @@ layui.use(['layer', 'gtable'], function () {
 
     const dsTableOptions = {
         id: 'dsTable',
-        url: `${ctx}/control/datasource/page`,
+        url: `${ctx}/business/datasource/page`,
         method: 'post',
         cols:[[
             {field: 'id', title: 'ID', hide: true},

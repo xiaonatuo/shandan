@@ -54,7 +54,7 @@ public class ControlApplicationTests {
      */
     public void queryDatasource() {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://host:port/control/control/datasource/page";
+        String url = "http://host:port/control数据资源/page";
 
         // 准备数据
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();

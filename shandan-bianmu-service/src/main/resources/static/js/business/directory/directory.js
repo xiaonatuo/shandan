@@ -98,22 +98,25 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         });
         metaListTable.addTableRowEvent('addLink', function (obj) {
             openAddMetadataLayer(directory.basicData, () => {
-                //dirTree.partialRefreshAdd(currentTreeNode);
                 metaListTable.reloadTable();
             })
         })
         metaListTable.addTableRowEvent('removeLink', function (obj) {
             layer.confirm('是否要解除该条数据的关联？', {}, function (index) {
-                const data = {directoryId: basicData.id, metadataId: obj.id};
-                $.post(`${ctx}/business/directory/remove/metadata`, data, function (res) {
+
+                if(obj.dataSourceId == 'file'){
+                    $.post(`${ctx}/business/directory/remove/file`, {fileId: obj.id}, callback)
+                }else{
+                    $.post(`${ctx}/business/directory/remove/metadata`, {directoryId: basicData.id, metadataId: obj.id}, callback)
+                }
+                function callback(res){
                     if (res.flag) {
-                        //dirTree.partialRefreshAdd(currentTreeNode);
                         metaListTable.reloadTable();
                     } else {
-                        layer.msg('解除关联失败')
+                        layer.msg('解除关联失败');
                     }
                     layer.close(index);
-                })
+                }
             })
         })
         metaListTable.addTableRowEvent('addFile', function (obj) {
@@ -125,15 +128,19 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 content: `${ctx}/sys/file/layer?directoryId=${basicData.id}`,
                 success: function (layero, index) {
                     fileUploadLayerWin = window[layero.find('iframe')[0]['name']];
-                    //layer.iframeAuto(index)
                 },
                 yes: function (index) {
                     fileUploadLayerWin.save().then(ok => {
-                        ok && dirTree.partialRefreshAdd(currentTreeNode);
+                        ok && metaListTable.reloadTable();
                     });
                 }
             });
         });
+
+        // 查看按钮监听
+        metaListTable.addTableRowEvent('details', function (obj) {
+
+        })
     }
 
     /**

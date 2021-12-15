@@ -1,4 +1,4 @@
-package com.keyware.shandan.bianmu.controller;
+package com.keyware.shandan.datasource.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.common.controller.BaseController;
@@ -32,6 +32,18 @@ public class DataSourceController extends BaseController<DataSourceService, Data
 
     @Autowired
     private DynamicDataSourceService dynamicDataSourceService;
+
+    @GetMapping("/index")
+    public ModelAndView index(ModelAndView modelAndView){
+        modelAndView.setViewName("business/datasource/datasource");
+        return modelAndView;
+    }
+
+    @GetMapping("/edit")
+    public ModelAndView edit(ModelAndView modelAndView){
+        modelAndView.setViewName("business/datasource/datasourceEdit");
+        return modelAndView;
+    }
 
     @GetMapping("/selectTableLayer")
     public ModelAndView selectTable(){

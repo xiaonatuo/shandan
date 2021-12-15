@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keyware.shandan.bianmu.mapper.DirectoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.bianmu.entity.DirectoryVo">
+        <id column="ID" property="id"/>
+        <result column="DIRECTORY_NAME" property="directoryName"/>
+        <result column="PARENT_ID" property="parentId"/>
+        <result column="DIRECTORY_PATH" property="directoryPath"/>
+        <result column="DIRECTORY_TYPE" property="directoryType"/>
+        <result column="REVIEW_STATUS" property="reviewStatus"/>
+        <result column="ORG_ID" property="orgId"/>
+        <result column="CREATE_USER" property="createUser"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="MODIFY_USER" property="modifyUser"/>
+        <result column="MODIFY_TIME" property="modifyTime"/>
+        <association property="hasChild" column="ID" select="selectHasChild" />
+        <association property="modifyUserName" column="MODIFY_USER" select="selectModifyUserName" />
+        <association property="org" column="ORG_ID" select="com.keyware.shandan.system.mapper.SysOrgMapper.selectById"
+                     javaType="com.keyware.shandan.system.entity.SysOrg">
+            <result column="ORG_NUMBER" property="orgNumber"/>
+            <result column="ORG_NAME" property="orgName"/>
+            <result column="ORG_SHORT_NAME" property="orgShortName"/>
+            <result column="ORG_PARENT_ID" property="orgParentId"/>
+            <result column="ORG_PATH" property="orgPath"/>
+            <result column="LEADER" property="leader"/>
+            <result column="REMARK" property="remark"/>
+        </association>
+    </resultMap>
+
+    <select id="selectModifyUserName" resultType="String" >
+        select USER_NAME from SYS_USER where USER_ID = #{userId}
+    </select>
+
+    <select id="selectHasChild" parameterType="string" resultType="boolean">
+        select count(1)
+        from B_DIRECTORY
+        where PARENT_ID = #{parentId}
+    </select>
+
+    <select id="selectMetadataByDirectory" resultType="com.keyware.shandan.bianmu.entity.MetadataBasicVo"
+            parameterType="string">
+        select mb.*
+        from B_DIRECTORY_METADATA dm
+                 left join B_DIRECTORY dir on dir.ID = dm.DIRECTORY_ID
+                 left join B_METADATA_BASIC mb on dm.METADATA_ID = mb.ID
+        where dir.ID = #{id}
+    </select>
+
+    <select id="selectAllMetadataByDirectory" resultType="com.keyware.shandan.bianmu.entity.MetadataBasicVo"
+            parameterType="string">
+        select B.*
+        from B_METADATA_BASIC B
+             right join B_DIRECTORY_METADATA DM on B.ID = DM.METADATA_ID
+             right join (
+                select D1.*
+                from B_DIRECTORY D1
+                     left join B_DIRECTORY D2 on D1.DIRECTORY_PATH like '%' || D2.DIRECTORY_NAME || '%'
+                where D2.ID = #{id}
+        ) t on t.ID = DM.DIRECTORY_ID where B.ID is not null
+    </select>
+</mapper>

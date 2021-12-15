@@ -16,8 +16,8 @@ layui.use(['form', 'layer', 'editPage'], function () {
 
     editPage.init({
         formId: 'datasourceForm',
-        formInitUrl: `${ctx}/control/datasource/get/${requestParam.id}`,
-        formSubmitUrl: `${ctx}/control/datasource/save`
+        formInitUrl: `${ctx}/business/datasource/get/${requestParam.id}`,
+        formSubmitUrl: `${ctx}/business/datasource/save`
     });
 });
 
@@ -34,7 +34,7 @@ function save(){
  */
 function connectTest(){
     let data = editPage.getData();
-    $.post(`${ctx}/control/datasource/connection/test`, data, function (res) {
+    $.post(`${ctx}/business/datasource/connection/test`, data, function (res) {
         if(res.flag){
             layer.msg('连接成功');
         }else{
