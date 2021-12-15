@@ -1,0 +1,322 @@
+html {
+    height: 100%
+}
+
+body {
+    height: 100%
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+
+.sys-title {
+    height: 40%;
+    display: flex;
+    align-items: center;
+}
+
+.sys-title h1 {
+    font-size: 60px;
+    font-weight: bolder;
+    color: #141a1d;
+}
+
+.app-list {
+    width: 60%;
+    max-height: 60%;
+    min-width: 900px;
+    box-shadow: 0 0 10px #00000045;
+    background: #fffc;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.app-item {
+    position: relative;
+    margin: 20px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.app-list .app-item .app-icon{
+    position: relative;
+    width: 140px;
+    height: 140px;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 1px 1px 5px #0000004d;
+}
+.app-list .app-item img{
+    float: left;
+}
+.app-item img, .app-item .app-icon {
+    width: 100%;
+    height: 100%;
+}
+
+.app-item p {
+    margin-top: 10px;
+    color: #4a4a4a;
+    max-height: 48px;
+    font-size: 16px;
+    text-align: center;
+    max-width: 140px;
+    overflow: hidden;
+}
+.mask{
+    opacity: 0;
+    position: absolute;
+    z-index: 1;
+    background: rgba(255, 255, 255, .2);
+    transition: all .2s;
+}
+.app-item .mask {
+    height: 100%;
+    width: 100%;
+}
+.icon-list .mask{
+    height: 60px;
+    width: 60px;
+    position: inherit;
+}
+
+.app-item:hover, .icon-list:hover {
+    cursor: pointer;
+}
+
+.app-item:hover .mask, .icon-list li:hover .mask {
+    opacity: 1;
+}
+
+.sys-setting {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.sys-setting a {
+    background: none
+}
+
+.layer-setting {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 100%;
+}
+
+.layer-setting .setting-btn {
+    display: flex;
+    justify-content: flex-start;
+    width: 60%;
+    padding: 15px;
+}
+
+.layer-setting .layer-app-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 15px;
+    min-width: 0;
+    box-shadow: none;
+    padding: 0;
+    overflow-y: auto;
+}
+
+.layer-app-list .app-item {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 0;
+    padding: 10px 0;
+    height: auto;
+    border-bottom: 1px solid #e8e8e8;
+}
+.layer-app-list .app-item img, .layer-app-list .app-item .app-icon{
+    border-radius: 5px;
+    margin: 0 15px;
+}
+.layer-app-list .app-item img, .layer-app-list .app-item .app-icon {
+    width: 60px;
+    height: 60px;
+}
+
+.app-item .app-info {
+    display: flex;
+    flex-direction: column;
+    height: 60px;
+    justify-content: space-around;
+    width: 65%;
+}
+
+.app-info p {
+    text-align: left;
+    width: auto;
+    max-width: 100%;
+}
+
+.app-info p.title span {
+    margin-left: 10px;
+}
+
+.app-info p.sub-title {
+    color: gray;
+}
+
+.app-item .app-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 20%;
+    margin: 0 15px;
+}
+.selected-icon{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.selected-icon .layui-btn{
+    margin-left: 15px;
+}
+.current-icon{
+    height: 60px;
+    width: 60px;
+    padding: 2px;
+    border: 1px dashed gray;
+    border-radius: 5px;
+}
+.current-icon .icon{
+    width: 60px;
+    height: 60px;
+}
+.upload-btn-area{
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.upload-btn-area a.layui-btn {
+    width: 90px;
+}
+
+.upload-btn-area .layui-word-aux {
+    margin-left: 15px;
+}
+.icon-list{
+    height: 140px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+.icon-list li {
+    float: left;
+    border: 2px solid #FFF;
+    width: 60px;
+    height: 60px;
+    margin: 2px;
+    border-radius: 5px;
+}
+.icon-list li.on {
+    border-color: orange;
+}
+.icon-altbook{
+    background: url(image/metro/altbook.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-approvedsafety{
+    background: url(image/metro/approvedsafety.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-calculator{
+    background: url(image/metro/calculator.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-cloud{
+    background: url(image/metro/cloud.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-configured{
+    background: url(image/metro/configured.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-dashmac{
+    background: url(image/metro/dashmac.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-directmail{
+    background: url(image/metro/directmail.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-dropbox{
+    background: url(image/metro/dropbox.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-dunpai{
+    background: url(image/metro/dunpai.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-excel{
+    background: url(image/metro/excel.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-googledocsblast{
+    background: url(image/metro/googledocsblast.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-googlemapsrafaga{
+    background: url(image/metro/googlemapsrafaga.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-icalmac{
+    background: url(image/metro/icalmac.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-instagram{
+    background: url(image/metro/instagram.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-internetdownloadmanager{
+    background: url(image/metro/internetdownloadmanager.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-liveMessenger{
+    background: url(image/metro/liveMessenger.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-liveSync{
+    background: url(image/metro/liveSync.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-macappstorealt{
+    background: url(image/metro/macappstorealt.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-magnifier{
+    background: url(image/metro/magnifier.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-newswindows8{
+    background: url(image/metro/newswindows8.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-notebook{
+    background: url(image/metro/notebook.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-pc{
+    background: url(image/metro/pc.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-search{
+    background: url(image/metro/search.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-skyDrive{
+    background: url(image/metro/skyDrive.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-windows8photos{
+    background: url(image/metro/windows8photos.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-windowsmediaplayer{
+    background: url(image/metro/windowsmediaplayer.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-yuansu{
+    background: url(image/metro/yuansu.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-zipfile{
+    background: url(image/metro/zipfile.png) 0 0 / 100% 100% no-repeat;
+}
+.icon-fanglian{
+    background: url(image/metro/fanglian.png) 0 0 / 100% 100% no-repeat;
+}
+ .icon-boldness{
+     background: url(image/metro/boldness.png) 0 0 / 100% 100% no-repeat;
+ }

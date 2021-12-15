@@ -1,4 +1,4 @@
-package com.keyware.shandan.desktop.config;
+package com.keyware.shandan.system.utils;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

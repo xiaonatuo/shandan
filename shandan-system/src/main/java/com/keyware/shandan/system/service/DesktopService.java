@@ -1,11 +1,9 @@
-package com.keyware.shandan.desktop.services;
+package com.keyware.shandan.system.service;
 
-import com.keyware.shandan.desktop.entity.AppInfo;
-import com.keyware.shandan.desktop.entity.DesktopSetting;
+import com.keyware.shandan.system.entity.DesktopSetting;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 /**

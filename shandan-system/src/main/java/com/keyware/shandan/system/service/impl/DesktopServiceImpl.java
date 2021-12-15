@@ -1,23 +1,17 @@
-package com.keyware.shandan.desktop.services.impl;
+package com.keyware.shandan.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.common.util.MD5Util;
-import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.common.util.UUIDUtil;
-import com.keyware.shandan.desktop.config.ProjectProperties;
-import com.keyware.shandan.desktop.entity.AppInfo;
-import com.keyware.shandan.desktop.entity.DesktopSetting;
-import com.keyware.shandan.desktop.mapper.AppInfoMapper;
-import com.keyware.shandan.desktop.mapper.DesktopMapper;
-import com.keyware.shandan.desktop.services.AppInfoService;
-import com.keyware.shandan.desktop.services.DesktopService;
+import com.keyware.shandan.system.entity.DesktopSetting;
+import com.keyware.shandan.system.mapper.DesktopMapper;
+import com.keyware.shandan.system.service.DesktopService;
+import com.keyware.shandan.system.utils.ProjectProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,17 +24,10 @@ import java.util.Map;
 public class DesktopServiceImpl implements DesktopService {
 
     @Autowired
-    private AppInfoMapper appInfoMapper;
-
-    @Autowired
     private DesktopMapper desktopMapper;
 
     @Autowired
-    private AppInfoService appInfoService;
-
-    @Autowired
     private ProjectProperties projectProperties;
-
 
     @Override
     public Boolean auth(String pwd) {

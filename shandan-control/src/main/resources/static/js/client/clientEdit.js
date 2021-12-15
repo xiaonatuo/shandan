@@ -19,6 +19,10 @@ layui.use(['form', 'layer', 'editPage'], function () {
         formInitUrl: `${ctx}/sys/oauth/client/get/${requestParam.id}`,
         formSubmitUrl: `${ctx}/sys/oauth/client/save`
     });
+
+
+
+
 });
 
 /**

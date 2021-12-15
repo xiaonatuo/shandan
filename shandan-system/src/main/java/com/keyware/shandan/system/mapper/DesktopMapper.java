@@ -1,7 +1,7 @@
-package com.keyware.shandan.desktop.mapper;
+package com.keyware.shandan.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.keyware.shandan.desktop.entity.DesktopSetting;
+import com.keyware.shandan.system.entity.DesktopSetting;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

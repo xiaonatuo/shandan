@@ -15,5 +15,9 @@
         <result column="ADDITIONAL_INFORMATION" property="additionalInformation"/>
         <result column="AUTOAPPROVE" property="autoapprove"/>
         <result column="WEB_CLIENT_LOGOUT_URI" property="webClientLogoutUri"/>
+        <result column="TITLE" property="title"/>
+        <result column="TARGET" property="target"/>
+        <result column="ICON" property="icon"/>
+        <result column="SORT" property="sort"/>
     </resultMap>
 </mapper>

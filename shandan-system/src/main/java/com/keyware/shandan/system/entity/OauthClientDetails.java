@@ -63,10 +63,34 @@ public class OauthClientDetails implements Serializable {
     @TableField("WEB_CLIENT_LOGOUT_URI")
     private String webClientLogoutUri;
 
+    /**
+     * 应用标题
+     */
+    @TableField("TITLE")
+    private String title;
+
+    /**
+     * 应用打开方式
+     */
+    @TableField("TARGET")
+    private String target;
+
+    /**
+     * 应用图标
+     */
+    @TableField("ICON")
+    private String icon;
+
+    /**
+     * 应用排列顺序
+     */
+    @TableField("SORT")
+    private String sort;
+
     @Override
     public String toString() {
-        return "ClientDetailsDTO{" +
-                "clientId='" + id + '\'' +
+        return "OauthClientDetails{" +
+                "id='" + id + '\'' +
                 ", clientSecret='" + clientSecret + '\'' +
                 ", resourceIds='" + resourceIds + '\'' +
                 ", scope='" + scope + '\'' +
@@ -78,6 +102,10 @@ public class OauthClientDetails implements Serializable {
                 ", additionalInformation='" + additionalInformation + '\'' +
                 ", autoapprove='" + autoapprove + '\'' +
                 ", webClientLogoutUri='" + webClientLogoutUri + '\'' +
+                ", title='" + title + '\'' +
+                ", target='" + target + '\'' +
+                ", icon='" + icon + '\'' +
+                ", sort='" + sort + '\'' +
                 '}';
     }
 }

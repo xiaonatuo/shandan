@@ -1,4 +1,4 @@
-package com.keyware.shandan.desktop.entity;
+package com.keyware.shandan.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
