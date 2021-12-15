@@ -44,7 +44,7 @@ public class BianmuCommonController {
      */
     @GetMapping("/details/{id}")
     public ModelAndView metadataDetails(ModelAndView mav, @PathVariable String id){
-        mav.setViewName("review/metadataDetails");
+        mav.setViewName("business/metadata/details");
         MetadataBasicVo metadata = metadataService.get(id).getData();
         mav.addObject("detailsData", metadata);
 

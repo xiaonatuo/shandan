@@ -123,37 +123,41 @@ layui.use(['layer', 'laytpl', 'dropdown', 'carousel'], function () {
      * 查询文件列表
      * @returns {Promise<void>}
      */
-    async function getFileList() {
-        const loadIndex = layer.load();
-        await $.ajax({
-            url: `${ctx}/sys/file/list`,
-            data: {entityId},
-            type: 'post',
-            dataType: 'json',
-            async: false,
-            success: function (res) {
-                layer.close(loadIndex);
-                if (res.flag) {
-                    // 将可预览的文件和不可预览的文件进行拆分
-                    noViewFiles = res.data;
-                    for (let type in viewType) {
-                        res.data.forEach((file, index) => {
-                            if (viewType[type].includes(file.fileSuffix)) {
-                                viewFiles.push(file);
-                                delete noViewFiles[index]
-                            }
-                        })
+     function getFileList() {
+        return new Promise((resolve, reject)=>{
+            const loadIndex = layer.load();
+            $.ajax({
+                url: `${ctx}/sys/file/list`,
+                data: {entityId},
+                type: 'post',
+                dataType: 'json',
+                async: false,
+                success: function (res) {
+                    layer.close(loadIndex);
+                    if (res.flag) {
+                        // 将可预览的文件和不可预览的文件进行拆分
+                        noViewFiles = res.data;
+                        for (let type in viewType) {
+                            res.data.forEach((file, index) => {
+                                if (viewType[type].includes(file.fileSuffix)) {
+                                    viewFiles.push(file);
+                                    delete noViewFiles[index]
+                                }
+                            })
+                        }
+                        // 将数组中空值过滤掉， 因为上面的遍历删除操作会使数组中产生空值
+                        noViewFiles = noViewFiles.filter(a => a);
+                    } else {
+                        layer.alert(res.msg);
                     }
-                    // 将数组中空值过滤掉， 因为上面的遍历删除操作会使数组中产生空值
-                    noViewFiles = noViewFiles.filter(a => a);
-                } else {
-                    layer.alert(res.msg);
+                    resolve && resolve();
+                },
+                error: function (res) {
+                    layer.close(loadIndex);
+                    layer.alert('服务器异常！');
+                    reject && reject()
                 }
-            },
-            error: function (res) {
-                layer.close(loadIndex);
-                layer.alert('服务器异常！');
-            }
-        })
+            })
+        });
     }
 });

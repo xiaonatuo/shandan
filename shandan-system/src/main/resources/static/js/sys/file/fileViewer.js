@@ -36,7 +36,6 @@ function fileViewer(file){
     let player;
     layui.use(['layer','laytpl'], function(){
         const layer = layui.layer;
-        console.info('文件预览');
         layer.tab({
             area: [window.innerWidth +'px', window.innerHeight+'px'],
             tab: [{
@@ -44,14 +43,11 @@ function fileViewer(file){
                 content: layerContainer
             }, {
                 title: '文件属性',
-                content: '<div id="fileProperties" style="padding:20px;">TAB2该说些啥</div>'
+                content: '<div id="fileProperties" style="padding:20px;"></div>'
             }],
             success: function (layerObj, index) {
                 //layer.full(index);
                 viewFile(file);
-                layui.laytpl($("#filePropertiesTemplate").html()).render(file, function (html) {
-                    $("#fileProperties").html(html);
-                })
             }
         });
         /**
@@ -59,8 +55,9 @@ function fileViewer(file){
          * @param file
          */
         function viewFile(file) {
+            console.info(file);
             const fileSuffix = file.fileSuffix.toLowerCase();
-            const filePath = `${bianmuServer}/upload/${file.path}`;
+            const filePath = `${ctx}/upload/${file.path}`;
             if (viewType.image.includes(fileSuffix)) {
                 let htm = `<img id="image-viewer" src="${filePath}" style="max-height: 100%; max-width: 100%"/>`
                 $('#file-viewer-image').html(htm)
@@ -86,7 +83,7 @@ function fileViewer(file){
                 $('#download-file').off('click')
                 $('#download-file').on('click', function ({target}) {
                     let fileId = $(target).data('id')
-                    window.open(`${bianmuServer}/sys/file/download/${fileId}`)
+                    window.open(`${ctx}/sys/file/download/${fileId}`)
                 })
                 showFileViewer('other');
             }
@@ -99,6 +96,9 @@ function fileViewer(file){
         function showFileViewer(type){
             $('#fileViewer .file-viewer').addClass('layui-hide');
             $(`#file-viewer-${type}`).removeClass('layui-hide');
+            layui.laytpl($("#filePropertiesTemplate").html()).render(file, function (html) {
+                $("#fileProperties").html(html);
+            })
         }
 
         /**

@@ -73,7 +73,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         if (!basicData) return;
         let operate = {}
         if (basicData.reviewStatus == ReviewStatus.UN_SUBMIT || basicData.reviewStatus == ReviewStatus.FAIL) {
-            operate = {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width:100, align: 'center'}
+            operate = {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 100, align: 'center'}
         }
 
         metaListTable = listPage.init({
@@ -87,7 +87,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 method: 'get',
                 cols: [[
                     {field: 'id', title: 'ID', hide: true},
-                    {field: 'metadataName', title: '数据表',width: 300},
+                    {field: 'metadataName', title: '数据表', width: 300},
                     {field: 'metadataComment', title: '中文注释'},
                     {field: 'themeTask', title: '主题任务'},
                     {field: 'dataFrom', title: '数据来源'},
@@ -104,12 +104,16 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         metaListTable.addTableRowEvent('removeLink', function (obj) {
             layer.confirm('是否要解除该条数据的关联？', {}, function (index) {
 
-                if(obj.dataSourceId == 'file'){
+                if (obj.dataSourceId.startsWith('file_')) {
                     $.post(`${ctx}/business/directory/remove/file`, {fileId: obj.id}, callback)
-                }else{
-                    $.post(`${ctx}/business/directory/remove/metadata`, {directoryId: basicData.id, metadataId: obj.id}, callback)
+                } else {
+                    $.post(`${ctx}/business/directory/remove/metadata`, {
+                        directoryId: basicData.id,
+                        metadataId: obj.id
+                    }, callback)
                 }
-                function callback(res){
+
+                function callback(res) {
                     if (res.flag) {
                         metaListTable.reloadTable();
                     } else {
@@ -139,7 +143,13 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
 
         // 查看按钮监听
         metaListTable.addTableRowEvent('details', function (obj) {
-
+            if (obj.dataSourceId.startsWith('file_')) {
+                console.info('obj.directoryId',obj);
+                const datasourceId = obj.dataSourceId.split('_')
+                openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${datasourceId[1]}`)
+            } else {
+                openMaxLayerWithURL(`${ctx}/business/metadata/details/${obj.id}`)
+            }
         })
     }
 

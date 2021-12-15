@@ -330,6 +330,20 @@ window.showErrorMsg2 = (msg = '服务器连接异常') => {
     layer.msg(msg, {icon: 5, time: 2000})
 }
 window.showOkMsg2 = (msg = 'OK提示') => {layer.msg(msg, {icon: 6, time: 1000})}
+window.openMaxLayerWithURL = (url)=>{
+    layer.open({
+        title: false,
+        closeBtn: false,
+        type: 2,
+        area: [window.innerWidth + 'px', window.innerHeight + 'px'],
+        content: url,
+        success: function (layerObj, index) {
+            window.closeDetailsLayer = function () {
+                layer.close(index);
+            };
+        }
+    })
+}
 
 /**
  * 常用工具方法
@@ -403,7 +417,7 @@ commonUtil = {
      * @param loading 是否显示loading状态
      * @returns {Promise<unknown>}
      */
-    get: (url, data, loading=true) => Util.send(url, data, loading),
+    get: (url, data, loading=true) => Util.send(url, data, 'get', loading),
 
     /**
      * post请求

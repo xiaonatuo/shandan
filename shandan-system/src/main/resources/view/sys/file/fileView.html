@@ -7,36 +7,53 @@
     <script th:replace="common/head::static"></script>
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        #fileViewer{
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
 </head>
 <body>
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md10">
         <div class="layui-card">
-            <!--<div class="layui-card-header">文件预览</div>-->
+            <div class="layui-card-header">
+                <a class="layui-btn layui-btn-sm layui-btn-primary layui-border-green layui-font-14"
+                   href="javascript:void(0)" style="border:0; padding:0;text-decoration: underline;"
+                   id="backBtn">返回列表</a>
+            </div>
             <div class="layui-card-body" id="fileViewer">
-                <!-- 图片轮播组件 -->
-                <div id="file-viewer-image" class="file-viewer layui-hide" style="height: 100%">
-                    <div class="layui-carousel" id="image-carousel" lay-filter="image-carousel">
-                        <div carousel-item></div>
+                <ul class="file-viewer-tab">
+                    <li>预览</li>
+                    <li>属性</li>
+                </ul>
+                <div class="file-viewer-container">
+                    <!-- 图片轮播组件 -->
+                    <div id="file-viewer-image" class="file-viewer layui-hide" style="height: 100%">
+                        <div class="layui-carousel" id="image-carousel" lay-filter="image-carousel">
+                            <div carousel-item></div>
+                        </div>
                     </div>
-                </div>
-                <!-- video-js视频播放器 -->
-                <div id="file-viewer-video" class="file-viewer layui-hide" style="height: 100%">
-                    <video id="videoPlayer" class="video-js" controls preload="auto" style="width: 100%; height: 100%">
-                        <p class="vjs-no-js">
-                            要观看此视频，请启用 JavaScript，并考虑升级到
-                            <a href="https:videojs.comhtml5-video-support" target="_blank">支持 HTML5 视频</a>
-                            的网络浏览器
-                        </p>
-                    </video>
-                </div>
-                <!-- pdf浏览组件 -->
-                <div id="file-viewer-pdf" class="file-viewer layui-hide" style="height: 100%">
-                    <iframe id="pdfViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
-                </div>
-                <!-- 文本文件浏览组件 -->
-                <div id="file-viewer-text" class="file-viewer layui-hide" style="height: 100%">
-                    <iframe id="txtViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                    <!-- video-js视频播放器 -->
+                    <div id="file-viewer-video" class="file-viewer layui-hide" style="height: 100%">
+                        <video id="videoPlayer" class="video-js" controls preload="auto"
+                               style="width: 100%; height: 100%">
+                            <p class="vjs-no-js">
+                                要观看此视频，请启用 JavaScript，并考虑升级到
+                                <a href="https:videojs.comhtml5-video-support" target="_blank">支持 HTML5 视频</a>
+                                的网络浏览器
+                            </p>
+                        </video>
+                    </div>
+                    <!-- pdf浏览组件 -->
+                    <div id="file-viewer-pdf" class="file-viewer layui-hide" style="height: 100%">
+                        <iframe id="pdfViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                    </div>
+                    <!-- 文本文件浏览组件 -->
+                    <div id="file-viewer-text" class="file-viewer layui-hide" style="height: 100%">
+                        <iframe id="txtViewer" style="height: 100%; width:100%" frameborder="0"></iframe>
+                    </div>
                 </div>
             </div>
         </div>
@@ -60,18 +77,18 @@
     {{# } }}
     <ul class="layui-menu" id="{{d.fileListID}}">
         {{# for(let file of d.list){
-                let fileName = file.fileName + file.fileSuffix;
-                if(d.fileListID == 'viewFileListMenu'){
-                let jsonText = JSON.stringify(file);
+        let fileName = file.fileName + file.fileSuffix;
+        if(d.fileListID == 'viewFileListMenu'){
+        let jsonText = JSON.stringify(file);
         }}
         <li lay-options='{{jsonText}}' title="{{fileName}}" style="padding-left: 0;">
             <div class="layui-menu-body-title">{{fileName}}</div>
         </li>
-        {{#     }else { }}
+        {{# }else { }}
         <li-a lay-options="{id: '{{file.id}}' }" title="{{fileName}}" style="padding-left: 0;">
             <div class="layui-menu-body-title" style="color:gray">{{fileName}}</div>
         </li-a>
-        {{#    } }}
+        {{# } }}
         {{# } }}
     </ul>
 </script>
@@ -82,16 +99,21 @@
      * 切换显示文件展示区域
      * @param type 展示类型
      */
-    function showFileViewer(type){
+    function showFileViewer(type) {
         $('#fileViewer .file-viewer').addClass('layui-hide');
         $(`#file-viewer-${type}`).removeClass('layui-hide');
     }
 
     const sizeInit = () => {
         $("div.layui-card:eq(0) .layui-card-body").height(window.innerHeight - 40 - 6).css('padding', 0);
-        $("div.layui-card:eq(1) .layui-card-body").height(window.innerHeight -  43 - 40 - 20);
+        $("div.layui-card:eq(1) .layui-card-body").height(window.innerHeight - 43 - 40 - 20);
     }
     window.onresize = sizeInit;
     sizeInit();
+
+    //返回列表页
+    $('#backBtn').on('click', function () {
+        window.parent.closeDetailsLayer();
+    });
 </script>
 </html>
