@@ -29,9 +29,7 @@ security:
       access-token-uri: ${oauth.server}/oauth/token
       user-authorization-uri: ${oauth.server}/oauth/authorize
     resource:
-      user-info-uri: ${oauth.server}/user/info
-      jwt:
-        key-uri: ${oauth.server}/oauth/token_key
+      user-info-uri: ${oauth.server}/oauth/user/info
 
 project:
   #是否需要输入验证码

@@ -13,3 +13,15 @@ spring:
           username: BIANMU
           password: admin1234
           driver-class-name: dm.jdbc.driver.DmDriver
+
+oauth:
+  server: http://localhost:8888/oauth-server
+security:
+  oauth2:
+    client:
+      client-id: desktop
+      client-secret: bianmu_123456
+      access-token-uri: ${oauth.server}/oauth/token
+      user-authorization-uri: ${oauth.server}/oauth/authorize
+    resource:
+      user-info-uri: ${oauth.server}/oauth/user/info

@@ -21,4 +21,4 @@ mybatis-plus:
 
 oauth:
   logout:
-    success-url: /login?logout
+    success-url: login?logout

@@ -2,7 +2,9 @@ package com.keyware.shandan.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -19,7 +21,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/js/**",
             "/css/**",
             "/webjars/**",
-            "/getVerifyCodeImage",
+            "/user/**",
             "/error/*",
             "/upload/**",
             "/assets/**",
@@ -61,7 +63,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.logout().logoutSuccessHandler((request, response, authentication) -> {
             System.out.println("http = " + http);
 
+
+
             response.sendRedirect(logoutUrl);
         });
     }
+
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+
 }
