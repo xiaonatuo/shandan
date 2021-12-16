@@ -12,23 +12,12 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
     const layer = layui.layer,
         listPage = layui.listPage,
         globalTree = layui.globalTree,
-        laytpl = layui.laytpl,
-        gtable = layui.gtable
-    form = layui.form;
+        form = layui.form;
     // 目录树
     let dirTree;
-    let currentTreeNode;
     let metaListTable;
-    let reviewStatusSearch = '';
     let fileUploadLayerWin;
 
-    //目录树右键添加和编辑菜单弹框显示的其他内容
-    const dirAddLayer = [{
-        label: "目录类型", name: "directoryType", type: "select", optionsData: function () {
-            return {"DIRECTORY": "结构目录", "METADATA": "资源目录"}
-        }
-    }];
-    const dirEditLayer = $.extend(dirAddLayer, [])
 
     let addMetadataLayerWin;
     const openAddMetadataLayer = function (directory, callback) {
@@ -71,10 +60,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
     const loadMetadataList = function (directory) {
         const {basicData} = directory;
         if (!basicData) return;
-        let operate = {}
-        if (basicData.reviewStatus == ReviewStatus.UN_SUBMIT || basicData.reviewStatus == ReviewStatus.FAIL) {
-            operate = {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 100, align: 'center'}
-        }
 
         metaListTable = listPage.init({
             table: {
@@ -152,109 +137,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         })
     }
 
-    /**
-     * 加载数据资源详情
-     */
-    const loadMetadataDetails = function (metadata) {
-        const {basicData} = metadata;
-        if (!basicData) {
-            return
-        }
-        $('#metadataCardBody ul:first li:first').click();
-        if (!basicData.dataSourceId) {
-            $('#metadataCardBody ul:first li.db-source').hide()
-            $('#metadataCardBody ul:first li.file-source').show()
-        } else {
-            $('#metadataCardBody ul:first li.db-source').show()
-            $('#metadataCardBody ul:first li.file-source').hide()
-        }
-        // 查询数据资源基础和详细信息
-        $.get(`${ctx}/business/metadata/get/${basicData.id}`, function (res) {
-            laytpl($("#metadataBasicTemplate").html()).render(res, function (html) {
-                $("#metadataBasicTab").html(html);
-                layui.dict.render();
-            })
-        });
-
-        // 查询数据资源字段信息
-        gtable.init({
-            id: 'metadataColumnTable',
-            url: `${ctx}/business/metadata/columns?id=${basicData.id}`,
-            method: 'get',
-            toolbar: '',
-            height: 'full-136',
-            page: false,
-            cols: [[
-                {field: 'tableName', title: 'tableName', hide: true},
-                {field: 'columnName', title: '列名'},
-                {field: 'comment', title: '注释'},
-                {field: 'dataType', title: '数据类型'},
-                {field: 'dataLength', title: '列长度'},
-                {field: 'dataScale', title: '数值刻度', width: 90},
-                {field: 'dataPrecision', title: '数值精度', width: 90},
-                {field: 'nullAble', title: '允许为NULL'},
-                {field: 'dataDefault', title: '默认值'},
-            ]],
-            // done: (obj) => console.info(obj)
-        });
-
-        // 查询数据资源的示例数据
-        $.get(`${ctx}/business/metadata/columns?id=${basicData.id}`, function (res) {
-            let columns = [];
-            if (res.flag) {
-                for (let {columnName, comment} of res.data) {
-                    columns.push({field: columnName, title: comment || columnName, minWidth: 150});
-                }
-            }
-            const tableOptions = {
-                id: 'metadataExampleTable',
-                url: `${ctx}/business/metadata/example/data?metadataId=${basicData.id}`,
-                method: 'get',
-                cols: [columns],
-                page: false,
-                toolbar: true,
-                defaultToolbar: ['filter'],
-                height: 'full-105',
-            }
-            layui.listPage.init({
-                table: tableOptions
-            })
-        });
-
-        // 查询文件列表
-        const fileListTable = layui.listPage.init({
-            table: {
-                id: 'fileListTable',
-                url: `${ctx}/sys/file/list`,
-                where: {entityId: basicData.id},
-                cols: [[
-                    {field: 'fileName', title: '文件名称'},
-                    {field: 'fileSize', title: '文件大小(MB)'},
-                    {field: 'fileType', title: '文件类型'},
-                    {field: 'right', title: '操作', toolbar: '#fileListTableToolBar', width: 150}
-                ]],
-                page: false,
-                toolbar: false,
-                height: 'full-135'
-            },
-        });
-        fileListTable.addTableRowEvent('download', function (obj) {
-            window.open(`${ctx}/sys/file/download/${obj.id}`)
-        });
-        let fileViewLayerWin;
-        fileListTable.addTableRowEvent('file-view', function () {
-            layer.open({
-                id: 'fileviewLayer',
-                title: basicData.metadataName,
-                type: 2,
-                content: `${ctx}/sys/file/view?entityId=${basicData.id}`,
-                success: function (layero, index) {
-                    fileViewLayerWin = window[layero.find('iframe')[0]['name']];
-                    layer.full(index);
-                },
-            });
-        })
-    }
 
     let tempNode;
     // 加载并渲染目录树
@@ -275,22 +157,19 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 res.data.forEach(item => {
                     dirCache.set(item.id, item);
                 })
-                initLiHoverEvent();
 
-                async function initLiHoverEvent() {
-                    setTimeout(() => {
-                        $('.dtree-nav-div.dtree-theme-item').each((index, elem) => {
-                            let data = $(elem).data('basic');
-                            if (data) {
-                                if (typeof data === 'string') {
-                                    data = JSON.parse(data);
-                                }
-                                let title = data.metadataComment || data.directoryName || data.fileName + data.fileSuffix;
-                                $(elem).attr('title', title)
+                setTimeout(() => {
+                    $('.dtree-nav-div.dtree-theme-item').each((index, elem) => {
+                        let data = $(elem).data('basic');
+                        if (data) {
+                            if (typeof data === 'string') {
+                                data = JSON.parse(data);
                             }
-                        });
-                    }, 200)
-                }
+                            let title = data.metadataComment || data.directoryName || data.fileName + data.fileSuffix;
+                            $(elem).attr('title', title)
+                        }
+                    });
+                }, 200)
             }
         },
         done: function (nodes, elem) {
@@ -299,31 +178,15 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         },
         onClick: function (node) {
             tempNode = node;
-            currentTreeNode = node.dom;
             const {basicData} = node.param;
             if (!basicData) return false;
             if (basicData.directoryPath) {
                 let path = basicData.directoryPath.replaceAll('/', ' / ');
                 $('#currentPosition').text(path);
             }
-            let showType = 'directory';
-            let callback = () => {
-                loadMetadataList(node.param)
-            }
-            if (basicData) {
-                if (basicData.metadataName) {
-                    showType = 'metadata';
-                    callback = () => {
-                        loadMetadataDetails(node.param)
-                    }
-                } else if (basicData.entityId) {
-                    showType = 'file';
-                    callback = () => {
-                        viewFile(basicData);
-                    }
-                }
-            }
-            toggleRightCard(showType, callback);
+
+            loadMetadataList(node.param)
+
 
             // 先移除事件，否则会和节点点击事件重叠
             $('#directoryTree cite i.icon-fail').off('click');
@@ -517,66 +380,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         })
     }
 
-    let player;
-
-    /**
-     * 预览文件
-     * @param file
-     */
-    function viewFile(file) {
-        const fileSuffix = file.fileSuffix.toLowerCase();
-        laytpl($("#filePropertiesTemplate").html()).render(file, function (html) {
-            $("#fileProperties").html(html);
-        })
-        const filePath = `${ctx}/upload/${file.path}`;
-        if (viewType.image.includes(fileSuffix)) {
-            let htm = `<img id="image-viewer" src="${filePath}" style="max-height: ${imageHeight}px; max-width: ${imageWidth}px"/>`
-            $('#file-viewer-image').html(htm)
-            showFileViewer('image');
-        } else if (viewType.video.includes(fileSuffix) || viewType.audio.includes(fileSuffix)) {
-            if (!player) {
-                initVideoPlayer();
-            }
-            player.src(filePath);
-            showFileViewer('video');
-        } else if (viewType.pdf.includes(fileSuffix)) {
-            $('#pdfViewer').attr('src', filePath);
-            showFileViewer('pdf');
-        } else if (viewType.text.includes(fileSuffix)) {
-            $('#txtViewer').attr('src', filePath);
-            showFileViewer('text');
-        } else {
-            let htm = `<p>该文件不支持预览，可下载后查看。</p>
-                        <a href="javascript:void(0)"  id="download-file" data-id="${file.id}" style="color: blue; text-decoration: underline;">下载文件</a>`;
-            $('#file-viewer-other').html(htm)
-            $('#download-file').off('click')
-            $('#download-file').on('click', function ({target}) {
-                let fileId = $(target).data('id')
-                window.open(`${ctx}/sys/file/download/${fileId}`)
-            })
-            showFileViewer('other');
-        }
-    }
-
-    /**
-     * 视频播放器初始化
-     */
-    function initVideoPlayer() {
-        player = videojs('videoPlayer');
-        player.ready(function () {
-            //this.play();
-        });
-    }
-
-    // 目录树筛选条件
-    /*form.on('select(reviewStatusSelect)', function ({elem, othis, value}) {
-        reviewStatusSearch = value;
-        const treeOps = {request: {}}
-        if (value) {
-            treeOps.request = {reviewStatus: value};
-        }
-        globalTree.reload(treeOps)
-    });*/
     $('#directoryTreeSearchBox').on('keyup', function () {
         setTimeout(() => {
             dirTree.fuzzySearch(this.value);
