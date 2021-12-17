@@ -58,33 +58,6 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
     }
 
     /**
-     * 获取目录树
-     *
-     * @return
-     */
-    @GetMapping("/tree")
-    public Result<List<TreeVo>> tree(String id) {
-        DirectoryVo parent = null;
-        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(id) && !"-".equals(id)) {
-            parent = directoryService.getById(id);
-            if (parent == null) {
-                return Result.of(null, false, "目录未找到");
-
-            }
-            wrapper.likeRight("DIRECTORY_PATH", parent.getDirectoryPath());
-        }
-
-        List<DirectoryVo> directoryList = directoryService.list(wrapper);
-
-        // 如果父目录存在，则从查询到的集合中将自己过滤掉
-        if(parent != null){
-            directoryList = directoryList.stream().filter(dir-> !id.equals(dir.getId())).collect(Collectors.toList());
-        }
-        return Result.of(TreeUtil.buildDirTree(directoryList.stream().map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
-    }
-
-    /**
      * 保存目录与数据资源关系
      *
      * @param directoryId

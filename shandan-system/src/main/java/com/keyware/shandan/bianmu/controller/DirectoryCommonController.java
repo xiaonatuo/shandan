@@ -3,10 +3,16 @@ package com.keyware.shandan.bianmu.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
 import com.keyware.shandan.bianmu.service.DirectoryService;
+import com.keyware.shandan.bianmu.utils.DirectoryUtil;
+import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.common.entity.TreeVo;
 import com.keyware.shandan.common.enums.SystemTypes;
+import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.common.util.TreeUtil;
 import com.keyware.shandan.system.entity.SysSetting;
 import com.keyware.shandan.system.utils.SysSettingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +41,33 @@ public class DirectoryCommonController {
     @Autowired
     private DirectoryMetadataService directoryMetadataService;
 
+
+    /**
+     * 获取目录树
+     *
+     * @return
+     */
+    @GetMapping("/tree")
+    public Result<List<TreeVo>> tree(String id) {
+        DirectoryVo parent = null;
+        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(id) && !"-".equals(id)) {
+            parent = directoryService.getById(id);
+            if (parent == null) {
+                return Result.of(null, false, "目录未找到");
+
+            }
+            wrapper.likeRight("DIRECTORY_PATH", parent.getDirectoryPath());
+        }
+
+        List<DirectoryVo> directoryList = directoryService.list(wrapper);
+
+        // 如果父目录存在，则从查询到的集合中将自己过滤掉
+        if(parent != null){
+            directoryList = directoryList.stream().filter(dir-> !id.equals(dir.getId())).collect(Collectors.toList());
+        }
+        return Result.of(TreeUtil.buildDirTree(directoryList.stream().map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
+    }
 
     @GetMapping("/details/{id}")
     public ModelAndView details(ModelAndView mav, @PathVariable String id) {
