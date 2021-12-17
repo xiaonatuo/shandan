@@ -8,17 +8,27 @@
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
     <style>
-        .layui-card-body {
+        .page-main {
             display: flex;
             padding: 0;
             align-items: center;
+            height: 100%;
+        }
+
+        .layui-layout-left {
+            left: 0
         }
 
         #condition-box {
             height: 100%;
             width: 30%;
+            padding: 0 10px;
             border-radius: 0 8px 8px 0;
             border-right: 1px solid #dddddd;
+        }
+
+        #condition-box .layui-card {
+            position: relative;
         }
 
         .condition-btn a.layui-btn {
@@ -36,19 +46,30 @@
     </script>
 </head>
 <body>
-<div class="layui-row">
+<div class="layui-row" style="height: 100%">
     <!-- 数据表格 -->
-    <div class="layui-col-md12">
-        <div class="layui-card">
-            <div class="layui-card-body">
-                <div id="condition-box">
-
+    <div class="layui-col-md12 page-main">
+        <div id="condition-box">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <div class="layui-layout-left">设置检索条件：</div>
+                    <div class="layui-layout-right">
+                        <a class="layui-btn layui-btn-xs layui-btn-primary" href="javascript:void(0)" style="border: 0">清空</a>
+                        <a class="layui-btn layui-btn-xs" href="javascript:void(0)">开始查询</a>
+                    </div>
                 </div>
-                <div class="condition-btn"><a href="javascript:void(0)" class="layui-btn layui-btn-xs" data-type="hide"
-                                              id="condition-btn">收起条件</a></div>
-                <div class="meta-result" style="height: 100%; flex: 1;">
+                <div class="layui-card-body">
+                    <ul id="condition-list">
+                        <li>检索条件项</li>
+                    </ul>
                 </div>
             </div>
+        </div>
+        <div class="condition-btn">
+            <a href="javascript:void(0)" class="layui-btn layui-btn-xs"
+               data-type="hide" id="condition-btn">收起条件</a>
+        </div>
+        <div class="meta-result" style="height: 100%; flex: 1;">
         </div>
     </div>
 </div>
@@ -58,12 +79,12 @@
 <!--<script th:src="@{/js/view.js}"></script>-->
 <script type="text/javascript">
     layui.use([], function () {
-
-        let cb_width = $('#condition-box').width();
-        $('#condition-btn').on('click', function(){
+        let cb_width = $('#condition-box').width(), cb_padding = $('#condition-box').css('padding');
+        $('#condition-btn').on('click', function () {
             let type = $(this).data('type'), text = $(this).text();
             let isHide = ($(this).data('type') == 'hide');
-            $('#condition-box').animate({width: isHide ? 10 : cb_width})
+            $('#condition-box').animate({width: isHide ? 0 : cb_width, padding: isHide ? '0 0' : cb_padding})
+            $('#condition-box').find('.layui-card:first').animate({left: (isHide ? -cb_width : 0) + 'px'})
             $(this).data('type', isHide ? 'show' : 'hide')
             $(this).text(isHide ? '展开条件' : '收起条件')
         })
