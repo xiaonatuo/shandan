@@ -14,7 +14,7 @@
             align-items: center;
             height: 100%;
         }
-
+        .layui-card-header, .layui-card-body{padding:0}
         .layui-layout-left {
             left: 0
         }
@@ -52,15 +52,21 @@
         <div id="condition-box">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <div class="layui-layout-left">设置检索条件：</div>
+                    <div class="layui-layout-left">自定义查询</div>
                     <div class="layui-layout-right">
                         <a class="layui-btn layui-btn-xs layui-btn-primary" href="javascript:void(0)" style="border: 0">清空</a>
                         <a class="layui-btn layui-btn-xs" href="javascript:void(0)">开始查询</a>
                     </div>
                 </div>
                 <div class="layui-card-body">
-                    <ul id="condition-list">
-                        <li>检索条件项</li>
+                    <label>查询条件：</label>
+                    <ul id="condition-list" style="margin-left: 20px">
+                        <li>字段1 等于 abcd 删除</li><!-- 下拉框 删除按钮-->
+                        <li>或者 字段2 等于 abcd 删除</li>
+                        <li>
+                            <a class="layui-btn layui-btn-xs layui-btn-primary">增加条件项</a>
+                            <a class="layui-btn layui-btn-xs layui-btn-primary">增加子查询</a>
+                        </li>
                     </ul>
                 </div>
             </div>
