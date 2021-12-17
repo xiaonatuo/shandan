@@ -334,15 +334,32 @@ window.openMaxLayerWithURL = (url)=>{
     layer.open({
         title: false,
         closeBtn: false,
-        type: 2,
+        type: 1,
         area: [window.innerWidth + 'px', window.innerHeight + 'px'],
-        content: url,
-        success: function (layerObj, index) {
-            window.closeDetailsLayer = function () {
-                layer.close(index);
+        content: `
+                    <div class="layui-card max-layer" style="display: flex; flex-direction: column; height: 100%;">
+                        <div class="layui-card-header">
+                            <div style=" float: left;">
+                                <a class="layui-btn layui-btn-sm layui-btn-primary layui-border-green layui-font-14" 
+                                href="javascript:void(0)" style="border:0; padding:0;text-decoration: underline;" id="backBtn">返回列表</a>
+                            </div>
+                        </div>
+                        <div class="layui-card-body" style="display: flex; flex: 1; padding:0;">
+                            <iframe id="max_layer_iframe" src="" style="width: 100%; height: 99%; overflow: hidden;border: 0"></iframe>
+                        </div>
+                    </div>`,
+        success: function (layerObj, index1) {
+            // 解决iframe加载后高度只有一半的bug，加载完成后重置高度，使iframe内部页面高度自动填充
+            $('#max_layer_iframe')[0].onload = function () {
+                $("#max_layer_iframe").css('height', '0');
+                $("#max_layer_iframe").css('height', '100%');
             };
+            $('#max_layer_iframe').attr('src', url);
+
+            //返回列表页
+            $('#backBtn').on('click', ()=>layer.close(index1));
         }
-    })
+    });
 }
 
 /**

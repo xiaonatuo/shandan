@@ -29,7 +29,7 @@
                         <li>视图</li>
                     </ul>
                     <div class="layui-tab-content">
-                        <div class="layui-tab-item layui-show" style="overflow: auto; padding: 10px 0"
+                        <div class="layui-tab-item layui-show" style="overflow-y: auto; padding: 10px 0;overflow-x: hidden"
                              id="tree-toobar-div">
                             <div class="layui-form" lay-filter="directoryFilterForm">
                                 <div class="layui-form-item" style="margin-bottom: 0">
@@ -74,7 +74,8 @@
             <div class="layui-card-body right-card">
                 <div class="layui-tab layui-tab-brief" id="metadataListCardBody" lay-filter="metadataListCardBody">
                     <ul class="layui-tab-title">
-                        <li class="layui-this metadata-table">资源列表</li>
+                        <li class="layui-this metadata-table">资源查询</li>
+                        <li class="">文件查询</li>
                     </ul>
                     <div class="layui-tab-content">
                         <div class="layui-tab-item layui-show">
@@ -88,26 +89,17 @@
                                                placeholder="请输入关键字查询" class="layui-input layui-btn-sm">
                                         <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
                                     </div>
-                                    <div class="layui-layout-right" style="padding-right: 20px; top:10px">
-                                        <button class="layui-btn layui-btn-sm {{d.hideFunBtn ? 'layui-hide' : ''}}"
-                                                lay-event="addLink">关联数据表
-                                        </button>
-                                        <button class="layui-btn layui-btn-sm  {{d.hideFunBtn ? 'layui-hide' : ''}}"
-                                                lay-event="addFile"><i
-                                                class="layui-icon">&#xe67c;</i>上传文件
-                                        </button>
-                                    </div>
                                 </div>
                             </script>
                             <script type="text/html" id="rowToolBar">
-                                {{# var disabled = (d.reviewStatus == ReviewStatus.UN_SUBMIT || d.reviewStatus == ReviewStatus.FAIL) ? '' : 'layui-btn-disabled'; }}
                                 <div class="layui-btn-container">
                                     <button class="layui-btn layui-btn-xs remove-link" lay-event="details">查看</button>
-                                    <button class="layui-btn layui-btn-xs remove-link {{disabled}}"
-                                            lay-event="removeLink{{disabled}}">移除
-                                    </button>
                                 </div>
                             </script>
+                        </div>
+
+                        <div class="layui-tab-item">
+                            文件查询
                         </div>
                     </div>
                 </div>
@@ -122,35 +114,9 @@
 <script th:src="@{/js/browser.js}"></script>
 <script th:src="@{/js/view.js}"></script>
 <script type="text/javascript">
-    const toggleRightCard = (showType, callback) => {
-        if (showType === 'metadata') {
-            $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
-            $("#metadataCardBody").removeClass('layui-hide').addClass('layui-show');
-        } else if (showType === 'directory') {
-            $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
-            $("#metadataListCardBody").removeClass('layui-hide').addClass('layui-show');
-        } else if (showType === 'file') {
-            $('div.layui-card-body.right-card div.layui-tab.layui-tab-brief').addClass('layui-hide');
-            $("#fileCardBody").removeClass('layui-hide').addClass('layui-show');
-        }
-        callback && callback();
-    }
-
-    /**
-     * 切换显示文件展示区域
-     * @param type 展示类型
-     */
-    function showFileViewer(type) {
-        $('#fileViewer .file-viewer').addClass('layui-hide');
-        $(`#file-viewer-${type}`).removeClass('layui-hide');
-    }
-
-    let imageWidth;
-    let imageHeight;
     const sizeInit = () => {
         $(".layui-card-body").height(window.innerHeight - 20);
-        $("#tree-toobar-div").height($(".layui-card-body").height() - 25 - 45);
-        imageWidth = $('.layui-col-md9:first').innerWidth() - 54;
+        $("#tree-toobar-div").height($(".layui-card-body").height() - 25-45);
     }
     window.onresize = sizeInit;
     sizeInit();

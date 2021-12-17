@@ -1,5 +1,6 @@
 package com.keyware.shandan.config;
 
+import com.keyware.shandan.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -30,6 +37,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private InMemoryTokenStore inMemoryTokenStore;
 
     @Autowired
     private UserOauthDetailsService userOauthDetailsService;
@@ -60,10 +70,22 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and().csrf().disable().cors();
 
-        http.logout().logoutSuccessHandler((request, response, authentication) -> {
+        http.logout().addLogoutHandler(((request, response, authentication) -> {
+            String author = request.getHeader("Authorization");
+            if(StringUtils.isNotBlank(author)){
+                author = author.replaceFirst("Bearer ", "");
+                OAuth2AccessToken token = inMemoryTokenStore.readAccessToken(author);
+                if(token != null){
+                    inMemoryTokenStore.removeAccessToken(token);
+                    inMemoryTokenStore.removeRefreshToken(token.getRefreshToken());
+                    OAuth2Authentication oauth2Auth = inMemoryTokenStore.readAuthentication(author);
+                    Authentication authen = oauth2Auth.getUserAuthentication();
+                    SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+                    logoutHandler.logout(request, response, authen);
+                }
+            }
+        })).logoutSuccessHandler((request, response, authentication) -> {
             System.out.println("http = " + http);
-
-
 
             response.sendRedirect(logoutUrl);
         });

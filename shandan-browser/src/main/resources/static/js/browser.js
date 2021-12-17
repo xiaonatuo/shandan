@@ -21,22 +21,20 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
     /**
      * 加载数据资源列表
      */
-    const loadMetadataList = function (directory) {
-        const {basicData} = directory;
-        if (!basicData) return;
+    const loadMetadataList = function (id) {
+        if (!id) return;
 
         metaListTable = listPage.init({
             table: {
-                hideFunBtn: basicData.directoryType == 'DIRECTORY' || basicData.reviewStatus == ReviewStatus.SUBMITTED || basicData.reviewStatus == ReviewStatus.PASS,
                 id: 'dirMetadataTable',
                 toolbar: '#tableToolBar',
                 searchFieldNames: 'metadataName',
-                url: `${ctx}/business/metadata/list/directory?directoryId=${basicData.id}`,
+                url: `${ctx}/business/metadata/list/directory?directoryId=${id}`,
                 height: 'full-110',
                 method: 'get',
                 cols: [[
                     {field: 'id', title: 'ID', hide: true},
-                    {field: 'metadataName', title: '数据表', width: 300},
+                    {field: 'metadataName', title: '资源名称', width: 300},
                     {field: 'metadataComment', title: '中文注释'},
                     {field: 'themeTask', title: '主题任务'},
                     {field: 'dataFrom', title: '数据来源'},
@@ -52,17 +50,17 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
                 const datasourceId = obj.dataSourceId.split('_')
                 openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${datasourceId[1]}`)
             } else {
-                openMaxLayerWithURL(`${ctx}/business/metadata/details/${obj.id}`)
+                openMaxLayerWithURL(`${ctx}/search/meta/${obj.id}`)
             }
         })
     }
 
 
-    let tempNode;
     // 加载并渲染目录树
     let treeOps = {
         id: 'directoryTree',
         url: `${ctx}/business/directory/tree`,
+        request: {reviewStatus: ReviewStatus.PASS},
         data: [{id: '-', parentId: '', title: '资源目录', leaf: false, last: false, spread: false}],
         cache: true,
         type: 'load',
@@ -92,16 +90,21 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
         done: function (nodes, elem) {
             // 模拟鼠标点击事件展开第一层目录
             elem.find('li:first>div:first>i:first').click();
+            elem.find('li:first>div:first').click();
         },
         onClick: function (node) {
-            tempNode = node;
             const {basicData} = node.param;
-            if (!basicData) return false;
-            if (basicData.directoryPath) {
-                let path = basicData.directoryPath.replaceAll('/', ' / ');
-                $('#currentPosition').text(path);
+
+            let directoryId = '-', directoryPath = ' / 资源目录'
+            if (basicData) {
+                directoryId = basicData.id;
+                if (basicData.directoryPath) {
+                    directoryPath += basicData.directoryPath.replaceAll('/', ' / ');
+                }
             }
-            loadMetadataList(node.param)
+            $('#currentPosition').text(directoryPath);
+            console.info(directoryId);
+            loadMetadataList(directoryId)
         },
 
     }

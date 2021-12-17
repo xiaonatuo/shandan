@@ -48,7 +48,7 @@ public class DirectoryCommonController {
      * @return
      */
     @GetMapping("/tree")
-    public Result<List<TreeVo>> tree(String id) {
+    public Result<List<TreeVo>> tree(String id, String reviewStatus) {
         DirectoryVo parent = null;
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(id) && !"-".equals(id)) {
@@ -58,6 +58,9 @@ public class DirectoryCommonController {
 
             }
             wrapper.likeRight("DIRECTORY_PATH", parent.getDirectoryPath());
+        }
+        if(StringUtils.isNotBlank(reviewStatus)){
+            wrapper.eq("REVIEW_STATUS", reviewStatus);
         }
 
         List<DirectoryVo> directoryList = directoryService.list(wrapper);

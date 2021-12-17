@@ -17,7 +17,7 @@ public class ExportParam implements Serializable {
     /**
      * 数据查询条件
      */
-    private List<ConditionItem> conditions;
+    private List<SearchConditionVo.Item> conditions;
 
     // echartsImage
     private List<EchartsParam> echarts;

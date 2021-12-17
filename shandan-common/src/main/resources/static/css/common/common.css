@@ -71,3 +71,4 @@ body, html {
 }
 .layui-tab-content{padding:7px 0}
 .dtree-icon-dian.dtree-theme-ficon{color: #FFFFFF !important;}
+.max-layer .layui-card-header{border-color: #EFEFEF}

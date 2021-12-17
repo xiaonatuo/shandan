@@ -8,7 +8,7 @@ import com.keyware.shandan.bianmu.entity.MetadataDetailsVo;
 import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.bianmu.service.MetadataService;
 import com.keyware.shandan.browser.config.BianmuDataCache;
-import com.keyware.shandan.browser.entity.ConditionItem;
+import com.keyware.shandan.browser.entity.SearchConditionVo;
 import com.keyware.shandan.browser.entity.ExportParam;
 import com.keyware.shandan.browser.entity.ReportVo;
 import com.keyware.shandan.browser.service.SearchService;
@@ -220,7 +220,7 @@ public class ReportController {
     private Map<String, String> filedMap(ExportParam param) {
         Map<String, String> fields = new HashMap<>();
         boolean hasMetadata = false;
-        for (ConditionItem item : param.getConditions()) {
+        for (SearchConditionVo.Item item : param.getConditions()) {
             if (item.getField().equals("metadataId")) {
                 if (StringUtils.isNotBlank(item.getValue())) {
                     MetadataDetailsVo vo = BianmuDataCache.get(item.getValue());

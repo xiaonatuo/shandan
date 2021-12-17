@@ -53,5 +53,5 @@ public class ReportVo implements Serializable {
     /**
      * 数据查询条件
      */
-    private List<ConditionItem> conditions;
+    private List<SearchConditionVo.Item> conditions;
 }

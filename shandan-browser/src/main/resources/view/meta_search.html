@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .layui-card-body {
+            display: flex;
+            padding: 0;
+            align-items: center;
+        }
+
+        #condition-box {
+            height: 100%;
+            width: 30%;
+            border-radius: 0 8px 8px 0;
+            border-right: 1px solid #dddddd;
+        }
+
+        .condition-btn a.layui-btn {
+            writing-mode: vertical-rl;
+            border-radius: 0 6px 6px 0;
+            width: 30px;
+            height: 80px;
+            letter-spacing: 2px;
+            line-height: 20px
+        }
+    </style>
+    <script th:inline="javascript">
+        const metadata = /*[[${metadata}]]*/ {};
+        console.info(metadata);
+    </script>
+</head>
+<body>
+<div class="layui-row">
+    <!-- 数据表格 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div id="condition-box">
+>>》
+                </div>
+                <div class="condition-btn"><a href="javascript:void(0)" class="layui-btn layui-btn-xs" data-type="hide"
+                                              id="condition-btn">收起条件</a></div>
+                <div class="meta-result" style="height: 100%; flex: 1;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<!-- js -->
+<!--<script th:src="@{/js/view.js}"></script>-->
+<script type="text/javascript">
+    layui.use([], function () {
+
+        let cb_width = $('#condition-box').width();
+        $('#condition-btn').on('click', function(){
+            let type = $(this).data('type'), text = $(this).text();
+            let isHide = ($(this).data('type') == 'hide');
+            $('#condition-box').animate({width: isHide ? 10 : cb_width})
+            $(this).data('type', isHide ? 'show' : 'hide')
+            $(this).text(isHide ? '展开条件' : '收起条件')
+        })
+
+    });
+    const sizeInit = () => {
+        $(".layui-card-body").height(window.innerHeight);
+    }
+    window.onresize = sizeInit;
+    sizeInit();
+</script>
+</html>

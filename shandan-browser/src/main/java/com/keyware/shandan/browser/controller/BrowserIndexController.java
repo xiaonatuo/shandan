@@ -8,13 +8,13 @@ import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.enums.DirectoryType;
 import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.service.DirectoryService;
+import com.keyware.shandan.bianmu.service.MetadataService;
 import com.keyware.shandan.browser.config.BrowserProperties;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.enums.SystemTypes;
 import com.keyware.shandan.common.util.RsaUtil;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
-import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.entity.SysSetting;
 import com.keyware.shandan.system.entity.SysUser;
@@ -23,6 +23,7 @@ import com.keyware.shandan.system.service.SysUserService;
 import com.keyware.shandan.system.utils.SysSettingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,7 +49,7 @@ public class BrowserIndexController {
     private DirectoryService directoryService;
 
     @Autowired
-    private CustomProperties customProperties;
+    private MetadataService metadataService;
 
     @Autowired
     private SysUserService sysUserService;
@@ -91,6 +92,24 @@ public class BrowserIndexController {
         mov.setViewName("browser");
         SysSetting bianmuSetting = SysSettingUtil.getSysSetting(SystemTypes.BIANMU.name());
         mov.addObject("bianmuServer", bianmuSetting.getSysAddress());
+        return mov;
+    }
+
+    /**
+     * 跳转数据资源搜索页面
+     *
+     * @param mov    视图模型
+     * @param metaId 数据资源ID
+     * @return 视图模型
+     */
+    @GetMapping("/search/meta/{metaId}")
+    public ModelAndView metaSearch(ModelAndView mov, @PathVariable String metaId) {
+        mov.setViewName("meta_search");
+        MetadataBasicVo meta = null;
+        if (StringUtils.isNotBlank(metaId)) {
+            meta = metadataService.getById(metaId);
+        }
+        mov.addObject("metadata", meta);
         return mov;
     }
 

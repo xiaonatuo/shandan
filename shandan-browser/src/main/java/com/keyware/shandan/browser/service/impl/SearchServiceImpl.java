@@ -6,8 +6,7 @@ import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.bianmu.service.MetadataService;
-import com.keyware.shandan.browser.entity.ConditionItem;
-import com.keyware.shandan.browser.entity.ConditionVo;
+import com.keyware.shandan.browser.entity.SearchConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
 import com.keyware.shandan.browser.entity.ReportVo;
 import com.keyware.shandan.browser.enums.ConditionLogic;
@@ -23,9 +22,7 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +62,7 @@ public class SearchServiceImpl implements SearchService {
      * @return -
      */
     @Override
-    public PageVo esSearch(ConditionVo condition) throws IOException {
+    public PageVo esSearch(SearchConditionVo condition) throws IOException {
         SearchRequest request = buildRequest(search_index, condition);
         SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
         return PageVo.ofSearchHits(response.getHits(), condition);
@@ -80,7 +77,7 @@ public class SearchServiceImpl implements SearchService {
      */
     @Override
     public JSONObject report(ReportVo report) throws IOException {
-        ConditionVo condition = new ConditionVo();
+        SearchConditionVo condition = new SearchConditionVo();
         condition.setConditions(report.getConditions());
         SearchRequest request = buildRequest(search_index, condition);
 
@@ -97,16 +94,16 @@ public class SearchServiceImpl implements SearchService {
      * @param condition 条件
      * @return -
      */
-    private SearchRequest buildRequest(String index, ConditionVo condition) {
+    private SearchRequest buildRequest(String index, SearchConditionVo condition) {
         SearchRequest request = Requests.searchRequest(index);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         setPage(searchSourceBuilder, condition);
 
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        List<ConditionItem> conditionItems = condition.getConditions();
+        List<SearchConditionVo.Item> conditionItems = condition.getConditions();
 
         boolean metaFlag = false;
-        for (ConditionItem item : conditionItems) {
+        for (SearchConditionVo.Item item : conditionItems) {
             if (StringUtils.isBlank(item.getValue().trim())) {
                 continue;
             }
@@ -199,7 +196,7 @@ public class SearchServiceImpl implements SearchService {
      * @param builder -
      * @param vo      -
      */
-    private void setPage(SearchSourceBuilder builder, ConditionVo vo) {
+    private void setPage(SearchSourceBuilder builder, SearchConditionVo vo) {
         int page = vo.getPage();
         int size = vo.getSize();
         builder.from(page * size - size).size(size);

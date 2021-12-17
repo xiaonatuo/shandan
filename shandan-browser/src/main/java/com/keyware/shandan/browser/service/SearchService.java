@@ -1,7 +1,7 @@
 package com.keyware.shandan.browser.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.keyware.shandan.browser.entity.ConditionVo;
+import com.keyware.shandan.browser.entity.SearchConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
 import com.keyware.shandan.browser.entity.ReportVo;
 
@@ -21,7 +21,7 @@ public interface SearchService {
      * @param condition 条件
      * @return -
      */
-    PageVo esSearch(ConditionVo condition) throws IOException;
+    PageVo esSearch(SearchConditionVo condition) throws IOException;
 
     /**
      * 数据统计

@@ -6,12 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.service.MetadataService;
-import com.keyware.shandan.browser.entity.ConditionVo;
+import com.keyware.shandan.browser.entity.SearchConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
 import com.keyware.shandan.browser.service.SearchService;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.frame.annotation.AppLog;
-import com.keyware.shandan.system.entity.SysFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +43,7 @@ public class SearchController {
      */
     @AppLog(operate = "全文检索分页查询")
     @PostMapping("/full")
-    public Result<PageVo> fullSearch(ConditionVo condition) {
+    public Result<PageVo> fullSearch(SearchConditionVo condition) {
 
         try {
             return Result.of(searchService.esSearch(condition));
@@ -62,7 +61,7 @@ public class SearchController {
      * @return
      */
     @PostMapping("/full/test")
-    public Result<PageVo> fullSearchTest(@RequestBody ConditionVo condition) {
+    public Result<PageVo> fullSearchTest(@RequestBody SearchConditionVo condition) {
 
         try {
             return Result.of(searchService.esSearch(condition));
@@ -114,4 +113,14 @@ public class SearchController {
         return jsonArray;
     }
 
+
+    /**
+     * 全文检索-检索文件
+     * @return 文件结果列表
+     */
+    @GetMapping("/full/file")
+    public Result<Object> searchFile(){
+
+        return Result.of(null);
+    }
 }
