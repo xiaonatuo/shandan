@@ -83,7 +83,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
         return Result.of(metadataService.saveMetadataBasicAndDetailsList(metadataBasic));
     }
 
-    @PostMapping("/save/full/test")
+    @PostMapping("/save/all")
     public Result<Boolean> saveFullTest(@RequestBody MetadataBasicVo metadataBasic) {
         return Result.of(metadataService.saveMetadataBasicAndDetailsList(metadataBasic));
     }

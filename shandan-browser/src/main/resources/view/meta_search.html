@@ -14,14 +14,22 @@
             align-items: center;
             height: 100%;
         }
-        .layui-card-header, .layui-card-body{padding:0}
+
+        .layui-card-header, .layui-card-body {
+            padding: 0
+        }
+
+        .layui-card-header {
+            border-bottom-color: #efefef
+        }
+
         .layui-layout-left {
             left: 0
         }
 
         #condition-box {
             height: 100%;
-            width: 30%;
+            width: 450px;
             padding: 0 10px;
             border-radius: 0 8px 8px 0;
             border-right: 1px solid #dddddd;
@@ -39,10 +47,43 @@
             letter-spacing: 2px;
             line-height: 20px
         }
+
+        #condition-list li {
+            color: gray;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 5px
+        }
+        #condition-list li:hover{background-color: #efefef;}
+        #condition-list li .layui-btn{
+            margin: 0;
+            margin-right: 10px;
+            padding: 0;
+            max-width: 100px;
+            overflow: hidden;
+        }
+        #condition-list li .layui-btn:hover{
+            text-decoration-line: underline;
+        }
+        #condition-list li:first-child{margin-left: 38px;}
+
+        #condition-list li input{
+            border: 0;
+        }
+        #condition-list li input:focus{
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .layui-btn.my-btn{
+            border: 0;
+            color: #009688;
+        }
+        .condition-btn-group{text-align: right}
+        .condition-none{color:#d2d2d2; text-align: center}
     </style>
     <script th:inline="javascript">
         const metadata = /*[[${metadata}]]*/ {};
-        console.info(metadata);
     </script>
 </head>
 <body>
@@ -61,13 +102,12 @@
                 <div class="layui-card-body">
                     <label>查询条件：</label>
                     <ul id="condition-list" style="margin-left: 20px">
-                        <li>字段1 等于 abcd 删除</li><!-- 下拉框 删除按钮-->
-                        <li>或者 字段2 等于 abcd 删除</li>
-                        <li>
-                            <a class="layui-btn layui-btn-xs layui-btn-primary">增加条件项</a>
-                            <a class="layui-btn layui-btn-xs layui-btn-primary">增加子查询</a>
-                        </li>
+                        <p class="condition-none">暂无条件</p>
                     </ul>
+                    <p class="condition-btn-group">
+                        <a class="layui-btn layui-btn-xs layui-btn-primary my-btn" name="condition-add-btn"
+                           data-type="single-filed">添加条件</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -82,24 +122,18 @@
 </body>
 
 <!-- js -->
-<!--<script th:src="@{/js/view.js}"></script>-->
+<script th:src="@{/js/meta_search.js}"></script>
 <script type="text/javascript">
-    layui.use([], function () {
-        let cb_width = $('#condition-box').width(), cb_padding = $('#condition-box').css('padding');
-        $('#condition-btn').on('click', function () {
-            let type = $(this).data('type'), text = $(this).text();
-            let isHide = ($(this).data('type') == 'hide');
-            $('#condition-box').animate({width: isHide ? 0 : cb_width, padding: isHide ? '0 0' : cb_padding})
-            $('#condition-box').find('.layui-card:first').animate({left: (isHide ? -cb_width : 0) + 'px'})
-            $(this).data('type', isHide ? 'show' : 'hide')
-            $(this).text(isHide ? '展开条件' : '收起条件')
-        })
-
-    });
-    const sizeInit = () => {
-        $(".layui-card-body").height(window.innerHeight);
+    /**
+     * 页面尺寸初始化
+     */
+    function sizeInit() {
+        $(".layui-card-body").height(window.innerHeight - 44);
     }
-    window.onresize = sizeInit;
-    sizeInit();
+
+    $(function () {
+        window.onresize = sizeInit;
+        sizeInit();
+    })
 </script>
 </html>
