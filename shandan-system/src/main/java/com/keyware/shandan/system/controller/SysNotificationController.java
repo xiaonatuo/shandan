@@ -85,23 +85,8 @@ public class SysNotificationController extends BaseController<SysNotificationSer
         Result<SysNotification> result = sysNotificationService.get(id);
         modelAndView.setViewName("sys/notification/notificationDetail");
         modelAndView.addObject("sysNotification", result.getData());
-
         return modelAndView;
     }
 
-
-    /**
-     * 未读信息查询
-     * @param modelAndView
-     * @param id
-     * @return
-     */
-    @GetMapping("/unread/detail/{id}")
-    public ModelAndView unreadDetail(ModelAndView modelAndView, @PathVariable("id")String id){
-        Result<SysNotification> result = sysNotificationService.get(id);
-        modelAndView.setViewName("sys/notification/notificationDetail");
-        modelAndView.addObject("sysNotification", result.getData());
-        return modelAndView;
-    }
 
 }
