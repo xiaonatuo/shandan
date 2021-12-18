@@ -18,8 +18,14 @@ import com.keyware.shandan.system.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +47,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser, 
 
     @Override
     public Result<Boolean> deleteById(String id) {
+
+        String url = "";
+        try{
+            String result = restfulConnect(url,id);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.of(null,false,"删除用户信息失败");
+        }
         // 删除权限关系
         SysUserRole userRole = new SysUserRole();
         userRole.setUserId(id);
@@ -85,6 +99,23 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser, 
 
     @Override
     public Result<SysUser> updateOrSave(SysUser entity) {
+
+        //用户注册接口地址
+        String url = null;
+        if(Objects.isNull(entity.getUserId())){
+            //insert
+            url = "http://localhost:8080/rest/user/getUser/";
+        }else{
+            //update
+            url = "http://localhost:8080/rest/user/getUser/";
+        }
+
+        try{
+            String result = restfulConnect(url,entity.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.of(null,false,"同步用户信息失败");
+        }
         if (!StringUtils.isNotBlank(entity.getUserId())) {
             SysUser userCondition = new SysUser();
             userCondition.setLoginName(entity.getLoginName());
@@ -137,4 +168,56 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser, 
         boolean ok = super.update(new QueryWrapper<>(user));
         return Result.of(user, ok, ok ? "修改成功" : "修改失败");
     }
+
+
+    /**
+     *  根据地址调用不同数据接口
+     * @param url
+     * @param parm
+     * @return
+     */
+    public static String restfulConnect(String url,String parm){
+
+        //返回值
+        String output = null;
+
+        if(StringUtils.isNotBlank(url)){
+
+            try{
+                URL serverUrl = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) serverUrl.openConnection();
+                // 提交模式
+                connection.setRequestMethod("POST");// POST GET PUT DELETE
+                //connection.setRequestProperty("Authorization", "Basic YWRtaW46YWRtaW4=");//YWRtaW46YWRtaW4=");
+                // 设置访问提交模式，表单提交
+                //connection.setRequestProperty("Content-Type", "application/json");
+                connection.setConnectTimeout(15000);// 连接超时 单位毫秒
+                connection.setReadTimeout(15000);// 读取超时 单位毫秒
+                connection.setRequestMethod("POST");
+                OutputStream out = connection.getOutputStream();// 获得一个输出流,向服务器写数据
+                out.write(parm.getBytes());
+                out.flush();
+                out.close();
+                if (connection.getResponseCode() != 200) {
+                    throw new RuntimeException(
+                            "HTTP GET Request Failed with Error code : "
+                                    + connection.getResponseCode());
+                }
+                BufferedReader responseBuffer = new BufferedReader(
+                        new InputStreamReader((connection.getInputStream())));
+
+                System.out.println("Output from Server:  \n");
+                while ((output = responseBuffer.readLine()) != null) {
+                    System.out.println(output);
+                }
+                connection.disconnect();
+            }catch (Exception e){
+                e.printStackTrace();
+                return null ;
+            }
+        }
+        return output;
+    }
+
+
 }
