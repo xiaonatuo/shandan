@@ -62,10 +62,10 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
      *
      * @return
      */
-    @GetMapping("/tree")
+   /* @GetMapping("/tree")
     public Result<DirectoryVo> tree() {
         return Result.of(directoryService.getById("ROOT"));
-    }
+    }*/
 
     /**
      * 保存目录与数据资源关系
