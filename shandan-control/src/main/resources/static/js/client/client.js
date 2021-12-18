@@ -23,7 +23,7 @@ layui.use(['layer', 'gtable', 'form', 'element', 'upload'], function () {
             area: ['600px', '650px'],
             btn: ['确定', '取消'],
             content: `
-                 <form class="layui-form" lay-filter="appInfoForm" style="overflow: hidden; padding: 15px 20px 0 0;">
+                 <form class="layui-form" lay-filter="clientInfoForm" style="overflow: hidden; padding: 15px 20px 0 0;">
                     <div class="layui-form-item">
                         <label class="layui-form-label">客户端ID</label>
                         <div class="layui-input-block">
@@ -154,7 +154,7 @@ layui.use(['layer', 'gtable', 'form', 'element', 'upload'], function () {
                 $('ul.icon-list li').on('click', showDefaultIcon)
                 if (id) {
                     getApp(id).then(appInfo => {
-                        form.val('appInfoForm', appInfo);
+                        form.val('clientInfoForm', appInfo);
                         let icon;
                         if (appInfo.icon !=null && appInfo.icon.startsWith('icon-')) {
                             $('.current-icon div:first').attr('class', 'icon ' + appInfo.icon);
@@ -169,8 +169,8 @@ layui.use(['layer', 'gtable', 'form', 'element', 'upload'], function () {
                 bindUploadBtn();
             },
             yes: function (index) {
-                form.on('submit(appInfoForm)', function () {
-                    let formVal = form.val('appInfoForm');
+                form.on('submit(clientInfoForm)', function () {
+                    let formVal = form.val('clientInfoForm');
                     if (!formVal.icon) {
                         layer.msg('请选择图标', {icon: 5});
                         return false;
@@ -207,9 +207,9 @@ layui.use(['layer', 'gtable', 'form', 'element', 'upload'], function () {
         const _class = $(this).attr('class');
         $('.current-icon div:first').attr('class', 'icon ' + _class);
         const icon = $(this).data('value');
-        let data = form.val('appInfoForm');
+        let data = form.val('clientInfoForm');
         data.icon = icon;
-        form.val('appInfoForm', data);
+        form.val('clientInfoForm', data);
         $('#icon-content').html('');
     }
 
@@ -228,9 +228,9 @@ layui.use(['layer', 'gtable', 'form', 'element', 'upload'], function () {
             done: function (res) {
                 if (res.flag) { //上传成功
                     showImgIcon(res.data);
-                    let data = form.val('appInfoForm');
+                    let data = form.val('clientInfoForm');
                     data.icon = res.data;
-                    form.val('appInfoForm', data);
+                    form.val('clientInfoForm', data);
                 } else {
                     layer.msg('上传失败', {icon: 5});
                 }
