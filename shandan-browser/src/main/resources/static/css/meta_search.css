@@ -1,0 +1,79 @@
+.page-main {
+    display: flex;
+    padding: 0;
+    align-items: center;
+    height: 100%;
+}
+
+.layui-card-header, .layui-card-body {
+    padding: 0
+}
+
+.layui-card-header {
+    border-bottom-color: #efefef
+}
+
+.layui-layout-left {
+    left: 0
+}
+
+#condition-box {
+    height: 100%;
+    width: 450px;
+    padding: 0 10px;
+    border-radius: 0 8px 8px 0;
+    border-right: 1px solid #dddddd;
+}
+
+#condition-box .layui-card {
+    position: relative;
+}
+
+.condition-btn a.layui-btn {
+    writing-mode: vertical-rl;
+    border-radius: 0 6px 6px 0;
+    width: 30px;
+    height: 80px;
+    letter-spacing: 2px;
+    line-height: 20px
+}
+#condition-list{
+    margin-left: 20px;
+    max-height: calc(100% - 50px);
+    overflow-y: auto;
+}
+#condition-list li {
+    color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px
+}
+#condition-list li:hover{background-color: #efefef;}
+#condition-list li .layui-btn{
+    margin: 0;
+    margin-right: 10px;
+    padding: 0;
+    max-width: 100px;
+    overflow: hidden;
+}
+#condition-list li .layui-btn:hover{
+    text-decoration-line: underline;
+}
+#condition-list li:first-child{margin-left: 38px;}
+
+#condition-list li input{
+    border: 0;
+}
+#condition-list li input:focus{
+    border-bottom: 1px solid #dddddd;
+}
+
+.layui-btn.my-btn{
+    border: 0;
+    color: #009688;
+}
+.condition-btn-group{text-align: right}
+.condition-none{color:#d2d2d2; text-align: center}
+.layui-dropdown{min-width: auto}
+.layui-dropdown li{padding: 0 10px}

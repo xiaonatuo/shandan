@@ -7,83 +7,11 @@
     <script th:replace="common/head::static"></script>
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
-    <style>
-        .page-main {
-            display: flex;
-            padding: 0;
-            align-items: center;
-            height: 100%;
-        }
+    <link th:href="@{/css/meta_search.css}" rel="stylesheet" type="text/css"/>
 
-        .layui-card-header, .layui-card-body {
-            padding: 0
-        }
-
-        .layui-card-header {
-            border-bottom-color: #efefef
-        }
-
-        .layui-layout-left {
-            left: 0
-        }
-
-        #condition-box {
-            height: 100%;
-            width: 450px;
-            padding: 0 10px;
-            border-radius: 0 8px 8px 0;
-            border-right: 1px solid #dddddd;
-        }
-
-        #condition-box .layui-card {
-            position: relative;
-        }
-
-        .condition-btn a.layui-btn {
-            writing-mode: vertical-rl;
-            border-radius: 0 6px 6px 0;
-            width: 30px;
-            height: 80px;
-            letter-spacing: 2px;
-            line-height: 20px
-        }
-
-        #condition-list li {
-            color: gray;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 5px
-        }
-        #condition-list li:hover{background-color: #efefef;}
-        #condition-list li .layui-btn{
-            margin: 0;
-            margin-right: 10px;
-            padding: 0;
-            max-width: 100px;
-            overflow: hidden;
-        }
-        #condition-list li .layui-btn:hover{
-            text-decoration-line: underline;
-        }
-        #condition-list li:first-child{margin-left: 38px;}
-
-        #condition-list li input{
-            border: 0;
-        }
-        #condition-list li input:focus{
-            border-bottom: 1px solid #dddddd;
-        }
-
-        .layui-btn.my-btn{
-            border: 0;
-            color: #009688;
-        }
-        .condition-btn-group{text-align: right}
-        .condition-none{color:#d2d2d2; text-align: center}
-    </style>
     <script th:inline="javascript">
         const metadata = /*[[${metadata}]]*/ {};
+        const columns = /*[[${columns}]]*/ [];
     </script>
 </head>
 <body>
@@ -95,13 +23,12 @@
                 <div class="layui-card-header">
                     <div class="layui-layout-left">自定义查询</div>
                     <div class="layui-layout-right">
-                        <a class="layui-btn layui-btn-xs layui-btn-primary" href="javascript:void(0)" style="border: 0">清空</a>
-                        <a class="layui-btn layui-btn-xs" href="javascript:void(0)">开始查询</a>
+                        <a class="layui-btn layui-btn-xs" id="btn_query" href="javascript:void(0)">开始查询</a>
                     </div>
                 </div>
                 <div class="layui-card-body">
                     <label>查询条件：</label>
-                    <ul id="condition-list" style="margin-left: 20px">
+                    <ul id="condition-list">
                         <p class="condition-none">暂无条件</p>
                     </ul>
                     <p class="condition-btn-group">

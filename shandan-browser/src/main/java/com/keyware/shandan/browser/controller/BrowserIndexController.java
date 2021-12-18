@@ -14,6 +14,7 @@ import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.enums.SystemTypes;
 import com.keyware.shandan.common.util.RsaUtil;
 import com.keyware.shandan.common.util.StringUtils;
+import com.keyware.shandan.datasource.entity.DBTableColumnVo;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.entity.SysSetting;
@@ -106,10 +107,14 @@ public class BrowserIndexController {
     public ModelAndView metaSearch(ModelAndView mov, @PathVariable String metaId) {
         mov.setViewName("meta_search");
         MetadataBasicVo meta = null;
+        List<DBTableColumnVo> columnVoList = new ArrayList<>();
         if (StringUtils.isNotBlank(metaId)) {
-            meta = metadataService.getById(metaId);
+            meta = metadataService.get(metaId).getData();
+            // 查询字段列
+            meta.getMetadataDetailsList().forEach(list -> columnVoList.addAll(list.getColumnList()));
         }
         mov.addObject("metadata", meta);
+        mov.addObject("columns", columnVoList);
         return mov;
     }
 
