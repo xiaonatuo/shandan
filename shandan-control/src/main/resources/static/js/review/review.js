@@ -101,7 +101,7 @@ class Review {
 
             // 绑定审核按钮点击事件
             listPage.addTableRowEvent('review', function (data) {
-                _this.reviewOperate(data, () => listPage.reloadTable());
+                _this.reviewOperate(data.id, () => listPage.reloadTable());
             })
 
             listPage.addTableRowEvent('details', function (data) {
