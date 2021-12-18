@@ -5,12 +5,11 @@ import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.system.entity.SysNotification;
+import com.keyware.shandan.system.entity.SysNotificationUnread;
 import com.keyware.shandan.system.service.SysNotificationService;
+import com.keyware.shandan.system.service.SysNotificationUnreadService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -27,6 +26,8 @@ public class SysNotificationController extends BaseController<SysNotificationSer
 
     @Autowired
     private SysNotificationService sysNotificationService;
+    @Autowired
+    private SysNotificationUnreadService sysNotificationUnreadService;
 
     @GetMapping("/")
     public ModelAndView index(){
@@ -61,4 +62,46 @@ public class SysNotificationController extends BaseController<SysNotificationSer
         }
         return Result.of(sysNotificationService.read(notificationId));
     }
+
+    /**
+     * 未读数据查询
+     * @param id
+     * @return
+     */
+    @GetMapping("unread/get/{id}")
+    public Result<SysNotificationUnread> getUnread(@PathVariable("id") String id) {
+        return sysNotificationUnreadService.get(id);
+    }
+
+
+    /**
+     * 已读信息查询
+     * @param modelAndView
+     * @param id
+     * @return
+     */
+    @GetMapping("/detail/{id}")
+    public ModelAndView detail(ModelAndView modelAndView, @PathVariable("id")String id){
+        Result<SysNotification> result = sysNotificationService.get(id);
+        modelAndView.setViewName("sys/notification/notificationDetail");
+        modelAndView.addObject("sysNotification", result.getData());
+
+        return modelAndView;
+    }
+
+
+    /**
+     * 未读信息查询
+     * @param modelAndView
+     * @param id
+     * @return
+     */
+    @GetMapping("/unread/detail/{id}")
+    public ModelAndView unreadDetail(ModelAndView modelAndView, @PathVariable("id")String id){
+        Result<SysNotification> result = sysNotificationService.get(id);
+        modelAndView.setViewName("sys/notification/notificationDetail");
+        modelAndView.addObject("sysNotification", result.getData());
+        return modelAndView;
+    }
+
 }

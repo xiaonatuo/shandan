@@ -77,4 +77,11 @@ public class SysNotification extends BaseEntity{
      */
     @TableField(exist = false)
     private List<SysUser> receiveList;
+
+
+    /**
+     * 已读标识
+     */
+    @TableField(exist = false)
+    private String status = "1";
 }

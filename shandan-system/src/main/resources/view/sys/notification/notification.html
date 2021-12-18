@@ -43,9 +43,10 @@
     window.onresize = sizeInit;
     sizeInit();
 
-    layui.use(['flow', 'util', 'notification'], function () {
+    layui.use(['flow', 'util', 'notification','form','layer'], function () {
         let flow = layui.flow;
         let util = layui.util;
+        form = layui.form;
         NotificationUtil = parent.window.NotificationUtil;
 
         // 系统通知侧边栏流加载
@@ -112,13 +113,34 @@
                                     data = records.filter(item => item.id == id)[0];
                                 }
                                 if (data.type === 'METADATA_REVIEW') {
-                                    parent.open(`${ctx}/business/review/metadata`);
+                                    //parent.open(`${ctx}/business/review/metadata`);
+                                    if(data.status ='1'){
+                                        openDetailLayer(id);
+                                    }else{
+                                        openDetailLayer(data.entityId);
+                                    }
+
                                 } else if(data.type === 'DIRECTORY_REVIEW') {
-                                    parent.open(`${ctx}/business/review/directory`)
+                                    //parent.open(`${ctx}/business/review/directory`)
+                                    if(data.status ='1'){
+                                        openDetailLayer(id);
+                                    }else{
+                                        openDetailLayer(data.entityId);
+                                    }
                                 } else if(data.type === 'METADATA_REVIEW_PASS' || data.type === 'METADATA_REVIEW_FAIL') {
-                                    parent.open(`${ctx}/business/metadata/`);
+                                    if(data.status ='1'){
+                                        openDetailLayer(id);
+                                    }else{
+                                        openDetailLayer(data.entityId);
+                                    }
+                                    //parent.open(`${ctx}/business/review/metadata/`);
                                 } else if(data.type === 'DIRECTORY_REVIEW_PASS' || data.type === 'DIRECTORY_REVIEW_FAIL') {
-                                    parent.open(`${ctx}/business/directory/`);
+                                    //parent.open(`${ctx}/business/review/directory/`);
+                                    if(data.status ='1'){
+                                        openDetailLayer(id);
+                                    }else{
+                                        openDetailLayer(data.entityId);
+                                    }
                                 }
                             });
                         }
@@ -126,6 +148,30 @@
                 }
             });
         }
+
+
+        function openDetailLayer(id) {
+            let detailLayerWin;
+            parent.layer.open({
+                id: 'notificationDetail',
+                type: 2,
+                title: '通知信息',
+                area: ['500px', '380px'],
+                content: ctx + `/sys/notification/detail/${id}`,
+                btn: ['取消'],
+                success: function (layero, index) {
+                    detailLayerWin = window[layero.find('iframe')[0]['name']]
+                },
+                yes: function (index) {
+                    parent.layer.close(index);
+                },
+                end: function () {
+
+                }
+            });
+        }
+
+
     })
 </script>
 </html>

@@ -38,6 +38,12 @@ public class SysNotificationUnread extends BaseEntity{
     @TableField("NOTIFICATION_ID")
     private String notificationId;
 
+    /**
+     * 未读标识
+     */
+    @TableField(exist = false)
+    private String status ="2";
+
     public SysNotificationUnread() {
     }
 

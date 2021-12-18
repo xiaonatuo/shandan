@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/sys/user/user.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .layui-form-label {
+             width: 150px !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-row">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <form id="userForm" class="layui-form layui-form-pane" lay-filter="notificationDetailForm">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">通知标题</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" th:value="${sysNotification.title}" readonly class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">通知类型</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="type" th:value="${sysNotification.type}" readonly  class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">通知内容</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="content" th:value="${sysNotification.content}" readonly  class="layui-input"></input>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/notification/notificationDetail.js}"></script>
+
+
+
+</html>
