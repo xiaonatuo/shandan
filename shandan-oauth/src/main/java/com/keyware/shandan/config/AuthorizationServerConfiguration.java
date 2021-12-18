@@ -23,8 +23,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     private OauthClientDetailsService oauthClientDetailsService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -40,8 +38,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(inMemoryTokenStore())
-                .userDetailsService(userOauthDetailsService)
-                .authenticationManager(authenticationManager);
+                .userDetailsService(userOauthDetailsService);
     }
 
     @Bean
