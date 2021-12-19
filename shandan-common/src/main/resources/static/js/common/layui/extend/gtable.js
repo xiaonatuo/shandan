@@ -40,6 +40,7 @@ layui.define(['table'], function (exports) {
         height: 'full-74',
         cellMinWidth: 80,
         cols: [[{}]],
+        where: {},
         done: function (res) {},//加载完成
         onToolBarTable: function (obj) {}, // 表格工具事件
         onToolBarRow: function (obj) {}, //行工具事件
@@ -118,6 +119,10 @@ layui.define(['table'], function (exports) {
          */
         getData(){
             return table.getData(this.options.id);
+        }
+
+        on(event, callback){
+            table.on(`${event}(${this.options.id})`, callback);
         }
     }
 

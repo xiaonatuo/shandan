@@ -223,16 +223,18 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
     @Override
     public Result<MetadataBasicVo> get(String id) {
         MetadataBasicVo result = getById(id);
-        List<MetadataDetailsVo> details = result.getMetadataDetailsList();
+        if(result != null){
+            List<MetadataDetailsVo> details = result.getMetadataDetailsList();
+            DataSourceVo dataSource = dataSourceService.getById(result.getDataSourceId());
 
-        DataSourceVo dataSource = dataSourceService.getById(result.getDataSourceId());
-
-        // 查询每个详情对象的数据表的列
-        if (!ObjectUtils.isEmpty(details)) {
-            result.setMetadataDetailsList(details.stream().peek(detail -> {
-                detail.setColumnList(dynamicDataSourceService.getColumnListByTable(detail.getTableName(), dataSource).stream().filter(col ->detailsHasColumn(detail.getTableColumns(), col.getColumnName())).collect(Collectors.toList()));
-            }).collect(Collectors.toList()));
+            // 查询每个详情对象的数据表的列
+            if (!ObjectUtils.isEmpty(details)) {
+                result.setMetadataDetailsList(details.stream().peek(detail -> {
+                    detail.setColumnList(dynamicDataSourceService.getColumnListByTable(detail.getTableName(), dataSource).stream().filter(col ->detailsHasColumn(detail.getTableColumns(), col.getColumnName())).collect(Collectors.toList()));
+                }).collect(Collectors.toList()));
+            }
         }
+
         return Result.of(result);
     }
 

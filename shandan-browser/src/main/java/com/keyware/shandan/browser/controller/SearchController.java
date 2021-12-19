@@ -8,6 +8,7 @@ import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.service.MetadataService;
 import com.keyware.shandan.browser.entity.SearchConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
+import com.keyware.shandan.browser.service.MetadataDataService;
 import com.keyware.shandan.browser.service.SearchService;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.frame.annotation.AppLog;
@@ -33,6 +34,9 @@ public class SearchController {
 
     @Autowired
     private MetadataService metadataService;
+
+    @Autowired
+    private MetadataDataService metadataDataService;
 
 
     /**
@@ -72,11 +76,11 @@ public class SearchController {
     }
 
     @GetMapping("/metadata/columns")
-    public Result<JSONObject> getMetaColumns(String metaTable){
+    public Result<JSONObject> getMetaColumns(String metaTable) {
         QueryWrapper<MetadataBasicVo> qw = new QueryWrapper<>();
         qw.eq("METADATA_NAME", metaTable);
         List<MetadataBasicVo> list = metadataService.list(qw);
-        if(list != null && list.size() > 0) {
+        if (list != null && list.size() > 0) {
             MetadataBasicVo basicVo = list.get(0);
             JSONObject json = (JSONObject) JSONObject.toJSON(basicVo);
             json.put("field", getFiledByMetadata(basicVo));
@@ -87,6 +91,7 @@ public class SearchController {
 
     /**
      * 查询指定数据资源表的分页数据
+     *
      * @param metaID
      * @param page
      * @param size
@@ -97,7 +102,7 @@ public class SearchController {
     @PostMapping("/metadata/page")
     public Result<PageVo> dataPageByMetadata(String metaID, Integer page, Integer size, String orderField, String order) {
         MetadataBasicVo basicVo = metadataService.getById(metaID);
-        if(basicVo != null){
+        if (basicVo != null) {
             Page<HashMap<String, Object>> dataList = metadataService.getDynamicData(basicVo, page, size, orderField, order);
             return Result.of(PageVo.pageConvert(dataList));
         }
@@ -107,7 +112,7 @@ public class SearchController {
 
     private JSONArray getFiledByMetadata(MetadataBasicVo basicVo) {
         JSONArray jsonArray = new JSONArray();
-        basicVo.getMetadataDetailsList().forEach(detail ->{
+        basicVo.getMetadataDetailsList().forEach(detail -> {
             jsonArray.addAll(JSONArray.parseArray(detail.getTableColumns()));
         });
         return jsonArray;
@@ -116,11 +121,28 @@ public class SearchController {
 
     /**
      * 全文检索-检索文件
+     *
      * @return 文件结果列表
      */
     @GetMapping("/full/file")
-    public Result<Object> searchFile(){
+    public Result<Object> searchFile() {
 
         return Result.of(null);
+    }
+
+    /**
+     * 查询指定数据资源下的数据
+     *
+     * @param metaId    数据资源ID
+     * @param condition 条件项
+     * @return 分页列表
+     */
+    @PostMapping("/metadata/condition/{metaId}")
+    public Result<PageVo> searchDataByMetadata(@PathVariable String metaId, SearchConditionVo condition) {
+        MetadataBasicVo metadata = metadataService.get(metaId).getData();
+        if (metadata != null) {
+            return Result.of(metadataDataService.queryData(metadata, condition));
+        }
+        return Result.of(new PageVo());
     }
 }

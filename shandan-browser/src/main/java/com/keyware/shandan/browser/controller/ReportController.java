@@ -142,26 +142,26 @@ public class ReportController {
         List<String> conditions = new ArrayList<>();
         Map<String, String> fields = filedMap(param);
         param.getConditions().forEach(item -> {
-            if (StringUtils.isNotBlank(item.getValue())) {
-                if (item.getField().equals("searchInput")) {
-                    conditions.add("关键词包含：" + item.getValue());
-                } else if (item.getField().equals("directoryId")) {
-                    DirectoryVo dir = directoryService.getById(item.getValue());
+            if (StringUtils.isNotBlank(item.getFieldValue())) {
+                if (item.getFieldName().equals("searchInput")) {
+                    conditions.add("关键词包含：" + item.getFieldValue());
+                } else if (item.getFieldName().equals("directoryId")) {
+                    DirectoryVo dir = directoryService.getById(item.getFieldValue());
                     if(dir != null){
                         conditions.add("数据目录：" + dir.getDirectoryPath());
                     }
-                }else if (item.getField().equals("metadataId")) {
-                    MetadataBasicVo metadata = metadataService.getById(item.getValue());
+                }else if (item.getFieldName().equals("metadataId")) {
+                    MetadataBasicVo metadata = metadataService.getById(item.getFieldValue());
                     if(metadata != null){
                         String tableName = StringUtils.isNotBlank(metadata.getMetadataComment()) ? metadata.getMetadataComment() : metadata.getMetadataName();
                         conditions.add("数据表："+ tableName);
                     }
-                }else if(item.getField().equals("inputDate")){
-                    conditions.add("任务时间："+ item.getValue());
+                }else if(item.getFieldName().equals("inputDate")){
+                    conditions.add("任务时间："+ item.getFieldValue());
                 } else {
-                    String filedComment = fields.get(item.getField());
+                    String filedComment = fields.get(item.getFieldName());
                     String logic = item.getLogic().getText();
-                    conditions.add(filedComment + "：" + logic.replace("?", item.getValue()));
+                    conditions.add(filedComment + "：" + logic.replace("?", item.getFieldValue()));
                 }
             }
         });
@@ -221,9 +221,9 @@ public class ReportController {
         Map<String, String> fields = new HashMap<>();
         boolean hasMetadata = false;
         for (SearchConditionVo.Item item : param.getConditions()) {
-            if (item.getField().equals("metadataId")) {
-                if (StringUtils.isNotBlank(item.getValue())) {
-                    MetadataDetailsVo vo = BianmuDataCache.get(item.getValue());
+            if (item.getFieldName().equals("metadataId")) {
+                if (StringUtils.isNotBlank(item.getFieldValue())) {
+                    MetadataDetailsVo vo = BianmuDataCache.get(item.getFieldValue());
                     if (vo != null) {
                         JSONArray columns = JSONArray.parseArray(vo.getTableColumns());
                         for (Object json : columns) {

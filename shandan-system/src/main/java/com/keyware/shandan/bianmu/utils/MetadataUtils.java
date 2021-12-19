@@ -22,18 +22,14 @@ import java.util.stream.Collectors;
  * @since 2021/6/22
  */
 public class MetadataUtils {
-    // 主表别名
-    private static final String MASTER_TABLE_ALIAS = " M";
-    // 右表别名前缀
-    private static final String TABLE_ALIAS_PREFIX = " T";
 
     public static String generateSql(MetadataBasicVo metadata, DataSourceVo dataSource) {
         StringBuilder builder = new StringBuilder();
 
         String schema = dataSource.getJdbcSchema();
-        if(StringUtils.isBlank(schema)){
+        if (StringUtils.isBlank(schema)) {
             schema = "";
-        }else{
+        } else {
             schema = "\"" + schema + "\".";
         }
         // 找到主表并设置为左表
@@ -54,32 +50,31 @@ public class MetadataUtils {
                 // 主表列
                 masterColumns.forEach(o -> {
                     JSONObject obj = (JSONObject) o;
-                    columnsBuilder.append(MASTER_TABLE_ALIAS).append(".\"").append(obj.getString("columnName")).append("\",");
+                    columnsBuilder.append(" \"").append(master_table).append("\".\"").append(obj.getString("columnName")).append("\",");
                     columnTemp.add(obj.getString("columnName"));
                 });
                 // 主表表名
-                tableNameBuilder.append(schema).append("\"").append(master_table).append("\" as ").append(MASTER_TABLE_ALIAS);
+                tableNameBuilder.append(schema).append("\"").append(master_table).append("\" as \"").append(master_table).append("\"");
 
                 // 需要判断所有右表是否被设定为外表，如果没有，则该表不参与sql查询
                 List<MetadataDetailsVo> tables = getForeignTables(rightTables, masterTable);
                 // where 条件
-                appendWhere(tables, masterTable, wheresBuilder, MASTER_TABLE_ALIAS);
+                appendWhere(tables, masterTable, wheresBuilder, "\"" + master_table + "\"");
 
                 // 遍历右表
                 for (int i = 0; i < tables.size(); i++) {
                     MetadataDetailsVo table = tables.get(i);
-                    String rightTableAlias = TABLE_ALIAS_PREFIX + i;
-                    tableNameBuilder.append(", ").append(schema).append("\"").append(table.getTableName()).append("\" as ").append(rightTableAlias);
+                    tableNameBuilder.append(", ").append(schema).append("\"").append(table.getTableName()).append("\" as \"").append(table.getTableName()).append("\"");
 
                     getColumns(table).forEach(obj -> {
                         JSONObject col = (JSONObject) obj;
-                        if(!columnTemp.contains(col.getString("columnName"))){
-                            columnsBuilder.append(rightTableAlias).append(".\"").append(col.getString("columnName")).append("\",");
+                        if (!columnTemp.contains(col.getString("columnName"))) {
+                            columnsBuilder.append("\"").append(table.getTableName()).append("\".\"").append(col.getString("columnName")).append("\",");
                         }
                     });
 
                     // where 条件
-                    appendWhere(tables, table, wheresBuilder, rightTableAlias);
+                    appendWhere(tables, table, wheresBuilder, "\"" + table.getTableName() + "\"");
                 }
 
                 builder.append("select ").append(columnsBuilder.substring(0, columnsBuilder.toString().length() - 1))
@@ -97,15 +92,14 @@ public class MetadataUtils {
     }
 
     private static void appendWhere(List<MetadataDetailsVo> tables, MetadataDetailsVo table, StringBuilder wheresBuilder, String tableAlias) {
-// 先判断该表是否设置外表
+        // 先判断该表是否设置外表
         if (StringUtils.isNotBlank(table.getForeignTable())) {
             // 找到外表
             Optional<MetadataDetailsVo> foreignOptional = tables.stream().filter(t -> t.getTableName().equals(table.getForeignTable())).findFirst();
             if (foreignOptional.isPresent()) {
                 MetadataDetailsVo foreignTable = foreignOptional.get();
-                String foreignAlias = TABLE_ALIAS_PREFIX + tables.indexOf(foreignTable);
                 if (StringUtils.isNotBlank(foreignTable.getTablePrimaryColumn())) {
-                    wheresBuilder.append("and").append(tableAlias).append(".\"").append(table.getForeignColumn()).append("\" = ").append(foreignAlias).append(".\"").append(foreignTable.getTablePrimaryColumn()).append("\"");
+                    wheresBuilder.append("and").append(tableAlias).append(".\"").append(table.getForeignColumn()).append("\" = \"").append(foreignTable.getTableName()).append("\".\"").append(foreignTable.getTablePrimaryColumn()).append("\"");
                 }
             }
         }
@@ -121,7 +115,7 @@ public class MetadataUtils {
     private static List<MetadataDetailsVo> getForeignTables(List<MetadataDetailsVo> rightTables, MetadataDetailsVo masterTable) {
         List<MetadataDetailsVo> result = new ArrayList<>();
         for (MetadataDetailsVo vo : rightTables) {
-            if(StringUtils.isBlank(masterTable.getForeignTable())){
+            if (StringUtils.isBlank(masterTable.getForeignTable())) {
                 continue;
             }
             if (masterTable.getForeignTable().equals(vo.getTableName())) {
@@ -154,9 +148,9 @@ public class MetadataUtils {
             if (arr != null) {
                 arr.forEach(item -> {
                     JSONObject obj = (JSONObject) item;
-                    if(detail.getColumnList() == null){
+                    if (detail.getColumnList() == null) {
                         columns.add(obj);
-                    }else{
+                    } else {
                         for (DBTableColumnVo col : detail.getColumnList()) {
                             if (col.getColumnName().equals(obj.getString("columnName"))) {
                                 columns.add(JSONObject.toJSON(col));

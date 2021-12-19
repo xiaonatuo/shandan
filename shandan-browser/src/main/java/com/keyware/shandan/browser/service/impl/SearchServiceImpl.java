@@ -104,36 +104,36 @@ public class SearchServiceImpl implements SearchService {
 
         boolean metaFlag = false;
         for (SearchConditionVo.Item item : conditionItems) {
-            if (StringUtils.isBlank(item.getValue().trim())) {
+            if (StringUtils.isBlank(item.getFieldValue().trim())) {
                 continue;
             }
             // 文本框
-            if ("searchInput".equals(item.getField())) {
+            if ("searchInput".equals(item.getFieldName())) {
 
-                boolQueryBuilder.must(QueryBuilders.queryStringQuery(item.getValue()));
-            } else if ("INPUTDATE".equals(item.getField())) {
-                String[] dates = item.getValue().split("至");
+                boolQueryBuilder.must(QueryBuilders.queryStringQuery(item.getFieldValue()));
+            } else if ("INPUTDATE".equals(item.getFieldName())) {
+                String[] dates = item.getFieldValue().split("至");
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date begin = sdf.parse(dates[0].trim() + " 00:00:00");
                     Date end = sdf.parse(dates[1].trim() + " 23:59:59");
-                    boolQueryBuilder.must(QueryBuilders.rangeQuery(item.getField()).gte(begin.getTime()).lte(end.getTime()));
+                    boolQueryBuilder.must(QueryBuilders.rangeQuery(item.getFieldName()).gte(begin.getTime()).lte(end.getTime()));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-            } else if ("metadataId".equals(item.getField())) {
-                MetadataBasicVo metadata = metadataService.getById(item.getValue());
+            } else if ("metadataId".equals(item.getFieldName())) {
+                MetadataBasicVo metadata = metadataService.getById(item.getFieldValue());
                 boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE.keyword", metadata.getMetadataName()));
                 metaFlag = true;
-            } else if ("directoryId".equals(item.getField()) && !item.getField().equals("-")) {
+            } else if ("directoryId".equals(item.getFieldName()) && !item.getFieldName().equals("-")) {
                 metaFlag = true;
                 // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的数据资源表
                 BoolQueryBuilder bool = QueryBuilders.boolQuery();
-                bool.should(QueryBuilders.termsQuery("META_TYPE.keyword", getMetadataIdsByDirId(item.getValue())));
+                bool.should(QueryBuilders.termsQuery("META_TYPE.keyword", getMetadataIdsByDirId(item.getFieldValue())));
                 //boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE.keyword", getMetadataIdsByDirId(item.getValue())));
 
                 //因为目录中也包含file类型，所以需要单独对file类型的数据做过滤
-                String[] dirids = getDirectoryAllChildIds(item.getValue());
+                String[] dirids = getDirectoryAllChildIds(item.getFieldValue());
                 if (dirids != null) {
                     BoolQueryBuilder mustQuery = QueryBuilders.boolQuery();
                     mustQuery.must(QueryBuilders.termsQuery("entityId", dirids));
@@ -145,15 +145,15 @@ public class SearchServiceImpl implements SearchService {
 
             } else {
                 if (item.getLogic() == ConditionLogic.eq) {
-                    boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(item.getField(), item.getValue()));
+                    boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(item.getFieldName(), item.getFieldValue()));
                 } else if (item.getLogic() == ConditionLogic.nq) {
-                    boolQueryBuilder.mustNot(QueryBuilders.matchPhraseQuery(item.getField(), item.getValue()));
+                    boolQueryBuilder.mustNot(QueryBuilders.matchPhraseQuery(item.getFieldName(), item.getFieldValue()));
                 } else if (item.getLogic() == ConditionLogic.like) {
-                    boolQueryBuilder.must(QueryBuilders.fuzzyQuery(item.getField(), item.getValue()));
+                    boolQueryBuilder.must(QueryBuilders.fuzzyQuery(item.getFieldName(), item.getFieldValue()));
                 } else if (item.getLogic() == ConditionLogic.gt) {
-                    boolQueryBuilder.must(QueryBuilders.rangeQuery(item.getField()).gt(item.getValue()));
+                    boolQueryBuilder.must(QueryBuilders.rangeQuery(item.getFieldName()).gt(item.getFieldValue()));
                 } else if (item.getLogic() == ConditionLogic.lt) {
-                    boolQueryBuilder.must(QueryBuilders.rangeQuery(item.getField()).lt(item.getValue()));
+                    boolQueryBuilder.must(QueryBuilders.rangeQuery(item.getFieldName()).lt(item.getFieldValue()));
                 }
             }
         }
@@ -169,7 +169,7 @@ public class SearchServiceImpl implements SearchService {
         }
         searchSourceBuilder.query(boolQueryBuilder).highlighter(buildHighlightBuilder());
         if (StringUtils.isNotBlank(condition.getSortFiled())) {
-            searchSourceBuilder.sort(condition.getSortFiled(), condition.getSort());
+            searchSourceBuilder.sort(condition.getSortFiled(), condition.getOrder());
         }
         return request.source(searchSourceBuilder);
     }

@@ -6,22 +6,54 @@ layui.use(['dropdown', 'gtable', 'laydate'], function () {
     const dropdown = layui.dropdown, gtable = layui.gtable, laydate = layui.laydate;
 
     const $condition_list = $('#condition-list');
+    let result_table;
 
     // 初始化条件抽屉
     initConditionDrawer();
     // 初始化数据表格
     initTable();
 
+    let where = {};
     $('#btn_query').on('click', function () {
         let condition = getConditionItemValue();
-        console.info(condition);
+        if (result_table) {
+            where.conditions = condition
+            result_table.reload({where});
+        }
     });
 
     /**
      * 初始化数据表格
      */
     function initTable() {
-
+        buildResultTableCols().then(cols => {
+            result_table = gtable.init({
+                id: 'meta-result-table',
+                title: metadata.metadataName + (metadata.metadataComment ? `(${metadata.metadataComment})`: ''),
+                url: `${ctx}/search/metadata/condition/${metadata.id}`,
+                height: 'full-20',
+                autoSort: false,
+                cols: [cols],
+                toolbar: '#table-title',
+                defaultToolbar: ['filter', 'print', 'exports', {
+                    title: '统计报表',
+                    layEvent: 'tong-ji',
+                    icon: 'layui-icon-chart' //图标类名
+                }]
+            })
+            // 排序事件回调
+            result_table.on('sort', function (obj) {
+                where.sort = {
+                    field: obj.field,
+                    sort: obj.type
+                }
+                result_table.reload({initSort: obj,where})
+            });
+            // 统计报表自定义
+            result_table.onToolBarTable('tong-ji', function () {
+                layer.msg('tongji')
+            });
+        });
     }
 
     /**
@@ -121,15 +153,16 @@ layui.use(['dropdown', 'gtable', 'laydate'], function () {
             $FIELD_NAME_ELEM.data('value', data.value);
             $FIELD_NAME_ELEM.data('table', data.table);
             $FIELD_NAME_ELEM.data('dataType', data.dataType);
+            $FIELD_NAME_ELEM.attr('title', data.title);
             $FIELD_NAME_ELEM.text(data.title);
 
             //如果是日期时间类型则渲染日期时间组件
             if (DATE_TYPE.includes(data.dataType)) {
                 let input_id = $FIELD_NAME_ELEM.next().next().attr('id');
                 laydate.render({elem: `#${input_id}`, type: 'datetime'});
-            }else{
+            } else {
                 //如果不是时间类型，重新渲染input标签，因为laydate组件渲染后无法销毁
-                let $elem = $FIELD_NAME_ELEM.next().next(),$elem_parent = $elem.parent();
+                let $elem = $FIELD_NAME_ELEM.next().next(), $elem_parent = $elem.parent();
                 $elem.remove();
                 $elem_parent.append($elem[0].outerHTML);
             }
@@ -157,6 +190,7 @@ layui.use(['dropdown', 'gtable', 'laydate'], function () {
         $(`a[name="condition_btn_del"]`).on('click', function () {
             let id = $(this).data('id');
             $condition_list.find(`li[id="li_${id}"]`).remove();
+            $condition_list.find(`li:first a[name="${LOGIC_JOIN}"]`).addClass("layui-hide").data('value', 'and');
             if ($condition_list.find('li').length == 0) {
                 $condition_list.find('p.condition-none').removeClass('layui-hide');
             }
@@ -170,16 +204,39 @@ layui.use(['dropdown', 'gtable', 'laydate'], function () {
         let conditions = [];
         $condition_list.find('li').each(function () {
             let $li = $(this), index = $li.data('id'),
-                logic_join = $(`#${LOGIC_JOIN}_${index}`).data('value'),
-                logic_judgement = $(`#${LOGIC_JUDGEMENT}_${index}`).data('value');
+                logicJoin = $(`#${LOGIC_JOIN}_${index}`).data('value'),
+                logicJudgement = $(`#${LOGIC_JUDGEMENT}_${index}`).data('value');
 
             let $field_name = $(`#${FIELD_NAME}_${index}`),
-                field_name = $field_name.data('value'),
-                data_type = $field_name.data('dataType'),
+                fieldName = $field_name.data('value'),
+                dataType = $field_name.data('dataType'),
                 table = $field_name.data('table');
-            let field_value = $li.find(`input[name="${FIELD_VALUE}"]`).val();
-            conditions.push({logic_join, field_name, logic_judgement, field_value, data_type, table})
+            let fieldValue = $li.find(`input[name="${FIELD_VALUE}"]`).val();
+            conditions.push({logicJoin, fieldName, logicJudgement, fieldValue, dataType, table})
         });
         return conditions;
+    }
+
+    /**
+     *
+     * @returns {Promise<unknown>}
+     */
+    function buildResultTableCols() {
+        return new Promise((resolve, reject) => {
+            if (columns.length == 0) {
+                console.error("数据资源表的字段信息异常");
+                reject && reject();
+            } else {
+                let cols = columns.map(col => {
+                    let {columnName, comment} = col;
+                    return {
+                        title: comment || columnName,
+                        field: columnName,
+                        sort: true
+                    }
+                })
+                resolve && resolve(cols);
+            }
+        });
     }
 });

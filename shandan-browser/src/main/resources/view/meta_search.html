@@ -42,7 +42,12 @@
             <a href="javascript:void(0)" class="layui-btn layui-btn-xs"
                data-type="hide" id="condition-btn">收起条件</a>
         </div>
-        <div class="meta-result" style="height: 100%; flex: 1;">
+        <div class="meta-result" style="height: 100%; flex: 1; overflow: hidden; padding-right: 10px">
+            <script type="text/html" id="table-title">
+                <h3>{{d.title}}</h3>
+            </script>
+            <table class="layui-hide" id="meta-result-table" lay-filter="meta-result-table"
+                   style="height: 100%"></table>
         </div>
     </div>
 </div>
