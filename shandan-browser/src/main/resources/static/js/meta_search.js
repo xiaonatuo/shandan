@@ -50,8 +50,10 @@ layui.use(['dropdown', 'gtable', 'laydate'], function () {
                 result_table.reload({initSort: obj,where})
             });
             // 统计报表自定义
-            result_table.onToolBarTable('tong-ji', function () {
-                layer.msg('tongji')
+            result_table.on('toolbar', function ({event}) {
+                if (event == 'tong-ji') {
+                    openStatisticalReport()
+                }
             });
         });
     }
@@ -238,5 +240,9 @@ layui.use(['dropdown', 'gtable', 'laydate'], function () {
                 resolve && resolve(cols);
             }
         });
+    }
+
+    function openStatisticalReport(){
+        
     }
 });
