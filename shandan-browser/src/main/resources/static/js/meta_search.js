@@ -2,8 +2,8 @@ const LOGIC_JOIN = 'logic_join', FIELD_NAME = 'field_name', LOGIC_JUDGEMENT = 'l
     FIELD_VALUE = 'filed_value';
 // 达梦数据库日期时间数据类型集合
 const DATE_TYPE = ['DATE', 'DATETIME', 'TIMESTAMP', 'DATETIME WITH TIME ZONE', 'TIME', 'TIME WITH TIME ZONE', 'TIMESTAMP WITH TIME ZONE', 'TIMESTAMP WITH LOCAL TIME ZONE'];
-layui.use(['dropdown', 'gtable', 'laydate'], function () {
-    const dropdown = layui.dropdown, gtable = layui.gtable, laydate = layui.laydate;
+layui.use(['dropdown', 'gtable', 'laydate', 'form'], function () {
+    const dropdown = layui.dropdown, gtable = layui.gtable, laydate = layui.laydate, form = layui.form;
 
     const $condition_list = $('#condition-list');
     let result_table;
@@ -29,7 +29,7 @@ layui.use(['dropdown', 'gtable', 'laydate'], function () {
         buildResultTableCols().then(cols => {
             result_table = gtable.init({
                 id: 'meta-result-table',
-                title: metadata.metadataName + (metadata.metadataComment ? `(${metadata.metadataComment})`: ''),
+                title: metadata.metadataName + (metadata.metadataComment ? `(${metadata.metadataComment})` : ''),
                 url: `${ctx}/search/metadata/condition/${metadata.id}`,
                 height: 'full-20',
                 autoSort: false,
@@ -47,7 +47,7 @@ layui.use(['dropdown', 'gtable', 'laydate'], function () {
                     field: obj.field,
                     sort: obj.type
                 }
-                result_table.reload({initSort: obj,where})
+                result_table.reload({initSort: obj, where})
             });
             // 统计报表自定义
             result_table.on('toolbar', function ({event}) {
@@ -242,7 +242,12 @@ layui.use(['dropdown', 'gtable', 'laydate'], function () {
         });
     }
 
-    function openStatisticalReport(){
-        
+    /**
+     * 打开统计分析
+     */
+    function openStatisticalReport() {
+        const reportComponent = new ReportComponent(columns, getConditionItemValue(), metadata.id);
+       // reportComponent.setConditions(data.conditions)
+        reportComponent.openMainLayer();
     }
 });

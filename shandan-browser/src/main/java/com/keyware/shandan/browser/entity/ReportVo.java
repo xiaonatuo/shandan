@@ -16,6 +16,11 @@ public class ReportVo implements Serializable {
     private static final long serialVersionUID = 7215196708660649726L;
 
     /**
+     * 数据资源ID
+     */
+    private String metadataId;
+
+    /**
      * 图表类型
      */
     private String reportType;

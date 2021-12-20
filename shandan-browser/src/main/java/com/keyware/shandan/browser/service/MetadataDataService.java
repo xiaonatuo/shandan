@@ -10,4 +10,6 @@ import com.keyware.shandan.browser.entity.SearchConditionVo;
 public interface MetadataDataService {
 
     PageVo queryData(MetadataBasicVo metadata, SearchConditionVo condition);
+
+    String getQuerySql(MetadataBasicVo metadata, SearchConditionVo condition);
 }

@@ -143,7 +143,7 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
             return new Page<>();
         }
         String sql = MetadataUtils.generateSql(metadataBasic, dataSource);
-        List<HashMap<String, Object>> list = dynamicDatasourceMapper.list(sql);
+        List<HashMap<String, Object>> list = dynamicDatasourceMapper.page(new Page<>(1, 10), sql).getRecords();
         Page<HashMap<String, Object>> page = new Page<>(1, 10);
 
         // 处理Clob类型

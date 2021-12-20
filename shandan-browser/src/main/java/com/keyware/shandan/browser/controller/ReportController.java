@@ -79,6 +79,11 @@ public class ReportController {
         }
     }
 
+    @PostMapping("/data/metadata/conditions")
+    public Result<Object> getDataByMetadata(ReportVo report){
+        return Result.of(null);
+    }
+
     /**
      * 导出到word
      *

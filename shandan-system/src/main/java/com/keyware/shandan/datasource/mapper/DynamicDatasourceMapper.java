@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -18,7 +19,8 @@ import java.util.List;
 @Mapper
 public interface DynamicDatasourceMapper {
 
-    List<HashMap<String, Object>> list(String sqlStr);
+    @Select("${sql}")
+    List<Map<String, Object>> list(String sqlStr);
 
     @Select("${sql}")
     Page<HashMap<String, Object>> page(Page page, String sql);
