@@ -41,6 +41,7 @@ public class ReportDateServiceImpl extends ReportService {
                 " select *, TO_CHAR(" + TEMP_ALIAS_1 + ".\"" + report.getFieldX() + "\", '" + formatter.get(report.getDateInterval()) + "') as \"name\"" +
                 " from (" + querySql + ") as " + TEMP_ALIAS_1 +
                 ") as " + TEMP_ALIAS_2 +
-                "group " + TEMP_ALIAS_2 + ".\"name\"";
+                " group " + TEMP_ALIAS_2 + ".\"name\"" +
+                " order by "+ TEMP_ALIAS_2 + ".\"name\" asc";
     }
 }

@@ -38,6 +38,7 @@ public class ReportNumberServiceImpl extends ReportService {
         builder.append(" from (").append(querySql).append(") as ").append(TEMP_ALIAS_1);
         builder.append(") as ").append(TEMP_ALIAS_2);
         builder.append(" group by ").append("\"name\"");
+        builder.append(" order by ").append("\"name\" asc");
         return builder.toString();
     }
 

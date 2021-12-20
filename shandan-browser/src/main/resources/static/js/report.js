@@ -64,7 +64,7 @@ ReportComponent.prototype.openEchartsConfigLayer = function () {
         },
         yes: function (index) {
             _this.requestData();
-            //layer.close(index);
+            layer.close(index);
         }
     });
 }
@@ -147,30 +147,36 @@ ReportComponent.prototype.setConditions = function (value) {
  */
 ReportComponent.prototype.requestData = function () {
     const _this = this;
-    Util.post(`/report/data/metadata/conditions`, _this.getReportData()).then(res => {
-        if (res.flag) {
-            _this.renderEcharts(res.data);
-        } else {
-            showErrorMsg('数据统计请求失败');
-        }
+    _this.getReportData().then(data => {
+        Util.post(`/report/data/metadata/conditions`, data).then(res => {
+            console.info(res);
+            if (res.flag) {
+                _this.renderEcharts(res.data);
+            } else {
+                showErrorMsg('数据统计请求失败');
+            }
+        });
     })
 }
 
 ReportComponent.prototype.getReportData = function () {
-    const _this = this;
-    _this.formData = _this.form.val('echartsConfigForm');
-    if (_this.validate(_this.formData)) {
-        _this.formData.conditions = _this.conditions;
-        _this.formData.metadataId = _this.metadataId;
-        _this.formData.fieldXTable = getFiledTable($('#selectFieldX'), _this.formData.fieldX);
-        _this.formData.fieldYTable = getFiledTable($('#selectFieldY'), _this.formData.fieldY);
-    }
-
     function getFiledTable($select, value) {
         return $select.find(`option[value="${value}"]`).data('table');
     }
 
-    return _this.formData;
+    const _this = this;
+    return new Promise(((resolve, reject) => {
+        _this.formData = Object.assign(_this.formData, _this.form.val('echartsConfigForm'));
+        if (_this.validate(_this.formData)) {
+            _this.formData.conditions = _this.conditions;
+            _this.formData.metadataId = _this.metadataId;
+            _this.formData.fieldXTable = getFiledTable($('#selectFieldX'), _this.formData.fieldX);
+            _this.formData.fieldYTable = getFiledTable($('#selectFieldY'), _this.formData.fieldY);
+            resolve && resolve(_this.formData)
+        } else {
+            reject && reject();
+        }
+    }));
 }
 /**
  * 数据校验
@@ -218,6 +224,7 @@ ReportComponent.prototype.renderEcharts = function (reportData) {
     $('#report-items').append(`<div class="echarts-item" id="${elemId}"></div>`)
     let chartDom = document.getElementById(elemId);
     let echartsItem = echarts.init(chartDom);
+    console.info(reportData);
     let option = {
         width: 500,
         title: {

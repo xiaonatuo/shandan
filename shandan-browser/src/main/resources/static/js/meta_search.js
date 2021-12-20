@@ -247,7 +247,6 @@ layui.use(['dropdown', 'gtable', 'laydate', 'form'], function () {
      */
     function openStatisticalReport() {
         const reportComponent = new ReportComponent(columns, getConditionItemValue(), metadata.id);
-       // reportComponent.setConditions(data.conditions)
         reportComponent.openMainLayer();
     }
 });

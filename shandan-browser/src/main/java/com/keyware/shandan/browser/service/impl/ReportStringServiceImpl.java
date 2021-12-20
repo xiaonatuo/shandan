@@ -30,11 +30,11 @@ public class ReportStringServiceImpl extends ReportService {
 
     @Override
     protected String buildStatisticsSql(String querySql) {
-        return "select " + TEMP_ALIAS_1 + ".\"" + report.getFieldX() + "\" as \"name\", " +
-                report.getAggregationType() + "(" +
-                TEMP_ALIAS_1 + ".\"" + report.getFieldY() + "\") as \"value\"" +
+        return "select " +
+                TEMP_ALIAS_1 + ".\"" + report.getFieldX() + "\" as \"name\", " +
+                report.getAggregationType() + "(" + TEMP_ALIAS_1 + ".\"" + report.getFieldY() + "\") as \"value\"" +
                 " from (" + querySql + ") as " + TEMP_ALIAS_1 +
-                " group by " +
-                TEMP_ALIAS_1 + ".\"" + report.getFieldX() + "\"";
+                " group by " + TEMP_ALIAS_1 + ".\"" + report.getFieldX() + "\"" +
+                " order by " + TEMP_ALIAS_1 + ".\"" + report.getFieldX() + "\" asc";
     }
 }
