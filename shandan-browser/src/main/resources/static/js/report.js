@@ -297,6 +297,7 @@ ReportComponent.prototype.renderEcharts = function (reportData) {
 
 ReportComponent.prototype.download = function () {
     const _this = this;
+    console.info(_this);
     if (_this.echarts.length == 0) {
         layer.msg('请先定义图表', {icon: 5})
         return false;
@@ -320,7 +321,7 @@ ReportComponent.prototype.download = function () {
             title: text,
             conditions: _this.conditions,
             echarts: echartsData,
-            fields: _this.fields
+            fields: _this.columns
         };
 
         $.ajax({

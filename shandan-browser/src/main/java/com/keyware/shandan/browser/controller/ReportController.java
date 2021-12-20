@@ -183,7 +183,7 @@ public class ReportController {
                     MetadataBasicVo metadata = metadataService.getById(item.getFieldValue());
                     if (metadata != null) {
                         String tableName = StringUtils.isNotBlank(metadata.getMetadataComment()) ? metadata.getMetadataComment() : metadata.getMetadataName();
-                        conditions.add("数据表：" + tableName);
+                        conditions.add("数据资源：" + tableName);
                     }
                 } else if (item.getFieldName().equals("inputDate")) {
                     conditions.add("任务时间：" + item.getFieldValue());
@@ -267,7 +267,7 @@ public class ReportController {
         }
         if (!hasMetadata) {
             param.getFields().forEach(item -> {
-                fields.put(item.get("field").toString(), item.get("comment").toString());
+                fields.put(item.get("columnName").toString(), item.get("comment").toString());
             });
         }
 
