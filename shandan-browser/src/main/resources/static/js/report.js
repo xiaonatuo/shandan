@@ -10,6 +10,7 @@ function ReportComponent(columns, conditions, metadataId) {
     this.conditions = conditions || [];
     this.echarts = [];
     this.size = 0;
+    this.formData = {};
 
     this.form = {};
     layui.use(['form'], () => {
@@ -63,44 +64,11 @@ ReportComponent.prototype.openEchartsConfigLayer = function () {
         },
         yes: function (index) {
             _this.requestData();
-            layer.close(index);
+            //layer.close(index);
         }
     });
 }
 
-/**
- * 初始化字段下拉框数据
- * @param metadataId 数据资源ID
- */
-ReportComponent.prototype.initFieldSelect = function (metadataId) {
-    const _this = this;
-    $.get(`${ctx}/report/metadata/columns/${metadataId}`, {}, function (res) {
-        let fields = $.extend([], common_fields);
-        if (res.flag && res.data) {
-            let cols = JSON.parse(res.data);
-            for (let item of cols) {
-                const field = item.columnName, type = item.dataType, comment = item.comment;
-                if (!field || field.toLowerCase().endsWith('id')) {
-                    continue
-                }
-                let flag = true;
-                // 将现有字段集合中同名但大小写不同的字段替换掉
-                for (let i = 0; i < fields.length; i++) {
-                    if (fields[i].field.toUpperCase() == field.toUpperCase()) {
-                        fields[i].field = field;
-                        fields[i].type = type;
-                        fields[i].comment = comment;
-                        flag = false;
-                        break;
-                    }
-                }
-                flag && fields.push({field, type, comment});
-            }
-            _this.fields = fields;
-        }
-        _this.renderSelect();
-    })
-}
 /**
  * 渲染字段下拉框
  */
@@ -167,20 +135,6 @@ ReportComponent.prototype.findFieldType = function (value, elem) {
 }
 
 /**
- * 设置属性
- * @param value -
- */
-ReportComponent.prototype.setFormData = function (value) {
-    this.formData = value;
-    // 需要判断目录树是否选中了数据资源，如果是，则需要查询字段，然后渲染字段下拉框
-    if (value.metadataId) {
-        this.initFieldSelect(value.metadataId);
-    } else {
-        this.renderSelect(common_fields);
-    }
-}
-
-/**
  * 设置条件参数
  * @param value -
  */
@@ -193,7 +147,7 @@ ReportComponent.prototype.setConditions = function (value) {
  */
 ReportComponent.prototype.requestData = function () {
     const _this = this;
-    Util.post(`/report/data`, _this.getReportData()).then(res => {
+    Util.post(`/report/data/metadata/conditions`, _this.getReportData()).then(res => {
         if (res.flag) {
             _this.renderEcharts(res.data);
         } else {
@@ -204,20 +158,19 @@ ReportComponent.prototype.requestData = function () {
 
 ReportComponent.prototype.getReportData = function () {
     const _this = this;
-    const formVal = _this.form.val('echartsConfigForm');
-    if (_this.validate(formVal)) {
-        formVal.conditions = _this.conditions;
-        formVal.metadataId = _this.metadataId;
-        formVal.fieldXTable = getFiledTable($('#selectFieldX'), formVal.fieldX);
-        formVal.fieldYTable = getFiledTable($('#selectFieldY'), formVal.fieldY);
+    _this.formData = _this.form.val('echartsConfigForm');
+    if (_this.validate(_this.formData)) {
+        _this.formData.conditions = _this.conditions;
+        _this.formData.metadataId = _this.metadataId;
+        _this.formData.fieldXTable = getFiledTable($('#selectFieldX'), _this.formData.fieldX);
+        _this.formData.fieldYTable = getFiledTable($('#selectFieldY'), _this.formData.fieldY);
     }
 
     function getFiledTable($select, value) {
         return $select.find(`option[value="${value}"]`).data('table');
     }
 
-    console.info(formVal);
-    return formVal;
+    return _this.formData;
 }
 /**
  * 数据校验

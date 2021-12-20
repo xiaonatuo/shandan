@@ -29,6 +29,7 @@ public class ReportVo implements Serializable {
      * 统计维度字段
      */
     private String fieldX;
+    private String fieldXTable;
 
     /**
      * 统计维度字段类型
@@ -43,17 +44,19 @@ public class ReportVo implements Serializable {
     /**
      * 统计维度数值间隔
      */
-    private Double numberInterval;
+    private Integer numberInterval;
 
     /**
      * 指标聚合方式
      */
     private String aggregationType;
+    private String aggregationText;
 
     /**
      * 指标聚合字段
      */
     private String fieldY;
+    private String fieldYTable;
 
     /**
      * 数据查询条件

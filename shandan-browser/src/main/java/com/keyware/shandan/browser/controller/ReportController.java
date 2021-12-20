@@ -11,7 +11,9 @@ import com.keyware.shandan.browser.config.BianmuDataCache;
 import com.keyware.shandan.browser.entity.SearchConditionVo;
 import com.keyware.shandan.browser.entity.ExportParam;
 import com.keyware.shandan.browser.entity.ReportVo;
+import com.keyware.shandan.browser.service.ReportService;
 import com.keyware.shandan.browser.service.SearchService;
+import com.keyware.shandan.browser.service.impl.ReportNumberServiceImpl;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.StringUtils;
 import freemarker.template.Configuration;
@@ -44,6 +46,9 @@ public class ReportController {
 
     @Autowired
     private SearchService searchService;
+
+    @Autowired
+    private ReportNumberServiceImpl reportNumberService;
 
     private static ExportParam tempExportParam;
 
@@ -81,7 +86,12 @@ public class ReportController {
 
     @PostMapping("/data/metadata/conditions")
     public Result<Object> getDataByMetadata(ReportVo report){
-        return Result.of(null);
+        try {
+            return Result.of(reportNumberService.statisticsQuery(report));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.of(null, false, e.getMessage());
+        }
     }
 
     /**
