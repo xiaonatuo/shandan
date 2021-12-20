@@ -13,7 +13,9 @@ import com.keyware.shandan.browser.entity.ExportParam;
 import com.keyware.shandan.browser.entity.ReportVo;
 import com.keyware.shandan.browser.service.ReportService;
 import com.keyware.shandan.browser.service.SearchService;
+import com.keyware.shandan.browser.service.impl.ReportDateServiceImpl;
 import com.keyware.shandan.browser.service.impl.ReportNumberServiceImpl;
+import com.keyware.shandan.browser.service.impl.ReportStringServiceImpl;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.StringUtils;
 import freemarker.template.Configuration;
@@ -50,6 +52,12 @@ public class ReportController {
     @Autowired
     private ReportNumberServiceImpl reportNumberService;
 
+    @Autowired
+    private ReportDateServiceImpl reportDateService;
+
+    @Autowired
+    private ReportStringServiceImpl reportStringService;
+
     private static ExportParam tempExportParam;
 
     /**
@@ -85,9 +93,15 @@ public class ReportController {
     }
 
     @PostMapping("/data/metadata/conditions")
-    public Result<Object> getDataByMetadata(ReportVo report){
+    public Result<Object> getDataByMetadata(ReportVo report) {
         try {
-            return Result.of(reportNumberService.statisticsQuery(report));
+            if (ReportNumberServiceImpl.NUMBER_TYPES.contains(report.getFieldXType())) {
+                return Result.of(reportNumberService.statisticsQuery(report));
+            } else if (ReportNumberServiceImpl.DATE_TYPES.contains(report.getFieldXType())) {
+                return Result.of(reportDateService.statisticsQuery(report));
+            } else {
+                return Result.of(reportStringService.statisticsQuery(report));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return Result.of(null, false, e.getMessage());
@@ -162,17 +176,17 @@ public class ReportController {
                     conditions.add("关键词包含：" + item.getFieldValue());
                 } else if (item.getFieldName().equals("directoryId")) {
                     DirectoryVo dir = directoryService.getById(item.getFieldValue());
-                    if(dir != null){
+                    if (dir != null) {
                         conditions.add("数据目录：" + dir.getDirectoryPath());
                     }
-                }else if (item.getFieldName().equals("metadataId")) {
+                } else if (item.getFieldName().equals("metadataId")) {
                     MetadataBasicVo metadata = metadataService.getById(item.getFieldValue());
-                    if(metadata != null){
+                    if (metadata != null) {
                         String tableName = StringUtils.isNotBlank(metadata.getMetadataComment()) ? metadata.getMetadataComment() : metadata.getMetadataName();
-                        conditions.add("数据表："+ tableName);
+                        conditions.add("数据表：" + tableName);
                     }
-                }else if(item.getFieldName().equals("inputDate")){
-                    conditions.add("任务时间："+ item.getFieldValue());
+                } else if (item.getFieldName().equals("inputDate")) {
+                    conditions.add("任务时间：" + item.getFieldValue());
                 } else {
                     String filedComment = fields.get(item.getFieldName());
                     String logic = item.getLogic().getText();
@@ -181,7 +195,7 @@ public class ReportController {
             }
         });
 
-        if(conditions.size() == 0){
+        if (conditions.size() == 0) {
             conditions.add("统计结果基于全部数据");
         }
         result.put("conditions", conditions);
@@ -198,22 +212,22 @@ public class ReportController {
             String xFiledStr = fields.getOrDefault(echart.getFieldX(), echart.getFieldX());
             map.put("data_header_field", xFiledStr);
             //echarts图表表头统计指标描述
-            if(StringUtils.isNotBlank(echart.getRemark())){
+            if (StringUtils.isNotBlank(echart.getRemark())) {
                 map.put("data_header_remark", echart.getRemark());
-            }else{
+            } else {
                 String yFileStr = fields.getOrDefault(echart.getFiledY(), echart.getFiledY());
                 String type = echart.getAggregationType();
-                if("count".equals(type)){
+                if ("count".equals(type)) {
                     yFileStr += "总数";
-                }else if("sum".equals(type)){
+                } else if ("sum".equals(type)) {
                     yFileStr += "总和";
-                }else if("avg".equals(type)){
+                } else if ("avg".equals(type)) {
                     yFileStr += "平均值";
                 }
                 map.put("data_header_remark", yFileStr);
             }
             List<Map<String, String>> datas = new ArrayList<>();
-            echart.getData().forEach(data->{
+            echart.getData().forEach(data -> {
                 Map<String, String> row = new HashMap<>();
                 row.put("field_text", (String) data.get("name"));
                 row.put("field_data", String.valueOf(data.get("value")));

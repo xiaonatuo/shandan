@@ -9,6 +9,7 @@ import com.keyware.shandan.browser.service.ReportService;
 import com.keyware.shandan.datasource.mapper.DynamicDatasourceMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +28,9 @@ public class ReportNumberServiceImpl extends ReportService {
     }
 
     @Override
-    protected void buildIntervalStatisticsSql(ReportVo report, StringBuilder builder, String querySql) throws Exception {
-        // 数值类型
-        String intervalSql = getIntervalSql(report, getMinMaxValues(metadata, report, querySql));
+    protected String buildStatisticsSql(String querySql) throws Exception {
+        StringBuilder builder = new StringBuilder();
+        String intervalSql = getIntervalSql(getMinMaxValues(querySql));
         builder.append("select ").append(TEMP_ALIAS_2).append(".\"name\", ");
         builder.append(report.getAggregationType()).append("(").append(TEMP_ALIAS_2).append(".\"").append(report.getFieldY()).append("\") as ").append("\"value\"");
         builder.append(" from (select *, ");
@@ -37,10 +38,10 @@ public class ReportNumberServiceImpl extends ReportService {
         builder.append(" from (").append(querySql).append(") as ").append(TEMP_ALIAS_1);
         builder.append(") as ").append(TEMP_ALIAS_2);
         builder.append(" group by ").append("\"name\"");
+        return builder.toString();
     }
 
-    @Override
-    protected String getIntervalSql(ReportVo report, MinMaxVal minMaxVal) {
+    protected String getIntervalSql(MinMaxVal minMaxVal) {
         List<MinMaxVal> intervals = getIntervalGroup(report.getNumberInterval(), minMaxVal);
         StringBuilder builder = new StringBuilder(" case");
         intervals.forEach(minMax -> {
@@ -51,7 +52,7 @@ public class ReportNumberServiceImpl extends ReportService {
     }
 
     @DS("#metadata.dataSourceId")
-    protected MinMaxVal getMinMaxValues(MetadataBasicVo metadata, ReportVo report, String querySql) throws Exception {
+    protected MinMaxVal getMinMaxValues(String querySql) throws Exception {
         String sql = "select min(" + report.getFieldY() + ") as \"min\", max(" + report.getFieldY() + ") as \"max\" from (" + querySql + ") T";
         List<Map<String, Object>> list = dynamicDatasourceMapper.list(sql);
         if (list.size() == 0) {
@@ -70,8 +71,8 @@ public class ReportNumberServiceImpl extends ReportService {
         do {
             int min = offset;
             offset += interval;
-            group.add(new MinMaxVal(min + 1, offset));
-        } while (offset <= (int) minMaxVal.getMax());
+            group.add(new MinMaxVal(min, offset));
+        } while (offset <= ((BigDecimal) minMaxVal.getMax()).intValue());
         return group;
     }
 
