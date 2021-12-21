@@ -292,7 +292,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 toolbarId: "toolbar_dir_submit",
                 icon: "layui-icon layui-icon-release",
                 title: "提交审核", handler: function (node, elem) {
-                    console.info(node, elem);
                     let param = {
                         entityId: node.id,
                         entityType: ReviewEntityType.DIRECTORY,
@@ -306,9 +305,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                             tempNode.basicData.reviewStatus = ReviewStatus.PASS;
                             tempNode.title = tempNode.context;
                             tempNode.title = formatterTitle(tempNode);
-                            //tempNode.iconClass = 'dtree-icon-fenzhijigou';
                             dirTree.partialRefreshEdit(elem, tempNode)
-                            metaListTable.reloadTable();
+                            //metaListTable.reloadTable();
+                            loadMetadataList(node)
                         } else {
                             layer.msg('提交失败,' + res.msg);
                         }
@@ -326,7 +325,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
 
     function formatterTitle(data) {
         let {title, basicData} = data;
-        if (basicData && basicData.directoryType === ReviewEntityType.METADATA) {
+        if (basicData) {
             const reviewStatus = data.basicData.reviewStatus;
             title += ReviewStatusIcon[reviewStatus].replace('##id##', basicData.id);
         }
