@@ -56,6 +56,7 @@ public class ReportVo implements Serializable {
      * 指标聚合字段
      */
     private String fieldY;
+    private String fieldYType;
     private String fieldYTable;
 
     /**

@@ -205,7 +205,7 @@ public class ReportController {
         param.getEcharts().forEach(echart -> {
             Map<String, Object> map = new HashMap<>();
             // echarts图表的标题
-            map.put("title", echart.getTitle());
+            map.put("title", echart.getTitle() == null ? "" : echart.getTitle());
             // echarts导出的图片
             map.put("imageData", echart.getImage().replace("data:image/png;base64,", ""));
             // echarts图表表头统计维度字段

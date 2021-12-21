@@ -30,7 +30,12 @@ public class ReportNumberServiceImpl extends ReportService {
     @Override
     protected String buildStatisticsSql(String querySql) throws Exception {
         StringBuilder builder = new StringBuilder();
-        String intervalSql = getIntervalSql(getMinMaxValues(querySql));
+        String intervalSql = "";
+        if(NUMBER_TYPES.contains(report.getFieldYType())){
+            intervalSql = getIntervalSql(getMinMaxValues(querySql));
+        }else{
+            intervalSql = TEMP_ALIAS_1 +".\""+ report.getFieldY()+"\" ";
+        }
         builder.append("select ").append(TEMP_ALIAS_2).append(".\"name\", ");
         builder.append(report.getAggregationType()).append("(").append(TEMP_ALIAS_2).append(".\"").append(report.getFieldY()).append("\") as ").append("\"value\"");
         builder.append(" from (select *, ");

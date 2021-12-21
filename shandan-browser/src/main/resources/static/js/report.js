@@ -148,7 +148,6 @@ ReportComponent.prototype.requestData = function (callback) {
     const _this = this;
     _this.getReportData().then(data => {
         Util.post(`/report/data/metadata/conditions`, data).then(res => {
-            console.info(res);
             if (res.flag) {
                 _this.renderEcharts(res.data);
                 callback && callback();
@@ -219,12 +218,11 @@ ReportComponent.prototype.validate = function (formVal) {
  */
 ReportComponent.prototype.renderEcharts = function (reportData) {
     const _this = this;
-    const formData = _this.form.val('echartsConfigForm');
+    const formData = _this.formData;
     const elemId = `echarts-item-${_this.echarts.length + 1}`;
     $('#report-items').append(`<div class="echarts-item" id="${elemId}"></div>`)
     let chartDom = document.getElementById(elemId);
     let echartsItem = echarts.init(chartDom);
-    console.info(reportData);
     let option = {
         width: 500,
         title: {
@@ -297,7 +295,6 @@ ReportComponent.prototype.renderEcharts = function (reportData) {
 
 ReportComponent.prototype.download = function () {
     const _this = this;
-    console.info(_this);
     if (_this.echarts.length == 0) {
         layer.msg('请先定义图表', {icon: 5})
         return false;
@@ -308,11 +305,11 @@ ReportComponent.prototype.download = function () {
         for (let e of _this.echarts) {
             let config = e.formData;
             echartsData.push({
-                title: config.title,
-                fieldX: config.fieldX,
-                filedY: config.fieldY,
+                title: config.title || '',
+                fieldX: config.fieldX || '',
+                filedY: config.fieldY || '',
                 aggregationType: config.aggregationType,
-                remark: config.remark,
+                remark: config.remark || '',
                 data: e.requestData,
                 image: e.getDataURL(),
             })
