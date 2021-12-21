@@ -82,8 +82,6 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
      */
     @GetMapping("/list/directory")
     public Result<Page<DirectoryVo>> directoryReviewPageList(Page<DirectoryVo> page, DirectoryVo vo) {
-        //vo.setReviewStatus(ReviewStatus.SUBMITTED);
-        vo.setDirectoryType(DirectoryType.METADATA);
         return Result.of(directoryService.page(page, new QueryWrapper<>(vo)));
     }
 

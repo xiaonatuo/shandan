@@ -50,13 +50,17 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
 
         // 查询父目录，并设置目录路径
         DirectoryVo parent = getById(entity.getParentId());
-        entity.setDirectoryPath(parent == null ? "/".concat(entity.getDirectoryName()) : parent.getDirectoryPath().concat("/").concat(entity.getDirectoryName()));
-
-        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
-        wrapper.eq("DIRECTORY_PATH", entity.getDirectoryPath());
-        if (list(wrapper).size() > 0) {
-            return Result.of(null, false, "目录已经存在！");
+        String newPath = parent == null ? "/".concat(entity.getDirectoryName()) : parent.getDirectoryPath().concat("/").concat(entity.getDirectoryName());
+        if(!newPath.equals(entity.getDirectoryPath())){
+            QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
+            wrapper.eq("DIRECTORY_PATH", entity.getDirectoryPath());
+            if (list(wrapper).size() > 0) {
+                return Result.of(null, false, "目录已经存在！");
+            }
+            entity.setDirectoryPath(parent == null ? "/".concat(entity.getDirectoryName()) : parent.getDirectoryPath().concat("/").concat(entity.getDirectoryName()));
         }
+
+
 
         // 同时更新所有子级目录的路径
         if (oldDir != null) {
