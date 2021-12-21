@@ -145,7 +145,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
     }
 
     function initFileSearchTable(id) {
-        let metaListTable = listPage.init({
+        let dirFileTable = listPage.init({
             table: {
                 id: 'dirFileTable',
                 toolbar: '#fileTableToolBar',
@@ -173,9 +173,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
         });
 
         // 查看按钮监听
-        metaListTable.addTableRowEvent('details', function (obj) {
+        dirFileTable.addTableRowEvent('details-file', function (obj) {
             openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${obj._entityId}`)
-
         })
     }
 })
