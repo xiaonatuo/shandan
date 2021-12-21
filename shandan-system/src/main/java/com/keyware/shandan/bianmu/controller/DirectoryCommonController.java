@@ -95,7 +95,7 @@ public class DirectoryCommonController {
             if(i == 1) node.put("parentId", "-");
             if(i == path.length-1) {
                 node.put("id", dir.getId());
-                node.put("iconClass", "dtree-icon-fenzhijigou");
+                node.put("iconClass", "dtree-icon-wenjianjiazhankai");
                 node.put("type", "metadata");
                 node.put("last", true);
                 node.put("basicData", JSON.toJSON(dir));

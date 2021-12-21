@@ -21,42 +21,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     let metaListTable;
     let reviewStatusSearch = '';
 
-
-    let addMetadataLayerWin;
-    const openAddMetadataLayer = function (directory, callback) {
-        layer.open({
-            id: 'addMetadataLayer',
-            type: 2,
-            area: ['800px', '800px'],
-            btn: ['确定', '取消'],
-            content: `${ctx}/business/metadata/layer/choose?directoryId=${directory.id}`,
-            success: function (layero) {
-                addMetadataLayerWin = window[layero.find('iframe')[0]['name']];
-            },
-            yes: function (index) {
-                addMetadataLayerWin && addMetadataLayerWin.ok().then(datas => {
-                    if (datas && Array.isArray(datas) && datas.length > 0) {
-                        const ids = datas.map(data => data.id).join(',');
-                        $.post(`${ctx}/business/directory/save/metadata`, {
-                            directoryId: directory.id,
-                            metadataIds: ids
-                        }, function (res) {
-                            if (res.flag) {
-                                layer.msg('保存成功');
-                                layer.close(index);
-                                callback && callback();
-                            } else {
-                                layer.msg('保存失败')
-                            }
-                        })
-                    } else {
-                        layer.msg('没有选择任何数据')
-                    }
-                });
-            }
-        });
-    }
-
     /**
      * 加载数据资源列表
      */
@@ -158,46 +122,11 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
             })
         });
 
-        // 查询文件列表
-        const fileListTable = layui.listPage.init({
-            table: {
-                id: 'fileListTable',
-                url: `${ctx}/sys/file/list`,
-                where: {entityId: basicData.id},
-                cols: [[
-                    {field: 'fileName', title: '文件名称'},
-                    {field: 'fileSize', title: '文件大小(MB)'},
-                    {field: 'fileType', title: '文件类型'},
-                    {field: 'right', title: '操作', toolbar: '#fileListTableToolBar', width: 150}
-                ]],
-                page: false,
-                toolbar: false,
-                height: 'full-150'
-            },
-        });
-        fileListTable.addTableRowEvent('download', function (obj) {
-            window.open(`${ctx}/sys/file/download/${obj.id}`)
-        });
-        let fileViewLayerWin;
-        fileListTable.addTableRowEvent('file-view', function () {
-            layer.open({
-                id: 'fileviewLayer',
-                title: basicData.metadataName,
-                type: 2,
-                content: `${ctx}/sys/file/view?entityId=${basicData.id}`,
-                success: function (layero, index) {
-                    fileViewLayerWin = window[layero.find('iframe')[0]['name']];
-                    layer.full(index);
-                },
-            });
-        })
     }
 
     // 加载并渲染目录树
-    let treeChildrenUrl = `${ctx}/business/directory/tree/children`
     let treeOps = {
         id: 'directoryTree',
-        //url: treeChildrenUrl,
         data: [{id: '-', parentId: '', title: '根目录', leaf: false, last: false, spread: true,children: treeData}],
         cache: true,
         initLevel: 13, // 默认展开一级
@@ -209,23 +138,22 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 res.data.forEach(item => {
                     dirCache.set(item.id, item);
                 })
-                initLiHoverEvent();
-                async function initLiHoverEvent() {
-                    setTimeout(() => {
-                        $('.dtree-nav-div.dtree-theme-item').each((index, elem)=>{
-                            let data = $(elem).data('basic');
-                            if (data) {
-                                if(typeof data === 'string'){data = JSON.parse(data);}
-                                let title = data.metadataComment || data.directoryName || data.fileName + data.fileSuffix;
-                                $(elem).attr('title', title)
+
+                setTimeout(() => {
+                    $('.dtree-nav-div.dtree-theme-item').each((index, elem) => {
+                        let data = $(elem).data('basic');
+                        if (data) {
+                            if (typeof data === 'string') {
+                                data = JSON.parse(data);
                             }
-                        });
-                    }, 200)
-                }
+                            let title = data.metadataComment || data.directoryName || data.fileName + data.fileSuffix;
+                            $(elem).attr('title', title)
+                        }
+                    });
+                }, 200)
             }
         },
         done: function (nodes, elem) {
-            // 模拟鼠标点击事件展开第一层目录
             $(`div.dtree-theme-item[data-id="${data.id}"]`).click();
         },
         onClick: function (node) {
@@ -276,62 +204,4 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     }
     dirTree = globalTree.init(treeOps);
 
-    let player;
-
-    /**
-     * 预览文件
-     * @param file
-     */
-    function viewFile(file) {
-        const fileSuffix = file.fileSuffix.toLowerCase();
-
-        const filePath = `${bianmuAddress}/upload/${file.path}`;
-        if (viewType.image.includes(fileSuffix)) {
-            let htm = `<img id="image-viewer" src="${filePath}" style="max-height: ${imageHeight}px; max-width: ${imageWidth}px"/>`
-            $('#file-viewer-image').html(htm)
-            showFileViewer('image');
-        } else if (viewType.video.includes(fileSuffix) || viewType.audio.includes(fileSuffix)) {
-            if (!player) {
-                initVideoPlayer();
-            }
-            player.src(filePath);
-            showFileViewer('video');
-        } else if (viewType.pdf.includes(fileSuffix)) {
-            $('#pdfViewer').attr('src', filePath);
-            showFileViewer('pdf');
-        } else if (viewType.text.includes(fileSuffix)) {
-            $('#txtViewer').attr('src', filePath);
-            showFileViewer('text');
-        } else {
-            let htm = `<p>该文件不支持预览，可下载后查看。</p>
-                        <a href="javascript:void(0)"  id="download-file" data-id="${file.id}" style="color: blue; text-decoration: underline;">下载文件</a>`;
-            $('#file-viewer-other').html(htm)
-            $('#download-file').off('click')
-            $('#download-file').on('click', function ({target}) {
-                let fileId = $(target).data('id')
-                window.open(`${bianmuAddress}/sys/file/download/${fileId}`)
-            })
-            showFileViewer('other');
-        }
-    }
-
-    /**
-     * 视频播放器初始化
-     */
-    function initVideoPlayer() {
-        player = videojs('videoPlayer');
-        player.ready(function () {
-            //this.play();
-        });
-    }
-
-    // 目录树筛选条件
-    form.on('select(reviewStatusSelect)', function ({elem, othis, value}) {
-        reviewStatusSearch = value;
-        const treeOps = {request: {}}
-        if (value) {
-            treeOps.request = {reviewStatus: value};
-        }
-        globalTree.reload(treeOps)
-    });
 })
