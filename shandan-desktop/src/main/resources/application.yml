@@ -9,7 +9,7 @@ spring:
   application:
     name: shandan-desktop
   profiles:
-    active: dev #选择配置分支，先读取系统环境变量，如果没有则默认值为 prod
+    active: prod #选择配置分支，先读取系统环境变量，如果没有则默认值为 prod
 
   #修改thymeleaf访问根路径
   thymeleaf:
