@@ -98,7 +98,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser, 
     }
 
     @Override
-    public Result<SysUser> updateOrSave(SysUser entity) {
+    public Result<SysUser> updateOrSave(SysUser entity) throws Exception {
 
         //用户注册接口地址
         String url = null;

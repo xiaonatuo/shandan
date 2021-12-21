@@ -19,7 +19,7 @@ public interface IBaseService<E, T> extends IService<E> {
 
     Page<E> page(Page<E> page, QueryWrapper<E> wrapper);
 
-    Result<E> updateOrSave(E entity);
+    Result<E> updateOrSave(E entity) throws Exception;
 
     Result<Boolean> deleteById(T Id);
 }

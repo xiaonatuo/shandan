@@ -67,7 +67,7 @@ public class UserController {
      * 保存
      */
     @PostMapping("shortcutMenuSave")
-    public Result<SysShortcutMenu> shortcutMenuSave(SysShortcutMenu shortcutMenu) {
+    public Result<SysShortcutMenu> shortcutMenuSave(SysShortcutMenu shortcutMenu) throws Exception {
         SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
         shortcutMenu.setUserId(user.getUserId());
         return sysShortcutMenuService.updateOrSave(shortcutMenu);

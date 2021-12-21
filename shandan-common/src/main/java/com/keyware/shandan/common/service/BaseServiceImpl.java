@@ -40,7 +40,7 @@ public class BaseServiceImpl<M extends IBaseMapper<E>, E, T> extends ServiceImpl
     }
 
     @Override
-    public Result<E> updateOrSave(E entity) {
+    public Result<E> updateOrSave(E entity) throws Exception {
         boolean ok = super.saveOrUpdate(entity);
         return Result.of(ok ? entity : null, ok);
     }

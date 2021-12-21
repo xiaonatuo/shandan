@@ -31,7 +31,7 @@ public class SysSettingServiceImpl extends BaseServiceImpl<SysSettingMapper, Sys
     private SysFileService fileService;
 
     @Override
-    public Result<SysSetting> updateOrSave(SysSetting entity) {
+    public Result<SysSetting> updateOrSave(SysSetting entity) throws Exception {
         Result<SysSetting> result = super.updateOrSave(entity);
         SysSettingUtil.setSysSettingMap(entity);
         return result;

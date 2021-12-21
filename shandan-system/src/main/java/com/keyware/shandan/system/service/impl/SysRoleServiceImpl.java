@@ -37,7 +37,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRole, 
     private SysUserRoleService sysUserRoleService;
 
     @Override
-    public Result<SysRole> updateOrSave(SysRole entity) {
+    public Result<SysRole> updateOrSave(SysRole entity) throws Exception {
         Result<SysRole> result = super.updateOrSave(entity);
         myFilterInvocationSecurityMetadataSource.setRequestMap(super.list());
         return result;

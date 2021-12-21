@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * 通用controller类
+ *
  * @param <S> 服务类泛型
  * @param <E> 实体类泛型
  * @param <T> 实体类主键对应类型泛型
@@ -25,7 +26,7 @@ public class BaseController<S extends IBaseService<E, T>, E, T> {
 
 
     @PostMapping("/page")
-    public Result<Page<E>> page(Page<E> page, E entity){
+    public Result<Page<E>> page(Page<E> page, E entity) {
         return Result.of(commonService.page(page, new QueryWrapper<>(entity)));
     }
 
@@ -40,12 +41,12 @@ public class BaseController<S extends IBaseService<E, T>, E, T> {
     }
 
     @PostMapping("save")
-    public Result<E> save(E entityVo) {
+    public Result<E> save(E entityVo) throws Exception {
         return commonService.updateOrSave(entityVo);
     }
 
     @DeleteMapping("delete/{id}")
-    public Result<Boolean> delete( @PathVariable("id") T id) {
+    public Result<Boolean> delete(@PathVariable("id") T id) {
         return commonService.deleteById(id);
     }
 }

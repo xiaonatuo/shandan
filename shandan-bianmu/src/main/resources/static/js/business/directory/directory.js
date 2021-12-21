@@ -243,9 +243,11 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 toolbarId: "toolbar_dir_add",
                 icon: "dtreefont dtree-icon-weibiaoti5",
                 title: "新建目录",
-                handler: function (node) {
+                handler: function (node, elem) {
                     const {id} = node;
-                    openDirectoryEditLayer({parentId: id})
+                    openDirectoryEditLayer({parentId: id}, function (data) {
+                        dirTree.partialRefreshAdd(elem, data)
+                    });
                 }
             },
             {
@@ -336,7 +338,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
      * 打开目录编辑窗口
      * @param data
      */
-    function openDirectoryEditLayer(data) {
+    function openDirectoryEditLayer(data, callback) {
         const isEdit = data.id;
         layer.open({
             type: 1,
@@ -359,19 +361,18 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             },
             yes: function (index) {
                 form.on('submit(directoryEditForm)', function ({elem, field}) {
-                    if (field.directoryName == tempNode.param.context) {
-                        layer.close(index);
-                    } else {
-                        Util.post(`/business/directory/save`, field, true).then(res => {
-                            if (res.flag) {
-                                let $dom = isEdit ? $(`div[data-id='${field.parentId}'][dtree-id='directoryTree']`) : tempNode.dom;
-                                dirTree.getChild($dom);
-                                layer.close(index);
-                            } else {
-                                showErrorMsg(res.msg);
-                            }
-                        });
-                    }
+                    Util.post(`/business/directory/save`, field, true).then(res => {
+                        if (res.flag) {
+                            layer.close(index);
+                            let data = Object.assign({}, field);
+                            data.basicData = res.data;
+                            data.title = field.directoryName;
+                            data.id = res.data.id;
+                            callback && callback(data);
+                        } else {
+                            showErrorMsg(res.msg);
+                        }
+                    });
                     return false;
                 });
                 $('#directoryEditFormSubmit').click();

@@ -114,7 +114,7 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
      * @return
      */
     @Override
-    public Result<SysOrg> updateOrSave(SysOrg entity) {
+    public Result<SysOrg> updateOrSave(SysOrg entity) throws Exception {
         SysOrg parentOrg = getById(entity.getOrgParentId());
         if (parentOrg == null) {
             return Result.of(null, false, "未查询到上级部门");

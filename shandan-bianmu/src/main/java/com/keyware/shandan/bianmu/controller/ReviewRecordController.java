@@ -99,7 +99,7 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
      * @return
      */
     @PostMapping("/operate")
-    public Result<Boolean> operate(String entityType, String entityId, String status, String opinion){
+    public Result<Boolean> operate(String entityType, String entityId, String status, String opinion) throws Exception {
         if(StringUtils.isBlankAny(entityType, entityId, status)){
             return Result.of(null, false, "参数错误");
         }

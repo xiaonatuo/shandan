@@ -72,7 +72,7 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
      * @return
      */
     @Override
-    public Boolean review(String entityId, String entityType, String status, String opinion) {
+    public Boolean review(String entityId, String entityType, String status, String opinion) throws Exception {
         ReviewEntityType reviewEntityType = Enum.valueOf(ReviewEntityType.class, entityType);
         ReviewStatus reviewStatus = Enum.valueOf(ReviewStatus.class, status);
         if (ReviewEntityType.DIRECTORY.name().equals(entityType)) {
