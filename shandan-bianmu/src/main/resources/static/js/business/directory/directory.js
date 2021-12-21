@@ -304,7 +304,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                         if (res.flag) {
                             layer.msg('提交成功');
                             let tempNode = Object.assign({}, node)
-                            tempNode.basicData.reviewStatus = ReviewStatus.PASS;
+                            tempNode.basicData.reviewStatus = ReviewStatus.SUBMITTED;
                             tempNode.title = tempNode.context;
                             tempNode.title = formatterTitle(tempNode);
                             dirTree.partialRefreshEdit(elem, tempNode)
