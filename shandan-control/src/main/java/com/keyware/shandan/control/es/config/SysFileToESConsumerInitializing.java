@@ -1,6 +1,6 @@
-package com.keyware.shandan.bianmu.es.config;
+package com.keyware.shandan.control.es.config;
 
-import com.keyware.shandan.bianmu.es.consumer.EsSysFileQueueConsumer;
+import com.keyware.shandan.control.es.consumer.EsSysFileQueueConsumer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

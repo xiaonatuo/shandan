@@ -1,4 +1,4 @@
-package com.keyware.shandan.bianmu.es.config;
+package com.keyware.shandan.control.es.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

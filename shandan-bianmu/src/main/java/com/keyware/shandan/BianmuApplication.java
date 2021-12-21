@@ -10,7 +10,7 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 
 @EnableAsync//开启异步调用
 @SpringBootApplication
-@EnableElasticsearchRepositories
+//@EnableElasticsearchRepositories
 public class BianmuApplication {
 
     public static void main(String[] args) {

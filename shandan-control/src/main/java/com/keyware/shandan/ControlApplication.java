@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,7 @@ import java.util.Map;
  * @since 2021/7/27
  */
 @SpringBootApplication
+@EnableElasticsearchRepositories
 public class ControlApplication {
     public static void main(String[] args) {
         SpringApplication.run(ControlApplication.class, args);
