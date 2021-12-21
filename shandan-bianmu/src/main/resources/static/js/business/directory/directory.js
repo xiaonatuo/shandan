@@ -63,7 +63,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
 
         metaListTable = listPage.init({
             table: {
-                hideFunBtn: basicData.directoryType == 'DIRECTORY' || basicData.reviewStatus == ReviewStatus.SUBMITTED || basicData.reviewStatus == ReviewStatus.PASS,
+                hideFunBtn: basicData.reviewStatus == ReviewStatus.SUBMITTED || basicData.reviewStatus == ReviewStatus.PASS,
                 id: 'dirMetadataTable',
                 toolbar: '#tableToolBar',
                 searchFieldNames: 'metadataName',
@@ -306,7 +306,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                             tempNode.basicData.reviewStatus = ReviewStatus.PASS;
                             tempNode.title = tempNode.context;
                             tempNode.title = formatterTitle(tempNode);
-                            tempNode.iconClass = 'dtree-icon-fenzhijigou';
+                            //tempNode.iconClass = 'dtree-icon-fenzhijigou';
                             dirTree.partialRefreshEdit(elem, tempNode)
                             metaListTable.reloadTable();
                         } else {
