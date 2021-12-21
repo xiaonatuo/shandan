@@ -73,7 +73,7 @@ public class ReportNumberServiceImpl extends ReportService {
             int min = offset;
             offset += interval;
             group.add(new MinMaxVal(min, offset));
-        } while (offset <= ((BigDecimal) minMaxVal.getMax()).intValue());
+        } while (offset <= ((Number) minMaxVal.getMax()).intValue());
         return group;
     }
 

@@ -63,8 +63,7 @@ ReportComponent.prototype.openEchartsConfigLayer = function () {
             $('#echartsConfigForm').parent().css('overflow', 'visible')
         },
         yes: function (index) {
-            _this.requestData();
-            layer.close(index);
+            _this.requestData(()=> layer.close(index));
         }
     });
 }
@@ -145,13 +144,14 @@ ReportComponent.prototype.setConditions = function (value) {
 /**
  * 请求数据
  */
-ReportComponent.prototype.requestData = function () {
+ReportComponent.prototype.requestData = function (callback) {
     const _this = this;
     _this.getReportData().then(data => {
         Util.post(`/report/data/metadata/conditions`, data).then(res => {
             console.info(res);
             if (res.flag) {
                 _this.renderEcharts(res.data);
+                callback && callback();
             } else {
                 showErrorMsg('数据统计请求失败');
             }
