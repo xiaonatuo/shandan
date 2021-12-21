@@ -83,11 +83,11 @@ public class PageVo implements Serializable {
      */
     private static Map<String, Object> fillMetadata(SearchHit hit) {
         SearchResultRow resultRow = new SearchResultRow();
-        Map<String, Object> source = hit.getSourceAsMap();
-        resultRow.putAll(source);
+        //Map<String, Object> source = hit.getSourceAsMap();
+        resultRow.putAll(hit.getSourceAsMap());
 
         // 数据类型,具体对应实际数据中的表名或者文件类型
-        Object metaTypeObj = source.get("META_TYPE");
+        /*Object metaTypeObj = source.get("META_TYPE");
         if(metaTypeObj == null){
             return source;
         }
@@ -97,13 +97,13 @@ public class PageVo implements Serializable {
         String tableComment = BianmuDataCache.getComment(metaType);
         resultRow.put("tableComment", tableComment);
         //表字段配置
-        resultRow.put("columns", BianmuDataCache.getColumns(metaType));
+        resultRow.put("columns", BianmuDataCache.getColumns(metaType));*/
 
         // 时间戳类型处理
-        if(source.get("INPUTDATE") != null){
-            long date = (long) source.get("INPUTDATE");
+        if(resultRow.get("inputDate") != null){
+            long date = (long) resultRow.get("inputDate");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            resultRow.put("INPUTDATE", sdf.format(new Date(date)));
+            resultRow.put("inputDate", sdf.format(new Date(date)));
         }
 
         // 设置标题
@@ -138,11 +138,11 @@ public class PageVo implements Serializable {
         }*/
 
         //解析高亮字段
-        /*Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+        Map<String, HighlightField> highlightFields = hit.getHighlightFields();
         for (Map.Entry<String, HighlightField> entry : highlightFields.entrySet()) {
             //高亮标题覆盖原标题
-            source.put(entry.getKey(), fragmentText(entry.getValue()));
-        }*/
+            resultRow.put(entry.getKey(), fragmentText(entry.getValue()));
+        }
         return resultRow;
     }
 

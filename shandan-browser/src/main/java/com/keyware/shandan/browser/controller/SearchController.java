@@ -8,6 +8,7 @@ import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.service.MetadataService;
 import com.keyware.shandan.browser.entity.SearchConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
+import com.keyware.shandan.browser.service.FileSearchService;
 import com.keyware.shandan.browser.service.MetadataDataService;
 import com.keyware.shandan.browser.service.SearchService;
 import com.keyware.shandan.common.entity.Result;
@@ -37,6 +38,9 @@ public class SearchController {
 
     @Autowired
     private MetadataDataService metadataDataService;
+
+    @Autowired
+    private FileSearchService fileSearchService;
 
 
     /**
@@ -125,9 +129,14 @@ public class SearchController {
      * @return 文件结果列表
      */
     @GetMapping("/full/file")
-    public Result<Object> searchFile() {
+    public Result<Object> searchFile(PageVo page, String search, String metaId) {
 
-        return Result.of(null);
+        try {
+            return Result.of(fileSearchService.searchFile(page, search, metaId));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.of(null, false, "Elasticsearch 请求异常");
+        }
     }
 
     /**

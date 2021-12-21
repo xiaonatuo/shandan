@@ -18,7 +18,6 @@ layui.define(['layer', 'gtable', 'globalTree'], function (exports) {
     let events = {
         query: function (data, _this) {
             searchText = $(`#${_this.table.searchInput}`).val().trim();
-            let where; // 需要保留初始化时的参数
 
             let fieldNames = _this.table.searchFieldNames;
             if (fieldNames) {

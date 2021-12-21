@@ -1,15 +1,21 @@
 package com.keyware.shandan.system.entity;
 
 import cn.hutool.core.io.FileTypeUtil;
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.keyware.shandan.common.entity.BaseEntity;
 import com.keyware.shandan.common.util.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * <p>
@@ -23,9 +29,15 @@ import java.io.IOException;
 @EqualsAndHashCode(callSuper = true)
 @TableName("SYS_FILE")
 @Document(indexName = "shandan", type = "_doc")
-public class SysFile extends EsCommonEntity {
-
+public class SysFile extends BaseEntity {
     private static final long serialVersionUID = 9146049308480231565L;
+
+    /**
+     * 主键ID
+     */
+    @TableId("ID")
+    @Id
+    private String id;
 
     @TableField(exist = false)
     @Field(value = "META_TYPE")
@@ -80,6 +92,106 @@ public class SysFile extends EsCommonEntity {
      */
     @TableField("REMARK")
     private String remark;
+
+    /**
+     * 录入人员
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField("ENTRYSTAFF")
+    private String entryStaff;
+
+    /**
+     * 装备型号
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField("EQUIPMENTMODEL")
+    private String equipmentModel;
+
+    /**
+     * 任务时间
+     */
+    @Field(type = FieldType.Date)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @TableField(value = "INPUTDATE")
+    private Date inputDate;
+
+    /**
+     * 文件来源
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField("SOURCE")
+    private String source;
+
+    /**
+     * 任务代号
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField("TASKCODE")
+    private String taskCode;
+
+    /**
+     * 任务性质
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField("TASKNATURE")
+    private String taskNature;
+
+    /**
+     * 部队代号
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField("TROOPCODE")
+    private String troopCode;
+
+    /**
+     * 目标/靶标类型
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField("TARGETNUMBER")
+    private String targetNumber;
+
+    /**
+     * 导弹编号
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField("MISSILENUMBER")
+    private String missileNumber;
+
+    /**
+     * 大文本字段，用于保存文件中的文本信息
+     */
+    @Field(value = "text", type = FieldType.Text)
+    @TableField(exist = false)
+    private String text;
+
+
+    /**
+     * 创建用户
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField(value = "CREATE_USER", fill = FieldFill.INSERT)
+    private String createUser;
+
+    /**
+     * 创建时间
+     */
+    @Field(type = FieldType.Date)
+    @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
+    private Date createTime;
+
+    /**
+     * 修改用户
+     */
+    @Field(type = FieldType.Keyword)
+    @TableField(value = "MODIFY_USER", fill = FieldFill.INSERT_UPDATE)
+    private String modifyUser;
+
+    /**
+     * 修改时间
+     */
+    @Field(type = FieldType.Date)
+    @TableField(value = "MODIFY_TIME", fill = FieldFill.INSERT_UPDATE)
+    private Date modifyTime;
 
     public SysFile() {
     }

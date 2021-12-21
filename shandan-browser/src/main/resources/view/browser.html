@@ -26,10 +26,11 @@
                 <div class="layui-tab layui-tab-brief" id="directoryTreeBody" lay-filter="directoryTreeBody">
                     <ul class="layui-tab-title">
                         <li class="layui-this metadata-table">目录</li>
-                        <li>视图</li>
+                        <!--<li>视图</li>--> <!-- TODO 暂时隐藏 -->
                     </ul>
                     <div class="layui-tab-content">
-                        <div class="layui-tab-item layui-show" style="overflow-y: auto; padding: 10px 0;overflow-x: hidden"
+                        <div class="layui-tab-item layui-show"
+                             style="overflow-y: auto; padding: 10px 0;overflow-x: hidden"
                              id="tree-toobar-div">
                             <div class="layui-form" lay-filter="directoryFilterForm">
                                 <div class="layui-form-item" style="margin-bottom: 0">
@@ -79,7 +80,7 @@
                     </ul>
                     <div class="layui-tab-content">
                         <div class="layui-tab-item layui-show">
-                            <div class="current-position">当前位置：<label id="currentPosition"></label></div>
+                            <div class="current-position">当前位置：<label></label></div>
                             <table class="layui-hide" id="dirMetadataTable" lay-filter="dirMetadataTable"></table>
                             <script type="text/html" id="tableToolBar">
                                 <div class="layui-btn-container">
@@ -99,7 +100,23 @@
                         </div>
 
                         <div class="layui-tab-item">
-                            文件查询
+                            <div class="current-position">当前位置：<label></label></div>
+                            <table class="layui-hide" id="dirFileTable" lay-filter="dirFileTable"></table>
+                            <script type="text/html" id="fileTableToolBar">
+                                <div class="layui-btn-container">
+                                    <div class="layui-layout-left" style="top:10px; left: 20px">
+                                        <input type="text" id="fileSearchKeyInput" name="searchKeyInput"
+                                               autocomplete="off" class="layui-input layui-btn-sm"
+                                               placeholder="请输入关键字查询" style="width: 330px">
+                                        <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
+                                    </div>
+                                </div>
+                            </script>
+                            <script type="text/html" id="fileRowToolBar">
+                                <div class="layui-btn-container">
+                                    <button class="layui-btn layui-btn-xs remove-link" lay-event="details">查看</button>
+                                </div>
+                            </script>
                         </div>
                     </div>
                 </div>
@@ -116,7 +133,7 @@
 <script type="text/javascript">
     const sizeInit = () => {
         $(".layui-card-body").height(window.innerHeight - 20);
-        $("#tree-toobar-div").height($(".layui-card-body").height() - 25-45);
+        $("#tree-toobar-div").height($(".layui-card-body").height() - 25 - 45);
     }
     window.onresize = sizeInit;
     sizeInit();
