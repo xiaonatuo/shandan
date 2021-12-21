@@ -1,9 +1,7 @@
 package com.keyware.shandan.browser.service;
 
-import com.keyware.shandan.bianmu.es.repository.EsSysFileRepository;
 import com.keyware.shandan.browser.entity.PageVo;
 import com.keyware.shandan.common.util.StringUtils;
-import com.keyware.shandan.system.entity.SysFile;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -14,14 +12,9 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 /**
  * FileSearchService
@@ -33,9 +26,6 @@ import java.util.stream.Collectors;
 public class FileSearchService {
 
     @Autowired
-    private EsSysFileRepository fileRepository;
-
-    @Autowired
     private RestHighLevelClient esClient;
 
     public PageVo searchFile(PageVo page, String text, String metaId) throws IOException {
@@ -44,7 +34,9 @@ public class FileSearchService {
         searchSourceBuilder.from(page.getPage() * page.getSize() - page.getSize()).size(page.getSize());
 
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
-        builder.must(QueryBuilders.termQuery("entityId", metaId));
+        if(!"-".equals(metaId)){
+            builder.must(QueryBuilders.termQuery("entityId", metaId));
+        }
         if (StringUtils.isNotBlank(text)) {
             BoolQueryBuilder should = QueryBuilders.boolQuery();
             should.should(QueryBuilders.matchQuery("fileName", text));
@@ -70,14 +62,6 @@ public class FileSearchService {
         searchSourceBuilder.query(builder).highlighter(highlightBuilder);
         request.source(searchSourceBuilder);
 
-        /*Page<SysFile> filePage = fileRepository.search(builder, PageRequest.of(page.getPage() - 1, page.getSize()));
-        PageVo result = new PageVo();
-        result.setSize(page.getSize());
-        result.setPage(page.getPage());
-        result.setTotal(filePage.getTotalElements());
-        result.setPageTotal(filePage.getTotalPages());
-        result.setRecords(filePage.getContent().stream().map(file -> (Object) file).collect(Collectors.toList()));
-        return result;*/
         SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
         return PageVo.ofSearchHits(response.getHits(), page);
     }
