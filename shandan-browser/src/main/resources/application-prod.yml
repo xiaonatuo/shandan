@@ -23,6 +23,10 @@ project:
   captcha-enable: false
   browser:
     dbtool-address: http://172.16.36.224:18300/dbtool/
+  # 配置文件存储方式
+  file-storage:
+    # 存储路径
+    path: ${user.home}/shandan/bianmu/upload
 
 
 oauth:

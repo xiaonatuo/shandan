@@ -41,3 +41,7 @@ project:
   remember-me-enable: true
   browser:
     dbtool-address: http://localhost:18300/dbtool/
+  # 配置文件存储方式
+  file-storage:
+    # 存储路径
+    path: D:/BIANMU

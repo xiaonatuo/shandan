@@ -169,20 +169,13 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
                     {field: 'inputDate', title: '收文时间', width: 160, align: 'center'},
                     {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 100, align: 'center'}
                 ]],
-                done: function (response) {
-                    console.info(response);
-                }
             },
         });
 
         // 查看按钮监听
         metaListTable.addTableRowEvent('details', function (obj) {
-            if (obj.dataSourceId.startsWith('file_')) {
-                const datasourceId = obj.dataSourceId.split('_')
-                openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${datasourceId[1]}`)
-            } else {
-                openMaxLayerWithURL(`${ctx}/search/meta/${obj.id}`)
-            }
+            openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${obj._entityId}`)
+
         })
     }
 })

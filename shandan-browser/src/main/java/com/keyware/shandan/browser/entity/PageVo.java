@@ -100,7 +100,7 @@ public class PageVo implements Serializable {
         resultRow.put("columns", BianmuDataCache.getColumns(metaType));*/
 
         // 时间戳类型处理
-        if(resultRow.get("inputDate") != null){
+        if (resultRow.get("inputDate") != null) {
             long date = (long) resultRow.get("inputDate");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             resultRow.put("inputDate", sdf.format(new Date(date)));
@@ -140,6 +140,8 @@ public class PageVo implements Serializable {
         //解析高亮字段
         Map<String, HighlightField> highlightFields = hit.getHighlightFields();
         for (Map.Entry<String, HighlightField> entry : highlightFields.entrySet()) {
+            resultRow.put("_" + entry.getKey(), resultRow.get(entry.getKey()));
+
             //高亮标题覆盖原标题
             resultRow.put(entry.getKey(), fragmentText(entry.getValue()));
         }
@@ -158,10 +160,10 @@ public class PageVo implements Serializable {
             text.append(fragment);
 
             // 如果是大文本，判断长度
-            if(field.getName().equals("text")){
+            if (field.getName().equals("text")) {
                 text.append(";");
                 int size = text.toString().replace("<label style=\"color:red\">", "").replace("</label>", "").length();
-                if(size > 150){
+                if (size > 150) {
                     break;
                 }
             }
