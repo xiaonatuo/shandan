@@ -13,6 +13,11 @@ import com.keyware.shandan.datasource.service.DataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.stream.Collectors;
+
 /**
  * 资源数据服务实现类
  */
@@ -36,7 +41,7 @@ public class MetadataDataServiceImpl implements MetadataDataService {
     public PageVo queryData(MetadataBasicVo metadata, SearchConditionVo condition) {
         String sql = getQuerySql(metadata, condition);
         sql += condition.getOrderBySql();
-        return dynamicQueryPage(metadata, condition, sql);
+        return dynamicQueryPage(condition, sql);
     }
 
     @Override
@@ -59,7 +64,18 @@ public class MetadataDataServiceImpl implements MetadataDataService {
      * @return 分页列表
      */
     @DS("#metadata.dataSourceId")
-    private PageVo dynamicQueryPage(MetadataBasicVo metadata, SearchConditionVo condition, String sql) {
-        return PageVo.pageConvert(dynamicDatasourceMapper.page(new Page<>(condition.getPage(), condition.getSize()), sql));
+    private PageVo dynamicQueryPage(SearchConditionVo condition, String sql) {
+        Page<HashMap<String, Object>> page = dynamicDatasourceMapper.page(new Page<>(condition.getPage(), condition.getSize()), sql);
+        // 处理Clob类型
+        page.setRecords(page.getRecords().stream().peek(data -> data.entrySet().stream().peek(entry -> {
+            if (entry.getValue() instanceof Clob) {
+                Clob clob = (Clob) entry.getValue();
+                try {
+                    entry.setValue(clob.getSubString(1, (int) clob.length()));
+                } catch (SQLException ignored) {
+                }
+            }
+        }).collect(Collectors.toSet())).collect(Collectors.toList()));
+        return PageVo.pageConvert(page);
     }
 }
