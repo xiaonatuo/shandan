@@ -77,7 +77,13 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                     {field: 'themeTask', title: '主题任务'},
                     {field: 'dataFrom', title: '数据来源'},
                     {field: 'createTime', title: '注册时间', width: 160, align: 'center'},
-                    {fixed: 'right', title: '操作', toolbar: `#rowToolBar${hideFunBtn? '2' : ''}`, width: 100, align: 'center'}
+                    {
+                        fixed: 'right',
+                        title: '操作',
+                        toolbar: `#rowToolBar${hideFunBtn ? '2' : ''}`,
+                        width: 100,
+                        align: 'center'
+                    }
                 ]],
             },
         });
@@ -178,14 +184,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         onClick: function (node) {
             tempNode = node;
             const {basicData} = node.param;
-            if (!basicData) return false;
-            if (basicData.directoryPath) {
-                let path = basicData.directoryPath.replaceAll('/', ' / ');
-                $('#currentPosition').text(path);
-            }
-
+            setLocation(basicData)
             loadMetadataList(node.param)
-
 
             // 先移除事件，否则会和节点点击事件重叠
             $('#directoryTree cite i.icon-fail').off('click');
@@ -207,8 +207,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 if (basicData) {
                     switch (basicData.reviewStatus) {
                         case ReviewStatus.SUBMITTED:
+                            setDisabledButtons(['toolbar_dir_submit']);
                         case ReviewStatus.PASS:
-                            setDisabledButtons(['toolbar_dir_add', 'toolbar_dir_rename', 'toolbar_dir_delete', 'toolbar_dir_link', 'toolbar_dir_submit']);
+                            setDisabledButtons(['toolbar_dir_submit']);
                             break;
                         case ReviewStatus.UN_SUBMIT:
                         case ReviewStatus.FAIL:
@@ -253,9 +254,12 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 toolbarId: "toolbar_dir_rename",
                 icon: "dtreefont dtree-icon-bianji",
                 title: "重命名目录",
-                handler: function (node) {
+                handler: function (node, elem) {
                     const {basicData} = node;
-                    openDirectoryEditLayer(basicData)
+                    openDirectoryEditLayer(basicData, function (data) {
+                        dirTree.partialRefreshEdit(elem, data);
+                        setLocation(data.basicData)
+                    });
                 }
             },
             {
@@ -268,8 +272,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                         Util.send(`/business/directory/delete/${id}`, {}, 'delete').then(res => {
                             if (res.flag) {
                                 showOkMsg('删除成功')
-                                /*let $dom = $(`div[data-id='${parentId}'][dtree-id='directoryTree']`);
-                                dirTree.getChild($dom);*/
                                 dirTree.partialRefreshDel(elem)
                                 layer.close(index);
                             } else {
@@ -386,4 +388,16 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             dirTree.fuzzySearch(this.value);
         }, 500)
     })
+
+    /**
+     * 设置当前位置
+     * @param dirNode
+     */
+    function setLocation(dirNode) {
+        let path = '/资源目录';
+        if (dirNode && dirNode.directoryPath) {
+            path = dirNode.directoryPath.replaceAll('/', ' / ');
+        }
+        $('#currentPosition').text(path);
+    }
 })
