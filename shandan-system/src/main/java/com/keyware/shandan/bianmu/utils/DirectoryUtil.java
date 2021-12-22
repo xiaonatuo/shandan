@@ -11,6 +11,12 @@ import com.keyware.shandan.common.entity.TreeVo;
  */
 public class DirectoryUtil {
 
+    /**
+     * 目录实体转换为树组件实体
+     *
+     * @param dir 目录实体
+     * @return 树组件实体
+     */
     public static TreeVo Dir2Tree(DirectoryVo dir) {
         TreeVo tree = new TreeVo();
         if (dir == null) return tree;
@@ -20,7 +26,7 @@ public class DirectoryUtil {
         tree.setType("DIRECTORY");
         tree.setPath(dir.getDirectoryPath());
         tree.setBasicData(dir);
-        if(!"-".equals(dir.getParentId()) && !dir.getHasChild()){
+        if (!"-".equals(dir.getParentId()) && !dir.getHasChild()) {
             tree.setLast(true);
         }
         return tree;

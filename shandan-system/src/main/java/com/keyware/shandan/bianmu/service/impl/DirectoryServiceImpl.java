@@ -16,6 +16,7 @@ import com.keyware.shandan.system.queue.provider.EsSysFileProvider;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -59,45 +60,39 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     }
 
     @Override
+    @Transactional
     public Result<DirectoryVo> updateOrSave(DirectoryVo entity) throws Exception {
         // 查询父目录，并设置目录路径
-        DirectoryVo parent = getById(entity.getParentId());
-        String dirPath = parent == null ? "/".concat(entity.getDirectoryName()) : parent.getDirectoryPath().concat("/").concat(entity.getDirectoryName());
-        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
-        wrapper.eq("DIRECTORY_PATH", dirPath);
-        DirectoryVo pathDir = getOne(wrapper);
-
-        if (StringUtils.isBlank(entity.getId())) {
-            if (pathDir != null) {
+        String path = buildPath(entity);
+        boolean isInsert = StringUtils.isBlank(entity.getId());
+        DirectoryVo existsDir = getByPath(path);
+        if (isInsert) {
+            if (existsDir != null) {
                 throw new Exception("目录已存在");
             }
             entity.setReviewStatus(ReviewStatus.UN_SUBMIT);
+            super.updateOrSave(entity);
         } else {
             DirectoryVo oldDir = getById(entity.getId());
-            if (oldDir != null) {
-                if (pathDir != null) {
-                    if (!pathDir.getId().equals(oldDir.getId())) {
-                        throw new Exception("目录已存在");
-                    }
-                }
-                // 同时更新所有子级目录的路径
-                directoryMapper.updateDirectoryPath(oldDir.getDirectoryPath() + "/", entity.getDirectoryPath() + "/");
+            if (existsDir != null && !existsDir.getId().equals(entity.getId())) {
+                throw new Exception("目录已存在");
+            }
+            entity.setDirectoryPath(path);
+            super.updateOrSave(entity);
+            // 同时更新所有子级目录的路径
+            updateChildrenPath(oldDir, entity);
+
+            //如果审核通过则需要把目录下文件保存到ES
+            if (entity.getReviewStatus() == ReviewStatus.PASS) {
+                appendFileToES(entity);
+
+                //设置上级目录们为通过
+                updateParentsToPass(entity);
             }
         }
-        entity.setDirectoryPath(dirPath);
 
-        //如果审核通过则需要把目录下文件保存到ES
-        if (entity.getReviewStatus() == ReviewStatus.PASS) {
-            SysFile condition = new SysFile();
-            condition.setEntityId(entity.getId());
-            List<SysFile> files = fileService.list(new QueryWrapper<>(condition));
-            esSysFileProvider.appendQueue(files);
 
-            //处理父级所有目录
-            updateParentsToPass(entity);
-        }
-
-        return super.updateOrSave(entity);
+        return Result.of(entity);
     }
 
     @Override
@@ -115,8 +110,8 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     /**
      * 获取树的子节点
      *
-     * @param vo
-     * @return
+     * @param vo -
+     * @return -
      */
     @Override
     public List<DirectoryVo> treeChildren(DirectoryVo vo) {
@@ -130,7 +125,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
      * 获取目录下的数据资源
      *
      * @param id 目录ID
-     * @return
+     * @return -
      */
     @Override
     public List<MetadataBasicVo> directoryMetadata(String id) {
@@ -156,5 +151,64 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
                 updateParentsToPass(parent);
             }
         }
+    }
+
+    /**
+     * 生成目录路径
+     *
+     * @param dir 目录
+     * @return 目录路径
+     * @throws Exception -
+     */
+    private String buildPath(DirectoryVo dir) throws Exception {
+        DirectoryVo parent = null;
+        if (dir.getParentId().equals("-")) {
+            parent = new DirectoryVo();
+            parent.setId("-");
+            parent.setDirectoryPath("/");
+        } else {
+            parent = getById(dir.getParentId());
+            if (parent == null) {
+                throw new Exception("父级目录不存在");
+            }
+        }
+
+        return parent.getDirectoryPath() + "/" + dir.getDirectoryName();
+    }
+
+    /**
+     * 根据path查询目录实体
+     *
+     * @param path 目录路径
+     * @return 目录
+     */
+    private DirectoryVo getByPath(String path) {
+        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
+        wrapper.eq("DIRECTORY_PATH", path);
+        return getOne(wrapper);
+    }
+
+    /**
+     * 将目录下的文件同步到ES
+     * @param dir 目录
+     */
+    private void appendFileToES(DirectoryVo dir){
+        SysFile condition = new SysFile();
+        condition.setEntityId(dir.getId());
+        List<SysFile> files = fileService.list(new QueryWrapper<>(condition));
+        esSysFileProvider.appendQueue(files);
+    }
+
+    /**
+     * 更新所有子级目录路径
+     * @param oldDir 原始目录
+     * @param newDir 新目录
+     * @throws Exception -
+     */
+    private void updateChildrenPath(DirectoryVo oldDir, DirectoryVo newDir) throws Exception {
+        if(StringUtils.isBlankAny(oldDir.getDirectoryPath(), newDir.getDirectoryPath())){
+            throw new Exception("目录路径设置异常");
+        }
+        directoryMapper.updateDirectoryPath(oldDir.getDirectoryPath() + "/", newDir.getDirectoryPath() + "/");
     }
 }
