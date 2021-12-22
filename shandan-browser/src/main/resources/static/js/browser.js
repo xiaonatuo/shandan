@@ -173,7 +173,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
         });
 
         // 查看按钮监听
-        dirFileTable.addTableRowEvent('details', function (obj) {
+        dirFileTable.addTableRowEvent('details-file', function (obj) {
             openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${obj._entityId}`)
         })
     }
