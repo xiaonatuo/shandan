@@ -99,13 +99,12 @@
                     <label class="field-name">文件描述</label>
                     <label class="field-value" name="remark"></label>
                 </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <input type="hidden" name="id">
-                        <button class="layui-btn layui-btn-sm" type="button" id="download-btn" th:text="${'下载('+ fileData.fileSize  +'M)'}">
-                            下载该文件
-                        </button>
-                    </div>
+                <div class="layui-form-item" style="display: flex; flex-direction: column;">
+                    <input type="hidden" name="id">
+                    <button class="layui-btn layui-btn-sm" type="button" id="download-btn" style="margin: 10px 70px"
+                            th:text="${'下载('+ fileData.fileSize  +'M)'}">
+                        下载该文件
+                    </button>
                 </div>
             </div>
         </div>
