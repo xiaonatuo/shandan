@@ -13,6 +13,7 @@ import com.keyware.shandan.datasource.service.DataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -58,7 +59,6 @@ public class MetadataDataServiceImpl implements MetadataDataService {
     /**
      * 动态查询分页数据
      *
-     * @param metadata  数据资源实体，动态数据源查询时，使用其中dataSourceId字段
      * @param condition 条件项
      * @param sql       动态sql语句
      * @return 分页列表
@@ -73,7 +73,10 @@ public class MetadataDataServiceImpl implements MetadataDataService {
                 try {
                     entry.setValue(clob.getSubString(1, (int) clob.length()));
                 } catch (SQLException ignored) {
+                    entry.setValue("(Clob)");
                 }
+            } else if (entry.getValue() instanceof Blob) {
+                entry.setValue("(Blob)");
             }
         }).collect(Collectors.toSet())).collect(Collectors.toList()));
         return PageVo.pageConvert(page);
