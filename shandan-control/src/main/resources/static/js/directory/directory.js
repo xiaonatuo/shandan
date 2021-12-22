@@ -216,10 +216,10 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                             setDisabledButtons();
                             break
                         case ReviewStatus.REJECTED:
-                            setDisabledButtons(['toolbar_dir_add', 'toolbar_dir_rename', 'toolbar_dir_link']);
+                            setDisabledButtons(['toolbar_dir_add', 'toolbar_dir_rename']);
                     }
                 } else {
-                    setDisabledButtons(['toolbar_dir_rename', 'toolbar_dir_delete', 'toolbar_dir_link']);
+                    setDisabledButtons(['toolbar_dir_rename', 'toolbar_dir_delete']);
                 }
 
                 /**
@@ -276,18 +276,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                             }
                         }).catch(() => showErrorMsg());
                     });
-                }
-            },
-            {
-                toolbarId: "toolbar_dir_link",
-                icon: "layui-icon layui-icon-link",
-                title: "关联数据资源",
-                handler: function (node, elem) {
-                    const {basicData, id, parentId, context} = node;
-                    openAddMetadataLayer(basicData, function () {
-                        //dirTree.partialRefreshAdd(elem);
-                        metaListTable.reloadTable();
-                    })
                 }
             }
         ],
