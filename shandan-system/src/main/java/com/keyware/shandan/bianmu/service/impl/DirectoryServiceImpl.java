@@ -50,8 +50,12 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     public Result<Boolean> deleteById(String id) {
         DirectoryVo dir = getById(id);
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
-        wrapper.likeRight("DIRECTORY_PATH", dir.getDirectoryPath());
-        return Result.of(null, remove(wrapper));
+        wrapper.likeRight("DIRECTORY_PATH", dir.getDirectoryPath() + "/");
+        // 先删除自己
+        removeById(id);
+        // 再删除子节点
+        remove(wrapper);
+        return Result.of(null, true);
     }
 
     @Override
@@ -71,8 +75,8 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
         } else {
             DirectoryVo oldDir = getById(entity.getId());
             if (oldDir != null) {
-                if(pathDir != null){
-                    if(!pathDir.getId().equals(oldDir.getId())){
+                if (pathDir != null) {
+                    if (!pathDir.getId().equals(oldDir.getId())) {
                         throw new Exception("目录已存在");
                     }
                 }

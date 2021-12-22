@@ -57,17 +57,17 @@ public class DirectoryCommonController {
                 return Result.of(null, false, "目录未找到");
 
             }
-            wrapper.likeRight("DIRECTORY_PATH", parent.getDirectoryPath());
+            wrapper.likeRight("DIRECTORY_PATH", parent.getDirectoryPath() + "/");
         }
-        if(StringUtils.isNotBlank(reviewStatus)){
+        if (StringUtils.isNotBlank(reviewStatus)) {
             wrapper.eq("REVIEW_STATUS", reviewStatus);
         }
 
         List<DirectoryVo> directoryList = directoryService.list(wrapper);
 
         // 如果父目录存在，则从查询到的集合中将自己过滤掉
-        if(parent != null){
-            directoryList = directoryList.stream().filter(dir-> !id.equals(dir.getId())).collect(Collectors.toList());
+        if (parent != null) {
+            directoryList = directoryList.stream().filter(dir -> !id.equals(dir.getId())).collect(Collectors.toList());
         }
         return Result.of(TreeUtil.buildDirTree(directoryList.stream().map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
     }
@@ -92,8 +92,8 @@ public class DirectoryCommonController {
             node.put("spread", true);
             node.put("parentId", (i - 1) + "");
             node.put("iconClass", "dtree-icon-wenjianjiazhankai");
-            if(i == 1) node.put("parentId", "-");
-            if(i == path.length-1) {
+            if (i == 1) node.put("parentId", "-");
+            if (i == path.length - 1) {
                 node.put("id", dir.getId());
                 node.put("iconClass", "dtree-icon-wenjianjiazhankai");
                 node.put("type", "metadata");
@@ -112,7 +112,7 @@ public class DirectoryCommonController {
         JSONArray children = new JSONArray();
         children.addAll(dirArray.stream().filter(node -> ((JSONObject) node).getString("parentId").equals(parentId)).collect(Collectors.toList()));
         return children.stream().map(node -> {
-            JSONObject nodeJson = (JSONObject)node;
+            JSONObject nodeJson = (JSONObject) node;
             nodeJson.put("children", buildTree(dirArray, nodeJson.getString("id")));
             return nodeJson;
         }).collect(Collectors.toList());

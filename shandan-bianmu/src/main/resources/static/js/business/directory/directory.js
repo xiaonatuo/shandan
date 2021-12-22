@@ -246,7 +246,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 handler: function (node, elem) {
                     const {id} = node;
                     openDirectoryEditLayer({parentId: id}, function (data) {
-                        dirTree.partialRefreshAdd(elem, data)
+                        dirTree.partialRefreshAdd(elem);
                     });
                 }
             },
@@ -263,13 +263,15 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 toolbarId: "toolbar_dir_delete",
                 icon: "dtreefont dtree-icon-delete1",
                 title: "删除目录",
-                handler: function (node) {
+                handler: function (node, elem) {
                     const {id, parentId} = node;
                     layer.confirm('是否确定删除该目录？', function (index) {
                         Util.send(`/business/directory/delete/${id}`, {}, 'delete').then(res => {
                             if (res.flag) {
-                                let $dom = $(`div[data-id='${parentId}'][dtree-id='directoryTree']`);
-                                dirTree.getChild($dom);
+                                showOkMsg('删除成功')
+                                /*let $dom = $(`div[data-id='${parentId}'][dtree-id='directoryTree']`);
+                                dirTree.getChild($dom);*/
+                                dirTree.partialRefreshDel(elem)
                                 layer.close(index);
                             } else {
                                 showErrorMsg(res.msg);
