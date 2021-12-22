@@ -29,10 +29,12 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
         auto: false,
         bindAction: '#fileUploadAction',
         choose: function (obj) {
+            showLoading()
             let that = this;
             let files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
             //读取本地文件
             obj.preview(function (index, file, result) {
+                closeLoading()
                 let tr = $(`<tr id="upload-${index}">
                                 <td>${file.name}</td>
                                 <td>${(file.size / 1024 / 1024).toFixed(1)}MB</td>
