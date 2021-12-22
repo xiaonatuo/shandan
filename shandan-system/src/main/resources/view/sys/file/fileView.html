@@ -126,8 +126,8 @@
     }
 
     const sizeInit = () => {
-        $("div.layui-card:eq(0) .layui-card-body").height(window.innerHeight - 40 - 6).css('padding', 0);
-        $("div.layui-card:eq(1) .layui-card-body").height(window.innerHeight - 40 - 20);
+        $("div.layui-card:eq(0) .layui-card-body").height(window.innerHeight - 6).css('padding', 0);
+        $("div.layui-card:eq(1) .layui-card-body").height(window.innerHeight - 20);
     }
     window.onresize = sizeInit;
     sizeInit();
