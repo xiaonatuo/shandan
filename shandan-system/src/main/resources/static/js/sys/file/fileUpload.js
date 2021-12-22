@@ -32,9 +32,14 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
             showLoading()
             let that = this;
             let files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+            let length = 0, curr = 0;
+            for(let i in files){
+                length++;
+            }
+
             //读取本地文件
             obj.preview(function (index, file, result) {
-                closeLoading()
+                curr++;
                 let tr = $(`<tr id="upload-${index}">
                                 <td>${file.name}</td>
                                 <td>${(file.size / 1024 / 1024).toFixed(1)}MB</td>
@@ -66,6 +71,10 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
 
                 that.elemList.append(tr);
                 element.render('progress'); //渲染新加的进度条组件
+
+                if(curr == length){
+                    closeLoading()
+                }
             });
         },
         before: function(obj){
