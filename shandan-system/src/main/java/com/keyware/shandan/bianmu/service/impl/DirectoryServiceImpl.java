@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -56,11 +57,16 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
         removeById(id);
         // 再删除子节点
         remove(wrapper);
+
+        DirectoryVo parent = getById(dir.getParentId());
+        if (parent != null && parent.getReviewStatus() == ReviewStatus.PASS) {
+            parent.setReviewStatus(ReviewStatus.UN_SUBMIT);
+            directoryMapper.updateById(parent);
+        }
         return Result.of(null, true);
     }
 
     @Override
-    @Transactional
     public Result<DirectoryVo> updateOrSave(DirectoryVo entity) throws Exception {
         // 查询父目录，并设置目录路径
         DirectoryVo parent = null;
@@ -110,6 +116,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
                 appendFileToES(entity);
                 //设置上级目录们为通过
                 updateParentsToPass(entity);
+                updateChildrenToPass(entity);
             }
         }
         return Result.of(entity);
@@ -171,6 +178,14 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
                 updateParentsToPass(parent);
             }
         }
+    }
+
+    private void updateChildrenToPass(DirectoryVo dir){
+        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
+        wrapper.likeRight("DIRECTORY_PATH", dir.getDirectoryPath() + "/");
+        List<DirectoryVo> list = super.list(wrapper);
+        list.stream().peek(item -> item.setReviewStatus(ReviewStatus.PASS)).collect(Collectors.toList());
+        super.saveOrUpdateBatch(list);
     }
 
     /**
