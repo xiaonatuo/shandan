@@ -33,5 +33,3 @@ security:
       user-authorization-uri: ${oauth.server}/oauth/authorize
     resource:
       user-info-uri: ${oauth.server}/user/info
-      jwt:
-        key-uri: ${oauth.server}/oauth/token_key
