@@ -63,21 +63,44 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     @Transactional
     public Result<DirectoryVo> updateOrSave(DirectoryVo entity) throws Exception {
         // 查询父目录，并设置目录路径
-        String path = buildPath(entity);
+        DirectoryVo parent = null;
+        if (entity.getParentId().equals("-")) {
+            parent = new DirectoryVo();
+            parent.setId("-");
+            parent.setDirectoryPath("/");
+        } else {
+            parent = getById(entity.getParentId());
+            if (parent == null) {
+                throw new Exception("父级目录不存在");
+            }
+        }
+
+        String path = parent.getDirectoryPath() + "/" + entity.getDirectoryName();
         boolean isInsert = StringUtils.isBlank(entity.getId());
         DirectoryVo existsDir = getByPath(path);
+
         if (isInsert) {
             if (existsDir != null) {
                 throw new Exception("目录已存在");
             }
             entity.setReviewStatus(ReviewStatus.UN_SUBMIT);
             super.updateOrSave(entity);
+
+            // 如果父目录为审核通过状态，则修改为待审核
+            if (parent.getReviewStatus() == ReviewStatus.PASS) {
+                parent.setReviewStatus(ReviewStatus.UN_SUBMIT);
+                super.updateOrSave(parent);
+            }
         } else {
             DirectoryVo oldDir = getById(entity.getId());
             if (existsDir != null && !existsDir.getId().equals(entity.getId())) {
                 throw new Exception("目录已存在");
             }
             entity.setDirectoryPath(path);
+            // 如果修改的目录原本为审核通过状态，则更新为未提交
+            if (oldDir.getReviewStatus() == ReviewStatus.PASS) {
+                entity.setReviewStatus(ReviewStatus.UN_SUBMIT);
+            }
             super.updateOrSave(entity);
             // 同时更新所有子级目录的路径
             updateChildrenPath(oldDir, entity);
@@ -85,13 +108,10 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
             //如果审核通过则需要把目录下文件保存到ES
             if (entity.getReviewStatus() == ReviewStatus.PASS) {
                 appendFileToES(entity);
-
                 //设置上级目录们为通过
                 updateParentsToPass(entity);
             }
         }
-
-
         return Result.of(entity);
     }
 
@@ -154,29 +174,6 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     }
 
     /**
-     * 生成目录路径
-     *
-     * @param dir 目录
-     * @return 目录路径
-     * @throws Exception -
-     */
-    private String buildPath(DirectoryVo dir) throws Exception {
-        DirectoryVo parent = null;
-        if (dir.getParentId().equals("-")) {
-            parent = new DirectoryVo();
-            parent.setId("-");
-            parent.setDirectoryPath("/");
-        } else {
-            parent = getById(dir.getParentId());
-            if (parent == null) {
-                throw new Exception("父级目录不存在");
-            }
-        }
-
-        return parent.getDirectoryPath() + "/" + dir.getDirectoryName();
-    }
-
-    /**
      * 根据path查询目录实体
      *
      * @param path 目录路径
@@ -190,9 +187,10 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
 
     /**
      * 将目录下的文件同步到ES
+     *
      * @param dir 目录
      */
-    private void appendFileToES(DirectoryVo dir){
+    private void appendFileToES(DirectoryVo dir) {
         SysFile condition = new SysFile();
         condition.setEntityId(dir.getId());
         List<SysFile> files = fileService.list(new QueryWrapper<>(condition));
@@ -201,12 +199,13 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
 
     /**
      * 更新所有子级目录路径
+     *
      * @param oldDir 原始目录
      * @param newDir 新目录
      * @throws Exception -
      */
     private void updateChildrenPath(DirectoryVo oldDir, DirectoryVo newDir) throws Exception {
-        if(StringUtils.isBlankAny(oldDir.getDirectoryPath(), newDir.getDirectoryPath())){
+        if (StringUtils.isBlankAny(oldDir.getDirectoryPath(), newDir.getDirectoryPath())) {
             throw new Exception("目录路径设置异常");
         }
         directoryMapper.updateDirectoryPath(oldDir.getDirectoryPath() + "/", newDir.getDirectoryPath() + "/");
