@@ -1,4 +1,4 @@
-package com.keyware.shandan.bianmu.es.repository;
+package com.keyware.shandan.control.es.repository;
 
 import com.keyware.shandan.system.entity.SysFile;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
