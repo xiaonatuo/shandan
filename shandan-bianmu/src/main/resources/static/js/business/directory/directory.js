@@ -129,8 +129,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         // 查看按钮监听
         metaListTable.addTableRowEvent('details', function (obj) {
             if (obj.dataSourceId.startsWith('file_')) {
-                const datasourceId = obj.dataSourceId.split('_')
-                openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${datasourceId[1]}`)
+                openMaxLayerWithURL(`${ctx}/sys/file/view?fileId=${obj.id}`)
             } else {
                 openMaxLayerWithURL(`${ctx}/business/metadata/details/${obj.id}`)
             }

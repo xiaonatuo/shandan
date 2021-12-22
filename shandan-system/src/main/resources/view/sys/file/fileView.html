@@ -7,65 +7,17 @@
     <script th:replace="common/head::static"></script>
     <!-- 样式 -->
     <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
-    <style>
-        #fileViewer {
-            display: flex;
-            flex-direction: row;
-        }
-
-        ul.file-viewer-tab {
-            border-right: 1px solid #f6f6f6;
-        }
-
-        ul.file-viewer-tab li {
-            line-height: 34px;
-            writing-mode: vertical-lr;
-            margin-top: 5px;
-            height: 50px;
-            width: 34px;
-            text-align: center;
-            margin-left: 10px;
-            border: 1px solid #e7e7e7;
-            border-right: 0;
-            border-radius: 8px 0px 0px 8px;
-            cursor: pointer;
-        }
-
-        ul.file-viewer-tab li.tab-active {
-            background: #f6f6f6;
-            color: #5fb878;
-            border-right: 2px solid #5fb878;
-        }
-
-        ul.file-viewer-tab li:hover {
-            color: #5fb878;
-        }
-
-        .file-viewer-container {
-            flex: 1
-        }
-
-        .file-viewer-item {
-            display: none;
-            width: 100%;
-            height: 100%;
-        }
-
-        .file-viewer-item.item-show {
-            display: block;
-        }
-    </style>
+    <link th:href="@{/css/sys/file/fileView.css}" rel="stylesheet" type="text/css"/>
+    <script th:inline="javascript">
+        const file = /*[[${fileData}]]*/ {};
+    </script>
 </head>
 <body>
 <div class="layui-row">
     <div class="layui-col-md10">
         <div class="layui-card">
-            <div class="layui-card-header"></div>
+            <!--<div class="layui-card-header"></div>-->
             <div class="layui-card-body" id="fileViewer">
-                <ul class="file-viewer-tab">
-                    <li class="tab-active">预览</li>
-                    <li>属性</li>
-                </ul>
                 <div class="file-viewer-container">
                     <div class="file-viewer-item item-show">
                         <!-- 图片轮播组件 -->
@@ -99,114 +51,67 @@
                             <p>该文件不支持预览，可下载后查看。</p>
                         </div>
                     </div>
-                    <div class="file-viewer-item">
-                        <div class="layui-form" lay-filter="file-form">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">文件名称</label>
-                                <div class="layui-input-block">
-                                    <input type="text" readonly class="layui-input" name="fileName">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">录入人员</label>
-                                <div class="layui-input-block">
-                                    <input type="text" readonly class="layui-input" name="entryStaff">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">导弹编号</label>
-                                <div class="layui-input-block">
-                                    <input type="text" readonly class="layui-input" name="missileNumber">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">目标编号</label>
-                                <div class="layui-input-block">
-                                    <input type="text" readonly class="layui-input" name="targetNumber">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">文件来源</label>
-                                <div class="layui-input-block">
-                                    <input type="text" readonly class="layui-input" name="source">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">目标性质</label>
-                                <div class="layui-input-block">
-                                    <input type="text" readonly class="layui-input" name="taskNature">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">部队代号</label>
-                                <div class="layui-input-block">
-                                    <input type="text" readonly class="layui-input" name="troopCode">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">装备型号</label>
-                                <div class="layui-input-block">
-                                    <input type="text" readonly class="layui-input" name="equipmentModel">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">任务时间</label>
-                                <div class="layui-input-block">
-                                    <input type="text" readonly class="layui-input" name="inputDate">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">文件描述</label>
-                                <div class="layui-input-block">
-                                    <textarea class="layui-textarea" name="remark" readonly></textarea>
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <div class="layui-input-block">
-                                    <input type="hidden" name="id">
-                                    <button class="layui-btn layui-btn-sm" type="button" name="download" id="download-btn">下载该文件</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="layui-col-md2">
         <div class="layui-card">
-            <div class="layui-card-header">文件列表</div>
-            <div class="layui-card-body" style="padding-top: 0;">
-                <div id="viewFileList"></div>
-                <div id="noViewFileList"></div>
+            <!--<div class="layui-card-header">文件属性</div>-->
+            <div class="layui-card-body" style="padding: 0; padding-top: 15px;">
+                <div class="file-property">
+                    <label class="field-name">文件名称</label>
+                    <label class="field-value" name="fileName"></label>
+                </div>
+                <div class="file-property">
+                    <label class="field-name">录入人员</label>
+                    <label class="field-value" name="entryStaff"></label>
+                </div>
+                <div class="file-property">
+                    <label class="field-name">导弹编号</label>
+                    <label class="field-value" name="missileNumber"></label>
+                </div>
+                <div class="file-property">
+                    <label class="field-name">目标编号</label>
+                    <label class="field-value" name="targetNumber"></label>
+                </div>
+                <div class="file-property">
+                    <label class="field-name">文件来源</label>
+                    <label class="field-value" name="source"></label>
+                </div>
+                <div class="file-property">
+                    <label class="field-name">目标性质</label>
+                    <label class="field-value" name="taskNature"></label>
+                </div>
+                <div class="file-property">
+                    <label class="field-name">部队代号</label>
+                    <label class="field-value" name="troopCode"></label>
+                </div>
+                <div class="file-property">
+                    <label class="field-name">装备型号</label>
+                    <label class="field-value" name="equipmentModel"></label>
+                </div>
+                <div class="file-property">
+                    <label class="field-name">任务时间</label>
+                    <label class="field-value" th:text="${file_inputDate}"></label>
+                </div>
+                <div class="file-property">
+                    <label class="field-name">文件描述</label>
+                    <label class="field-value" name="remark"></label>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="hidden" name="id">
+                        <button class="layui-btn layui-btn-sm" type="button" id="download-btn" th:text="${'下载('+ fileData.fileSize  +'M)'}">
+                            下载该文件
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script type="text/html" id="fileListTemplate">
-    {{# if(d.fileListID != 'viewFileListMenu' && d.list.length != 0){ }}
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px; border-color: gray">
-        <legend style="font-size: 12px; color: gray; margin: 0 auto">下列文件不支持预览</legend>
-    </fieldset>
-    {{# } }}
-    <ul class="layui-menu" id="{{d.fileListID}}">
-        {{# for(let file of d.list){
-        let fileName = file.fileName + file.fileSuffix;
-        if(d.fileListID == 'viewFileListMenu'){
-        let jsonText = JSON.stringify(file);
-        }}
-        <li lay-options='{{jsonText}}' title="{{fileName}}" style="padding-left: 0;">
-            <div class="layui-menu-body-title">{{fileName}}</div>
-        </li>
-        {{# }else { }}
-        <li-a lay-options="{id: '{{file.id}}' }" title="{{fileName}}" style="padding-left: 0;">
-            <div class="layui-menu-body-title" style="color:gray">{{fileName}}</div>
-        </li-a>
-        {{# } }}
-        {{# } }}
-    </ul>
-</script>
 <!-- js -->
 <script th:src="@{/js/sys/file/view.js}"></script>
 <script>
@@ -239,8 +144,7 @@
         $(`#fileViewer .file-viewer-item:eq(${index})`).addClass('item-show');
     })
     $('#download-btn').on('click', function () {
-        let fileId = $(this).prev().val();
-        window.open(`${ctx}/sys/file/download/${fileId}`)
+        window.open(`${ctx}/sys/file/download/${file.id}`)
     });
 </script>
 </html>

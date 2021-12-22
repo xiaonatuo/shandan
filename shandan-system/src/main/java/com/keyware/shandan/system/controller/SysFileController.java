@@ -6,6 +6,8 @@ import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import com.keyware.shandan.common.controller.BaseController;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * <p>
@@ -39,8 +43,14 @@ public class SysFileController extends BaseController<SysFileService, SysFile, S
     }
 
     @GetMapping("/view")
-    public ModelAndView fileViewer() {
-        return new ModelAndView("sys/file/fileView");
+    public ModelAndView fileViewer(ModelAndView mav, @RequestParam String fileId) {
+        mav.setViewName("sys/file/fileView");
+        SysFile file = sysFileService.getById(fileId);
+        file.setFileSize(Math.round(file.getFileSize() * 100) / 100d);
+        mav.addObject("fileData", file);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        mav.addObject("file_inputDate", sdf.format(file.getInputDate()));
+        return mav;
     }
 
     /**
@@ -72,7 +82,7 @@ public class SysFileController extends BaseController<SysFileService, SysFile, S
         if (sysFile == null) {
             return "文件不存在";
         }
-        String filePath =  customProperties.getFileStorage().getPath() + "/" + sysFile.getPath();
+        String filePath = customProperties.getFileStorage().getPath() + "/" + sysFile.getPath();
 
         File file = new File(filePath);
         if (!file.exists()) {
