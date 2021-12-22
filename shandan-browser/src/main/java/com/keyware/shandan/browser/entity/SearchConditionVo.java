@@ -97,7 +97,7 @@ public class SearchConditionVo extends PageVo implements Serializable {
 
             if (logicJudgement.equalsIgnoreCase("like_all")) {
                 logicJudgement = "like";
-                fieldValue = fieldValue.substring(1, fieldValue.length() - 2);
+                fieldValue = fieldValue.substring(1, fieldValue.length() - 1);
                 fieldValue = "'%" + fieldValue + "%'";
             } else if (logicJudgement.equalsIgnoreCase("like_left")) {
                 logicJudgement = "like";
@@ -105,7 +105,7 @@ public class SearchConditionVo extends PageVo implements Serializable {
                 fieldValue = "'%" + fieldValue;
             } else if (logicJudgement.equalsIgnoreCase("like_right")) {
                 logicJudgement = "like";
-                fieldValue = fieldValue.substring(0, fieldValue.length() - 2);
+                fieldValue = fieldValue.substring(0, fieldValue.length() - 1);
                 fieldValue = fieldValue + "%'";
             }
 

@@ -34,6 +34,7 @@ layui.use(['dropdown', 'gtable', 'laydate', 'form'], function () {
                 height: 'full-20',
                 autoSort: false,
                 cols: [cols],
+                limit: 20,
                 toolbar: '#table-title',
                 defaultToolbar: ['filter', 'print', 'exports', {
                     title: '统计报表',
@@ -214,6 +215,7 @@ layui.use(['dropdown', 'gtable', 'laydate', 'form'], function () {
                 dataType = $field_name.data('dataType'),
                 table = $field_name.data('table');
             let fieldValue = $li.find(`input[name="${FIELD_VALUE}"]`).val();
+            console.info(fieldValue);
             conditions.push({logicJoin, fieldName, logicJudgement, fieldValue, dataType, table})
         });
         return conditions;
