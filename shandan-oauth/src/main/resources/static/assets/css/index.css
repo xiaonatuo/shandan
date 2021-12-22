@@ -74,7 +74,7 @@
     color: #000;
     border-bottom: 1px solid #ccc;
     margin-bottom: 16px;
-    text-align: left;
+    text-align: center;
     font-size: 16px;
 }
 
@@ -160,7 +160,7 @@
     border: none;
     line-height: 44px;
     border-radius: 50px;
-    background: #15bb9a;
+    background: #3228a1;
     color: #fff;
     font-size: 16px;
     letter-spacing: 2px;
@@ -424,7 +424,7 @@
 }
 
 .bg1 {
-    background: url(../images/bg1.jpg) no-repeat;
+    background: url(../images/bg.png) no-repeat;
     height: 100%;
 }
 
