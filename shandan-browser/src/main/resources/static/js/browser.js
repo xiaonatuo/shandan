@@ -167,13 +167,13 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
                     {field: 'targetNumber', title: '目标/靶标类型'},
                     {field: 'entryStaff', title: '录入人员'},
                     {field: 'inputDate', title: '收文时间', width: 160, align: 'center'},
-                    {fixed: 'right', title: '操作', toolbar: '#rowToolBar', width: 100, align: 'center'}
+                    {fixed: 'right', title: '操作', toolbar: '#fileRowToolBar', width: 100, align: 'center'}
                 ]],
             },
         });
 
         // 查看按钮监听
-        dirFileTable.addTableRowEvent('details-file', function (obj) {
+        dirFileTable.addTableRowEvent('details', function (obj) {
             openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${obj._entityId}`)
         })
     }
