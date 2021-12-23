@@ -70,18 +70,18 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     public Result<DirectoryVo> updateOrSave(DirectoryVo entity) throws Exception {
         // 查询父目录，并设置目录路径
         DirectoryVo parent = null;
+        String path = "";
         if (entity.getParentId().equals("-")) {
             parent = new DirectoryVo();
-            parent.setId("-");
-            parent.setDirectoryPath("/");
+            path = "/" + entity.getDirectoryName();
         } else {
             parent = getById(entity.getParentId());
             if (parent == null) {
                 throw new Exception("父级目录不存在");
             }
+            path = parent.getDirectoryPath() + "/" + entity.getDirectoryName();
         }
 
-        String path = parent.getDirectoryPath() + "/" + entity.getDirectoryName();
         boolean isInsert = StringUtils.isBlank(entity.getId());
         DirectoryVo existsDir = getByPath(path);
 

@@ -258,6 +258,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                     const {basicData} = node;
                     openDirectoryEditLayer(basicData, function (data) {
                         dirTree.partialRefreshEdit(elem, data);
+                        dirTree.getChild(elem);
                         setLocation(data.basicData)
                     });
                 }
@@ -394,9 +395,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
      * @param dirNode
      */
     function setLocation(dirNode) {
-        let path = '/资源目录';
+        let path = '/ 资源目录';
         if (dirNode && dirNode.directoryPath) {
-            path = dirNode.directoryPath.replaceAll('/', ' / ');
+            path += dirNode.directoryPath.replaceAll('/', ' / ');
         }
         $('#currentPosition').text(path);
     }
