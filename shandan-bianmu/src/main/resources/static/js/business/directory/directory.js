@@ -246,8 +246,16 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 handler: function (node, elem) {
                     const {id, basicData} = node;
                     openDirectoryEditLayer({parentId: id}, function (data) {
-                        let $parentDom = $(`#directoryTree div.dtree-nav-div.dtree-theme-item[data-id="${basicData.parentId}"]`)
-                        dirTree.partialRefreshAdd($parentDom);
+                        if(id == '-'){
+                            dirTree.partialRefreshAdd(elem);
+                        }else{
+                            let $parentDom = $(`#directoryTree div.dtree-nav-div.dtree-theme-item[data-id="${basicData.parentId}"]`)
+                            dirTree.partialRefreshAdd($parentDom);
+                            setTimeout(function(){
+                                let $newDom = $(`#directoryTree div.dtree-nav-div.dtree-theme-item[data-id="${basicData.id}"]`)
+                                dirTree.partialRefreshAdd($newDom);
+                            },50)
+                        }
                     });
                 }
             },
