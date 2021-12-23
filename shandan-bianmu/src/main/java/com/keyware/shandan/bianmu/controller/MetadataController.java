@@ -1,5 +1,6 @@
 package com.keyware.shandan.bianmu.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.entity.DirectoryMetadataVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
@@ -46,7 +47,7 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     public ModelAndView index(ModelAndView mov) {
         mov.setViewName("business/metadata/metadata");
         Map<String, String> map = new HashMap<>();
-        Arrays.stream(SecretLevel.values()).forEach(secret-> map.put(secret.name(), secret.getDesc()));
+        Arrays.stream(SecretLevel.values()).forEach(secret -> map.put(secret.name(), secret.getDesc()));
         mov.addObject("SecretLevel", map);
         return mov;
     }
@@ -86,6 +87,12 @@ public class MetadataController extends BaseController<MetadataService, Metadata
     @PostMapping("/save/all")
     public Result<Boolean> saveFullTest(@RequestBody MetadataBasicVo metadataBasic) {
         return Result.of(metadataService.saveMetadataBasicAndDetailsList(metadataBasic));
+    }
+
+    @GetMapping("/get/page")
+    public Result<Object> getByPage(@RequestParam(value = "page", defaultValue = "1") int page,
+                                    @RequestParam(value = "size", defaultValue = "10") int size) {
+        return Result.of(metadataService.page(new Page<>(page, size)));
     }
 
     /**

@@ -21,6 +21,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * AES + RSA 加解密AOP处理
@@ -29,6 +32,8 @@ import java.text.SimpleDateFormat;
 @Aspect
 @Component
 public class SafetyAspect {
+    private static final String[] PATHS = {"/business/metadata/save/all"};
+    private static final List<String> EXCLUDE_PATHS = Arrays.asList(PATHS);
     //jackson
     private final ObjectMapper mapper = new ObjectMapper();
     /**
@@ -55,6 +60,12 @@ public class SafetyAspect {
             assert attributes != null;
             //request对象
             HttpServletRequest request = attributes.getRequest();
+
+            // 判断是否需要排除
+            String path = request.getServletPath();
+            if(EXCLUDE_PATHS.contains(path)){
+                return joinPoint.proceed(joinPoint.getArgs());
+            }
 
             //前端公钥
             String publicKey = request.getParameter("publicKey");

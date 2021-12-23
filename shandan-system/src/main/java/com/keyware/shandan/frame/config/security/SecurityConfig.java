@@ -36,7 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/getVerifyCodeImage",
             "/error/*",
             "/upload/**",
-            "/sys/file/download/**"
+            "/sys/file/download/**",
+            "/business/metadata/save/all",
+            "/business/metadata/get/page"
     };
 
    @Override

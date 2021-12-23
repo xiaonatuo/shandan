@@ -46,11 +46,13 @@ public class SecurityUtil {
         User user = null;
         SecurityContext ctx = SecurityContextHolder.getContext();
         Authentication auth = ctx.getAuthentication();
-        if (auth.getPrincipal() instanceof UserDetails) {
-            user = (User) auth.getPrincipal();
-        }else if(auth.getPrincipal() instanceof String){
-            String username = (String) auth.getPrincipal();
-            user = new User(username, "", new ArrayList<>());
+        if(auth.getPrincipal() != null){
+            if (auth.getPrincipal() instanceof UserDetails) {
+                user = (User) auth.getPrincipal();
+            }else if(auth.getPrincipal() instanceof String){
+                String username = (String) auth.getPrincipal();
+                user = new User(username, "", new ArrayList<>());
+            }
         }
         return user;
     }

@@ -25,6 +25,7 @@ public class MyBatisConfig {
 
     /**
      * 事务管理器
+     *
      * @param dataSource
      * @return
      */
@@ -38,6 +39,7 @@ public class MyBatisConfig {
 
     /**
      * Mybatis 拦截器配置
+     *
      * @return
      */
     @Bean
@@ -53,7 +55,7 @@ public class MyBatisConfig {
     }
 
     @Bean
-    public PermissionsInnerInterceptor permissionsInnerInterceptor(){
+    public PermissionsInnerInterceptor permissionsInnerInterceptor() {
         return new PermissionsInnerInterceptor();
     }
 
@@ -61,23 +63,28 @@ public class MyBatisConfig {
      * MyBatis实体类公共字段填充配置
      */
     @Component
-    class MetaObjectHandlerConfig implements MetaObjectHandler{
+    class MetaObjectHandlerConfig implements MetaObjectHandler {
 
         @Override
         public void insertFill(MetaObject metaObject) {
-            SysUser user = SecurityUtil.getLoginSysUser();
             this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
             this.strictInsertFill(metaObject, "modifyTime", Date.class, new Date());
-            this.strictInsertFill(metaObject, "createUser", String.class, user.getUserId());
-            this.strictInsertFill(metaObject, "modifyUser", String.class, user.getUserId());
-            this.strictInsertFill(metaObject, "orgId", String.class, user.getOrgId());
+            SysUser user = SecurityUtil.getLoginSysUser();
+            if (user != null) {
+                this.strictInsertFill(metaObject, "createUser", String.class, user.getUserId());
+                this.strictInsertFill(metaObject, "modifyUser", String.class, user.getUserId());
+                this.strictInsertFill(metaObject, "orgId", String.class, user.getOrgId());
+            }
         }
 
         @Override
         public void updateFill(MetaObject metaObject) {
-            String currentUserId = SecurityUtil.getLoginSysUser().getUserId();
             this.strictInsertFill(metaObject, "modifyTime", Date.class, new Date());
-            this.strictInsertFill(metaObject, "modifyUser", String.class, currentUserId);
+            SysUser user = SecurityUtil.getLoginSysUser();
+            if (user != null) {
+                String currentUserId = SecurityUtil.getLoginSysUser().getUserId();
+                this.strictInsertFill(metaObject, "modifyUser", String.class, currentUserId);
+            }
         }
     }
 }
