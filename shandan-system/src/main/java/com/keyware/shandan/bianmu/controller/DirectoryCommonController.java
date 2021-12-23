@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
+import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
 import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.bianmu.utils.DirectoryUtil;
@@ -48,7 +49,7 @@ public class DirectoryCommonController {
      * @return
      */
     @GetMapping("/tree")
-    public Result<List<TreeVo>> tree(String id, String reviewStatus) {
+    public Result<List<TreeVo>> tree(String id, String reviewStatus, boolean browser) {
         DirectoryVo parent = null;
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(id) && !"-".equals(id)) {
@@ -68,6 +69,16 @@ public class DirectoryCommonController {
         // 如果父目录存在，则从查询到的集合中将自己过滤掉
         if (parent != null) {
             directoryList = directoryList.stream().filter(dir -> !id.equals(dir.getId())).collect(Collectors.toList());
+        }
+        // 如果是综合浏览的请求，则需要判断每个目录的父级目录总是否有未通过审核的，如果有则过滤掉
+        if (browser) {
+            // 查询所有未审核通过的目录
+            QueryWrapper<DirectoryVo> unPassQuery = new QueryWrapper<>();
+            unPassQuery.in("REVIEW_STATUS", ReviewStatus.SUBMITTED, ReviewStatus.UN_SUBMIT, ReviewStatus.FAIL, ReviewStatus.REJECTED);
+            List<DirectoryVo> unPassList = directoryService.list(unPassQuery);
+            List<String> unPassIds = unPassList.stream().map(DirectoryVo::getId).collect(Collectors.toList());
+            // 判断目录的父级是否存在于未审核通过的目录中，如果存在于，则过滤掉
+            directoryList = directoryList.stream().filter(item -> !unPassIds.contains(item.getParentId())).collect(Collectors.toList());
         }
         return Result.of(TreeUtil.buildDirTree(directoryList.stream().map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
     }
@@ -89,7 +100,7 @@ public class DirectoryCommonController {
 
         String[] path = dir.getDirectoryPath().split("/");
         JSONArray dirArray = new JSONArray();
-        dirList.forEach(item->{
+        dirList.forEach(item -> {
             TreeVo tree = DirectoryUtil.Dir2Tree(item);
         });
         for (int i = 1; i < path.length; i++) {

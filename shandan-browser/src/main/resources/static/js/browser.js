@@ -19,7 +19,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
     function initDirectoryTree() {
         let dirTree = globalTree.init({
             id: 'directoryTree',
-            url: `${ctx}/business/directory/tree`,
+            url: `${ctx}/business/directory/tree?browser=true`,
             request: {reviewStatus: ReviewStatus.PASS},
             data: [{id: '-', parentId: '', title: '资源目录', leaf: false, last: false, spread: false}],
             cache: true,
