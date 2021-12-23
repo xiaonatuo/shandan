@@ -82,8 +82,16 @@ public class DirectoryCommonController {
         SysSetting bianmuSetting = SysSettingUtil.getSysSetting(SystemTypes.BIANMU.name());
         mav.addObject("bianmuAddress", bianmuSetting.getSysAddress());
 
+        // 获取父级目录
+        List<DirectoryVo> dirList = directoryService.parentLists(dir);
+        dirList.addAll(directoryService.childrenLists(dir));
+        dirList.add(dir);
+
         String[] path = dir.getDirectoryPath().split("/");
         JSONArray dirArray = new JSONArray();
+        dirList.forEach(item->{
+            TreeVo tree = DirectoryUtil.Dir2Tree(item);
+        });
         for (int i = 1; i < path.length; i++) {
             JSONObject node = new JSONObject();
             node.put("id", i + "");
@@ -103,7 +111,8 @@ public class DirectoryCommonController {
             dirArray.add(node);
         }
 
-        mav.addObject("treeData", buildTree(dirArray, "-"));
+        //mav.addObject("treeData", buildTree(dirArray, "-"));
+        mav.addObject("treeData", TreeUtil.buildDirTree(dirList.stream().map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
         return mav;
     }
 

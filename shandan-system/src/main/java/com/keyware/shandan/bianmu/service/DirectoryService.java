@@ -36,4 +36,18 @@ public interface DirectoryService extends IBaseService<DirectoryVo, String> {
      * @return
      */
     List<MetadataBasicVo> directoryAllMetadata(String id);
+
+    /**
+     * 获取目录的所有父级目录
+     * @param dir
+     * @return
+     */
+    List<DirectoryVo> parentLists(DirectoryVo dir);
+
+    /**
+     * 获取目录的所有子节点
+     * @param dir
+     * @return
+     */
+    List<DirectoryVo> childrenLists(DirectoryVo dir);
 }

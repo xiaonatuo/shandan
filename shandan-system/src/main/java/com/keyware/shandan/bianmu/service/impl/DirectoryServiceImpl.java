@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,6 +90,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
             if (existsDir != null) {
                 throw new Exception("目录已存在");
             }
+            entity.setDirectoryPath(path);
             entity.setReviewStatus(ReviewStatus.UN_SUBMIT);
             super.updateOrSave(entity);
 
@@ -165,6 +167,26 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
         return directoryMapper.selectAllMetadataByDirectory(id);
     }
 
+    @Override
+    public List<DirectoryVo> parentLists(DirectoryVo dir) {
+        List<DirectoryVo> list = new ArrayList<>();
+        DirectoryVo parent = getById(dir.getParentId());
+        if(parent != null){
+            list.add(parent);
+            if (!"-".equals(parent.getParentId())) {
+                list.addAll(parentLists(parent));
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<DirectoryVo> childrenLists(DirectoryVo dir) {
+        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
+        wrapper.likeRight("DIRECTORY_PATH", dir.getDirectoryPath() + "/");
+        return super.list(wrapper);
+    }
+
     /**
      * 递归更新所有父级目录为PASS
      *
@@ -180,6 +202,8 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
             }
         }
     }
+
+
 
     private void updateChildrenToPass(DirectoryVo dir){
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
