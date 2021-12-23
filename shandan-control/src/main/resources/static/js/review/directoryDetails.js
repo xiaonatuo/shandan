@@ -127,9 +127,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
     // 加载并渲染目录树
     let treeOps = {
         id: 'directoryTree',
-        data: [{id: '-', parentId: '', title: '根目录', leaf: false, last: false, spread: true,children: treeData}],
+        data: [{id: '-', parentId: '', title: '资源目录', leaf: false, last: false, spread: true,children: treeData}],
         cache: true,
-        initLevel: 13, // 默认展开一级
+        initLevel: 3, // 默认展开一级
         onDbClick: function ({dom}) {
             dirTree.clickSpread(dom);
         },
