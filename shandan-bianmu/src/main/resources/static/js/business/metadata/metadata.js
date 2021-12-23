@@ -20,7 +20,7 @@ layui.use(['layer', 'listPage', 'form', 'dict'], function () {
             url: `${ctx}/business/metadata/page`,
             cols: [[
                 {field: 'id', title: 'ID', hide: true},
-                {field: 'metadataName', title: '数据表'},
+                {field: 'metadataName', title: '数据名称'},
                 {field: 'metadataComment', title: '中文注释'},
                 {field: 'secretLevel', title: '密级', templet: data => layui.dict.getDictDesc('secret_level', data.secretLevel)},
                 {field: 'themeTask', title: '主题任务'},

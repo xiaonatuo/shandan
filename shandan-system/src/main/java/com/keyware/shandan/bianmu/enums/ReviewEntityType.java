@@ -16,7 +16,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ReviewEntityType {
     DIRECTORY("DIRECTORY", "目录"),
-    METADATA("METADATA", "数据表");
+    METADATA("METADATA", "数据资源");
 
     @EnumValue
     private final String value;

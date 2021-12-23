@@ -21,7 +21,7 @@ layui.use(['layer', 'listPage'], function () {
             cols: [[
                 {field: 'id', title: 'ID', hide: true},
                 {field: '',type: 'checkbox'},
-                {field: 'metadataName', title: '数据表'},
+                {field: 'metadataName', title: '数据名称'},
                 {field: 'metadataComment', title: '中文注释'},
                 /*{field: 'themeTask', title: '主题任务'},*/
                 {field: 'dataFrom', title: '数据来源'},

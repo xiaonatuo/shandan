@@ -43,8 +43,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                 method: 'get',
                 cols: [[
                     {field: 'id', title: 'ID', hide: true},
-                    {field: 'metadataName', title: '数据表'},
-                    {field: 'metadataComment', title: '中文注释'},
+                    {field: 'metadataName', title: '数据名称'},
+                    {field: 'metadataComment', title: '注释'},
                     {field: 'themeTask', title: '主题任务'},
                     {field: 'dataFrom', title: '数据来源'},
                     {field: 'collectionTime', title: '采集时间'},

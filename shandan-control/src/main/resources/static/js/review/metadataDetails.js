@@ -10,13 +10,13 @@ const htmlTemplate = `
             <div class="layui-tab-item layui-show">
                 <div class="layui-form" lay-filter="details-form">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">数据表名</label>
+                        <label class="layui-form-label">数据名称</label>
                         <div class="layui-input-block">
                             <input type="text" readonly class="layui-input" name="metadataName">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">中文注释</label>
+                        <label class="layui-form-label">注释</label>
                         <div class="layui-input-block">
                             <input type="text" readonly class="layui-input" name="metadataComment">
                         </div>

@@ -23,8 +23,8 @@ layui.use(['layer', 'listPage'], function () {
             height:'full-20',
             cols:[[
                 {type: 'checkbox', title: '选择', width: 50},
-                {field: 'tableName', title: '数据表'},
-                {field: 'tableComment', title: '表注释'},
+                {field: 'tableName', title: '数据名称'},
+                {field: 'tableComment', title: '注释'},
             ]],
             onChecked: function(obj){
                 const checkDatas = listPage.getTableCheckStatus();

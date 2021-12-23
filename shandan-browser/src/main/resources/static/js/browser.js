@@ -123,7 +123,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
                 method: 'get',
                 cols: [[
                     {field: 'id', title: 'ID', hide: true},
-                    {field: 'metadataName', title: '资源名称', width: 300},
+                    {field: 'metadataName', title: '数据名称', width: 300},
                     {field: 'metadataComment', title: '中文注释'},
                     {field: 'themeTask', title: '主题任务'},
                     {field: 'dataFrom', title: '数据来源'},
