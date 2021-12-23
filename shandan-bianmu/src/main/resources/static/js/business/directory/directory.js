@@ -330,7 +330,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
     dirTree = globalTree.init(treeOps);
 
     function formatterTitle(data) {
+        console.info(data);
         let {title, basicData} = data;
+        title = title || basicData.directoryName;
         if (basicData) {
             const reviewStatus = data.basicData.reviewStatus;
             title += ReviewStatusIcon[reviewStatus].replace('##id##', basicData.id);
@@ -370,7 +372,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                             layer.close(index);
                             let data = Object.assign({}, field);
                             data.basicData = res.data;
-                            data.title = field.directoryName;
+                            data.title = formatterTitle(data);
                             data.id = res.data.id;
                             callback && callback(data);
                         } else {

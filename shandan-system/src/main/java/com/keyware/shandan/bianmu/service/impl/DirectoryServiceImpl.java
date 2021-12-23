@@ -118,6 +118,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
                 updateParentsToPass(entity);
                 updateChildrenToPass(entity);
             }
+            entity = getById(entity.getId());
         }
         return Result.of(entity);
     }
