@@ -136,8 +136,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
         // 查看按钮监听
         metaListTable.addTableRowEvent('details', function (obj) {
             if (obj.dataSourceId.startsWith('file_')) {
-                const datasourceId = obj.dataSourceId.split('_')
-                openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${datasourceId[1]}`)
+                openMaxLayerWithURL(`${ctx}/sys/file/view?fileId=${obj.id}`)
             } else {
                 openMaxLayerWithURL(`${ctx}/search/meta/${obj.id}`)
             }
@@ -174,7 +173,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'gtable', 'form'], function () {
 
         // 查看按钮监听
         dirFileTable.addTableRowEvent('details-file', function (obj) {
-            openMaxLayerWithURL(`${ctx}/sys/file/view?entityId=${obj._entityId}`)
+            openMaxLayerWithURL(`${ctx}/sys/file/view?fileId=${obj.id}`)
         })
     }
 })
