@@ -244,9 +244,10 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 icon: "dtreefont dtree-icon-weibiaoti5",
                 title: "新建目录",
                 handler: function (node, elem) {
-                    const {id} = node;
+                    const {id, basicData} = node;
                     openDirectoryEditLayer({parentId: id}, function (data) {
-                        dirTree.partialRefreshAdd(elem);
+                        let $parentDom = $(`#directoryTree div.dtree-nav-div.dtree-theme-item[data-id="${basicData.parentId}"]`)
+                        dirTree.partialRefreshAdd($parentDom);
                     });
                 }
             },

@@ -36,12 +36,6 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
     @Autowired
     private DirectoryMapper directoryMapper;
 
-    @Autowired
-    private SysFileService fileService;
-
-    @Autowired
-    private EsSysFileProvider esSysFileProvider;
-
 
     /**
      * 删除目录，包含所有子级目录
@@ -94,7 +88,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
             entity.setReviewStatus(ReviewStatus.UN_SUBMIT);
             super.updateOrSave(entity);
 
-            // 如果父目录为审核通过状态，则修改为待审核
+            // 如果父目录为审核通过状态，则修改为未提交
             if (parent.getReviewStatus() == ReviewStatus.PASS) {
                 parent.setReviewStatus(ReviewStatus.UN_SUBMIT);
                 super.updateOrSave(parent);
@@ -112,14 +106,6 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
             super.updateOrSave(entity);
             // 同时更新所有子级目录的路径
             updateChildrenPath(oldDir, entity);
-
-            //如果审核通过则需要把目录下文件保存到ES
-            if (entity.getReviewStatus() == ReviewStatus.PASS) {
-                appendFileToES(entity);
-                //设置上级目录们为通过
-                updateParentsToPass(entity);
-                updateChildrenToPass(entity);
-            }
             entity = getById(entity.getId());
         }
         return Result.of(entity);
@@ -187,31 +173,6 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
         return super.list(wrapper);
     }
 
-    /**
-     * 递归更新所有父级目录为PASS
-     *
-     * @param dir 目录
-     */
-    private void updateParentsToPass(DirectoryVo dir) throws Exception {
-        DirectoryVo parent = getById(dir.getParentId());
-        if (parent != null) {
-            parent.setReviewStatus(ReviewStatus.PASS);
-            updateOrSave(parent);
-            if (!"-".equals(parent.getParentId())) {
-                updateParentsToPass(parent);
-            }
-        }
-    }
-
-
-
-    private void updateChildrenToPass(DirectoryVo dir){
-        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
-        wrapper.likeRight("DIRECTORY_PATH", dir.getDirectoryPath() + "/");
-        List<DirectoryVo> list = super.list(wrapper);
-        list.stream().peek(item -> item.setReviewStatus(ReviewStatus.PASS)).collect(Collectors.toList());
-        super.saveOrUpdateBatch(list);
-    }
 
     /**
      * 根据path查询目录实体
@@ -223,18 +184,6 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
         wrapper.eq("DIRECTORY_PATH", path);
         return getOne(wrapper);
-    }
-
-    /**
-     * 将目录下的文件同步到ES
-     *
-     * @param dir 目录
-     */
-    private void appendFileToES(DirectoryVo dir) {
-        SysFile condition = new SysFile();
-        condition.setEntityId(dir.getId());
-        List<SysFile> files = fileService.list(new QueryWrapper<>(condition));
-        esSysFileProvider.appendQueue(files);
     }
 
     /**

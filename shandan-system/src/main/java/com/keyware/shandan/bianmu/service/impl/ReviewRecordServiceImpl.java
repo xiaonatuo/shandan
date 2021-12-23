@@ -15,8 +15,11 @@ import com.keyware.shandan.common.enums.NotificationType;
 import com.keyware.shandan.common.service.BaseServiceImpl;
 import com.keyware.shandan.frame.annotation.DataPermissions;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
+import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.entity.SysNotification;
 import com.keyware.shandan.system.entity.SysUser;
+import com.keyware.shandan.system.queue.provider.EsSysFileProvider;
+import com.keyware.shandan.system.service.SysFileService;
 import com.keyware.shandan.system.service.SysNotificationService;
 import com.keyware.shandan.system.service.SysOrgService;
 import com.keyware.shandan.system.utils.NotificationUtil;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -49,6 +53,12 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
 
     @Autowired
     private SysNotificationService notificationService;
+
+    @Autowired
+    private SysFileService fileService;
+
+    @Autowired
+    private EsSysFileProvider esSysFileProvider;
 
     @Override
     @DataPermissions
@@ -81,14 +91,22 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
                 return false;
             }
             vo.setReviewStatus(reviewStatus);
-            directoryService.updateOrSave(vo);
+            directoryService.updateById(vo);
+            //如果审核通过则需要把目录下文件保存到ES
+            if (vo.getReviewStatus() == ReviewStatus.PASS) {
+                appendFileToES(vo);
+                //设置上级目录们为通过
+                updateParentsToPass(vo);
+                //设置子级目录们为通过
+                updateChildrenToPass(vo);
+            }
         } else if (ReviewEntityType.METADATA.name().equals(entityType)) {
             MetadataBasicVo vo = metadataService.getById(entityId);
             if (vo == null) {
                 return false;
             }
             vo.setReviewStatus(reviewStatus);
-            metadataService.updateOrSave(vo);
+            metadataService.updateById(vo);
         }
 
         ReviewRecordVo record = new ReviewRecordVo(entityId, reviewEntityType, reviewStatus, opinion);
@@ -99,6 +117,45 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
         }
 
         return false;
+    }
+
+
+    /**
+     * 将目录下的文件同步到ES
+     *
+     * @param dir 目录
+     */
+    private void appendFileToES(DirectoryVo dir) {
+        SysFile condition = new SysFile();
+        condition.setEntityId(dir.getId());
+        List<SysFile> files = fileService.list(new QueryWrapper<>(condition));
+        esSysFileProvider.appendQueue(files);
+    }
+
+    /**
+     * 递归更新所有父级目录为PASS
+     *
+     * @param dir 目录
+     */
+    private void updateParentsToPass(DirectoryVo dir) throws Exception {
+        DirectoryVo parent = directoryService.getById(dir.getParentId());
+        if (parent != null) {
+            parent.setReviewStatus(ReviewStatus.PASS);
+            directoryService.updateById(parent);
+            if (!"-".equals(parent.getParentId())) {
+                updateParentsToPass(parent);
+            }
+        }
+    }
+
+
+
+    private void updateChildrenToPass(DirectoryVo dir){
+        QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
+        wrapper.likeRight("DIRECTORY_PATH", dir.getDirectoryPath() + "/");
+        List<DirectoryVo> list = directoryService.list(wrapper);
+        list.stream().peek(item -> item.setReviewStatus(ReviewStatus.PASS)).collect(Collectors.toList());
+        directoryService.saveOrUpdateBatch(list);
     }
 
     /**
