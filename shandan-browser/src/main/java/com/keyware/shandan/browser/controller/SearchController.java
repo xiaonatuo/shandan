@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.service.MetadataService;
-import com.keyware.shandan.browser.entity.SearchConditionVo;
 import com.keyware.shandan.browser.entity.PageVo;
+import com.keyware.shandan.browser.entity.SearchConditionVo;
 import com.keyware.shandan.browser.service.FileSearchService;
 import com.keyware.shandan.browser.service.MetadataDataService;
 import com.keyware.shandan.browser.service.SearchService;
@@ -128,6 +128,7 @@ public class SearchController {
      *
      * @return 文件结果列表
      */
+    @AppLog(operate = "文件全文检索查询")
     @GetMapping("/full/file")
     public Result<Object> searchFile(PageVo page, String search, String metaId) {
 
@@ -146,8 +147,32 @@ public class SearchController {
      * @param condition 条件项
      * @return 分页列表
      */
+    @AppLog(operate = "查询指定数据资源下的数据")
     @PostMapping("/metadata/condition/{metaId}")
     public Result<PageVo> searchDataByMetadata(@PathVariable String metaId, SearchConditionVo condition) {
+        MetadataBasicVo metadata = metadataService.get(metaId).getData();
+        if (metadata != null) {
+            return Result.of(metadataDataService.queryData(metadata, condition));
+        }
+        return Result.of(new PageVo());
+    }
+
+    @PostMapping("/metadata/condition/query")
+    public Result<PageVo> searchDataByMetadataTest(@RequestParam String metaId, @RequestBody SearchConditionVo condition) {
+        MetadataBasicVo metadata = metadataService.get(metaId).getData();
+        if (metadata != null) {
+            return Result.of(metadataDataService.queryData(metadata, condition));
+        }
+        return Result.of(new PageVo());
+    }
+
+    @GetMapping("/metadata/condition/get")
+    public Result<PageVo> searchDataByMetadata2(@RequestParam String metaId,
+                                                @RequestParam(value = "page", defaultValue = "1") int page,
+                                                @RequestParam(value = "size", defaultValue = "10") int size) {
+        SearchConditionVo condition = new SearchConditionVo();
+        condition.setSize(size);
+        condition.setPage(page);
         MetadataBasicVo metadata = metadataService.get(metaId).getData();
         if (metadata != null) {
             return Result.of(metadataDataService.queryData(metadata, condition));
