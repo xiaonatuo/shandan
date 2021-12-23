@@ -38,14 +38,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/upload/**",
             "/sys/file/download/**",
             "/business/metadata/save/all",
-            "/business/metadata/get/page"
+            "/business/metadata/get/page",
+            "/search/metadata/condition/get",
+            "/search/metadata/condition/query"
     };
 
-   @Override
-   public void configure(WebSecurity web) throws Exception {
-       super.configure(web);
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        super.configure(web);
 
-   }
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

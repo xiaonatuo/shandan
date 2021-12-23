@@ -32,7 +32,7 @@ import java.util.List;
 @Aspect
 @Component
 public class SafetyAspect {
-    private static final String[] PATHS = {"/business/metadata/save/all"};
+    private static final String[] PATHS = {"/business/metadata/save/all","/search/metadata/condition/get","/search/metadata/condition/query"};
     private static final List<String> EXCLUDE_PATHS = Arrays.asList(PATHS);
     //jackson
     private final ObjectMapper mapper = new ObjectMapper();
