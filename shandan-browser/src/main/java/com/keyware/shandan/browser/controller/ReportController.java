@@ -267,7 +267,10 @@ public class ReportController {
         }
         if (!hasMetadata) {
             param.getFields().forEach(item -> {
-                fields.put(item.get("columnName").toString(), item.get("comment").toString());
+                if (Objects.nonNull(item.get("columnName"))) {
+                    String comment = Objects.nonNull(item.get("comment")) ? (String) item.get("comment") : (String) item.get("columnName");
+                    fields.put((String) item.get("columnName"), comment);
+                }
             });
         }
 
