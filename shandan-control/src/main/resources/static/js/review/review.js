@@ -20,7 +20,7 @@ const reviewLayerHtml = `
             <div class="layui-input-block">
                 <input type="radio" name="status" value="PASS" title="通过" lay-verify="required" lay-filter="reviewStatusRadio">
                 <input type="radio" name="status" value="FAIL" title="不通过" lay-verify="required" lay-filter="reviewStatusRadio">
-                <input type="radio" name="status" value="REJECTED" title="驳回" lay-verify="required" lay-filter="reviewStatusRadio">
+                <!--<input type="radio" name="status" value="REJECTED" title="驳回" lay-verify="required" lay-filter="reviewStatusRadio">-->
             </div>
         </div>
         <div class="layui-form-item">
@@ -111,18 +111,7 @@ class Review {
                 } else { // 目录类型数据
                     url = `${ctx}/business/directory/details/${data.id}`;
                 }
-                layer.open({
-                    title: false,
-                    closeBtn: false,
-                    type: 2,
-                    area: [window.innerWidth + 'px', window.innerHeight + 'px'],
-                    content: url,
-                    success: function (layerObj, index) {
-                        window.closeDetailsLayer = function () {
-                            layer.close(index);
-                        };
-                    }
-                })
+                openMaxLayerWithURL(url);
             });
 
             reviewForm.on('radio(statusRadio)', function (data) {

@@ -13,6 +13,9 @@
             line-height: 24px;
         }
         .layui-tab-content{padding: 0}
+        .layui-table-tool-temp {
+            padding-right: 0;
+        }
     </style>
     <script th:inline="javascript">
         const bianmuAddress = /*[[${bianmuAddress}]]*/ '';
@@ -25,27 +28,6 @@
 <div class="layui-row">
     <div class="layui-col-md12">
         <div class="layui-card">
-            <div class="layui-card-header">
-                <div style=" float: left;">
-                    <a class="layui-btn layui-btn-sm layui-btn-primary layui-border-green layui-font-14" href="javascript:void(0)" style="border:0; padding:0;text-decoration: underline;" id="backBtn">返回审核列表</a>
-                </div>
-                <div style="float: right;" id="reviewBtnBox">
-                    <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'PASS'">
-                        <span class="layui-font-green layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-ok-circle"></i>审核通过</span>
-                    </th:block>
-                    <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'FAIL'">
-                        <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>审核不通过</span>
-                    </th:block>
-                    <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'REJECTED'">
-                        <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>驳回</span>
-                    </th:block>
-                    <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'SUBMITTED'">
-                        <button class="layui-btn layui-btn-sm" data-status="PASS">审核通过</button>
-                        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-red" data-status="FAIL">审核不通过</button>
-                        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-black" data-status="REJECTED">驳回</button>
-                    </th:block>
-                </div>
-            </div>
             <div class="layui-card-body" style="padding: 0">
                 <div class="layui-row">
                     <!-- 树 -->
@@ -73,16 +55,28 @@
                                                 <div class="layui-btn-container">
                                                     <div class="layui-form-item">
                                                         <div class="layui-inline">
-                                                            <!--<button class="layui-btn layui-btn-sm {{d.hideFunBtn ? 'layui-hide' : ''}}" lay-event="addLink">关联数据资源</button>
-                                                            <button class="layui-btn layui-btn-sm  {{d.hideFunBtn ? 'layui-hide' : ''}}" lay-event="addFile"><i
-                                                                    class="layui-icon">&#xe67c;</i>上传文件
-                                                            </button>-->
-                                                        </div>
-                                                        <div class="layui-inline">
                                                             <input type="text" id="searchKeyInput" name="searchKeyInput"
                                                                    autocomplete="off"
                                                                    placeholder="请输入关键字查询" class="layui-input layui-btn-sm">
                                                             <button class="layui-btn layui-btn-sm" lay-event="query">查询</button>
+                                                        </div>
+                                                        <div class="layui-inline" style="float: right">
+                                                            <div style="float: right;" id="reviewBtnBox">
+                                                                <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'PASS'">
+                                                                    <span class="layui-font-green layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-ok-circle"></i>审核通过</span>
+                                                                </th:block>
+                                                                <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'FAIL'">
+                                                                    <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>审核不通过</span>
+                                                                </th:block>
+                                                                <!--<th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'REJECTED'">
+                                                                    <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>驳回</span>
+                                                                </th:block>-->
+                                                                <th:block th:if="${#strings.trim(directory.reviewStatus)} eq 'SUBMITTED'">
+                                                                    <button class="layui-btn layui-btn-sm" data-status="PASS">审核通过</button>
+                                                                    <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-red" data-status="FAIL">审核不通过</button>
+                                                                    <!--<button class="layui-btn layui-btn-sm layui-btn-primary layui-border-black" data-status="REJECTED">驳回</button>-->
+                                                                </th:block>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -210,19 +204,6 @@
 <script type="text/javascript">
     layui.use(['form'], function () {
 
-        //审核按钮组点击事件监听
-        $('#reviewBtnBox button').on('click', function () {
-            let status = $(this).data('status');
-            window.parent.ReviewComponent.openReviewLayer(data.id, status, ()=>{
-                window.location.reload();
-            });
-
-        });
-
-        //返回列表页
-        $('#backBtn').on('click', function () {
-            window.parent.closeDetailsLayer();
-        });
     });
 
     const toggleRightCard = (showType, callback) => {

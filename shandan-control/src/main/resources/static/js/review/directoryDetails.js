@@ -50,6 +50,16 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                     {field: 'collectionTime', title: '采集时间'},
                     operate
                 ]],
+                done: function () {
+                    //审核按钮组点击事件监听
+                    $('#reviewBtnBox button').on('click', function () {
+                        let status = $(this).data('status');
+                        window.parent.ReviewComponent.openReviewLayer(data.id, status, ()=>{
+                            window.location.reload();
+                        });
+
+                    });
+                }
             },
         });
     }

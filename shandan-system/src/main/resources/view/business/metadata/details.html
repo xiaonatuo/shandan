@@ -25,13 +25,13 @@
                     <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'FAIL'">
                         <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>审核不通过</span>
                     </th:block>
-                    <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'REJECTED'">
+                    <!--<th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'REJECTED'">
                         <span class="layui-font-red layui-font-14" style="font-weight: bold"><i class="layui-icon layui-icon-close"></i>驳回</span>
-                    </th:block>
+                    </th:block>-->
                     <th:block th:if="${#strings.trim(detailsData.reviewStatus)} eq 'SUBMITTED'">
                         <button class="layui-btn layui-btn-sm" data-status="PASS">审核通过</button>
                         <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-red" data-status="FAIL">审核不通过</button>
-                        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-black" data-status="REJECTED">驳回</button>
+                        <!--<button class="layui-btn layui-btn-sm layui-btn-primary layui-border-black" data-status="REJECTED">驳回</button>-->
                     </th:block>
                 </div>
             </div>
@@ -168,11 +168,6 @@
                 window.location.reload();
             });
 
-        });
-
-        //返回列表页
-        $('#backBtn').on('click', function () {
-            window.parent.closeDetailsLayer();
         });
     });
 </script>
