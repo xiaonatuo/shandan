@@ -89,7 +89,7 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
                     if (res.flag) {
                         res.data = res.data || [];
                         _this.orgIds = res.data.join(',');
-                        orgTree.chooseDataInit(res.data);
+                        orgTree.chooseDataInit(_this.orgIds);
                         orgTree.initNoAllCheck2();
                     }
                 });
@@ -150,6 +150,8 @@ layui.define(['orgSelector', 'orgTree', 'globalTree'], function (exports) {
      * @returns {Promise<boolean>}
      */
     async function save(permisId, orgIds, dirIds) {
+        console.info('方法参数：',permisId, orgIds, dirIds);
+        console.info('组件参数：', permisId, this.orgIds);
         // 机构配置保存
         let orgOk = true;
         await saveOrgConfig(permisId, orgIds).then(res => {
