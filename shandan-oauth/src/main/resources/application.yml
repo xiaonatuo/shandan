@@ -13,3 +13,16 @@ spring:
   #mvc接收参数时对日期进行格式化
   mvc:
     date-format: yyyy-MM-dd HH:mm:ss
+  datasource:
+    dynamic:
+      hikari:
+        #最小空闲连接数
+        min-idle: 3
+        #最大连接数，小于等于0会被重置为默认值10；大于零小于1会被重置为minimum-idle的值
+        max-pool-size: 30
+        #最长生命周期，默认值1800000，如果不等于0且小于30秒会被重置为30分钟
+        max-lifetime: 180000
+        #连接超时时间：毫秒，小于250毫秒，否则被重置为默认值30000(30秒)
+        connection-timeout: 20000
+        #空闲连接超时时间，默认值600000（10分钟）
+        idle-timeout: 180000
