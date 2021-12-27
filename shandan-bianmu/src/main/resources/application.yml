@@ -55,7 +55,7 @@ spring:
     dynamic:
       druid:
         #最大连接池数量
-        max-active: 30
+        max-active: 20
         #初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时
         initial-size: 3
         # 获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，
