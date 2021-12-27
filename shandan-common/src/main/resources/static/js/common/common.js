@@ -48,6 +48,9 @@ const ReviewEntityType = {
     METADATA: 'METADATA'
 }
 
+const PUBLIC_SETTING_KEY = 'PUBLIC_SETTING';
+const OFFICE_ONLINE_SERVER_KEY = 'OFFICE_ONLINE_SERVER';
+
 /**
  * 加解密操作简单封装一下
  */
@@ -523,6 +526,31 @@ if(!initTime || (currentTime - initTime) > 1000 * 60){
             _Store.set(STORE_DICT_KEY, dict)
         }
     })
+}
+
+const DICT = {
+    get: function(type, key){
+        let data = _Store.get(STORE_DICT_KEY);
+        if(type && key){
+            let data_type = data[type];
+            if(data_type){
+                for(let item of data_type){
+                    if(item.dictCode == key){
+                        return item.value;
+                    }
+                }
+                return '';
+            }
+            return {};
+        }else if(type){
+            return data[type];
+        }
+        return {};
+    },
+
+    getOfficeServer: function(){
+        return this.get(PUBLIC_SETTING_KEY, OFFICE_ONLINE_SERVER_KEY);
+    }
 }
 
 /**
