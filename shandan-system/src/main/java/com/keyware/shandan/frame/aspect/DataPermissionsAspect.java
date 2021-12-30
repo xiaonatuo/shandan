@@ -1,7 +1,8 @@
 package com.keyware.shandan.frame.aspect;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.keyware.shandan.bianmu.entity.DirectoryVo;
+import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.common.enums.DataPermisScope;
 import com.keyware.shandan.frame.annotation.DataPermissions;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 数据权限处理
@@ -50,6 +52,14 @@ public class DataPermissionsAspect {
         // 当前用户权限范围
         List<SysPermissions> permisList = getCurrentUserPermissions(currentUser.getUserId());
         DataPermissions annotation = getAnnotationByMethod(joinPoint, DataPermissions.class);
+
+        AtomicBoolean isDeptAdmin = new AtomicBoolean(false);
+        // 当前用户权限范围
+        permisList.forEach(sp ->{
+            if(DataPermisScope.ONLY_CURRENT_ORG.equals(sp.getPermisScope())){
+                isDeptAdmin.set(true);
+            }
+        });
         // 不包含最高权限范围时，通过查询权限范围内的部门作为条件进行查询
         if (permisList.stream().noneMatch(permis -> permis.getPermisScope() == DataPermisScope.ALL_SCOPE)) {
             Object[] args = joinPoint.getArgs();
@@ -80,24 +90,119 @@ public class DataPermissionsAspect {
                     if (orgIds.size() == 0) {
                         wrapper.eq(true, "CREATE_USER", currentUser.getUserId());
                     } else {
-                        wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
-                                .or(true, wp -> {
-                                    wp.in(true, annotation.orgColumn(), orgIds);
 
-                                    // 查询实体为目录或者数据资源时，则添加审核通wrapper.getEntity()过条件
-                                    Object entity = wrapper.getEntity();
-                                    if (entity != null) {
-                                        String className = entity.getClass().getName();
-                                        if (className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")
-                                                || className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
-                                            wp.and(true, wpe -> wpe.eq("REVIEW_STATUS", "PASS"));
-                                        }
+                        Object entity = wrapper.getEntity();
+                        if (entity != null) {
+                            String className = entity.getClass().getName();
+                            if (className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
+                                com.keyware.shandan.bianmu.entity.DirectoryVo dir = (DirectoryVo) entity;
+                                if(isDeptAdmin.get()){
+                                    if((null == dir.getReviewStatus() || "".equals(dir.getReviewStatus()))){
+                                        wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
+                                                .and(true, wp -> {
+                                                    wp.in(true, annotation.orgColumn(), orgIds);
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "SUBMITTED"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "PASS"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "FAIL"));
+                                                });
+                                    }else if(dir != null && null!=dir.getReviewStatus() && null!=dir.getReviewStatus().getValue()){
+                                        wrapper.eq("REVIEW_STATUS", dir.getReviewStatus().getValue());
                                     }
-                                });
+
+                                }else{
+                                    if(dir != null && null!=dir.getReviewStatus() && null!=dir.getReviewStatus().getValue()){
+                                        wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
+                                                .and(true, wp -> {
+                                                    wp.in(true, annotation.orgColumn(), orgIds);
+                                                    wp.and(true, wpe -> wpe.eq("REVIEW_STATUS", dir.getReviewStatus().getValue()));
+                                                });
+
+                                    }else{
+                                        wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
+                                                .and(true, wp -> {
+                                                    wp.in(true, annotation.orgColumn(), orgIds);
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "UN_SUBMIT"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "SUBMITTED"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "PASS"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "FAIL"));
+                                                });
+
+                                    }
+                                }
+                            }
+
+                            if(className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")){
+
+                                com.keyware.shandan.bianmu.entity.MetadataBasicVo vo = (MetadataBasicVo) entity;
+                                if(isDeptAdmin.get()){
+                                    if((null == vo.getReviewStatus() || "".equals(vo.getReviewStatus()))){
+                                        wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
+                                                .or(true, wp -> {
+                                                    wp.in(true, annotation.orgColumn(), orgIds);
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "SUBMITTED"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "PASS"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "FAIL"));
+                                                });
+                                    }else if(vo != null && null!=vo.getReviewStatus() && null!=vo.getReviewStatus().getValue()){
+                                            wrapper.eq("REVIEW_STATUS", vo.getReviewStatus().getValue());
+                                    }
+
+                                }else{
+                                    if(vo != null && null!=vo.getReviewStatus() && null!=vo.getReviewStatus().getValue()){
+                                        wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
+                                                .and(true, wp -> {
+                                                    wp.in(true, annotation.orgColumn(), orgIds);
+                                                    wp.and(true, wpe -> wpe.eq("REVIEW_STATUS", vo.getReviewStatus().getValue()));
+                                                });
+
+                                    }else{
+                                        wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
+                                                .and(true, wp -> {
+                                                    wp.in(true, annotation.orgColumn(), orgIds);
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "UN_SUBMIT"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "SUBMITTED"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "PASS"));
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "FAIL"));
+                                                });
+
+                                    }
+                                }
+                            }
+                        }
+
                     }
 
                     args[i] = wrapper;
                     return joinPoint.proceed(args);
+                }
+            }
+        }else if(permisList.stream().allMatch(permis -> permis.getPermisScope() == DataPermisScope.ALL_SCOPE)){
+
+            Object[] args = joinPoint.getArgs();
+            for (int i = 0; i < args.length; i++) {
+                if (args[i] instanceof QueryWrapper) {
+                    QueryWrapper<Object> wrapper = (QueryWrapper<Object>) args[i];
+                    Object entity = wrapper.getEntity();
+
+                    if (entity != null) {
+                        String className = entity.getClass().getName();
+                        if(className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")){
+                            com.keyware.shandan.bianmu.entity.MetadataBasicVo vo = (MetadataBasicVo) entity;
+                            if(vo != null && null!=vo.getReviewStatus() && null!=vo.getReviewStatus().getValue()){
+                                wrapper.eq("REVIEW_STATUS", vo.getReviewStatus().getValue());
+                            }
+                            args[i] = wrapper;
+                            return joinPoint.proceed(args);
+                        }else if(className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
+                            String classNameDir = entity.getClass().getName();
+                            com.keyware.shandan.bianmu.entity.DirectoryVo dio = (DirectoryVo) entity;
+                            if(null!=dio && null!=dio.getReviewStatus() && null!=dio.getReviewStatus().getValue()){
+                                wrapper.eq("REVIEW_STATUS", dio.getReviewStatus().getValue());
+                            }
+                            return joinPoint.proceed();
+                        }
+                    }
+
                 }
             }
         }

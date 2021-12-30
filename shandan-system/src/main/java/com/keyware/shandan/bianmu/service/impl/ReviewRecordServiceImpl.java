@@ -82,7 +82,8 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
      * @return
      */
     @Override
-    public Boolean review(String entityId, String entityType, String status, String opinion) throws Exception {
+    public Boolean review(String entityId, String entityType, String status,
+                          String opinion,String metadataName,String proType) throws Exception {
         ReviewEntityType reviewEntityType = Enum.valueOf(ReviewEntityType.class, entityType);
         ReviewStatus reviewStatus = Enum.valueOf(ReviewStatus.class, status);
         if (ReviewEntityType.DIRECTORY.name().equals(entityType)) {
@@ -112,7 +113,7 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
         ReviewRecordVo record = new ReviewRecordVo(entityId, reviewEntityType, reviewStatus, opinion);
         if (save(record)) {
             // 发送系统通知
-            notificationService.sendNotification(newReviewNotify(record));
+            notificationService.sendNotification(newReviewNotify(record,metadataName,proType));
             return true;
         }
 
@@ -163,24 +164,25 @@ public class ReviewRecordServiceImpl extends BaseServiceImpl<ReviewRecordMapper,
      * @param record
      * @return
      */
-    private SysNotification newReviewNotify(ReviewRecordVo record) {
+    private SysNotification newReviewNotify(ReviewRecordVo record,String metadataName,String proType) {
         String content = genNotificationContent(record);
         String receiveIds = judgingReceiver(record);
+        //数据资源
         if(record.getEntityType() == ReviewEntityType.METADATA){
             if(record.getReviewOperate() == ReviewStatus.PASS){
-                return NotificationUtil.newNotification(NotificationType.METADATA_REVIEW_PASS, null, content, receiveIds);
+                return NotificationUtil.newNotification(NotificationType.METADATA_REVIEW_PASS, null, content, receiveIds,record.getReviewOpinion(),metadataName,proType);
             }else if(record.getReviewOperate() == ReviewStatus.FAIL){
-                return NotificationUtil.newNotification(NotificationType.METADATA_REVIEW_FAIL, null, content, receiveIds);
+                return NotificationUtil.newNotification(NotificationType.METADATA_REVIEW_FAIL, null, content, receiveIds,record.getReviewOpinion(),metadataName,proType);
             }
-
-            return NotificationUtil.newMetadataReviewNotify(content, receiveIds);
+            return NotificationUtil.newMetadataReviewNotify(content, receiveIds,record.getReviewOpinion(),metadataName,proType);
         }else{
+            //目录资源
             if(record.getReviewOperate() == ReviewStatus.PASS){
-                return NotificationUtil.newNotification(NotificationType.DIRECTORY_REVIEW_PASS, null, content, receiveIds);
+                return NotificationUtil.newNotification(NotificationType.DIRECTORY_REVIEW_PASS, null, content, receiveIds,record.getReviewOpinion(),metadataName,proType);
             }else if(record.getReviewOperate() == ReviewStatus.FAIL){
-                return NotificationUtil.newNotification(NotificationType.DIRECTORY_REVIEW_FAIL, null, content, receiveIds);
+                return NotificationUtil.newNotification(NotificationType.DIRECTORY_REVIEW_FAIL, null, content, receiveIds,record.getReviewOpinion(),metadataName,proType);
             }
-            return NotificationUtil.newDirectoryReviewNotify(content, receiveIds);
+            return NotificationUtil.newDirectoryReviewNotify(content, receiveIds,record.getReviewOpinion(),metadataName,proType);
         }
     }
 

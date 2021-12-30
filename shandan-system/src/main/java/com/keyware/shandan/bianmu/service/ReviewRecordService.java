@@ -21,5 +21,5 @@ public interface ReviewRecordService extends IBaseService<ReviewRecordVo, String
      * @param opinion 审核意见
      * @return
      */
-    Boolean review(String entityId, String entityType, String status, String opinion) throws Exception;
+    Boolean review(String entityId, String entityType, String status, String opinion,String metadataName,String proType) throws Exception;
 }

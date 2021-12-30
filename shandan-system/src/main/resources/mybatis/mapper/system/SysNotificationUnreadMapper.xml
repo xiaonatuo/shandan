@@ -10,6 +10,8 @@
         <result column="MODIFY_USER" property="modifyUser" />
         <result column="MODIFY_TIME" property="modifyTime" />
         <result column="USER_ID" property="userId" />
+        <result column="OPINION" property="opinion" />
+        <result column="CN_NAME" property="cnName" />
         <result column="NOTIFICATION_ID" property="notificationId" />
     </resultMap>
 </mapper>

@@ -75,10 +75,6 @@ public class MetadataServiceImpl extends BaseServiceImpl<MetadataBasicMapper, Me
         if(StringUtils.isNotBlank(metaData.getMetadataName())){
             wrapper.like("METADATA_NAME", metaData.getMetadataName());
         }
-        if(metaData.getReviewStatus() != null){
-            wrapper.eq("REVIEW_STATUS", metaData.getReviewStatus().getValue());
-        }
-
         return metadataBasicMapper.selectPage(page, wrapper);
     }
 

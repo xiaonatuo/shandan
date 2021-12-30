@@ -12,6 +12,8 @@
         <result column="FROM_ID" property="fromId" />
         <result column="RECEIVE_ID" property="receiveId" />
         <result column="TITLE" property="title" />
+        <result column="OPINION" property="opinion" />
+        <result column="CN_NAME" property="cnName" />
         <result column="CONTENT" property="content" />
         <result column="TYPE" property="type" />
         <result column="ALL_READ" property="allRead" />

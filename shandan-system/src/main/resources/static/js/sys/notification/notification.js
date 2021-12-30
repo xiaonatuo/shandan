@@ -21,12 +21,12 @@ layui.define([], function (exports) {
             allPageList: `${ctx}/sys/notification/page`,
             setRead: `${ctx}/sys/notification/read`
         }
-        this.interval = 1000 * 30;
+        this.interval = 1000 * 10;
     }
 
     SysNotificationUtil.prototype.init = function () {
         this.initStorage();
-        this.initUnreadMark()
+        this.initUnreadMark();
     };
 
     /**
@@ -59,7 +59,7 @@ layui.define([], function (exports) {
      * 初始化消息未读标记
      */
     SysNotificationUtil.prototype.initUnreadMark = function () {
-        let list = this.getUnreadList()
+        let list = this.getUnreadList();
         if (list && list.length > 0) {
             this.showMark();
         }else{
@@ -146,9 +146,16 @@ layui.define([], function (exports) {
      */
     SysNotificationUtil.prototype.showMark = function () {
         setTimeout(() => {
+            //layui-badge-dot  layui-hide
             $('#unread-mark.layui-hide').removeClass('layui-hide');
+            layer.alert('您有未读的系统通知，请查看', {
+                icon: 1,
+                time: 5000,
+                title: "消息通知"
+            });
         }, 150)
     };
+
 
     SysNotificationUtil.prototype.hideMark = function () {
         setTimeout(() => {

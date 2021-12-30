@@ -66,6 +66,21 @@ public class SysNotification extends BaseEntity{
     @TableField("ALL_READ")
     private String allRead;
 
+
+    /**
+     * 审批意见
+     */
+    @TableField("OPINION")
+    private String opinion;
+
+
+    /**
+     * 中文名称
+     */
+    @TableField("CN_NAME")
+    private String cnName;
+
+
     /**
      * 发送人
      */

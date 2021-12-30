@@ -38,6 +38,21 @@ public class SysNotificationUnread extends BaseEntity{
     @TableField("NOTIFICATION_ID")
     private String notificationId;
 
+
+    /**
+     * 审批意见
+     */
+    @TableField("OPINION")
+    private String opinion;
+
+
+    /**
+     * 中文名称
+     */
+    @TableField("CN_NAME")
+    private String cnName;
+
+
     /**
      * 未读标识
      */

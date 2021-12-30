@@ -101,7 +101,7 @@ class Review {
 
             // 绑定审核按钮点击事件
             listPage.addTableRowEvent('review', function (data) {
-                _this.reviewOperate(data.id, () => listPage.reloadTable());
+                _this.reviewOperate(data.id,data, () => listPage.reloadTable());
             })
 
             listPage.addTableRowEvent('details', function (data) {
@@ -132,7 +132,7 @@ class Review {
      * @param callback 回调
      * @param status 审核状态
      */
-    reviewOperate(id, callback, status) {
+    reviewOperate(id,data, callback, status) {
         const _this = this;
         layer.open({
             type: 1,
@@ -149,7 +149,8 @@ class Review {
                 reviewForm.on('submit(reviewForm)', function ({elem, field}) {
                     let param = $.extend({}, field);
                     param.entityId = id;
-                    param.entityType = _this.options.entityType
+                    param.entityType = _this.options.entityType;
+                    param.metadataName = data.metadataName;
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
                         if (res.flag) {
                             layer.msg('操作成功');
@@ -198,8 +199,8 @@ layui.define([], function (exports) {
             review.init()
             this.reviewComponent = review;
         },
-        openReviewLayer: function (id, status, callback) {
-            this.reviewComponent.reviewOperate(id, () => {
+        openReviewLayer: function (id,data, status, callback) {
+            this.reviewComponent.reviewOperate(id,data, () => {
                 callback && callback()
                 //window.location.reload();
             }, status);
