@@ -91,15 +91,17 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
      * @param entityId 数据对象ID
      * @param status 审核状态
      * @param opinion 审核意见
+     * @param metadataName 数据名称
      * @return
      */
     @PostMapping("/operate")
-    public Result<Boolean> operate(String entityType, String entityId, String status, String opinion,String metadataName) throws Exception {
-        if(StringUtils.isBlankAny(entityType, entityId, status,metadataName)){
+    public Result<Boolean> operate(String entityType, String entityId,
+                                   String status, String opinion,String metadataName) throws Exception {
+        if(StringUtils.isBlankAny(entityType, entityId, status)){
             return Result.of(null, false, "参数错误");
         }
 
-        return Result.of(reviewRecordService.review(entityId, entityType, status, opinion,metadataName,"control"));
+        return Result.of(reviewRecordService.review(entityId, entityType, status, opinion,metadataName,"PASS"));
     }
 
     /**

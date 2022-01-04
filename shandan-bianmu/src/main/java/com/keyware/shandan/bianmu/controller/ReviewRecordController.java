@@ -100,11 +100,11 @@ public class ReviewRecordController extends BaseController<ReviewRecordService, 
      */
     @PostMapping("/operate")
     public Result<Boolean> operate(String entityType, String entityId, String status, String opinion,String metadataName) throws Exception {
-        if(StringUtils.isBlankAny(entityType, entityId, status,metadataName)){
+        if(StringUtils.isBlankAny(entityType, entityId, status)){
             return Result.of(null, false, "参数错误");
         }
 
-        return Result.of(reviewRecordService.review(entityId, entityType, status, opinion,metadataName,"bianmu"));
+        return Result.of(reviewRecordService.review(entityId, entityType, status, opinion,metadataName,"REVIEW"));
     }
 
     /**

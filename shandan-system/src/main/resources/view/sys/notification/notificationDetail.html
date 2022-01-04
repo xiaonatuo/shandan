@@ -34,31 +34,31 @@
                             <input type="text" name="content" th:value="${sysNotification.content}" readonly  class="layui-input"></input>
                         </div>
                     </div>
-                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='control'">
+                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='PASS'">
                         <label class="layui-form-label">审批意见</label>
                         <div class="layui-input-block">
                             <input type="text" name="opinion" th:value="${sysNotification.opinion}" readonly  class="layui-input"></input>
                         </div>
                     </div>
-                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='control'">
+                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='PASS'">
                         <label class="layui-form-label">审批用户</label>
                         <div class="layui-input-block">
                             <input type="text" name="createUser" th:value="${sysNotification.createUser}" readonly  class="layui-input"></input>
                         </div>
                     </div>
-                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='control'">
+                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='PASS'">
                         <label class="layui-form-label">审批时间</label>
                         <div class="layui-input-block">
                             <input type="text" name="createTime" th:value="${#dates.format(sysNotification.createTime,'yyyy-MM-dd HH:mm:ss')}" readonly  class="layui-input"></input>
                         </div>
                     </div>
-                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='bianmu'">
+                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='REVIEW'">
                         <label class="layui-form-label">提交用户</label>
                         <div class="layui-input-block">
                             <input type="text" name="createUser" th:value="${sysNotification.createUser}" readonly  class="layui-input"></input>
                         </div>
                     </div>
-                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='bianmu'">
+                    <div class="layui-form-item" th:if="${sysNotification.cnName}=='REVIEW'">
                         <label class="layui-form-label">提交时间</label>
                         <div class="layui-input-block">
                             <input type="text" name="createTime" th:value="${#dates.format(sysNotification.createTime,'yyyy-MM-dd HH:mm:ss')}" readonly  class="layui-input"></input>

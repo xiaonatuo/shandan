@@ -54,7 +54,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form'], funct
                     //审核按钮组点击事件监听
                     $('#reviewBtnBox button').on('click', function () {
                         let status = $(this).data('status');
-                        window.parent.ReviewComponent.openReviewLayer(data.id, status, ()=>{
+                        window.parent.ReviewComponent.openReviewLayer(data.id,data, status, ()=>{
                             window.location.reload();
                         });
 

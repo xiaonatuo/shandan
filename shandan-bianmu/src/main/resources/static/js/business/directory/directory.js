@@ -310,7 +310,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                     let param = {
                         entityId: node.id,
                         entityType: ReviewEntityType.DIRECTORY,
-                        status: ReviewStatus.SUBMITTED
+                        status: ReviewStatus.SUBMITTED,
+                        metadataName : node.basicData.directoryName
                     };
 
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
