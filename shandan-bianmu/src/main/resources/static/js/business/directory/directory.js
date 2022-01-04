@@ -80,7 +80,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                     {
                         fixed: 'right',
                         title: '操作',
-                        toolbar: `#rowToolBar${hideFunBtn ? '2' : ''}`,
+                        toolbar: `#rowToolBar`,
                         width: 100,
                         align: 'center'
                     }
