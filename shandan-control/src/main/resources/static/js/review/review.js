@@ -150,7 +150,7 @@ class Review {
                     let param = $.extend({}, field);
                     param.entityId = id;
                     param.entityType = _this.options.entityType;
-                    param.metadataName = data.metadataName;
+                    param.metadataName = (data.metadataName == null || data.metadataName == undefined)  ?  data.directoryName : data.metadataName;
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
                         if (res.flag) {
                             layer.msg('操作成功');

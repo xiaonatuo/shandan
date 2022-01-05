@@ -567,6 +567,7 @@ layui.config({
     gtable: 'gtable', // 数据表格组件
     editPage: 'editPage', // 数据表格组件
     listPage: 'listPage', // 数据表格组件
+    notice: 'notice', // 系统通知组件
 })
 
 
