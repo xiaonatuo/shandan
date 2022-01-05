@@ -145,7 +145,7 @@ layui.define([], function (exports) {
      * 显示未读消息标记
      */
     SysNotificationUtil.prototype.showMark = function () {
-        setTimeout(() => {
+        /*setTimeout(() => {
             //layui-badge-dot  layui-hide
             $('#unread-mark.layui-hide').removeClass('layui-hide');
             layer.alert('您有未读的系统通知，请查看', {
@@ -153,7 +153,7 @@ layui.define([], function (exports) {
                 time: 5000,
                 title: "消息通知"
             });
-        }, 150)
+        }, 150)*/
     };
 
 

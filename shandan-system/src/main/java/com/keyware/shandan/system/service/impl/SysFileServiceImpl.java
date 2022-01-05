@@ -1,8 +1,12 @@
 package com.keyware.shandan.system.service.impl;
 
+import com.keyware.shandan.bianmu.entity.DirectoryVo;
+import com.keyware.shandan.bianmu.enums.ReviewStatus;
+import com.keyware.shandan.bianmu.service.DirectoryService;
 import com.keyware.shandan.common.service.BaseServiceImpl;
 import com.keyware.shandan.common.util.DateUtil;
 import com.keyware.shandan.common.util.PoiFileReadUtil;
+import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.common.util.UUIDUtil;
 import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.SysFile;
@@ -11,6 +15,7 @@ import com.keyware.shandan.system.queue.provider.EsSysFileProvider;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -30,10 +35,21 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
     @Autowired
     private CustomProperties customProperties;
 
+    @Autowired
+    private DirectoryService directoryService;
+
     @Override
-    public SysFile uploadFiles(MultipartFile file, SysFile sysFile) throws IOException {
+    @Transactional
+    public SysFile uploadFiles(MultipartFile file, SysFile sysFile) throws Exception {
         if (file.isEmpty()) {
             return null;
+        }
+        DirectoryVo dir = null;
+        if(StringUtils.isNotBlank(sysFile.getEntityId())){
+            dir = directoryService.getById(sysFile.getEntityId());
+            if (dir == null) {
+                throw new Exception("目录不存在");
+            }
         }
 
         sysFile.setMultipartFile(file);
@@ -59,7 +75,14 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
         }else{
             file.transferTo(new File(storagePath + "/" + sysFile.getPath()));
         }
-        save(sysFile);
+
+        if(save(sysFile)){
+            if(dir != null && dir.getReviewStatus() != ReviewStatus.UN_SUBMIT){
+                dir.setReviewStatus(ReviewStatus.UN_SUBMIT);
+                directoryService.saveOrUpdate(dir);
+            }
+        }
+
         return sysFile;
     }
 

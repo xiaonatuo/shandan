@@ -7,14 +7,12 @@ import com.keyware.shandan.bianmu.entity.DirectoryMetadataVo;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.enums.DirectoryType;
+import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
 import com.keyware.shandan.bianmu.service.DirectoryService;
-import com.keyware.shandan.bianmu.utils.DirectoryUtil;
 import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
-import com.keyware.shandan.common.entity.TreeVo;
 import com.keyware.shandan.common.util.StringUtils;
-import com.keyware.shandan.common.util.TreeUtil;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +67,12 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
         if (StringUtils.isBlank(directoryId) || StringUtils.isBlank(metadataIds)) {
             return Result.of(null, false, "参数错误");
         }
+
+        DirectoryVo dir = directoryService.getById(directoryId);
+        if (dir == null) {
+            return Result.of(null, false, "目录不存在");
+        }
+
         List<DirectoryMetadataVo> dmList = Arrays.stream(metadataIds.split(","))
                 .map(metaId -> {
                     DirectoryMetadataVo vo = new DirectoryMetadataVo(directoryId, metaId);
@@ -78,7 +82,14 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
                 })
                 .collect(Collectors.toList());
 
-        return Result.of(directoryMetadataService.saveBatch(dmList));
+        if (directoryMetadataService.saveBatch(dmList)) {
+            if (dir.getReviewStatus() != ReviewStatus.UN_SUBMIT) {
+                dir.setReviewStatus(ReviewStatus.UN_SUBMIT);
+                directoryService.saveOrUpdate(dir);
+            }
+        }
+
+        return Result.of(dir);
     }
 
     /**
@@ -89,20 +100,50 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
      * @return
      */
     @PostMapping("/remove/metadata")
-    public Result<Boolean> removeMetadata(String directoryId, String metadataId) {
+    public Result<Object> removeMetadata(String directoryId, String metadataId) {
         if (StringUtils.isBlank(directoryId) || StringUtils.isBlank(metadataId)) {
             return Result.of(null, false, "参数错误");
         }
-        return Result.of(directoryMetadataService.remove(new QueryWrapper<>(new DirectoryMetadataVo(directoryId, metadataId))));
+
+        DirectoryVo dir = directoryService.getById(directoryId);
+        if (dir == null) {
+            return Result.of(null, false, "目录不存在");
+        }
+
+        if (directoryMetadataService.remove(new QueryWrapper<>(new DirectoryMetadataVo(directoryId, metadataId)))) {
+            if (dir.getReviewStatus() != ReviewStatus.UN_SUBMIT) {
+                dir.setReviewStatus(ReviewStatus.UN_SUBMIT);
+                directoryService.saveOrUpdate(dir);
+            }
+        }
+
+        return Result.of(dir);
     }
 
     @PostMapping("/remove/file")
-    public Result<Boolean> removeFile(String fileId) {
+    public Result<Object> removeFile(String fileId) {
         if (StringUtils.isBlankAny(fileId)) {
             return Result.of(null, false, "参数错误");
         }
 
-        return Result.of(sysFileService.removeById(fileId));
+        SysFile file = sysFileService.getById(fileId);
+        if (file == null) {
+            return Result.of(null, false, "文件不存在");
+        }
+
+        DirectoryVo dir = directoryService.getById(file.getEntityId());
+        if (dir == null) {
+            return Result.of(null, false, "目录不存在");
+        }
+
+        if (sysFileService.removeById(fileId)) {
+            if (dir.getReviewStatus() != ReviewStatus.UN_SUBMIT){
+                dir.setReviewStatus(ReviewStatus.UN_SUBMIT);
+                directoryService.saveOrUpdate(dir);
+            }
+        }
+
+        return Result.of(dir);
     }
 
     /**
@@ -173,14 +214,27 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
             return Result.of(null, false, "参数错误");
         }
 
+        DirectoryVo dir = directoryService.getById(directoryId);
+        if (dir == null) {
+            return Result.of(null, false, "目录不存在");
+        }
+
         List<SysFile> files = Arrays.stream(fileIds.split(",")).map(fid -> {
             SysFile file = new SysFile();
             file.setEntityId(directoryId);
             file.setId(fid);
             return file;
         }).collect(Collectors.toList());
+        // 更新文件的entityId
+        if (sysFileService.updateBatchById(files)) {
+            if (dir.getReviewStatus() != ReviewStatus.UN_SUBMIT) {
+                // 更新目录状态
+                dir.setReviewStatus(ReviewStatus.UN_SUBMIT);
+                directoryService.saveOrUpdate(dir);
+            }
+        }
 
-        return Result.of(sysFileService.updateBatchById(files));
+        return Result.of(dir);
     }
 
     /**

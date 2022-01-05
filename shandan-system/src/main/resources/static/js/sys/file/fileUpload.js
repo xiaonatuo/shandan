@@ -7,9 +7,10 @@
  * @since 2021/6/7
  */
 let fileMap = new Map();
-let uploadStatus = {
+let saveResult = {
     done: false,
-    success: false
+    success: false,
+    data: null
 };
 layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
     let upload = layui.upload,
@@ -97,8 +98,9 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
         },
         allDone: function (obj) { //多文件上传完毕后的状态回调
             if(obj.total === obj.successful){
-                uploadStatus.success = true;
-                uploadStatus.done = true;
+                saveResult.success = true;
+                saveResult.done = true;
+                saveResult.data = this.data;
 
                 let index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
@@ -112,7 +114,7 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
             tds.eq(2).find('.success-label').addClass('layui-hide');
             tds.eq(2).find('.fail-label').removeClass('layui-hide');
             element.progress('progress-file-u-' + index, '0%'); // 重置进度条
-            uploadStatus.done = true;
+            saveResult.done = true;
         },
         progress: function (n, elem, e, index) { //注意：index 参数为 layui 2.6.6 新增
             element.progress('progress-file-u-' + index, n + '%'); //执行进度条。n 即为返回的进度百分比
@@ -148,8 +150,8 @@ function save(){
  */
 async function getSaveStatus() {
     await commonUtil.sleep(100);
-    if (uploadStatus.done) {
-        return uploadStatus.success;
+    if (saveResult.done) {
+        return saveResult;
     }
     return getSaveStatus();
 

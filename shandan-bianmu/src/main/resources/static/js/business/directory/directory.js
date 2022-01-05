@@ -13,45 +13,51 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         listPage = layui.listPage,
         globalTree = layui.globalTree,
         form = layui.form;
-    // 目录树
-    let dirTree;
-    let metaListTable;
-    let fileUploadLayerWin;
 
+    // 目录树
+    let dirTree, metaListTable, fileUploadLayerWin, tempNode;
 
     let addMetadataLayerWin;
     const openAddMetadataLayer = function (directory, callback) {
-        layer.open({
-            id: 'addMetadataLayer',
-            type: 2,
-            area: ['800px', '600px'],
-            btn: ['确定', '取消'],
-            content: `${ctx}/business/metadata/layer/choose?directoryId=${directory.id}`,
-            success: function (layero) {
-                addMetadataLayerWin = window[layero.find('iframe')[0]['name']];
-            },
-            yes: function (index) {
-                addMetadataLayerWin && addMetadataLayerWin.ok().then(datas => {
-                    if (datas && Array.isArray(datas) && datas.length > 0) {
-                        const ids = datas.map(data => data.id).join(',');
-                        $.post(`${ctx}/business/directory/save/metadata`, {
-                            directoryId: directory.id,
-                            metadataIds: ids
-                        }, function (res) {
-                            if (res.flag) {
-                                layer.msg('保存成功');
-                                layer.close(index);
-                                callback && callback();
-                            } else {
-                                layer.msg('保存失败')
-                            }
-                        })
-                    } else {
-                        layer.msg('没有选择任何数据')
-                    }
-                });
-            }
-        });
+        if(directory.reviewStatus == ReviewStatus.PASS){
+            addDataConfirm(open);
+        }else{
+            open();
+        }
+        function open() {
+            layer.open({
+                id: 'addMetadataLayer',
+                type: 2,
+                area: ['800px', '600px'],
+                btn: ['确定', '取消'],
+                content: `${ctx}/business/metadata/layer/choose?directoryId=${directory.id}`,
+                success: function (layero) {
+                    addMetadataLayerWin = window[layero.find('iframe')[0]['name']];
+                },
+                yes: function (index) {
+                    addMetadataLayerWin && addMetadataLayerWin.ok().then(datas => {
+                        if (datas && Array.isArray(datas) && datas.length > 0) {
+                            const ids = datas.map(data => data.id).join(',');
+                            $.post(`${ctx}/business/directory/save/metadata`, {
+                                directoryId: directory.id,
+                                metadataIds: ids
+                            }, function (res) {
+                                if (res.flag) {
+                                    layer.msg('保存成功');
+                                    layer.close(index);
+                                    refreshDirectoryNode(tempNode, res.data);
+                                    callback && callback();
+                                } else {
+                                    layer.msg('保存失败')
+                                }
+                            })
+                        } else {
+                            layer.msg('没有选择任何数据')
+                        }
+                    });
+                }
+            });
+        }
     }
 
     /**
@@ -93,8 +99,15 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             })
         })
         metaListTable.addTableRowEvent('removeLink', function (obj) {
-            layer.confirm('是否要解除该条数据的关联？', {}, function (index) {
-
+            if(basicData.reviewStatus == ReviewStatus.PASS){
+                addDataConfirm(removeData)
+            }else{
+                layer.confirm('是否要解除该条数据的关联？', {}, function (index) {
+                    layer.close(index);
+                    removeData();
+                })
+            }
+            function removeData(){
                 if (obj.dataSourceId.startsWith('file_')) {
                     $.post(`${ctx}/business/directory/remove/file`, {fileId: obj.id}, callback)
                 } else {
@@ -107,29 +120,41 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 function callback(res) {
                     if (res.flag) {
                         metaListTable.reloadTable();
+                        refreshDirectoryNode(tempNode, res.data);
                     } else {
                         layer.msg('解除关联失败');
                     }
-                    layer.close(index);
                 }
-            })
+            }
         })
         metaListTable.addTableRowEvent('addFile', function (obj) {
-            layer.open({
-                id: 'fileUploadLayer',
-                type: 2,
-                area: ['850px', '600px'],
-                btn: ['开始上传', '取消'],
-                content: `${ctx}/sys/file/layer?directoryId=${basicData.id}`,
-                success: function (layero, index) {
-                    fileUploadLayerWin = window[layero.find('iframe')[0]['name']];
-                },
-                yes: function (index) {
-                    fileUploadLayerWin.save().then(ok => {
-                        ok && metaListTable.reloadTable();
-                    });
-                }
-            });
+            if(basicData.reviewStatus == ReviewStatus.PASS){
+                addDataConfirm(open);
+            }else {
+                open();
+            }
+            function open(){
+                layer.open({
+                    id: 'fileUploadLayer',
+                    type: 2,
+                    area: ['850px', '600px'],
+                    btn: ['开始上传', '取消'],
+                    content: `${ctx}/sys/file/layer?directoryId=${basicData.id}`,
+                    success: function (layero, index) {
+                        fileUploadLayerWin = window[layero.find('iframe')[0]['name']];
+                    },
+                    yes: function (index) {
+                        fileUploadLayerWin.save().then(res => {
+                            if(res.success){
+                                metaListTable.reloadTable();
+                                if(res.data){
+                                    Util.get(`/business/directory/get/${res.data.entityId}`).then(res=> refreshDirectoryNode(tempNode, res.data))
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         });
 
         // 查看按钮监听
@@ -143,7 +168,6 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
     }
 
 
-    let tempNode;
     // 加载并渲染目录树
     let treeChildrenUrl = `${ctx}/business/directory/tree`
     let treeOps = {
@@ -246,15 +270,15 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 handler: function (node, elem) {
                     const {id, basicData} = node;
                     openDirectoryEditLayer({parentId: id}, function (data) {
-                        if(id == '-'){
+                        if (id == '-') {
                             dirTree.partialRefreshAdd(elem);
-                        }else{
+                        } else {
                             let $parentDom = $(`#directoryTree div.dtree-nav-div.dtree-theme-item[data-id="${basicData.parentId}"]`)
                             dirTree.partialRefreshAdd($parentDom);
-                            setTimeout(function(){
+                            setTimeout(function () {
                                 let $newDom = $(`#directoryTree div.dtree-nav-div.dtree-theme-item[data-id="${basicData.id}"]`)
                                 dirTree.partialRefreshAdd($newDom);
-                            },50)
+                            }, 50)
                         }
                     });
                 }
@@ -310,18 +334,18 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                     let param = {
                         entityId: node.id,
                         entityType: ReviewEntityType.DIRECTORY,
-                        status: ReviewStatus.SUBMITTED
+                        status: ReviewStatus.SUBMITTED,
+                        metadataName: node.context || node.title || node.basicData.directoryName
                     };
-
                     $.post(`${ctx}/business/review/operate`, param, function (res) {
                         if (res.flag) {
                             layer.msg('提交成功');
-                            let tempNode = Object.assign({}, node)
-                            tempNode.basicData.reviewStatus = ReviewStatus.SUBMITTED;
-                            tempNode.title = tempNode.context;
-                            tempNode.title = formatterTitle(tempNode);
-                            dirTree.partialRefreshEdit(elem, tempNode)
-                            //metaListTable.reloadTable();
+                            let temp = Object.assign({}, node)
+                            temp.basicData.reviewStatus = ReviewStatus.SUBMITTED;
+                            temp.title = temp.context;
+                            temp.title = formatterTitle(temp);
+                            dirTree.partialRefreshEdit(elem, temp)
+                            dirTree.getChild(elem);
                             loadMetadataList(node)
                         } else {
                             layer.msg('提交失败,' + res.msg);
@@ -377,10 +401,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                     Util.post(`/business/directory/save`, field, true).then(res => {
                         if (res.flag) {
                             layer.close(index);
-                            let data = Object.assign({}, field);
-                            data.basicData = res.data;
-                            data.title = formatterTitle(data);
-                            data.id = res.data.id;
+                            let data = Object.assign({}, generateDirectoryNode(res.data), field);
                             callback && callback(data);
                         } else {
                             showErrorMsg(res.msg);
@@ -409,5 +430,36 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             path += dirNode.directoryPath.replaceAll('/', ' / ');
         }
         $('#currentPosition').text(path);
+    }
+
+    function generateDirectoryNode(data) {
+        if(data){
+            let temp = Object.assign({}, data);
+            temp.basicData = data;
+            temp.title = data.title || data.directoryName
+
+            return {
+                id: temp.id,
+                basicData: temp,
+                title: formatterTitle(temp)
+            }
+        }
+        return {};
+    }
+
+    /**
+     * 刷新目录节点
+     */
+    function refreshDirectoryNode({dom, param, parentParam, childrenParam}, data) {
+        dirTree.partialRefreshEdit(dom, generateDirectoryNode(data));
+        dirTree.getChild(dom);
+        dom.click();
+    }
+
+    function addDataConfirm(callback){
+        layer.confirm('当前资源目录已经审核通过,如继续关联,目录状态将重置为未提交，需要重新提交审核流程。<br>是否继续？', {area:['400px','220px'], icon: 0},function (index) {
+            layer.close(index);
+            callback && callback()
+        })
     }
 })

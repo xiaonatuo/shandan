@@ -17,6 +17,9 @@ public class UserService extends ServiceImpl<UserMapper, UserVo> {
         QueryWrapper<UserVo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("LOGIN_NAME", loginName);
         UserVo user = getOne(queryWrapper);
+        if(user == null){
+            return null;
+        }
         user.setRoles(roleService.listByUserId(user.getUserId()));
         return user;
     }

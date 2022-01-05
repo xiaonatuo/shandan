@@ -1,5 +1,11 @@
 # Project exclude paths
-/shandan-bianmu/target/
-/shandan-common/target/
-/shandan-system/target/
+# files
+rebel.xml
+*.iml
+*.log
+
+# directories
+.idea/
 doc/
+docker/
+target/

@@ -63,7 +63,7 @@ public class SysFileController extends BaseController<SysFileService, SysFile, S
     public Result<SysFile> upload(MultipartFile file, SysFile fileVo) {
         try {
             return Result.of(sysFileService.uploadFiles(file, fileVo));
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.of(null, false, "文件上传服务异常");
         }
