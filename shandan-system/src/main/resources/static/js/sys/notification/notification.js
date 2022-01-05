@@ -6,7 +6,30 @@
  * @author GuoXin
  * @since 2021/6/11
  */
-layui.define([], function (exports) {
+layui.define(['notice', 'jquery', 'layer'], function (exports) {
+
+
+    var notice = layui.notice;
+    var layer = layui.layer;
+    var $ = layui.jquery;
+    let notice01;
+
+    function  openOptions(){
+        let options = {
+            closeButton:true,//显示关闭按钮
+            debug:false,//启用debug
+            positionClass:"toast-top-right",//弹出的位置,
+            showDuration:"300",//显示的时间
+            hideDuration:"1000",//消失的时间
+            timeOut:"2000",//停留的时间,0则不自动关闭
+            extendedTimeOut:"1000",//控制时间
+            showEasing:"swing",//显示时的动画缓冲方式
+            hideEasing:"linear",//消失时的动画缓冲方式
+            iconClass: 'layui-icon layui-icon-praise', // 自定义图标，有内置，如不需要则传空 支持layui内置图标/自定义iconfont类名,需要完整加上 layui-icon/icon iconfont
+            onclick: null, // 点击关闭回调
+        }
+        notice01 = notice.success("您有未读的系统通知，请查看");
+    }
 
     const SysNotificationUtil = function (_user) {
         this.user = _user;
@@ -146,13 +169,8 @@ layui.define([], function (exports) {
      */
     SysNotificationUtil.prototype.showMark = function () {
         setTimeout(() => {
-            //layui-badge-dot  layui-hide
             $('#unread-mark.layui-hide').removeClass('layui-hide');
-            layer.alert('您有未读的系统通知，请查看', {
-                icon: 1,
-                time: 5000,
-                title: "消息通知"
-            });
+            openOptions();
         }, 150)
     };
 
