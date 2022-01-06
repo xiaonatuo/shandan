@@ -8,7 +8,6 @@
  */
 layui.define(['notice', 'jquery', 'layer'], function (exports) {
 
-
     var notice = layui.notice;
     var layer = layui.layer;
     var $ = layui.jquery;
@@ -44,7 +43,7 @@ layui.define(['notice', 'jquery', 'layer'], function (exports) {
             allPageList: `${ctx}/sys/notification/page`,
             setRead: `${ctx}/sys/notification/read`
         }
-        this.interval = 1000 * 10;
+        this.interval = 1000 * 30;
     }
 
     SysNotificationUtil.prototype.init = function () {
@@ -67,7 +66,9 @@ layui.define(['notice', 'jquery', 'layer'], function (exports) {
                         break;
                     }
                 }
-                hasUnread && _this.showMark();
+                if(hasUnread){
+                    _this.showMark();
+                }
             }
 
             if (res.flag) {

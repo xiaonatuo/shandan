@@ -87,7 +87,6 @@
                             let htm = '';
                             const records = res.data.records;
                             layui.each(records, function (index, item) {
-                                console.info(item);
                                 const timeAgo = util.timeAgo(new Date(item.createTime).getTime());
                                 htm += `<li class="notification-item">
                                     <p style="text-align: left;">【${item.title}】${item.content}<a href="javascript:void(0);" data-id="${item.id}" data-type="${id}" style="color: #01AAED; margin-left: 10px;">查看</a></p>
@@ -106,42 +105,13 @@
                                 let data;
                                 if (type === 'unread_flow') {
                                     data = NotificationUtil.getUnreadByID(id);
-                                    NotificationUtil.setRead(data.id, function () {
+                                    NotificationUtil.setRead(id, function () {
                                         loadFlow('unread_flow', NotificationUtil.urls.unreadPageList);
                                     });
                                 } else {
                                     data = records.filter(item => item.id == id)[0];
                                 }
-                                if (data.type === 'METADATA_REVIEW') {
-                                    //parent.open(`${ctx}/business/review/metadata`);
-                                    if(data.status ='1'){
-                                        openDetailLayer(id);
-                                    }else{
-                                        openDetailLayer(data.entityId);
-                                    }
-
-                                } else if(data.type === 'DIRECTORY_REVIEW') {
-                                    //parent.open(`${ctx}/business/review/directory`)
-                                    if(data.status ='1'){
-                                        openDetailLayer(id);
-                                    }else{
-                                        openDetailLayer(data.entityId);
-                                    }
-                                } else if(data.type === 'METADATA_REVIEW_PASS' || data.type === 'METADATA_REVIEW_FAIL') {
-                                    if(data.status ='1'){
-                                        openDetailLayer(id);
-                                    }else{
-                                        openDetailLayer(data.entityId);
-                                    }
-                                    //parent.open(`${ctx}/business/review/metadata/`);
-                                } else if(data.type === 'DIRECTORY_REVIEW_PASS' || data.type === 'DIRECTORY_REVIEW_FAIL') {
-                                    //parent.open(`${ctx}/business/review/directory/`);
-                                    if(data.status ='1'){
-                                        openDetailLayer(id);
-                                    }else{
-                                        openDetailLayer(data.entityId);
-                                    }
-                                }
+                                openDetailLayer(id);
                             });
                         }
                     })
