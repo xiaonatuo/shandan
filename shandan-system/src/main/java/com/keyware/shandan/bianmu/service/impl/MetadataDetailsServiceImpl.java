@@ -31,4 +31,15 @@ public class MetadataDetailsServiceImpl extends BaseServiceImpl<MetadataDetailsM
     public List<MetadataDetailsVo> analysis(String datasourceId) {
         return metadataDetailsMapper.selectHasForeignTableData(datasourceId);
     }
+
+
+    /**
+     * 查询关联关系分析
+     * @param datasourceId
+     * @return
+     */
+    @Override
+    public List<MetadataDetailsVo> analysisMetadata(String metadataId) {
+        return metadataDetailsMapper.selectHasForeignTableByMetadata(metadataId);
+    }
 }

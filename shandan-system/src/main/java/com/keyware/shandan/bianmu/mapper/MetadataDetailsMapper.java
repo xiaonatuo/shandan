@@ -23,4 +23,13 @@ public interface MetadataDetailsMapper extends IBaseMapper<MetadataDetailsVo> {
      * @return
      */
     List<MetadataDetailsVo> selectHasForeignTableData(String datasourceId);
+
+
+    /**
+     * 查询关联关系分析
+     * @param metadataId
+     * @return
+     */
+    List<MetadataDetailsVo> selectHasForeignTableByMetadata(String metadataId);
+
 }

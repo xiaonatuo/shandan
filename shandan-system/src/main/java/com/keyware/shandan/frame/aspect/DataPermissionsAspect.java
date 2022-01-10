@@ -48,7 +48,7 @@ public class DataPermissionsAspect {
 
     @Around(value = "@annotation(com.keyware.shandan.frame.annotation.DataPermissions)")
     public Object permissionsProtected(ProceedingJoinPoint joinPoint) throws Throwable {
-        SysUser currentUser = SecurityUtil.getLoginSysUser();
+         SysUser currentUser = SecurityUtil.getLoginSysUser();
         // 当前用户权限范围
         List<SysPermissions> permisList = getCurrentUserPermissions(currentUser.getUserId());
         DataPermissions annotation = getAnnotationByMethod(joinPoint, DataPermissions.class);
@@ -60,6 +60,7 @@ public class DataPermissionsAspect {
                 isDeptAdmin.set(true);
             }
         });
+
         // 不包含最高权限范围时，通过查询权限范围内的部门作为条件进行查询
         if (permisList.stream().noneMatch(permis -> permis.getPermisScope() == DataPermisScope.ALL_SCOPE)) {
             Object[] args = joinPoint.getArgs();
@@ -94,22 +95,32 @@ public class DataPermissionsAspect {
                         Object entity = wrapper.getEntity();
                         if (entity != null) {
                             String className = entity.getClass().getName();
+                            //目录
                             if (className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
                                 com.keyware.shandan.bianmu.entity.DirectoryVo dir = (DirectoryVo) entity;
+                                //部门管理员
                                 if(isDeptAdmin.get()){
                                     if((null == dir.getReviewStatus() || "".equals(dir.getReviewStatus()))){
                                         wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
-                                                .and(true, wp -> {
+                                                .or(true, wp -> {
                                                     wp.in(true, annotation.orgColumn(), orgIds);
+                                                })
+                                                .and(true, wp -> {
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "UN_SUBMIT"));
                                                     wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "SUBMITTED"));
                                                     wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "PASS"));
                                                     wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "FAIL"));
                                                 });
+
                                     }else if(dir != null && null!=dir.getReviewStatus() && null!=dir.getReviewStatus().getValue()){
-                                        wrapper.eq("REVIEW_STATUS", dir.getReviewStatus().getValue());
+                                        wrapper.eq("REVIEW_STATUS", dir.getReviewStatus().getValue())
+                                                .and(true, wp -> {
+                                                    wp.in(true, annotation.orgColumn(), orgIds);
+                                                });
                                     }
 
                                 }else{
+                                    //普通人员
                                     if(dir != null && null!=dir.getReviewStatus() && null!=dir.getReviewStatus().getValue()){
                                         wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
                                                 .and(true, wp -> {
@@ -130,24 +141,31 @@ public class DataPermissionsAspect {
                                     }
                                 }
                             }
-
+                            //元数据
                             if(className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")){
-
                                 com.keyware.shandan.bianmu.entity.MetadataBasicVo vo = (MetadataBasicVo) entity;
                                 if(isDeptAdmin.get()){
+                                    //部门管理员
                                     if((null == vo.getReviewStatus() || "".equals(vo.getReviewStatus()))){
                                         wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
                                                 .or(true, wp -> {
                                                     wp.in(true, annotation.orgColumn(), orgIds);
+                                                })
+                                                .and(true, wp -> {
+                                                    wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "UN_SUBMIT"));
                                                     wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "SUBMITTED"));
                                                     wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "PASS"));
                                                     wp.or(true, wpe -> wpe.eq("REVIEW_STATUS", "FAIL"));
                                                 });
                                     }else if(vo != null && null!=vo.getReviewStatus() && null!=vo.getReviewStatus().getValue()){
-                                            wrapper.eq("REVIEW_STATUS", vo.getReviewStatus().getValue());
+                                            wrapper.eq("REVIEW_STATUS", vo.getReviewStatus().getValue())
+                                                    .and(true, wp -> {
+                                                        wp.in(true, annotation.orgColumn(), orgIds);
+                                                    });
                                     }
 
                                 }else{
+                                    //普通人员
                                     if(vo != null && null!=vo.getReviewStatus() && null!=vo.getReviewStatus().getValue()){
                                         wrapper.eq(true, "CREATE_USER", currentUser.getUserId())
                                                 .and(true, wp -> {
@@ -176,8 +194,8 @@ public class DataPermissionsAspect {
                     return joinPoint.proceed(args);
                 }
             }
-        }else if(permisList.stream().allMatch(permis -> permis.getPermisScope() == DataPermisScope.ALL_SCOPE)){
-
+        }else {
+            //admin
             Object[] args = joinPoint.getArgs();
             for (int i = 0; i < args.length; i++) {
                 if (args[i] instanceof QueryWrapper) {
@@ -194,7 +212,6 @@ public class DataPermissionsAspect {
                             args[i] = wrapper;
                             return joinPoint.proceed(args);
                         }else if(className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
-                            String classNameDir = entity.getClass().getName();
                             com.keyware.shandan.bianmu.entity.DirectoryVo dio = (DirectoryVo) entity;
                             if(null!=dio && null!=dio.getReviewStatus() && null!=dio.getReviewStatus().getValue()){
                                 wrapper.eq("REVIEW_STATUS", dio.getReviewStatus().getValue());

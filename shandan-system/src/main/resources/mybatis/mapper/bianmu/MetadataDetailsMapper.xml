@@ -32,4 +32,12 @@
              ) TEMP
         where exists (select 1 from B_METADATA_DETAILS BMD where BMD.TABLE_NAME = TEMP.FOREIGN_TABLE)
     </select>
+
+    <select id="selectHasForeignTableByMetadata" resultType="com.keyware.shandan.bianmu.entity.MetadataDetailsVo">
+         select BMD.*
+         from B_METADATA_BASIC BMB
+                  left join B_METADATA_DETAILS BMD on BMB.ID = BMD.METADATA_ID
+         where METADATA_ID = #{metadataId} and REVIEW_STATUS = 'PASS'
+    </select>
+
 </mapper>

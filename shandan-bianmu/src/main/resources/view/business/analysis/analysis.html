@@ -17,18 +17,16 @@
                 <div class="layui-form">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <!--<label class="layui-form-label">选择数据源</label>-->
-                            <div class="layui-input-inline">
-                                <select id="dataSourcesSelect" name="dataSourceId" lay-verify="required"
-                                        lay-filter="dataSourcesSelect">
-                                    <option value="" selected>请选择数据源</option>
-                                </select>
+                            <div class="layui-inline">
+                                <input type="text" id="dataSourcesSelect" name="themeTask" autocomplete="off" placeholder="请选择数据源" class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <input type="hidden" id="dataSourcesSelectId" name="id">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <div class="layui-input-inline">
-                                <a id="start-analysis" class="layui-btn layui-btn-sm" href="javascript:void(0)">开始分析</a>
-                            </div>
+                            <button id="btn_selectAnalysis" type="button" class="layui-btn layui-btn-sm"
+                                    style="float: left; margin: 4px">数据表关系分析</button>
                         </div>
                     </div>
                 </div>

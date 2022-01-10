@@ -20,4 +20,12 @@ public interface MetadataDetailsService extends IBaseService<MetadataDetailsVo, 
      * @return
      */
     List<MetadataDetailsVo> analysis(String datasourceId);
+
+
+    /**
+     * 查询关联关系分析
+     * @param metadataId
+     * @return
+     */
+    List<MetadataDetailsVo> analysisMetadata(String metadataId);
 }
