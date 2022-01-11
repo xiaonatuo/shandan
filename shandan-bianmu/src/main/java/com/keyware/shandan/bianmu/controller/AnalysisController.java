@@ -1,13 +1,10 @@
 package com.keyware.shandan.bianmu.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keyware.shandan.bianmu.entity.MetadataDetailsVo;
 import com.keyware.shandan.bianmu.service.impl.MetadataDetailsService;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.StringUtils;
-import com.keyware.shandan.datasource.entity.DBUserTableVo;
-import com.keyware.shandan.datasource.entity.DataSourceVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -56,16 +52,16 @@ public class AnalysisController {
 
     @PostMapping("/data")
     public Result<Object> data(String datasourceId) {
-        if (StringUtils.isBlank(datasourceId)) {
+        Boolean bool = StringUtils.isBlank(datasourceId);
+        if (Boolean.TRUE.equals(bool)) {
             return Result.of(null, false, "参数错误");
         }
-
         List<JSONObject> nodes = new ArrayList<>();
         List<JSONObject> links = new ArrayList<>();
         List<JSONObject> categories = new ArrayList<>();
         // 查询包含外表关系的数据
         List<MetadataDetailsVo> dataList = metadataDetailsService.analysisMetadata(datasourceId);
-        if(dataList.size() == 0){
+        if(dataList.isEmpty()){
             return Result.of(null, false);
         }
         generateEchartsData(nodes, links, categories, dataList);
@@ -85,15 +81,15 @@ public class AnalysisController {
      * @param dataList
      */
     private void generateEchartsData(List<JSONObject> nodes, List<JSONObject> links, List<JSONObject> categories, List<MetadataDetailsVo> dataList) {
-        MetadataDetailsVo vo = null;
+        MetadataDetailsVo vo;
         //数据根节点
-        List<MetadataDetailsVo> master = dataList.stream().filter(v ->true == v.getMaster()).collect(Collectors.toList());
+        List<MetadataDetailsVo> master = dataList.stream().filter(v ->Boolean.TRUE.equals(v.getMaster())).collect(Collectors.toList());
         //子节点
-        List<MetadataDetailsVo> child = dataList.stream().filter(v ->false == v.getMaster()).collect(Collectors.toList());
+        List<MetadataDetailsVo> child = dataList.stream().filter(v ->Boolean.FALSE.equals(v.getMaster())).collect(Collectors.toList());
         //生成源节点
-        if(null != master && master.size() > 0){
+        if(!master.isEmpty()){
             vo = master.get(0);
-            nodes.add(getNode(vo, false,nodes,links,categories));
+            nodes.add(getNode(vo,nodes,links,categories));
             getChildrens(vo,child,nodes,links,categories);
         }
     }
@@ -109,25 +105,23 @@ public class AnalysisController {
         List<MetadataDetailsVo> children = all.stream().filter(md -> md.getTableName().equals(root.getForeignTable())).collect(Collectors.toList());
         //递归遍历
         for (MetadataDetailsVo s: children) {
-            nodes.add(getNode(s,true,nodes,links,categories));
+            nodes.add(getNode(s,nodes,links,categories));
             getChildrens(s,all,nodes,links,categories);
         }
         return children;
     }
 
 
-
     /**
      *  封装数据格式
      * @param vo
-     * @param target
      * @param
      * @return
      */
-    private JSONObject getNode(MetadataDetailsVo vo, Boolean target,List<JSONObject> nodes, List<JSONObject> links, List<JSONObject> categories){
+    private JSONObject getNode(MetadataDetailsVo vo,List<JSONObject> nodes, List<JSONObject> links, List<JSONObject> categories){
         JSONObject node = new JSONObject();
         String name = vo.getTableName();
-        String label = vo.getForeignColumn() + "-->" + vo.getForeignTable();
+        String label = (null!=vo.getForeignColumn() && null!=vo.getForeignTable()) ? (vo.getForeignColumn()+ "-->" + vo.getForeignTable()) : "";
         node.put("id", name);
         node.put("name", name);
         node.put("label", "{\"show\": true}");
@@ -138,8 +132,9 @@ public class AnalysisController {
         return node;
     }
 
+
     /**
-     *
+     * 维护导航信息
      * @param vo
      * @return
      */
@@ -149,8 +144,9 @@ public class AnalysisController {
         return category;
     }
 
+
     /**
-     *
+     * 维护线信息
      * @param vo
      * @return
      */
@@ -161,5 +157,6 @@ public class AnalysisController {
         link.put("value", 500);
         return link;
     }
+
 
 }

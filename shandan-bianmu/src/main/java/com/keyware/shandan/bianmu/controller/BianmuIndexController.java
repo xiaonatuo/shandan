@@ -69,7 +69,7 @@ public class BianmuIndexController {
         //后端公钥
         String publicKey = RsaUtil.getPublicKey();
         modelAndView.addObject("publicKey", publicKey);
-        if (roles.size() == 0) {
+        if (roles.isEmpty()) {
             modelAndView.addObject("ERROR", "没有配置角色");
         }
         return modelAndView;
