@@ -48,7 +48,8 @@ layui.define(['notice', 'jquery', 'layer'], function (exports) {
 
     SysNotificationUtil.prototype.init = function () {
         this.initStorage();
-        this.initUnreadMark();
+        //this.initUnreadMark();
+        this.getUnreadNotifications();
     };
 
     /**
@@ -68,6 +69,8 @@ layui.define(['notice', 'jquery', 'layer'], function (exports) {
                 }
                 if(hasUnread){
                     _this.showMark();
+                }else{
+                    _this.hideMark();
                 }
             }
 
