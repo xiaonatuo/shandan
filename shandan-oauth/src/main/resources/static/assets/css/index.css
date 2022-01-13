@@ -5,25 +5,37 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
 .logo {
     text-align: center;
-    position: absolute;
-    top: 14%;
+    height: 98px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background: url(../images/top.png) 0 -4px no-repeat;
+    background-size: 100% 100%;
 }
 
 .logo p {
-    font-size: 40px;
-    color: #fff;
+    font-size: 36px;
+    color: #4bd1ff;
+    width: 453px;
+    height: 100%;
     font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+    align-self: center;
 }
 
 .ad_img {
-    width: 340px;
-    height: 361px;
+    display: flex;
+    width: 100%;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
     box-shadow: 0 0 50px 9px rgb(0 0 0 / 30%);
     text-align: center;
 }
@@ -42,18 +54,19 @@
 }
 
 .ad_img_l {
-    float: left;
-    height: 361px;
+    width: 596px;
+    height: 596px;
+    background: url("../images/img1.png");
+    margin-right: 200px;
 }
 
 .ad_img_r {
-    float: right;
-    width: 280px;
-    padding: 33px 30px 22px;
-    height: 306px;
-    background: #fff;
+    width: 558px;
+    height: 512px;
+    background: url("../images/img_2.png");
     text-align: center;
 }
+.ad_img_r form{width: 100%; height: 100%}
 
 .tb_ span {
     display: inline-block;
@@ -70,12 +83,13 @@
 }
 
 .tb_ {
-    height: 32px;
-    color: #000;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 16px;
+    height: 82px;
+    line-height: 120px;
+    font-size: 36px;
+    font-weight: bold;
+    color: #4bd1ff;
     text-align: center;
-    font-size: 16px;
+    letter-spacing: 2px;
 }
 
 .tb_ ul {
@@ -97,7 +111,10 @@
 }
 
 .dis {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 44px;
 }
 
 .undis {
@@ -124,12 +141,15 @@
 }
 
 .login1 {
-    height: 42px;
-    width: 200px;
+    height: 28px;
+    width: 300px;
     border: none;
-    margin-top: 20px;
-    line-height: 42px;
-    color: #5c5c5c;
+    color: #46d7fb;
+    background-color: #fff0;
+
+}
+.inp_bg2 input::-webkit-input-placeholder{
+    color: #c3efff;
 }
 
 .inp_bg1 {
@@ -138,10 +158,26 @@
 }
 
 .inp_bg2 {
-    border-bottom: 1px solid #d8d8d8;
-    background: url(../images/login_password.png) 8px 26px no-repeat;
+    width: 388px;
+    height: 60px;
+    display: flex;
+    margin-bottom: 40px;
+    justify-content: space-between;
+    align-items: center;
+    background: url(../images/bg_2.png) no-repeat;
 }
-
+.inp_bg2 .ico_1{
+    width: 32px;
+    height: 32px;
+    margin-left: 17px;
+    background: url(../images/ico_1.png) no-repeat;
+}
+.inp_bg2 .ico_2{
+    width: 32px;
+    height: 32px;
+    margin-left: 17px;
+    background: url(../images/ico_2.png) no-repeat;
+}
 .login3 {
     height: 42px;
     width: 130px;
@@ -154,15 +190,14 @@
 }
 
 .login2 {
-    margin-top: 48px;
-    height: 46px;
-    width: 278px;
+    margin-top: 36px;
+    width: 388px;
+    height: 64px;
     border: none;
-    line-height: 44px;
-    border-radius: 50px;
-    background: #3228a1;
-    color: #fff;
-    font-size: 16px;
+    background: url(../images/bg_3.png);
+    color: #061644;
+    font-size: 24px;
+    font-weight: bold;
     letter-spacing: 2px;
     cursor: pointer;
     transition: .3s all linear;
@@ -181,7 +216,6 @@
 
 .login2:hover {
     transition: .2s all linear;
-    background: #0fa083;
 }
 
 .jizhu {
@@ -191,10 +225,8 @@
 }
 
 .footer {
-    z-index: 9999;
     width: 100%;
-    position: absolute;
-    bottom: 38px;
+    height: 136px;
 }
 
 .foot {
@@ -424,7 +456,8 @@
 }
 
 .bg1 {
-    background: url(../images/bg.png) no-repeat;
+    background: url(../images/bg.png) repeat-x;
+    background-size: 100% 100%;
     height: 100%;
 }
 
