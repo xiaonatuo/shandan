@@ -8,42 +8,58 @@
 </head>
 <body>
 <div class="main bg1">
+    <div class="wraper">
+        <div class="logo">
+            <p>防空兵实战化训练综合数据管理系统</p>
+        </div>
+    </div>
     <div class="sys-setting">
-        <a href="javascript:;" class="layui-btn layui-btn-xs" >
+        <a href="javascript:;" class="layui-btn layui-btn-xs" style="color: #4bd1ff">
             <i class="layui-icon layui-icon-username"></i>
             <span th:text="${user.userName}"></span>
         </a>
-        <a th:href="@{/logout}" class="layui-btn layui-btn-xs"  style="padding:0 10px"><i
+        <a th:href="@{/logout}" class="layui-btn layui-btn-xs" style="padding:0 10px;color: #4bd1ff"><i
                 class="layui-icon layui-icon-logout"></i>退出</a>
         <!--<a class="layui-btn layui-btn-xs" id="btn-setting"><i class="layui-icon layui-icon-set"></i>设置</a>-->
     </div>
-    <div class="sys-title">
-        <h1>防空兵实战化训练综合数据管理系统</h1>
+
+    <div class="ad_img">
+        <div class="ad_img_r">
+            <div class="app-list" id="app-list">
+            </div>
+        </div>
     </div>
-    <div class="app-list" id="app-list">
+
+    <div class="footer">
+        <div class="foot">
+            <p></p>
+        </div>
     </div>
+
 </div>
 </body>
 <script th:src="@{/js/index.js}"></script>
 <script th:inline="javascript">
     const appList = /*[[${appList}]]*/ [];
-    for(const app of appList){
-        let icon;
-        if (app.icon.startsWith('icon-')) {
-            icon = `<div class="app-icon ${app.icon}" title="${app.title}">
-                        <div class="mask" title="${app.title}"></div>
-                    </div>`;
-        } else if (app.icon.startsWith('images/')) {
-            icon = `<div class="app-icon">
-                        <img src="${ctx}/${app.icon}" title="${app.title}" alt="${app.title}" />
-                        <div class="mask" title="${app.title}"></div>
-                    </div>`;
-        } else {
-            icon = `<div class="app-icon">
+    console.info(appList);
+    for (const app of appList) {
+        let icon = `<div class="app-icon">
                         <img src="${app.icon}" title="${app.title}" alt="${app.title}" />
                         <div class="mask" title="${app.title}"></div>
                     </div>`;
+        if (app.icon) {
+            if (app.icon.startsWith('icon-')) {
+                icon = `<div class="app-icon ${app.icon}" title="${app.title}">
+                        <div class="mask" title="${app.title}"></div>
+                    </div>`;
+            } else if (app.icon.startsWith('upload/')) {
+                icon = `<div class="app-icon">
+                        <img src="${ctx}/${app.icon}" title="${app.title}" alt="${app.title}" />
+                        <div class="mask" title="${app.title}"></div>
+                    </div>`;
+            }
         }
+
         $('#app-list').append(`
             <div class="app-item" data-target="${app.target}" data-url="${app.url}">
                 ${icon}
@@ -51,10 +67,10 @@
             </div>
         `)
     }
-    $('.app-item').on('click',function (){
+    $('.app-item').on('click', function () {
         const url = $(this).data('url');
         const target = $(this).data('target');
-        if(url){
+        if (url) {
             window.open(url, target);
         }
     })
@@ -62,8 +78,9 @@
     // 禁止右键菜单
     document.oncontextmenu = () => false;
     // 图片加载失败的监听
-    $('.app-item img').on('error', function(){
-        this.src = `${ctx}/style/image/metro/dropbox.png`
+    $('.app-item img').on('error', function () {
+        $(this).parent().addClass('icon-dropbox')
+        $(this).attr('alt', '系统图标加载失败');
     })
 </script>
 </html>

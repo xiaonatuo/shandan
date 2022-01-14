@@ -16,9 +16,63 @@ body {
 }
 
 .bg1 {
-    background: url(image/bg.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/bg.png) repeat-x;
+    background-size: 100% 100%;
+    height: 100%;
+}
+.wraper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
+.logo {
+    text-align: center;
+    height: 98px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background: url(image/top.png) 0 -4px no-repeat;
+    background-size: 100% 100%;
+}
+
+.logo p {
+    font-size: 36px;
+    color: #4bd1ff;
+    width: 453px;
+    height: 100%;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+    align-self: center;
+}
+
+.ad_img {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 50px 9px rgb(0 0 0 / 30%);
+    text-align: center;
+}
+
+.ad_img_r {
+    width: 1000px;
+    height: 550px;
+    background: url("image/img_2.png") repeat-x;
+    background-size: 100% 100%;
+    text-align: center;
+}
+
+.footer {
+    width: 100%;
+    height: 136px;
+}
 .sys-title {
     height: 40%;
     display: flex;
@@ -32,16 +86,17 @@ body {
 }
 
 .app-list {
-    width: 60%;
-    max-height: 60%;
+    width: 900px;
+    max-height: 440px;
     min-width: 900px;
     box-shadow: 0 0 10px #00000045;
-    background: #fffc;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     border-radius: 10px;
     flex-wrap: wrap;
+    margin: 50px;
+    overflow-y: auto;
 }
 
 .app-item {
@@ -54,9 +109,9 @@ body {
 }
 .app-list .app-item .app-icon{
     position: relative;
-    width: 140px;
+    width: 138px;
     height: 140px;
-    border-radius: 30px;
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 1px 1px 5px #0000004d;
 }
@@ -70,7 +125,7 @@ body {
 
 .app-item p {
     margin-top: 10px;
-    color: #4a4a4a;
+    color: #7addff;
     max-height: 48px;
     font-size: 16px;
     text-align: center;
@@ -81,7 +136,7 @@ body {
     opacity: 0;
     position: absolute;
     z-index: 1;
-    background: rgba(255, 255, 255, .2);
+    background: rgb(12 69 147 / 20%);
     transition: all .2s;
 }
 .app-item .mask {
@@ -106,10 +161,13 @@ body {
     position: absolute;
     top: 10px;
     right: 10px;
+    font-size: 14px;
 }
 
 .sys-setting a {
-    background: none
+    background: none;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .layer-setting {
@@ -234,92 +292,101 @@ body {
     border-color: orange;
 }
 .icon-altbook{
-    background: url(image/metro/altbook.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/altbook.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-approvedsafety{
-    background: url(image/metro/approvedsafety.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/approvedsafety.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-calculator{
-    background: url(image/metro/calculator.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/calculator.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-cloud{
-    background: url(image/metro/cloud.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/cloud.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-configured{
-    background: url(image/metro/configured.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/configured.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-dashmac{
-    background: url(image/metro/dashmac.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/dashmac.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-directmail{
-    background: url(image/metro/directmail.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/directmail.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-dropbox{
-    background: url(image/metro/dropbox.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/dropbox.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-dunpai{
-    background: url(image/metro/dunpai.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/dunpai.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-excel{
-    background: url(image/metro/excel.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/excel.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-googledocsblast{
-    background: url(image/metro/googledocsblast.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/googledocsblast.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-googlemapsrafaga{
-    background: url(image/metro/googlemapsrafaga.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/googlemapsrafaga.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-icalmac{
-    background: url(image/metro/icalmac.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/icalmac.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-instagram{
-    background: url(image/metro/instagram.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/instagram.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-internetdownloadmanager{
-    background: url(image/metro/internetdownloadmanager.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/internetdownloadmanager.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-liveMessenger{
-    background: url(image/metro/liveMessenger.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/liveMessenger.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-liveSync{
-    background: url(image/metro/liveSync.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/liveSync.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-macappstorealt{
-    background: url(image/metro/macappstorealt.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/macappstorealt.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-magnifier{
-    background: url(image/metro/magnifier.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/magnifier.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-newswindows8{
-    background: url(image/metro/newswindows8.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/newswindows8.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-notebook{
-    background: url(image/metro/notebook.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/notebook.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-pc{
-    background: url(image/metro/pc.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/pc.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-search{
-    background: url(image/metro/search.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/search.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-skyDrive{
-    background: url(image/metro/skyDrive.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/skyDrive.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-windows8photos{
-    background: url(image/metro/windows8photos.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/windows8photos.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-windowsmediaplayer{
-    background: url(image/metro/windowsmediaplayer.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/windowsmediaplayer.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-yuansu{
-    background: url(image/metro/yuansu.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/yuansu.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-zipfile{
-    background: url(image/metro/zipfile.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/zipfile.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
 .icon-fanglian{
-    background: url(image/metro/fanglian.png) 0 0 / 100% 100% no-repeat;
+    background: url(image/metro/fanglian.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
 }
  .icon-boldness{
-     background: url(image/metro/boldness.png) 0 0 / 100% 100% no-repeat;
+     background: url(image/metro/boldness.png) -10px -10px / calc(100% + 20px) calc(100% + 20px) no-repeat;
  }
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: #f5f5f500;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #1faeff;
+}

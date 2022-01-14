@@ -76,6 +76,7 @@ layui.use(['layer', 'form', 'element', 'upload'], function () {
     function getApps() {
         const loadIndex = layer.load();
         $.get(`${ctx}/desktop/apps`, {}, function (res) {
+            console.info(res);
             layer.close(loadIndex);
             if (res) {
                 if (res.length == 0) {
