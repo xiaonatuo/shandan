@@ -20,8 +20,8 @@
 
     <select id="listByUserId" resultMap="fullResultMap">
         select * from SYS_USER_CLIENT ur
-        left join SYS_USER u on ur.USER_ID = u.USER_ID
-        left join OAUTH_CLIENT_DETAILS c on ur.CLIENT_ID = c.CLIENT_ID
+        right join SYS_USER u on ur.USER_ID = u.USER_ID
+        right join OAUTH_CLIENT_DETAILS c on ur.CLIENT_ID = c.CLIENT_ID
         where ur.USER_ID = #{userId}
     </select>
 
