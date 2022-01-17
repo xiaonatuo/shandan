@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 数据管控子系统启动类
@@ -90,7 +87,7 @@ public class ControlApplication {
 
             //登录用户系统菜单
             List<SysRole> roles = sysRoleService.getUserRoles(user.getUserId());
-            List<SysMenu> menuList = new ArrayList<>();
+            Set<SysMenu> menuList = new HashSet<>();
             for (SysRole role : roles) {
                 menuList.addAll(role.getMenuList());
             }
