@@ -201,14 +201,14 @@ public class DataPermissionsAspect {
                         String className = entity.getClass().getName();
                         if("com.keyware.shandan.bianmu.entity.MetadataBasicVo".equals(className)){
                             com.keyware.shandan.bianmu.entity.MetadataBasicVo vo = (MetadataBasicVo) entity;
-                            if(vo != null && null!=vo.getReviewStatus() && null!=vo.getReviewStatus().getValue()){
+                            if(null!=vo.getReviewStatus() && null!=vo.getReviewStatus().getValue()){
                                 wrapper.eq("REVIEW_STATUS", vo.getReviewStatus().getValue());
                             }
                             args[i] = wrapper;
                             return joinPoint.proceed(args);
                         }else if("com.keyware.shandan.bianmu.entity.DirectoryVo".equals(className)) {
                             com.keyware.shandan.bianmu.entity.DirectoryVo dio = (DirectoryVo) entity;
-                            if(null!=dio && null!=dio.getReviewStatus() && null!=dio.getReviewStatus().getValue()){
+                            if(null != dio.getReviewStatus() && null != dio.getReviewStatus().getValue()){
                                 wrapper.eq("REVIEW_STATUS", dio.getReviewStatus().getValue());
                             }
                             return joinPoint.proceed();

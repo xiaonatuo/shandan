@@ -42,9 +42,9 @@ public class DesktopServiceImpl implements DesktopService {
     @Override
     public Boolean saveSetting(DesktopSetting.Setting setting) {
         DesktopSetting.Setting set = desktopMapper.selectById(setting.getKey());
-        if(set == null){
+        if (set == null) {
             desktopMapper.insert(setting);
-        }else{
+        } else {
             desktopMapper.updateById(setting);
         }
         return true;
@@ -58,7 +58,9 @@ public class DesktopServiceImpl implements DesktopService {
     private String upload(MultipartFile multipartFile) throws IOException {
         String uploadFile = customProperties.getFileStorage().getPath();
         File dir = new File(uploadFile);
-        dir.mkdirs();
+        if (!dir.mkdirs()) {
+            throw new IOException("目录创建失败：" + uploadFile);
+        }
 
         String fileName = multipartFile.getOriginalFilename();
         if (fileName == null) {

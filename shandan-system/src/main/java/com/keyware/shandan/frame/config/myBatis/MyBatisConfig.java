@@ -63,7 +63,7 @@ public class MyBatisConfig {
      * MyBatis实体类公共字段填充配置
      */
     @Component
-    class MetaObjectHandlerConfig implements MetaObjectHandler {
+    static class MetaObjectHandlerConfig implements MetaObjectHandler {
 
         @Override
         public void insertFill(MetaObject metaObject) {

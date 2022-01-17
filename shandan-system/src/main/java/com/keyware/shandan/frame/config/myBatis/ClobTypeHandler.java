@@ -49,9 +49,10 @@ public class ClobTypeHandler implements TypeHandler<String> {
             Reader inStream = s.getCharacterStream();
             char[] c = new char[(int) s.length()];
             try {
-                inStream.read(c);
-                clobStr = new String(c);
-                inStream.close();
+                if(-1 == inStream.read(c)){
+                    clobStr = new String(c);
+                    inStream.close();
+                }
             }
             catch (IOException e) {
                 e.printStackTrace();
