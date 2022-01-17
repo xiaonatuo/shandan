@@ -98,7 +98,7 @@ public class DataPermissionsAspect {
                         if (entity != null) {
                             String className = entity.getClass().getName();
                             //目录
-                            if (className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
+                            if ("com.keyware.shandan.bianmu.entity.DirectoryVo".equals(className)) {
                                 com.keyware.shandan.bianmu.entity.DirectoryVo dir = (DirectoryVo) entity;
                                 //部门管理员
                                 if(isDeptAdmin.get()){
@@ -141,7 +141,7 @@ public class DataPermissionsAspect {
                                 }
                             }
                             //元数据
-                            if(className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")){
+                            if("com.keyware.shandan.bianmu.entity.MetadataBasicVo".equals(className)){
                                 com.keyware.shandan.bianmu.entity.MetadataBasicVo vo = (MetadataBasicVo) entity;
                                 if(isDeptAdmin.get()){
                                     //部门管理员
@@ -199,14 +199,14 @@ public class DataPermissionsAspect {
 
                     if (entity != null) {
                         String className = entity.getClass().getName();
-                        if(className.equals("com.keyware.shandan.bianmu.entity.MetadataBasicVo")){
+                        if("com.keyware.shandan.bianmu.entity.MetadataBasicVo".equals(className)){
                             com.keyware.shandan.bianmu.entity.MetadataBasicVo vo = (MetadataBasicVo) entity;
                             if(vo != null && null!=vo.getReviewStatus() && null!=vo.getReviewStatus().getValue()){
                                 wrapper.eq("REVIEW_STATUS", vo.getReviewStatus().getValue());
                             }
                             args[i] = wrapper;
                             return joinPoint.proceed(args);
-                        }else if(className.equals("com.keyware.shandan.bianmu.entity.DirectoryVo")) {
+                        }else if("com.keyware.shandan.bianmu.entity.DirectoryVo".equals(className)) {
                             com.keyware.shandan.bianmu.entity.DirectoryVo dio = (DirectoryVo) entity;
                             if(null!=dio && null!=dio.getReviewStatus() && null!=dio.getReviewStatus().getValue()){
                                 wrapper.eq("REVIEW_STATUS", dio.getReviewStatus().getValue());

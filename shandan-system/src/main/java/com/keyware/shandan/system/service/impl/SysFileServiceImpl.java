@@ -53,7 +53,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
         }
 
         sysFile.setMultipartFile(file);
-        sysFile.setLocation(customProperties.getFileStorage().getLocation());
+        //sysFile.setLocation(customProperties.getFileStorage().getLocation());
 
         String path = DateUtil.getFormatNowDate("yyyy/MM/dd");
         String fileNewName = UUIDUtil.getUUID() + sysFile.getFileSuffix();
@@ -64,7 +64,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
         fileDir.mkdirs();
         sysFile.setPath(path + "/" + fileNewName);
 
-        if(sysFile.getFileType().equalsIgnoreCase("txt")){
+        if("txt".equalsIgnoreCase(sysFile.getFileType())){
             PoiFileReadUtil.convertToUTF8(file, f ->{
                 try {
                     f.transferTo(new File(storagePath + "/" + sysFile.getPath()));

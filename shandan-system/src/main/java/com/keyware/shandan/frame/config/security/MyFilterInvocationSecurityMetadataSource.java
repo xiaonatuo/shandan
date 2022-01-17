@@ -61,7 +61,9 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
         Map<RequestMatcher, Collection<ConfigAttribute>> map = new ConcurrentHashMap<>();
         for (SysRole role : roleList) {
             String roleName = role.getRoleName();
-            if(role.getMenuList() == null) continue;
+            if(role.getMenuList() == null) {
+                continue;
+            }
 
             for (SysMenu menu : role.getMenuList()) {
                 String url = menu.getMenuPath();

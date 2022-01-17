@@ -95,15 +95,15 @@ public class SearchConditionVo extends PageVo implements Serializable {
                 fieldValue = "'" + fieldValue + "'";
             }
 
-            if (logicJudgement.equalsIgnoreCase("like_all")) {
+            if ("like_all".equalsIgnoreCase(logicJudgement)) {
                 logicJudgement = "like";
                 fieldValue = fieldValue.substring(1, fieldValue.length() - 1);
                 fieldValue = "'%" + fieldValue + "%'";
-            } else if (logicJudgement.equalsIgnoreCase("like_left")) {
+            } else if ("like_left".equalsIgnoreCase(logicJudgement)) {
                 logicJudgement = "like";
                 fieldValue = fieldValue.substring(1);
                 fieldValue = "'%" + fieldValue;
-            } else if (logicJudgement.equalsIgnoreCase("like_right")) {
+            } else if ("like_right".equalsIgnoreCase(logicJudgement)) {
                 logicJudgement = "like";
                 fieldValue = fieldValue.substring(0, fieldValue.length() - 1);
                 fieldValue = fieldValue + "%'";

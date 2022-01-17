@@ -18,8 +18,8 @@ import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
@@ -270,8 +270,9 @@ public class PoiFileReadUtil {
             bis = new ByteArrayInputStream(file);
             bis.mark(0);
             int read = bis.read(first3Bytes, 0, 3);
-            if (read == -1)
+            if (read == -1) {
                 return charset;
+            }
             if (first3Bytes[0] == (byte) 0xFF && first3Bytes[1] == (byte) 0xFE) {
                 charset = "UTF-16LE";
                 checked = true;
@@ -286,17 +287,21 @@ public class PoiFileReadUtil {
             bis.reset();
             if (!checked) {
                 while ((read = bis.read()) != -1) {
-                    if (read >= 0xF0)
+                    if (read >= 0xF0) {
                         break;
+                    }
                     if (0x80 <= read && read <= 0xBF) // 单独出现BF以下的，也算是GBK
+                    {
                         break;
+                    }
                     if (0xC0 <= read && read <= 0xDF) {
                         read = bis.read();
                         if (0x80 <= read && read <= 0xBF) // 双字节 (0xC0 - 0xDF)
-                            // (0x80 - 0xBF),也可能在GB编码内
+                        {// (0x80 - 0xBF),也可能在GB编码内
                             continue;
-                        else
+                        } else {
                             break;
+                        }
                     } else if (0xE0 <= read && read <= 0xEF) {// 也有可能出错，但是几率较小
                         read = bis.read();
                         if (0x80 <= read && read <= 0xBF) {
@@ -304,10 +309,12 @@ public class PoiFileReadUtil {
                             if (0x80 <= read && read <= 0xBF) {
                                 charset = "UTF-8";
                                 break;
-                            } else
+                            } else {
                                 break;
-                        } else
+                            }
+                        } else {
                             break;
+                        }
                     }
                 }
             }
@@ -324,10 +331,10 @@ public class PoiFileReadUtil {
     public static void convertToUTF8(MultipartFile file, Consumer<? super MultipartFile> action) throws IOException {
         File temp = new File(file.getName());
         String charset = get_charset(file.getBytes());
-        if("UTF-8".equalsIgnoreCase(charset)){
+        if ("UTF-8".equalsIgnoreCase(charset)) {
             action.accept(file);
         }
-        BufferedReader  reader = new BufferedReader(new InputStreamReader(file.getInputStream(), charset));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), charset));
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(temp), StandardCharsets.UTF_8));
 
         String str = "";

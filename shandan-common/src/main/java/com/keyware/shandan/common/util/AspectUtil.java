@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
  */
 public class AspectUtil {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
+    private final static ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * 解析连接点中的加密参数
@@ -31,8 +31,8 @@ public class AspectUtil {
      * @throws Exception -
      */
     public static Object[] parseJoinPointArgs(JoinPoint joinPoint, HttpServletRequest request) throws Exception {
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-        if(request.getMethod().equalsIgnoreCase("get") || ServletFileUpload.isMultipartContent(request)){
+        MAPPER.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        if("get".equalsIgnoreCase(request.getMethod()) || ServletFileUpload.isMultipartContent(request)){
             return joinPoint.getArgs();
         }
         return transformArguments(AesUtil.decrypt(request), joinPoint);
@@ -50,11 +50,11 @@ public class AspectUtil {
         if(StringUtils.isBlank(data)){
             return joinPoint.getArgs();
         }
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Object[] args = joinPoint.getArgs();
         JsonNode node = null;
         try {
-            node = mapper.readTree(data);
+            node = MAPPER.readTree(data);
         } catch (JsonParseException e) {
             e.printStackTrace();
             return args;
@@ -83,17 +83,17 @@ public class AspectUtil {
                 } else if (Boolean.class.isAssignableFrom(clazz)) {
                     args[i] = js.asBoolean();
                 } else if (clazz.isLocalClass()) {
-                    args[i] = mapper.readValue(js.toString(), clazz);
+                    args[i] = MAPPER.readValue(js.toString(), clazz);
                 }else{
                     try {
-                        args[i] = mapper.readValue(js.toString(), args[i].getClass());
+                        args[i] = MAPPER.readValue(js.toString(), args[i].getClass());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }else if(args[i] != null){
                 try {
-                    args[i] = mapper.readValue(data, args[i].getClass());
+                    args[i] = MAPPER.readValue(data, args[i].getClass());
                 } catch (Exception ignored) {
                 }
             }

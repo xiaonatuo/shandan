@@ -31,7 +31,9 @@ public class ViewVo<T> implements Serializable {
     private List<T> views;
 
     public void addView(T view) {
-        if(Objects.isNull(views)) views = new ArrayList<>();
+        if(Objects.isNull(views)) {
+            views = new ArrayList<>();
+        }
         views.add(view);
     }
 

@@ -87,12 +87,16 @@ public class SysPermissions extends BaseEntity implements Serializable {
     private String permisScopeRemark;
 
     public String getPermisScopeValue() {
-        if(this.permisScope == null) return "";
+        if(this.permisScope == null) {
+            return "";
+        }
         return this.permisScope.name();
     }
 
     public String getPermisScopeRemark() {
-        if(this.permisScope == null) return "";
+        if(this.permisScope == null) {
+            return "";
+        }
         return this.permisScope.getRemark();
     }
 }

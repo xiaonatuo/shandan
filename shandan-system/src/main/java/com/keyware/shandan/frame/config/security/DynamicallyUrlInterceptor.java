@@ -45,6 +45,7 @@ public class DynamicallyUrlInterceptor extends AbstractSecurityInterceptor imple
         return this.securityMetadataSource;
     }
 
+    @Override
     public SecurityMetadataSource obtainSecurityMetadataSource() {
         return this.securityMetadataSource;
     }

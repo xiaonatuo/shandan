@@ -29,6 +29,7 @@ public class SysUserRoleController extends BaseController<SysUserRoleService, Sy
         return sysUserRoleService.saveAllByUserId(userRole.getUserId(), userRole.getRoleIdList());
     }
 
+    @Override
     @PostMapping("save")
     public Result<SysUserRole> save(SysUserRole userRole) {
         //如果存在就删除，如果不存在就保存

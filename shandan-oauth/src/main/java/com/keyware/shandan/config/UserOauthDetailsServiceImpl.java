@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UserOauthDetailsService implements UserDetailsService {
+public class UserOauthDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserService userService;

@@ -179,7 +179,7 @@ public class SecurityUtil {
      */
     public static Cookie getRememberMeCookie(HttpServletRequest request){
         for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals("remember-me")) {
+            if ("remember-me".equals(cookie.getName())) {
                 return cookie;
             }
         }

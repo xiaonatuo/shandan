@@ -125,7 +125,7 @@ public class SearchServiceImpl implements SearchService {
                 MetadataBasicVo metadata = metadataService.getById(item.getFieldValue());
                 boolQueryBuilder.filter(QueryBuilders.termsQuery("META_TYPE.keyword", metadata.getMetadataName()));
                 metaFlag = true;
-            } else if ("directoryId".equals(item.getFieldName()) && !item.getFieldName().equals("-")) {
+            } else if ("directoryId".equals(item.getFieldName()) && !"-".equals(item.getFieldName())) {
                 metaFlag = true;
                 // 当条件包含目录时，需要设置查询ES类型，即对应编目数据中的数据资源表
                 BoolQueryBuilder bool = QueryBuilders.boolQuery();
@@ -244,7 +244,7 @@ public class SearchServiceImpl implements SearchService {
      */
     public String[] getAccessibleMetadata() {
         SysUser user = SecurityUtil.getLoginSysUser();
-        if (user != null && (user.getLoginName().equals("sa") || user.getLoginName().equals("admin"))) {
+        if (user != null && ("sa".equals(user.getLoginName()) || "admin".equals(user.getLoginName()))) {
             List<MetadataBasicVo> list = metadataService.list();
             if(list.size() > 0){
                 List<String> ids = list.stream().map(MetadataBasicVo::getMetadataName).collect(Collectors.toList());
@@ -267,7 +267,7 @@ public class SearchServiceImpl implements SearchService {
      */
     public String[] getAccessibleDirectory() {
         SysUser user = SecurityUtil.getLoginSysUser();
-        if (user != null && (user.getLoginName().equals("sa") || user.getLoginName().equals("admin"))) {
+        if (user != null && ("sa".equals(user.getLoginName()) || "admin".equals(user.getLoginName()))) {
             return Strings.EMPTY_ARRAY;
         }
         List<DirectoryVo> dirList = directoryService.list(new QueryWrapper<>());
