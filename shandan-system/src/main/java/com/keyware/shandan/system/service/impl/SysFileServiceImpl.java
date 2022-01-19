@@ -61,22 +61,15 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
         // 检查并创建目录
         String storagePath = customProperties.getFileStorage().getPath();
         File fileDir = new File(storagePath + "/" + path);
-        if (!fileDir.mkdirs()) {
-            throw new IOException("目录创建失败：" + fileDir.getPath());
+        if(!fileDir.exists()){
+            if (!fileDir.mkdirs()) {
+                throw new IOException("目录创建失败：" + fileDir.getPath());
+            }
         }
+
         sysFile.setPath(path + "/" + fileNewName);
 
-        if ("txt".equalsIgnoreCase(sysFile.getFileType())) {
-            PoiFileReadUtil.convertToUTF8(file, f -> {
-                try {
-                    f.transferTo(new File(storagePath + "/" + sysFile.getPath()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        } else {
-            file.transferTo(new File(storagePath + "/" + sysFile.getPath()));
-        }
+        file.transferTo(new File(storagePath + "/" + sysFile.getPath()));
 
         if (save(sysFile)) {
             if (dir != null && dir.getReviewStatus() != ReviewStatus.UN_SUBMIT) {
