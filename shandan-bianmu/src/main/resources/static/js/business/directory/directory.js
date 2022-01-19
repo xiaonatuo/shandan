@@ -19,11 +19,12 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
 
     let addMetadataLayerWin;
     const openAddMetadataLayer = function (directory, callback) {
-        if(directory.reviewStatus == ReviewStatus.PASS){
+        if (directory.reviewStatus == ReviewStatus.PASS) {
             addDataConfirm(open);
-        }else{
+        } else {
             open();
         }
+
         function open() {
             layer.open({
                 id: 'addMetadataLayer',
@@ -99,15 +100,16 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             })
         })
         metaListTable.addTableRowEvent('removeLink', function (obj) {
-            if(basicData.reviewStatus == ReviewStatus.PASS){
+            if (basicData.reviewStatus == ReviewStatus.PASS) {
                 addDataConfirm(removeData)
-            }else{
+            } else {
                 layer.confirm('是否要解除该条数据的关联？', {}, function (index) {
                     layer.close(index);
                     removeData();
                 })
             }
-            function removeData(){
+
+            function removeData() {
                 if (obj.dataSourceId.startsWith('file_')) {
                     $.post(`${ctx}/business/directory/remove/file`, {fileId: obj.id}, callback)
                 } else {
@@ -128,34 +130,21 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             }
         })
         metaListTable.addTableRowEvent('addFile', function (obj) {
-            if(basicData.reviewStatus == ReviewStatus.PASS){
-                addDataConfirm(open);
-            }else {
-                open();
-            }
-            function open(){
-                layer.open({
-                    id: 'fileUploadLayer',
-                    type: 2,
-                    area: ['850px', '600px'],
-                    btn: ['开始上传', '取消'],
-                    content: `${ctx}/sys/file/layer?directoryId=${basicData.id}`,
-                    success: function (layero, index) {
-                        fileUploadLayerWin = window[layero.find('iframe')[0]['name']];
-                    },
-                    yes: function (index) {
-                        fileUploadLayerWin.save().then(res => {
-                            if(res.success){
-                                metaListTable.reloadTable();
-                                if(res.data){
-                                    Util.get(`/business/directory/get/${res.data.entityId}`).then(res=> refreshDirectoryNode(tempNode, res.data))
-                                }
-                            }
-                        });
+            upload(basicData,`${ctx}/sys/file/layer?directoryId=${basicData.id}`, function(res){
+                if (res.success) {
+                    metaListTable.reloadTable();
+                    if (res.data) {
+                        Util.get(`/business/directory/get/${res.data.entityId}`).then(res => refreshDirectoryNode(tempNode, res.data))
                     }
-                });
-            }
+                }
+            });
         });
+
+        metaListTable.addTableRowEvent('addDirectory', function (obj) {
+            upload(basicData,`${ctx}/sys/file/layer/dir?directoryId=${basicData.id}`, function(){
+
+            });
+        })
 
         // 查看按钮监听
         metaListTable.addTableRowEvent('details', function (obj) {
@@ -167,6 +156,29 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         })
     }
 
+    function upload(basicData, url, callback) {
+        if (basicData.reviewStatus == ReviewStatus.PASS) {
+            addDataConfirm(open);
+        } else {
+            open();
+        }
+
+        function open() {
+            layer.open({
+                id: 'fileUploadLayer',
+                type: 2,
+                area: ['850px', '600px'],
+                btn: ['开始上传', '取消'],
+                content: url,
+                success: function (layero, index) {
+                    fileUploadLayerWin = window[layero.find('iframe')[0]['name']];
+                },
+                yes: function (index) {
+                    fileUploadLayerWin.save().then(callback);
+                }
+            });
+        }
+    }
 
     // 加载并渲染目录树
     let treeChildrenUrl = `${ctx}/business/directory/tree`
@@ -431,7 +443,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
     }
 
     function generateDirectoryNode(data) {
-        if(data){
+        if (data) {
             let temp = Object.assign({}, data);
             temp.basicData = data;
             temp.title = data.title || data.directoryName
@@ -454,8 +466,11 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         dom.click();
     }
 
-    function addDataConfirm(callback){
-        layer.confirm('当前资源目录已经审核通过,如继续关联,目录状态将重置为未提交，需要重新提交审核流程。<br>是否继续？', {area:['400px','220px'], icon: 0},function (index) {
+    function addDataConfirm(callback) {
+        layer.confirm('当前资源目录已经审核通过,如继续关联,目录状态将重置为未提交，需要重新提交审核流程。<br>是否继续？', {
+            area: ['400px', '220px'],
+            icon: 0
+        }, function (index) {
             layer.close(index);
             callback && callback()
         })

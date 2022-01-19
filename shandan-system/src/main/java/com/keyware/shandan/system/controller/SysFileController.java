@@ -41,6 +41,10 @@ public class SysFileController extends BaseController<SysFileService, SysFile, S
     public ModelAndView fileUploadLayer() {
         return new ModelAndView("sys/file/fileUploadLayer");
     }
+    @GetMapping("/layer/dir")
+    public ModelAndView fileUploadLayerDir() {
+        return new ModelAndView("sys/file/dirUploadLayer");
+    }
 
     @GetMapping("/view")
     public ModelAndView fileViewer(ModelAndView mav, @RequestParam String fileId) {

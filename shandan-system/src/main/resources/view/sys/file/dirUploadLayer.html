@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入公用部分 -->
+    <script th:replace="common/head::static"></script>
+    <!-- 样式 -->
+    <link th:href="@{/css/common/contianer.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .layui-form-label {
+            width: 90px;
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: 260px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-row">
+    <!-- 操作表单 -->
+    <div class="layui-col-md12">
+        <div class="layui-card" style="margin-bottom: 0">
+            <!--<div class="layui-card-header">文件选择</div>-->
+            <div class="layui-card-body">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-sm  layui-btn-normal" id="chooseFile">
+                        <i class="layui-icon layui-icon-file"></i>选择本地文件夹
+                    </button>
+
+                    <div class="layui-upload-list" style="max-width: 1000px; min-height: 80px; max-height: 216px; overflow-y: auto">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col>
+                                <col width="80">
+                                <col width="260">
+                                <col width="120">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>大小</th>
+                                <th>上传进度</th>
+                                <th style="text-align: right">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="fileList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="layui-form" lay-filter="file-form" style="border: 1px solid #eee; padding-top:15px">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">录入人员</label>
+                            <div class="layui-input-inline" th:object="${@securityUtil.getLoginSysUser()}">
+                                <input class="layui-input" name="entryStaff" type="text" readonly
+                                       th:value="*{userName}">
+                            </div>
+                            <label class="layui-form-label">任务时间</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" id="input-data" name="inputDate" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">文件来源</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="source" type="text">
+                            </div>
+                            <label class="layui-form-label">目标/靶标类型</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="targetNumber" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">任务代号</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="taskCode" type="text">
+                            </div>
+                            <label class="layui-form-label">任务性质</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="taskNature" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">部队代号</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="troopCode" type="text">
+                            </div>
+                            <label class="layui-form-label">装备型号</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="equipmentModel" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">导弹编号</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="missileNumber" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item  layui-form-text">
+                        <label class="layui-form-label">文件描述</label>
+                        <div class="layui-input-block" style="margin-left: 120px">
+                            <textarea class="layui-textarea" name="remark"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="layui-btn layui-btn-sm" id="fileUploadAction"
+                style="position: absolute; left: -50px; height: 0; border:0">
+        </button>
+    </div>
+</div>
+</body>
+<!-- js -->
+<script th:src="@{/js/sys/file/dirUpload.js}"></script>
+</html>
