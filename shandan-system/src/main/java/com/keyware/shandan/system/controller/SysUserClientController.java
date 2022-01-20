@@ -54,6 +54,7 @@ public class SysUserClientController extends BaseController<SysUserClientService
         return sysUserClientService.saveAllByUserId(userClient.getUserId(), userClient.getClientIdList());
     }
 
+    @Override
     @PostMapping("save")
     public Result<SysUserClient> save(SysUserClient sysUserClient) {
         //如果存在就删除，如果不存在就保存

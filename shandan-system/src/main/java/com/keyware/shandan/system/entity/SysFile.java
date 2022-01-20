@@ -79,7 +79,7 @@ public class SysFile extends BaseEntity {
      * 存储位置（local：本地存储，nas：NAS存储）
      */
     @TableField("LOCATION")
-    private String location;
+    private String location = "local";
 
     /**
      * 存储路径

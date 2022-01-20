@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -55,7 +57,7 @@ public class BianmuIndexController {
 
         //登录用户系统菜单
         List<SysRole> roles = sysRoleService.getUserRoles(user.getUserId());
-        List<SysMenu> menuList = new ArrayList<>();
+        Set<SysMenu> menuList = new HashSet<>();
         for (SysRole role : roles) {
             menuList.addAll(role.getMenuList());
         }

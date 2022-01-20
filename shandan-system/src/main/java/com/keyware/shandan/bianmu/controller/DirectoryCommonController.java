@@ -111,7 +111,9 @@ public class DirectoryCommonController {
             node.put("spread", true);
             node.put("parentId", (i - 1) + "");
             node.put("iconClass", "dtree-icon-wenjianjiazhankai");
-            if (i == 1) node.put("parentId", "-");
+            if (i == 1) {
+                node.put("parentId", "-");
+            }
             if (i == path.length - 1) {
                 node.put("id", dir.getId());
                 node.put("iconClass", "dtree-icon-wenjianjiazhankai");

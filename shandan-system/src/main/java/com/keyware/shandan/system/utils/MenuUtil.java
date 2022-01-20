@@ -4,6 +4,7 @@ import com.keyware.shandan.system.entity.SysMenu;
 import com.keyware.shandan.common.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ public class MenuUtil {
      * @param allMenu 所有菜单列表
      * @return 每个根节点下，所有子菜单列表
      */
-    public static List<SysMenu> getChildBySysMenuVo(String id, List<SysMenu> allMenu){
+    public static List<SysMenu> getChildBySysMenuVo(String id, Collection<SysMenu> allMenu){
         //子菜单
         List<SysMenu> childList = new ArrayList<>();
         if(allMenu != null ){

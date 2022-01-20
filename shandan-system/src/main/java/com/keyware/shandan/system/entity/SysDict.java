@@ -81,7 +81,9 @@ public class SysDict extends BaseEntity {
      * @return 数据字典类型名称
      */
     public String getTypeName() {
-        if (type != null) return this.type.getName();
+        if (type != null) {
+            return this.type.getName();
+        }
         return "";
     }
 

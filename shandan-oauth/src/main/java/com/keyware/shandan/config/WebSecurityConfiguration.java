@@ -42,7 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private InMemoryTokenStore inMemoryTokenStore;
 
     @Autowired
-    private UserOauthDetailsService userOauthDetailsService;
+    private UserOauthDetailsServiceImpl userOauthDetailsService;
 
     @Value("${oauth.logout.success-url:login?logout}")
     private String logoutUrl;

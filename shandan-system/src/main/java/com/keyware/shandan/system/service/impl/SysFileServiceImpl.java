@@ -45,7 +45,7 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
             return null;
         }
         DirectoryVo dir = null;
-        if(StringUtils.isNotBlank(sysFile.getEntityId())){
+        if (StringUtils.isNotBlank(sysFile.getEntityId())) {
             dir = directoryService.getById(sysFile.getEntityId());
             if (dir == null) {
                 throw new Exception("目录不存在");
@@ -53,31 +53,26 @@ public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFile, 
         }
 
         sysFile.setMultipartFile(file);
-        sysFile.setLocation(customProperties.getFileStorage().getLocation());
+        //sysFile.setLocation(customProperties.getFileStorage().getLocation());
 
         String path = DateUtil.getFormatNowDate("yyyy/MM/dd");
         String fileNewName = UUIDUtil.getUUID() + sysFile.getFileSuffix();
 
         // 检查并创建目录
         String storagePath = customProperties.getFileStorage().getPath();
-        File fileDir = new File(storagePath + "/" +path);
-        fileDir.mkdirs();
-        sysFile.setPath(path + "/" + fileNewName);
-
-        if(sysFile.getFileType().equalsIgnoreCase("txt")){
-            PoiFileReadUtil.convertToUTF8(file, f ->{
-                try {
-                    f.transferTo(new File(storagePath + "/" + sysFile.getPath()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }else{
-            file.transferTo(new File(storagePath + "/" + sysFile.getPath()));
+        File fileDir = new File(storagePath + "/" + path);
+        if(!fileDir.exists()){
+            if (!fileDir.mkdirs()) {
+                throw new IOException("目录创建失败：" + fileDir.getPath());
+            }
         }
 
-        if(save(sysFile)){
-            if(dir != null && dir.getReviewStatus() != ReviewStatus.UN_SUBMIT){
+        sysFile.setPath(path + "/" + fileNewName);
+
+        file.transferTo(new File(storagePath + "/" + sysFile.getPath()));
+
+        if (save(sysFile)) {
+            if (dir != null && dir.getReviewStatus() != ReviewStatus.UN_SUBMIT) {
                 dir.setReviewStatus(ReviewStatus.UN_SUBMIT);
                 directoryService.saveOrUpdate(dir);
             }

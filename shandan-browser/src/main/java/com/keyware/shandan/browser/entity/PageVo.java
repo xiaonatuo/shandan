@@ -160,7 +160,7 @@ public class PageVo implements Serializable {
             text.append(fragment);
 
             // 如果是大文本，判断长度
-            if (field.getName().equals("text")) {
+            if ("text".equals(field.getName())) {
                 text.append(";");
                 int size = text.toString().replace("<label style=\"color:red\">", "").replace("</label>", "").length();
                 if (size > 150) {

@@ -66,7 +66,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
         // 查询父目录，并设置目录路径
         DirectoryVo parent = null;
         String path = "";
-        if (entity.getParentId().equals("-")) {
+        if ("-".equals(entity.getParentId())) {
             parent = new DirectoryVo();
             path = "/" + entity.getDirectoryName();
         } else {

@@ -150,8 +150,9 @@ public class SecurityUtil {
      * 详情可在 PersistentTokenBasedRememberMeServices.processAutoLoginCookie断点，查看调用栈
      */
     public static String[] decodeCookie(String cookieValue) throws InvalidCookieException {
+        StringBuilder cookieBuilder = new StringBuilder(cookieValue);
         for(int j = 0; j < cookieValue.length() % 4; ++j) {
-            cookieValue = cookieValue + "=";
+            cookieBuilder.append("=");
         }
 
         try {
@@ -179,7 +180,7 @@ public class SecurityUtil {
      */
     public static Cookie getRememberMeCookie(HttpServletRequest request){
         for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals("remember-me")) {
+            if ("remember-me".equals(cookie.getName())) {
                 return cookie;
             }
         }
