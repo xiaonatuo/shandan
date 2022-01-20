@@ -86,7 +86,7 @@ public class SysUser extends BaseEntity implements Serializable {
     /**
      * 逻辑删除
      */
-    @TableLogic(value = "0", delval = "1")
+    //@TableLogic(value = "0", delval = "1")
     @TableField(value = "IS_DELETE")
     private Boolean deleted;
 

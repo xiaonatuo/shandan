@@ -5,6 +5,7 @@ import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.system.entity.SysOrg;
 import com.keyware.shandan.system.service.SysOrgService;
+import com.keyware.shandan.system.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.keyware.shandan.common.controller.BaseController;
@@ -65,7 +66,7 @@ public class SysOrgController extends BaseController<SysOrgService, SysOrg, Stri
      */
     @GetMapping("/tree")
     public Result<List<SysOrg>> getOrgTree(String parentId) {
-        return Result.of(sysOrgService.tree(parentId));
+        return Result.of(sysOrgService.tree(StringUtil.stringReplace(parentId)));
     }
 
 }

@@ -57,11 +57,12 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
             area:['800px', '545px'],
             content: ctx + `/sys/org/edit?orgParentId=${parentId}&id=${orgId}`,
             btn: ['确定', '取消'],
-            success: function (layero, index) {
+            success: function (layero, index,data) {
                 editLayerWin = window[layero.find('iframe')[0]['name']]
             },
             yes: function(index){
                 editLayerWin && editLayerWin.save().then(ok => {
+                    console.log(ok);
                     if (ok) {
                         orgTree.reload();
                         gtable.reload();

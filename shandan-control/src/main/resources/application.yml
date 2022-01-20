@@ -16,7 +16,7 @@ server:
 #基础配置
 spring:
   profiles:
-    active: prod #选择配置分支，先读取系统环境变量，如果没有则默认值为 dev
+    active: dev #选择配置分支，先读取系统环境变量，如果没有则默认值为 dev
   application:
     name: control
 
@@ -106,10 +106,10 @@ project:
 #mybatis-plus 配置项
 mybatis-plus:
   mapper-locations: classpath*:/mybatis/mapper/**/*Mapper.xml
-  global-config:
-    db-config:
-      logic-delete-field: deleted
-      logic-delete-value: 1
-      logic-not-delete-value: 0
+    #global-config:
+     #db-config:
+      #logic-delete-field: deleted
+      #logic-delete-value: 1
+      #logic-not-delete-value: 0
   configuration:
     default-enum-type-handler: com.keyware.shandan.frame.config.myBatis.CustomEnumTypeHandler

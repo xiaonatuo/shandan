@@ -100,9 +100,9 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
     @DataPermissions(orgColumn = "ID")
     public List<SysOrg> tree(String parentId) {
         QueryWrapper<SysOrg> wrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(parentId)) {
+        /*if(StringUtils.isNotBlank(parentId)) {
             wrapper.like("ORG_PATH", "%" + parentId + "%");
-        }
+        }*/
         List<SysOrg> list = list(wrapper);
         return generateTree(list);
     }
@@ -166,8 +166,7 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
         if (users.size() > 0) {
             return Result.of(false, false, "该部门下有用户数据，不能删除");
         }
-
-        super.removeByIds(idList);
+        sysOrgMapper.deleteBatchIds(idList);
         return Result.of(true, true);
     }
 
@@ -207,7 +206,7 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
                 // 根据当前根部门查找所有父部门
                 .forEach(org -> allOrgSet.addAll(listByIds(Arrays.asList(org.getOrgPath().split("\\|")))));
 
-        return allOrgSet.stream()
+                return allOrgSet.stream()
                 // 找到根部门
                 .filter(org -> allOrgSet.stream().noneMatch(o -> o.getId().equals(org.getOrgParentId())))
                 // 递归子部门
@@ -223,7 +222,7 @@ public class SysOrgServiceImpl extends BaseServiceImpl<SysOrgMapper, SysOrg, Str
      */
     private void findChildren(SysOrg org, List<SysOrg> list){
         org.setChildren(list.stream().filter(o -> org.getId().equals(o.getOrgParentId())).collect(Collectors.toList()));
-        if(org.getChildren().size() > 0){
+        if(!org.getChildren().isEmpty()){
             org.getChildren().stream().peek(o -> findChildren(o, list)).collect(Collectors.toList());
         }
     }
