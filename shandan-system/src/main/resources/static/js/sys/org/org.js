@@ -62,7 +62,6 @@ layui.use(['layer', 'gtable', 'orgTree'], function () {
             },
             yes: function(index){
                 editLayerWin && editLayerWin.save().then(ok => {
-                    console.log(ok);
                     if (ok) {
                         orgTree.reload();
                         gtable.reload();
