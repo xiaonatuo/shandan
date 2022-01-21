@@ -6,7 +6,16 @@ layui.use(['form', 'layer'], function () {
         form.val('permissionsForm', permisVo);
     }
 
-
+    /**
+     * 自定义表单验证规则
+     */
+    form.verify({
+        permisScope: function (value) {
+            if (null == value) {
+                return '请选择数据权限范围';
+            }
+        }
+    });
 
     form.on('submit(permissionsForm)', function (elem) {
         let data = form.val('permissionsForm');
