@@ -1,4 +1,5 @@
-let saveFlag = {};
+let saveFlag = {done: false, ok: false};
+let zz = false;
 layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'util', 'dtree'], function () {
     let layDate = layui.laydate,
         form = layui.form;
@@ -25,7 +26,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'util', 'dtre
             async: false,
             success: function (res) {
                 hasData = res.data && res.data.length > 0;
-                saveFlag = hasData == true ? false :true;
+                saveFlag.ok = hasData == true ? false :true;
             }
         })
         return hasData;
@@ -48,7 +49,8 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'util', 'dtre
             data.msg = data.flag ? '保存成功' : data.msg;
             let icon = data.flag ? 1 : 5;
             layer.msg(data.msg, {icon, time: 2000}, function () {
-                saveFlag = data.flag;
+                saveFlag.done = data.flag;
+                saveFlag.ok = data.flag;
             });
         });
         return false; //阻止表单跳转
@@ -76,6 +78,15 @@ function save() {
  * @returns {Promise<boolean|boolean|*>}
  */
 async function getSaveStatus() {
-    return saveFlag;
+    await commonUtil.sleep(100);
+    if(zz){
+        saveFlag = {done: false, ok: false}
+        return saveFlag;
+    }
+    if (saveFlag.done) {
+        zz = true;
+        return saveFlag;
+    }else{
+        return getSaveStatus();
+    }
 }
-
