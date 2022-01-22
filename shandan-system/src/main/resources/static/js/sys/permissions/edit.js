@@ -26,7 +26,7 @@ layui.use(['form', 'layer'], function () {
         $.post(ctx + "/sys/permissions/save", data, function (data) {
             data.msg = data.flag ? '保存成功' : data.msg;
             let icon = data.flag ? 1 : 5;
-            layer.msg(data.msg, {icon, time: 2000}, function () {
+            layer.msg(data.msg, {icon, time: 1500}, function () {
                 saveFlag.done = true;
                 saveFlag.ok = data.flag;
             });
