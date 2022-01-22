@@ -10,6 +10,10 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
     let searchText = '';
     let roleData = {};
 
+    if (roleVo) {
+        form.val('roleForm', roleVo);
+    }
+
     /**
      * 重置form表单数据
      */
@@ -75,6 +79,41 @@ layui.use(['form', 'menuTree', 'layer', 'gtable'], function () {
             });
             callback && callback();
         });
+    }
+
+
+    /**
+     * 自定义表单验证规则
+     */
+    form.verify({
+        roleName: function (value) {
+            if (checkRoleName(value)) {
+                return '角色名称已存在';
+            }
+        }
+    });
+
+    /**
+     * 同步请求验证权限名称是否存在
+     * @param orgNumber
+     * @returns {boolean}
+     */
+    const checkRoleName = function (roleName){
+        let hasData = false;
+        let data = form.val('roleForm');
+        if(data.id){
+            return false;
+        }
+        $.ajax({
+            url: `${ctx}/sys/role/list`,
+            data: {roleName},
+            type: 'POST',
+            async: false,
+            success: function (res) {
+                hasData = res.data && res.data.length > 0;
+            }
+        })
+        return hasData;
     }
 
     /**

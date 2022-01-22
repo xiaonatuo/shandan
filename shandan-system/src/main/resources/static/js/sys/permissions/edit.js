@@ -10,12 +10,42 @@ layui.use(['form', 'layer'], function () {
      * 自定义表单验证规则
      */
     form.verify({
+        permisName: function (value) {
+            if (checkPermisName(value)) {
+                return '权限名称已存在';
+            }
+        },
         permisScope: function (value) {
             if (null == value) {
                 return '请选择数据权限范围';
             }
         }
     });
+
+    /**
+     * 同步请求验证权限名称是否存在
+     * @param orgNumber
+     * @returns {boolean}
+     */
+    const checkPermisName = function (permisName){
+        let hasData = false;
+        let data = form.val('permissionsForm');
+        if(data.id){
+            return false;
+        }
+        $.ajax({
+            url: `${ctx}/sys/permissions/list`,
+            data: {permisName},
+            type: 'POST',
+            async: false,
+            success: function (res) {
+                hasData = res.data && res.data.length > 0;
+                saveFlag.ok = hasData == true ? false :true;
+            }
+        })
+        return hasData;
+    }
+
 
     form.on('submit(permissionsForm)', function (elem) {
         let data = form.val('permissionsForm');
