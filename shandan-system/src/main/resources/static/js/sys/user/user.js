@@ -36,7 +36,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
                 case 'addData':
                     let param = orgTree.getNowParam();
                     if (param && param.id) {
-                        openEditLayer(param.id, param.context);
+                        openEditLayer(param.id, param.context,"","add");
                     } else {
                         layer.msg("请先选择所属部门！");
                     }
@@ -77,7 +77,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
                     });
                     break;
                 case 'edit':
-                    openEditLayer("", "", data.userId);
+                    openEditLayer("", "", data.userId,"edit");
                     break;
                 case 'role':
                     openRoleLayer(data.userId);
@@ -103,7 +103,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             title: '选择角色',
             area: ['300px', '400px'],
             content: ctx + `/sys/role/layer?userId=${userId}`,
-            btn: ['确定'],
+            btn: ['关闭'],
             success: function (layero, index) {
                 roleLayer = window[layero.find('iframe')[0]['name']]
             },
@@ -130,7 +130,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
             title: '选择客户端',
             area: ['300px', '400px'],
             content: ctx + `/sys/userClient/layer?userId=${userId}`,
-            btn: ['确定'],
+            btn: ['关闭'],
             success: function (layero, index) {
                 clientLayer = window[layero.find('iframe')[0]['name']]
             },
@@ -145,15 +145,21 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'gtable', 'or
 
 
 
-    function openEditLayer(orgId, orgName, userId) {
+    function openEditLayer(orgId, orgName, userId,type) {
         if (!userId) {
             userId = ''
+        }
+        let titleType;
+        if("add" == type){
+            titleType = "新增用户";
+        }else if("edit" == type){
+            titleType ="编辑用户";
         }
         let editLayerWin;
         layer.open({
             id: 'userEdit',
             type: 2,
-            title: '添加用户',
+            title: titleType,
             area: ['500px', '380px'],
             content: ctx + `/sys/sysUser/edit?orgId=${orgId}&orgName=${orgName}&userId=${userId}`,
             btn: ['确定', '取消'],

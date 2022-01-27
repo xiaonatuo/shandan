@@ -1,14 +1,13 @@
 package com.keyware.shandan.system.controller;
 
-import com.keyware.shandan.common.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
 import com.keyware.shandan.common.controller.BaseController;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import com.keyware.shandan.system.service.SysDictService;
+import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.system.entity.SysDict;
+import com.keyware.shandan.system.service.SysDictService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -50,7 +49,8 @@ public class SysDictController extends BaseController<SysDictService, SysDict, S
     public ModelAndView editView(ModelAndView view, String id) {
         view.setViewName("sys/dict/dictEdit");
         SysDict dict = new SysDict();
-        if (StringUtils.isNotBlank(id)) {
+        Boolean b = StringUtils.isNotBlank(id);
+        if (Boolean.TRUE.equals(b)) {
             dict = sysDictService.getById(id);
         }
         view.addObject("dict", dict);

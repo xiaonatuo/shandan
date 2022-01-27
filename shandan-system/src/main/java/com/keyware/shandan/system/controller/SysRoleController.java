@@ -20,6 +20,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/sys/role/")
 public class SysRoleController extends BaseController<SysRoleService, SysRole, String> {
+
+
+    private static final String error_result = "roleId不能为空";
+
     @Autowired
     private SysRoleService sysRoleService;
 
@@ -63,7 +67,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRole, S
     @GetMapping("/menus/{roleId}")
     public Result<List<String>> getMenus(@PathVariable String roleId) {
         if (StringUtils.isBlank(roleId)) {
-            return Result.of(null, false, "roleId 不能为空");
+            return Result.of(null, false, error_result);
         }
 
         List<SysRoleMenu> roleMenus = sysRoleMenuService.list(new QueryWrapper<>(new SysRoleMenu(roleId, null)));
@@ -96,7 +100,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRole, S
     @PostMapping("/save/menus")
     public Result<Boolean> saveRoleMenu(@RequestBody String roleId, @RequestBody String menuIds) {
         if (StringUtils.isBlank(roleId)) {
-            return Result.of(false, false, "roleId 不能为空");
+            return Result.of(false, false, error_result);
         }
         //先删除
         SysRoleMenu roleMenu = new SysRoleMenu();
@@ -121,7 +125,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRole, S
     @PostMapping("/save/permis")
     public Result<Boolean> saveRolePermis(SysRolePermissions rolePermis) {
         if (StringUtils.isBlank(rolePermis.getRoleId())) {
-            return Result.of(false, false, "roleId 不能为空");
+            return Result.of(false, false, error_result);
         }
         QueryWrapper<SysRolePermissions> wrapper = new QueryWrapper<>(rolePermis);
         List<SysRolePermissions> list = sysRolePermissionsService.list(wrapper);

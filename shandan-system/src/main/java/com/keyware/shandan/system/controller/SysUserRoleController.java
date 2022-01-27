@@ -34,7 +34,7 @@ public class SysUserRoleController extends BaseController<SysUserRoleService, Sy
     public Result<SysUserRole> save(SysUserRole userRole) {
         //如果存在就删除，如果不存在就保存
         List<SysUserRole> list = sysUserRoleService.list(new QueryWrapper<>(userRole));
-        if(list.size() > 0){
+        if(!list.isEmpty()){
             sysUserRoleService.remove(new QueryWrapper<>(userRole));
         }else{
             sysUserRoleService.save(userRole);
