@@ -560,6 +560,7 @@ layui.config({
     base: `${ctx}/js/common/layui/extend/`
 }).extend({
     dtree: 'dtree/dtree',
+    uploader: 'uploader/uploader',
     dict: 'dict', // 数据字典组件
     globalTree: 'globalTree', // 通用树组件
     orgTree: 'orgTree', // 部门树组件

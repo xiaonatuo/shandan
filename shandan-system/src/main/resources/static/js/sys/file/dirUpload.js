@@ -12,17 +12,17 @@ let saveResult = {
     success: false,
     data: null
 };
-layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
+layui.use(['layer', 'uploader', 'element', 'form', 'laydate'], function () {
     let upload = layui.upload,
         element = layui.element,
         layer = layui.layer,
         form = layui.form,
         laydate = layui.laydate;
 
-    let param = layui.url().search;
+    let param = layui.url().search || {};
+    bindDatetimePlugins();
 
-
-    let uploadListIns = upload.render({
+    /*let uploadListIns = upload.render({
         elem: '#chooseFile',
         elemList: $('#fileList'), //列表元素对象
         url: `${ctx}/sys/file/upload`,
@@ -38,8 +38,6 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
             for(let i in files){
                 length++;
             }
-            console.info(obj);
-            console.info(this);
 
             //读取本地文件
             obj.preview(function (index, file, result) {
@@ -76,12 +74,12 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
                 that.elemList.append(tr);
                 element.render('progress'); //渲染新加的进度条组件
 
-                if(curr == length){
+                if (curr == length) {
                     closeLoading()
                 }
             });
         },
-        before: function(obj){
+        before: function (obj) {
             this.data = getFormVal();
         },
         done: function (res, index, upload) { //成功的回调
@@ -100,7 +98,7 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
             this.error(index, upload);
         },
         allDone: function (obj) { //多文件上传完毕后的状态回调
-            if(obj.total === obj.successful){
+            if (obj.total === obj.successful) {
                 saveResult.success = true;
                 saveResult.done = true;
                 saveResult.data = this.data;
@@ -122,35 +120,57 @@ layui.use(['layer', 'upload', 'element', 'form', 'laydate'], function () {
         progress: function (n, elem, e, index) { //注意：index 参数为 layui 2.6.6 新增
             element.progress('progress-file-u-' + index, n + '%'); //执行进度条。n 即为返回的进度百分比
         }
-    });
+    });*/
 
-    setTimeout(function(){
-        $('#chooseFile').next().attr('webkitdirectory','');
-    }, 100)
+
+
+    layui.uploader.render({
+        url: `${ctx}/sys/file/upload/chunk`,//上传文件服务器地址，必填
+        fileCheckUrl: `${ctx}/sys/file/upload/check`,//文件校验地址
+        checkChunkUrl: `${ctx}/sys/file/upload/chunk/check`,//文件块校验地址
+        mergeChunksUrl: `${ctx}/sys/file/upload/chunk/merge`,//文件合并地址
+        //size:5*1024*1024*1024,//单个文件大小，有默认值，可不填
+        //fileType:fileType,//允许上传文件格式,有默认值，可不填
+        fileBoxEle: "#uploader-table",//上传容器
+        chooseFolder: true,
+        getFormData: getFormVal
+        //fileNumLimit:500,//上限500个文件
+        // headers:{//headers参数传递,根据自己需要添加
+        //     Authorization:new Date().getTime()
+        // }
+    });
 
     /**
      * 获取form表单数据
      * @returns {*}
      */
-    function getFormVal(){
+    function getFormVal() {
         let formVal = form.val('file-form');
         formVal.entityId = param.directoryId;
         formVal.inputDate = formVal.inputDate ? formVal.inputDate + '.000' : '';
         return formVal;
     }
-//日期选择器
-    laydate.render({
-        elem: '#input-data',
-        format: "yyyy-MM-dd HH:mm:ss",
-        value: new Date(),
-        isInitValue: true,
-    });
+
+
+    /**
+     * 绑定日期时间插件
+     */
+    function bindDatetimePlugins() {
+        //日期选择器
+        laydate.render({
+            elem: '#input-data',
+            format: "yyyy-MM-dd HH:mm:ss",
+            value: new Date(),
+            isInitValue: true,
+        });
+    }
 });
 
-function save(){
+function save() {
     $('#fileUploadAction').click();
     return getSaveStatus();
 }
+
 /**
  * 每隔100毫秒获取表单保存进度，如果保存请求完成则返回保存状态
  * @returns {Promise<boolean|boolean|*>}

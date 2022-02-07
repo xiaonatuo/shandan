@@ -22,32 +22,8 @@
     <!-- 操作表单 -->
     <div class="layui-col-md12">
         <div class="layui-card" style="margin-bottom: 0">
-            <!--<div class="layui-card-header">文件选择</div>-->
             <div class="layui-card-body">
-                <div class="layui-upload">
-                    <button type="button" class="layui-btn layui-btn-sm  layui-btn-normal" id="chooseFile">
-                        <i class="layui-icon layui-icon-file"></i>选择本地文件夹
-                    </button>
-
-                    <div class="layui-upload-list" style="max-width: 1000px; min-height: 80px; max-height: 216px; overflow-y: auto">
-                        <table class="layui-table">
-                            <colgroup>
-                                <col>
-                                <col width="80">
-                                <col width="260">
-                                <col width="120">
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>文件名</th>
-                                <th>大小</th>
-                                <th>上传进度</th>
-                                <th style="text-align: right">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody id="fileList"></tbody>
-                        </table>
-                    </div>
+                <div class="layui-upload" id="uploader-table">
                 </div>
                 <div class="layui-form" lay-filter="file-form" style="border: 1px solid #eee; padding-top:15px">
                     <div class="layui-form-item">

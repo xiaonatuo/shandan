@@ -56,9 +56,13 @@ public class CustomProperties {
         @Deprecated
         private String location = "local";
         /**
-         * 存储路径
+         * 文件存储路径
          */
-        private String path;
+        private String path = System.getProperty("user.home") + "/shandan";
+        /**
+         * 临时文件存放路径
+         */
+        private String tempPath = path + "/temp";
         /**
          * 文件服务映射别名
          */

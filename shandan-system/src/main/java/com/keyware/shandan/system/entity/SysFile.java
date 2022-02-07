@@ -93,6 +93,18 @@ public class SysFile extends BaseEntity {
     @TableField("REMARK")
     private String remark;
 
+    @TableField("IS_CHUNK")
+    private Boolean isChunk;
+
+    @TableField("IS_MERGE")
+    private Boolean isMerge;
+
+    @TableField("CURRENT_CHUNK_INDEX")
+    private int currentChunkIndex;
+
+    @TableField("MD5")
+    private String MD5;
+
     /**
      * 录入人员
      */
@@ -194,6 +206,13 @@ public class SysFile extends BaseEntity {
     private Date modifyTime;
 
     public SysFile() {
+    }
+
+    public Boolean isChunk(){
+        return isChunk;
+    }
+    public Boolean isMerge(){
+        return isMerge;
     }
 
     public void setMultipartFile(MultipartFile file) throws IOException {
