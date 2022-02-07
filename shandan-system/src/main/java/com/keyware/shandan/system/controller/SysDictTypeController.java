@@ -36,7 +36,8 @@ public class SysDictTypeController extends BaseController<SysDictTypeService, Sy
 
     @DeleteMapping("/delete")
     public Result<Object> deleteByIds(String ids) {
-        if (StringUtils.isBlank(ids)) {
+        Boolean b = StringUtils.isNotBlank(ids);
+        if (Boolean.TRUE.equals(b)) {
             return Result.of(null, false, "参数不能为空");
         }
         dictTypeService.removeByIds(Arrays.asList(ids.split(",")));
