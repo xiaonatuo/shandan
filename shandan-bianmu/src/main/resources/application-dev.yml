@@ -39,4 +39,4 @@ project:
   # 配置文件存储方式
   file-storage:
     # 存储路径
-    path: D:/BIANMU
+    path: ${user.home}/shandan/bianmu/upload

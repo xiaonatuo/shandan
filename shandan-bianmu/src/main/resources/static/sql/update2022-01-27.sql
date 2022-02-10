@@ -16,7 +16,7 @@ comment on column "BIANMU"."SYS_FILE"."CURRENT_CHUNK_INDEX" is '当前分片索�
 
 create table "BIANMU"."SYS_FILE_CHUNK"
 (
-    "ID" INTEGER identity(1, 1) not null ,
+    "ID" VARCHAR2(50) not null ,
     "CHUNK_NAME" VARCHAR2(150),
     "CHUNK_PATH" VARCHAR2(500),
     "CHUNK_MD5" VARCHAR2(150),
@@ -30,8 +30,7 @@ create table "BIANMU"."SYS_FILE_CHUNK"
     "FILE_SIZE" BIGINT,
     primary key("ID")
 )
-    storage(initial 1, next 1, minextents 1, fillfactor 0)
-;
+storage(initial 1, next 1, minextents 1, fillfactor 0);
 
 comment on table "BIANMU"."SYS_FILE_CHUNK" is '系统文件分片表';
 
@@ -66,3 +65,7 @@ alter table "BIANMU"."SYS_FILE_CHUNK" add column("CREATE_TIME" TIMESTAMP(6));
 alter table "BIANMU"."SYS_FILE_CHUNK" add column("MODIFY_USER" VARCHAR2(50));
 
 alter table "BIANMU"."SYS_FILE_CHUNK" add column("MODIFY_TIME" TIMESTAMP(6));
+
+alter table "BIANMU"."SYS_FILE" add column("IS_FIRST" BIT);
+
+comment on column "BIANMU"."SYS_FILE"."IS_FIRST" is '是否第一次上传';

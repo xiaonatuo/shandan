@@ -11,7 +11,7 @@ layui.extend({
         , fileSize = undefined // 100*1024*1024//默认上传文件大小
         , chunkSize = 1024 * 1024//默认文件片段
         , fileType = '' //'doc,docx,pdf,xls,xlsx,ppt,pptx,gif,jpg,jpeg,bmp,png,rar,zip'
-        , uplaod
+        , upload
         , headers
         , nowtime = 0;
     var index = 0;
@@ -22,6 +22,7 @@ layui.extend({
     var percentages = {}; // 所有文件的进度信息，key为file id
     var fList = [];
     var fileBoxEle = "#fileBoxEle";
+    var fileMap = new Map();
     //加载样式
     layui.link(ctx + '/js/common/layui/extend/uploader/exts/webuploader.css');
 
@@ -45,26 +46,20 @@ layui.extend({
             fileType = that.options.fileType;
         }
 
-        var fileBox = `<blockquote class="quoteBox">
-                    <div  id="extend-upload-chooseFile" style="float: left;margin-left: 5px;margin-top: 5px;">选择文件</div>
-                    <button type="button" id="extent-button-uploader" class="layui-btn" style="height: 32px;line-height:32px;margin-top: 5px;margin-left: 5px;">开始上传</button>
-                    <!--<div class="layui-card layui-inline layui-card-body">msg</div>-->
-                    
-                    </blockquote>
+        var fileBox = `
+                    <div id="extend-upload-chooseFile" style="margin-left: 5px;margin-top: 5px;height: 32px;line-height:22px;">选择文件</div>
                     <table style="margin-top:-10px;" class="layui-table" id="extend-uploader-form" lay-filter="extend-uploader-form">
                       <thead>
                         <tr>
                           <th lay-data="{type:'numbers', fixed:'left'}"></th>
-                          <th lay-data="{field:'fileName', width:100}">文件名称</th>
+                          <th lay-data="{field:'fileName'}">文件名称</th>
                           <th lay-data="{field:'fileSize', width:100}">文件大小</th>
-                    <!--//       <th lay-data="{field:'validateMd5', width:120}">文件验证</th>-->
-                          <th lay-data="{field:'progress', width:100,templet:'#button-form-optProcess'}">进度</th>
-                          <th lay-data="{field:'oper', width: 200,templet: '#button-form-uploadTalbe'}">操作</th>
+                          <th lay-data="{field:'progress', width:200,templet:'#button-form-optProcess'}">进度</th>
+                          <th lay-data="{field:'oper', width: 100,templet: '#button-form-uploadTalbe'}">操作</th>
                         </tr>
                       </thead>
                     </table>
                     <script type="text/html" id="button-form-uploadTalbe">
-                    <!--// <a class="layui-btn layui-btn-xs" lay-event="stop">暂停</a>-->
                         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
                     </script>
                     <script type="text/html" id="button-form-optProcess">
@@ -83,14 +78,13 @@ layui.extend({
     };
 
     Class.prototype.createUploader = function (options, that, fileType, fileSize, chunkSize) {
-        var fileNumLimit = options.fileNumLimit || 10;
         table.init('extend-uploader-form', {
             height: 260,
-            limit: fileNumLimit,//默认好像是一页10条，我们只需要一页展示完，所以写大一点
+            limit: 10000,//默认好像是一页10条，我们只需要一页展示完，所以写大一点
             unresize: true
         });
 
-        uplaod = webUploader.create({
+        upload = webUploader.create({
             // 不压缩image
             resize: false,
             // swf文件路径
@@ -99,20 +93,18 @@ layui.extend({
             server: options.url,
             pick: {
                 id: '#extend-upload-chooseFile',//指定选择文件的按钮容器，不指定则不创建按钮。注意 这里虽然写的是 id, 不仅支持 id, 还支持 class, 或者 dom 节点。
+                innerHTML: '选择文件夹',
                 multiple: true //开启文件多选
             },
-            // fileSingleSizeLimit:fileSize,//单个文件大小
             //接收文件类型--自行添加options
             accept: [{
                 title: 'file',
                 extensions: fileType,
                 mimeTypes: that.buildFileType(fileType)
             }],
-            // 单位字节，如果图片大小小于此值，不会采用压缩。512k  512*1024，如果设置为0，原图尺寸大于设置的尺寸就会压缩；如果大于0，只有在原图尺寸大于设置的尺寸，并且图片大小大于此值，才会压缩
-            compressSize: 0,
-            fileNumLimit: fileNumLimit,//验证文件总数量, 超出则不允许加入队列,默认值：undefined,如果不配置，则不限制数量
-            fileSizeLimit: 100 * 1024 * 1024 * 1024, //1kb=1024*1024,验证文件总大小是否超出限制, 超出则不允许加入队列。
-            fileSingleSizeLimit: fileSize, //验证单个文件大小是否超出限制, 超出则不允许加入队列。
+            fileNumLimit: undefined,//验证文件总数量, 超出则不允许加入队列,默认值：undefined,如果不配置，则不限制数量
+            fileSizeLimit: undefined, //1kb=1024*1024,验证文件总大小是否超出限制, 超出则不允许加入队列。
+            fileSingleSizeLimit: undefined, //验证单个文件大小是否超出限制, 超出则不允许加入队列。
             chunked: true,//是否开启分片上传
             threads: 1,
             chunkSize: chunkSize,//如果要分片，每一片的文件大小
@@ -152,12 +144,29 @@ layui.extend({
             return false;
     };
 
+
     Class.prototype.events = function () {
         var that = this, option = this.options;
         var {uploadBeforeSend, error, uploadSuccess, uploadFinished, uploadProgress} = option;
-        //当文件添加进去
-        uplaod.on('fileQueued', function (file) {
-            //console.log("file:",file);
+        /*let flag;
+        let div = document.createElement('div');
+        div.style = 'position:absolute; width:100px; height:100px; z-index:999; background:red;';*/
+        //添加文件之前
+        upload.on('beforeFileQueued', function(file){
+            /*if(!flag){
+                /!*console.info('sss', div);
+                let body = document.getElementById('uploader-table')
+                //  body.appendChild(div);
+                flag = true;*!/
+            }*/
+        })
+        // 当一批文件被添加之后
+        upload.on('filesQueued', function () {
+
+        });
+        upload.on('fileQueued', function (file) {
+            file.nameBak = file.name;
+            file.name = file.source.source.webkitRelativePath;
             var fileSize = that.formatFileSize(file.size);
             var row = {
                 fileId: file.id,
@@ -173,15 +182,14 @@ layui.extend({
         });
 
         //监听进度条,更新进度条信息
-        uplaod.on('uploadProgress', function (file, percentage) {
+        upload.on('uploadProgress', function (file, percentage) {
             element.progress(file.id, (percentage * 100).toFixed(0) + '%');
             uploadProgress && uploadProgress(file, percentage);
         });
 
 
         /**上传之前**/
-        uplaod.on('uploadBeforeSend', function (block, data, headers) {
-            console.info('block', block)
+        upload.on('uploadBeforeSend', function (block, data, headers) {
             nowtime = new Date().getTime();
             data.contentType = block.file.type;
             data.chunks = block.file.chunks;
@@ -193,23 +201,22 @@ layui.extend({
             data.startOffset = block.start;
             data.endOffset = block.end;
             data.id = '';
-            data.fileName = data.name;
-            if(option.getFormData){
+            data.fileName = block.file.nameBak;
+            data.fileFullName = block.file.name;
+            if (option.getFormData) {
                 let d = option.getFormData();
-                if(d){
+                if (d) {
                     data = Object.assign(data, option.getFormData())
                 }
             }
-            console.info('sssss', data);
             if (that.isEmpty(that.options.headers)) {
                 headers = that.options.headers;
             }
-            // headers.Authorization=that.options.headers.Authorization;
             uploadBeforeSend && uploadBeforeSend(block, data, headers);
         });
 
         //错误信息监听
-        uplaod.on('error', function (handler) {
+        upload.on('error', function (handler) {
 
             if (handler == 'F_EXCEED_SIZE') {
                 layer.alert('上传的单个太大! <br>最大支持' + that.formatFileSize(fileSize) + '! <br>操作无法进行,如有需求请联系管理员', {icon: 5});
@@ -220,7 +227,7 @@ layui.extend({
         });
 
         /**从文件队列移除**/
-        uplaod.on('fileDequeued', function (file) {
+        upload.on('fileDequeued', function (file) {
             fileAllNum--;
             fileAllSize -= file.size;
             delete percentages[file.id];
@@ -232,38 +239,24 @@ layui.extend({
             if (obj.event === 'del') {
                 rowData = that.removeArray(rowData, data.fileId);
                 fList = that.removeArray(fList, data.fileId);
-                uplaod.removeFile(data.fileId, true);
+                upload.removeFile(data.fileId, true);
 
                 obj.del();
-                //通知后台删除文件
-                //console.log("data:",data);
-                //console.log("data.fileId:",data.fileId);
             } else if (obj.event === 'stop') {//暂停、继续
-                // if(){
-                //
-                // }
-                uplaod.stop(true);
+                upload.stop(true);
 
             }
-        });
-
-        //开始上传
-        $("#extent-button-uploader").click(function () {
-            that.uploadToServer();
         });
 
         //当文件上传成功时触发。file {ArchivesFile} File对象, response {Object}服务端返回的数据
-        uplaod.on('uploadSuccess', function (file, response) {
-            layer.msg("上传完成");
-            //console.log("response:"+response);
-            // debugger;
-            if (response.flag) {
+        upload.on('uploadSuccess', function (file, res) {
+            if (res.flag) {
                 that.setTableBtn(file.id, '正在校验文件...');
             }
-            uploadSuccess && uploadSuccess(file, response);
+            uploadSuccess && uploadSuccess(file, res);
         })
         //所有文件上传成功后
-        uplaod.on('uploadFinished', function () {//成功后
+        upload.on('uploadFinished', function () {//成功后
             $("#extent-button-uploader").text("开始上传");
             $("#extent-button-uploader").removeClass('layui-btn-disabled');
             uploadFinished && uploadFinished();
@@ -282,8 +275,6 @@ layui.extend({
 
         headers = options.headers || {};
         var fileCheckUrl = options.fileCheckUrl;//检测文件是否存在url
-        var checkChunkUrl = options.checkChunkUrl;//检测分片url
-        var mergeChunksUrl = options.mergeChunksUrl;//合并文件请求地址
 
         //监控文件上传的三个时间点(注意：该段代码必须放在WebUploader.create之前)
         //时间点1：:所有分块进行上传之前（1.可以计算文件的唯一标记;2.可以判断是否秒传）
@@ -302,109 +293,73 @@ layui.extend({
                 (new webUploader.Uploader()).md5File(file, 0, 10 * 1024 * 1024).progress(function (percentage) {
                 }).then(function (val) {
                     file.fileMd5 = val;
-                    //console.log("beforeSendFile contentType:",file);
-                    //2.请求后台是否保存过该文件，如果存在，则跳过该文件，实现秒传功能
+                    let {fileMd5, name} = file;
+                    let formData = options.getFormData() || {};
                     $.ajax({
                             type: "POST",
                             url: fileCheckUrl,
                             headers: headers,
-                            data: {
-                                fileMd5: val
-                            },
+                            data: {fileMd5, name},
                             dataType: "json",
                             success: function (response) {
                                 if (response.flag) {
-
-                                    uplaod.skipFile(file);
-                                    that.setTableBtn(file.id, "上传成功");
-                                    element.progress(file.id, '100%');
-                                    successNum++;
-                                    successSize += file.size;
-                                    //如果存在，则跳过该文件，秒传成功
-                                    fList.push(response.data);
-                                    deferred.reject();
-                                } else {
-                                    if (response.code === 30001) {//判断是否支持此类文件上传
-                                        var m = "<span style='color: red;font-size: large;font-style: oblique;'>" + response.message + "，文件后缀：" + file.ext + "</span>";
-                                        // layer.alert(m);
-                                        uplaod.skipFile(file);
-                                        that.setTableBtn(file.id, m);
-                                        element.progress(file.id, '0%');
+                                    let _file = response.data.file, name_exists = response.data.name_exists;
+                                    fileMap.set(file.id, _file);
+                                    if (_file && _file.isMerge) {
+                                        upload.skipFile(file);
+                                        that.setTableBtn(file.id, "上传成功");
+                                        element.progress(file.id, '100%');
                                         successNum++;
                                         successSize += file.size;
                                         //如果存在，则跳过该文件，秒传成功
-                                        fList.push(response.data);
+                                        fList.push(_file);
+                                        // 未找到文件名相同的文件，则将文件信息复制一份并保存
+                                        if (!name_exists) {
+                                            saveFileAndDir(_file.id, formData.entityId, file.name);
+                                        }
                                         deferred.reject();
-                                        return;
                                     } else {
-                                        //继续上传
                                         deferred.resolve();
                                     }
-                                }
-                            }
-                        }
-                    );
-
-                });
-                //返回deffered
-                return deferred.promise();
-            },
-            //时间点2：如果有分块上传，则 每个分块上传之前调用此函数
-            //block:代表当前分块对象
-            beforeSend: function (block) {//向后台发送当前文件的唯一标记，用于后台创建保存分块文件的目录
-                //1.请求后台是否保存过当前分块，如果存在，则跳过该分块文件，实现断点续传功能
-                var deferred = webUploader.Deferred();
-                //请求后台是否保存完成该文件信息，如果保存过，则跳过，如果没有，则发送该分块内容
-                (new webUploader.Uploader()).md5File(block.file, block.start, block.end).progress(function (percentage) {
-                }).then(function (val) {
-                    block.zoneMd5 = val;
-                    $.ajax({
-                            type: "POST",
-                            url: checkChunkUrl,
-                            headers: headers,
-                            data: {
-                                fileMd5: block.file.fileMd5,
-                                chunkMd5: block.zoneMd5
-                            },
-                            dataType: "json",
-                            success: function (response) {
-                                if (response.flag) {
-                                    //分块存在，跳过该分块
-                                    deferred.reject();
                                 } else {
-                                    //分块不存在或者不完整，重新发送该分块内容
                                     deferred.resolve();
                                 }
                             }
                         }
                     );
                 });
+                //返回deffered
+                return deferred.promise();
+            },
+            //时间点2：如果有分块上传，则 每个分块上传之前调用此函数
+            //block:代表当前分块对象
+            beforeSend: function (block) {
+                let _block_file = block.file;
+                let _file = fileMap.get(_block_file.id);
+
+                let deferred = webUploader.Deferred();
+                if (_file && block.chunk <= _file.currentChunkIndex) {
+                    //分片索引小于已上传的分片索引则不上传
+                    deferred.reject();
+                } else {
+                    block.zoneMd5 = _block_file.fileMd5 + "_" + block.chunk;
+                    deferred.resolve();
+                }
                 return deferred.promise();
             },
             //时间点3：所有分块上传成功之后调用此函数
-            afterSendFile: function (file) {//前台通知后台合并文件
-                //1.如果分块上传，则通过后台合并所有分块文件
-                //请求后台合并文件
-                $.ajax({
-                    type: "POST",
-                    url: mergeChunksUrl + "/" + file.fileMd5,
-                    headers: headers,
-                    dataType: "JSON",
-                    success: function (resdata) {
-                        if (resdata.flag) {//存在了，+1
-                            // $("#"+file.id).find(".layui-progress-bar").removeClass('layui-bg-blue');
-                            // element.progress('progress_'+file.id, '100%');
-                            // $("#"+file.id).find('.percent').html("100%");
-                            uplaod.skipFile(file);
-                            that.setTableBtn(file.id, '上传成功');
-                            element.progress(file.id, '100%');
-                            successNum++;
-                            successSize += file.size;
-                            var data = resdata.data.fileInfo;
-                            fList.push(data);
-                        }
-                    }
-                });
+            afterSendFile: function (file, res, hds) {
+                if (res.flag) {
+                    let formData = options.getFormData() || {};
+                    saveFileAndDir(res.data.id, formData.entityId, file.fullName).then(res => {
+                        upload.skipFile(file);
+                        that.setTableBtn(file.id, '上传成功');
+                        element.progress(file.id, '100%');
+                        successNum++;
+                        successSize += file.size;
+                        fList.push(fileMap.get(file.id));
+                    });
+                }
             }
         });
     };
@@ -441,9 +396,7 @@ layui.extend({
             layer.msg('没有上传的文件', {icon: 5});
             return;
         }
-        $("#extent-button-uploader").text("正在上传，请稍等...");
-        $("#extent-button-uploader").addClass('layui-btn-disabled');
-        uplaod.upload();
+        upload.upload();
     };
 
     Class.prototype.removeArray = function (array, fileId) {
@@ -490,13 +443,20 @@ layui.extend({
         that.events();
     }
 
+    function saveFileAndDir(fileId, currentDirId, fileFullName) {
+        let data = {fileId, currentDirId, fileFullName}
+        return new Promise(((resolve, reject) => {
+            Util.post(`/sys/file/upload/chunk/complete`, data).then(resolve).catch(reject)
+        }))
+    }
+
     var layWebupload = {
         render: function (options) {
             var inst = new Class(options);
             return inst;
         },
         startUpload: function () {
-            uplaod.upload();
+            upload.upload();
         },
     };
     exports('uploader', layWebupload);

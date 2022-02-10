@@ -136,7 +136,7 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
             return Result.of(null, false, "目录不存在");
         }
 
-        if (sysFileService.removeById(fileId)) {
+        if (sysFileService.deleteById(fileId).getData()) {
             if (dir.getReviewStatus() != ReviewStatus.UN_SUBMIT){
                 dir.setReviewStatus(ReviewStatus.UN_SUBMIT);
                 directoryService.saveOrUpdate(dir);

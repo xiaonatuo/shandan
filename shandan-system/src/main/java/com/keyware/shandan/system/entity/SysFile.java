@@ -93,17 +93,41 @@ public class SysFile extends BaseEntity {
     @TableField("REMARK")
     private String remark;
 
+    /**
+     * 是否分片上传
+     */
     @TableField("IS_CHUNK")
     private Boolean isChunk;
 
+    /**
+     * 是否已经合并分片（用于秒传）
+     */
     @TableField("IS_MERGE")
     private Boolean isMerge;
 
+    /**
+     * 当前分片索引（用于断点续传）
+     */
     @TableField("CURRENT_CHUNK_INDEX")
     private int currentChunkIndex;
 
+    /**
+     * 文件的MD5值
+     */
     @TableField("MD5")
     private String MD5;
+
+    /**
+     * 是否第一次上传
+     */
+    @TableField("IS_FIRST")
+    private Boolean isFirst;
+
+    /**
+     * 文件全路径名称
+     */
+    @TableField(exist = false)
+    private String fileFullName;
 
     /**
      * 录入人员
@@ -214,11 +238,14 @@ public class SysFile extends BaseEntity {
     public Boolean isMerge(){
         return isMerge;
     }
+    public boolean isFirst() {
+        return isFirst;
+    }
 
     public void setMultipartFile(MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
             int index = file.getOriginalFilename().lastIndexOf(".");
-            this.fileName = file.getOriginalFilename().substring(0, index);
+            this.fileName = file.getOriginalFilename();
             this.fileSuffix = file.getOriginalFilename().substring(index);
             this.fileSize = file.getSize() / 1024d / 1024d;
             String fileType = FileTypeUtil.getType(file.getInputStream());

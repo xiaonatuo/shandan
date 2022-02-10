@@ -173,14 +173,14 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
         return super.list(wrapper);
     }
 
-
     /**
      * 根据path查询目录实体
      *
      * @param path 目录路径
      * @return 目录
      */
-    private DirectoryVo getByPath(String path) {
+    @Override
+    public DirectoryVo getByPath(String path) {
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
         wrapper.eq("DIRECTORY_PATH", path);
         return getOne(wrapper);

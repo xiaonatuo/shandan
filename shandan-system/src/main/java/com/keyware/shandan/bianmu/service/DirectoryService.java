@@ -50,4 +50,11 @@ public interface DirectoryService extends IBaseService<DirectoryVo, String> {
      * @return
      */
     List<DirectoryVo> childrenLists(DirectoryVo dir);
+
+    /**
+     * 根据路径查询目录
+     * @param path 查询路径
+     * @return 目录数据
+     */
+    DirectoryVo getByPath(String path);
 }

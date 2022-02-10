@@ -1,27 +1,27 @@
 package com.keyware.shandan.system.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.frame.properties.CustomProperties;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.entity.SysFileChunk;
 import com.keyware.shandan.system.service.SysFileService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import com.keyware.shandan.common.controller.BaseController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -79,18 +79,26 @@ public class SysFileController extends BaseController<SysFileService, SysFile, S
     }
 
     /**
-     * 根据文件的MD5值判断文件是否上传
+     * 根据文件的MD5值判断文件是否已经上传
+     * 由于MD5值是仅是基于文件内容得出的值，并不包括文件名称，所以需要在根据文件名称判断，是否需要以新的文件名称重新保存一条记录到数据库
      *
-     * @param fileMd5 文件的MD5值
+     * @param fileMd5 文件的MD5值，用于判断文件是否已经上传
+     * @param name    文件名
      * @return 结果集
      */
     @PostMapping("/upload/check")
-    public Result<Object> uploadFileCheck(@RequestBody String fileMd5) {
-        SysFile file = sysFileService.getFileByMd5(fileMd5);
-        if (file == null) {
-            return Result.of(null, false);
+    public Result<Object> uploadFileCheck(@RequestBody String fileMd5,
+                                          @RequestBody String name) {
+        JSONObject data = new JSONObject();
+
+        List<SysFile> files = sysFileService.getFilesByMd5(fileMd5);
+        if (files.size() == 0) {
+            data.put("exists", false);
+        } else {
+            data.put("file", files.stream().filter(SysFile::isFirst).findFirst().orElse(null));
+            data.put("name_exists", files.stream().anyMatch(file -> file.getFileName().equals(name)));
         }
-        return Result.of(file);
+        return Result.of(data);
     }
 
     /**
@@ -103,66 +111,51 @@ public class SysFileController extends BaseController<SysFileService, SysFile, S
     @PostMapping("/upload/chunk")
     public Result<Object> uploadChunk(MultipartFile file, SysFile fileInfo, SysFileChunk fileChunk) {
         try {
-            sysFileService.uploadFileChunk(file, fileInfo, fileChunk);
+            SysFile sysFile = sysFileService.uploadFileChunk(file, fileInfo, fileChunk);
+            return Result.of(sysFile);
         } catch (Exception e) {
             e.printStackTrace();
+            return Result.of(null, false, "上传失败");
         }
-        return Result.of(null);
     }
 
     /**
-     * 根据文件及文件分片的MD5值判断文件分片是否上传
+     * 复制文件信息并保存到指定目录
      *
-     * @param fileMd5  文件的MD5值
-     * @param chunkMd5 文件分片的MD5值
-     * @return 结果集
+     * @param fileId
+     * @param target
+     * @return
+     * @throws Exception
      */
-    @PostMapping("/upload/chunk/check")
-    public Result<Object> checkChunk(@RequestBody String fileMd5, @RequestBody String chunkMd5) {
-        SysFileChunk chunk = sysFileService.getFileChunkByMd5(fileMd5, chunkMd5);
-        if (chunk == null) {
-            return Result.of(null, false);
+    @PostMapping("/copy")
+    public Result<Object> fileCopy(@RequestBody String fileId,
+                                   @RequestBody String target) throws Exception {
+        if (StringUtils.isNotBlank(fileId)) {
+            SysFile file = sysFileService.getById(fileId);
+            SysFile file2 = new SysFile();
+            BeanUtils.copyProperties(file, file2);
+            file2.setId(null);
+            file2.setIsFirst(false);
+            save(file2);
+            return Result.of(file2);
         }
-        return Result.of(chunk);
+        return Result.of(null, false);
     }
 
     /**
-     * 合并文件，前端所有分片上传完成时，发起请求，将所有的文件合并成一个完整的文件，并删除服务器分片文件
-     * 前端需要传入总文件的MD5值
+     * 文件分片上传完成，需要自动生成目录结构，并保存目录文件关系
+     *
+     * @param fileId       上传的文件ID
+     * @param currentDirId 当前目录ID
+     * @param fileFullName 文件的全路径名称
+     * @return 结果
      */
-    @PostMapping("/upload/chunk/merge/{fileMd5}")
-    public Result<Object> mergerChunk(@PathVariable("fileMd5") String fileMd5, HttpServletRequest request) {
-        //return fileRecordService.mergeZoneFile(totalmd5,request);
-        SysFile file = sysFileService.getFileByMd5(fileMd5);
-        if (file == null) {
-            return Result.of(null, false);
-        }
-        if (file.isChunk() && file.isMerge()) {
-            // 文件上传成功
-            return Result.of(file);
-        }
-
-        List<SysFileChunk> chunks = sysFileService.getFileChunksByFileMd5(fileMd5);
-        if (chunks.size() == 0) {
-            return Result.of(null, false);
-        }
-
-        try {
-            file = sysFileService.mergeFileChunk(file, chunks);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Result.of(null, false, "文件合并服务异常");
-        }
-        return Result.of(file, !Objects.isNull(file));
-    }
-
-    /***
-     * 删除文件分片
-     */
-    @PostMapping("/zone/upload/del/{totalmd5}")
-    public Result<Object> delZoneFile(@PathVariable("totalmd5") String totalmd5) {
-        //return fileRecordService.delZoneFile(totalmd5);
-        return Result.of(null);
+    @PostMapping("/upload/chunk/complete")
+    public Result<Object> mergerChunk(@RequestBody String fileId,
+                                      @RequestBody String currentDirId,
+                                      @RequestBody String fileFullName) throws Exception {
+        boolean flag = sysFileService.autoCreateDirAndUpdateFile(fileId, currentDirId, fileFullName);
+        return Result.of(flag, flag);
     }
 
     /**

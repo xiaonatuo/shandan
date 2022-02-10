@@ -1,5 +1,6 @@
 package com.keyware.shandan.system.entity;
 
+import com.baomidou.mybatisplus.annotation.OrderBy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -47,7 +48,8 @@ public class SysFileChunk extends BaseEntity {
      * 当前分片索引
      */
     @TableField("CHUNK_INDEX")
-    private Integer chunkIndex;//zoneNowIndex;
+    @OrderBy(isDesc = false)
+    private Integer chunkIndex;
     /**
      * 文件开始位置
      */
@@ -74,4 +76,12 @@ public class SysFileChunk extends BaseEntity {
     @TableField("FILE_SIZE")
     private Long fileSize;
 
+    /**
+     * 是否最后一片分片
+     *
+     * @return 是否最后一片分片
+     */
+    public boolean isLast() {
+        return chunkIndex == chunkTotal - 1;
+    }
 }
