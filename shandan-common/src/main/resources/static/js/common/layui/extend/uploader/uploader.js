@@ -47,7 +47,7 @@ layui.extend({
         }
 
         var fileBox = `
-                    <div id="extend-upload-chooseFile" style="margin-left: 5px;margin-top: 5px;height: 32px;line-height:22px;">选择文件</div>
+                    <div id="extend-upload-chooseFile" style="margin-left: 5px;margin-top: 5px;height: 32px;line-height:22px;">选择文件夹</div>
                     <table style="margin-top:-10px;" class="layui-table" id="extend-uploader-form" lay-filter="extend-uploader-form">
                       <thead>
                         <tr>
@@ -257,8 +257,6 @@ layui.extend({
         })
         //所有文件上传成功后
         upload.on('uploadFinished', function () {//成功后
-            $("#extent-button-uploader").text("开始上传");
-            $("#extent-button-uploader").removeClass('layui-btn-disabled');
             uploadFinished && uploadFinished();
         });
     };

@@ -141,8 +141,11 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         });
 
         metaListTable.addTableRowEvent('addDirectory', function (obj) {
-            upload(basicData,`${ctx}/sys/file/layer/dir?directoryId=${basicData.id}`, function(){
-
+            upload(basicData,`${ctx}/sys/file/layer/dir?directoryId=${basicData.id}`, function(res){
+                if (res.success) {
+                    refreshDirectoryNode(tempNode, basicData);
+                    metaListTable.reloadTable();
+                }
             });
         })
 

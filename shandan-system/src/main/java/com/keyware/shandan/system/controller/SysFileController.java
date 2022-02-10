@@ -120,29 +120,6 @@ public class SysFileController extends BaseController<SysFileService, SysFile, S
     }
 
     /**
-     * 复制文件信息并保存到指定目录
-     *
-     * @param fileId
-     * @param target
-     * @return
-     * @throws Exception
-     */
-    @PostMapping("/copy")
-    public Result<Object> fileCopy(@RequestBody String fileId,
-                                   @RequestBody String target) throws Exception {
-        if (StringUtils.isNotBlank(fileId)) {
-            SysFile file = sysFileService.getById(fileId);
-            SysFile file2 = new SysFile();
-            BeanUtils.copyProperties(file, file2);
-            file2.setId(null);
-            file2.setIsFirst(false);
-            save(file2);
-            return Result.of(file2);
-        }
-        return Result.of(null, false);
-    }
-
-    /**
      * 文件分片上传完成，需要自动生成目录结构，并保存目录文件关系
      *
      * @param fileId       上传的文件ID

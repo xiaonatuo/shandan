@@ -97,13 +97,13 @@ public class SysFile extends BaseEntity {
      * 是否分片上传
      */
     @TableField("IS_CHUNK")
-    private Boolean isChunk;
+    private Boolean isChunk = false;
 
     /**
      * 是否已经合并分片（用于秒传）
      */
     @TableField("IS_MERGE")
-    private Boolean isMerge;
+    private Boolean isMerge = false;
 
     /**
      * 当前分片索引（用于断点续传）
@@ -121,7 +121,7 @@ public class SysFile extends BaseEntity {
      * 是否第一次上传
      */
     @TableField("IS_FIRST")
-    private Boolean isFirst;
+    private Boolean isFirst = false;
 
     /**
      * 文件全路径名称

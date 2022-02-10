@@ -24,7 +24,15 @@ layui.use(['layer', 'uploader', 'element', 'form', 'laydate'], function () {
         fileCheckUrl: `${ctx}/sys/file/upload/check`,//文件校验地址
         fileBoxEle: "#uploader-table",//上传容器
         chooseFolder: true,
-        getFormData: getFormVal
+        getFormData: getFormVal,
+        uploadFinished: function () {
+            saveResult.done = true;
+            saveResult.success = true;
+
+            let index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            parent.layer.msg('上传成功');
+        }
     });
 
     $('#fileUploadAction').on('click', function () {
