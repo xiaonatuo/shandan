@@ -54,7 +54,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
      * 设置参数并渲染组件
      * @param options
      */
-    GlobalTree.prototype.render = function (options = {}) {
+    GlobalTree.prototype.renderTree = function (options = {}) {
         const _this = $.extend(true, this, options);
         _this.request = options.request || {};
         const _done = _this.done;
@@ -82,7 +82,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
      * @param options
      */
     GlobalTree.prototype.reload = function (options) {
-        this.render(options);
+        this.renderTree(options);
     }
 
     /**
@@ -122,7 +122,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
      */
     globalTree.init = function (options) {
         tree = new GlobalTree();
-        let dtreeObj = tree.render(options)
+        let dtreeObj = tree.renderTree(options)
         return $.extend(tree, dtreeObj);
     }
 

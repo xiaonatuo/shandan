@@ -57,7 +57,7 @@ public class TreeUtil {
         Stream<TreeVo> nodesStream = nodes.stream();
         // 从所有节点中找出父节点不在集合中的节点
         List<String> allId = nodes.stream().map(TreeVo::getId).collect(Collectors.toList());
-        nodesStream.filter(node -> ("-".equals(node.getParentId()) && !allId.contains(node.getParentId()))).forEach(node -> {
+        nodesStream.filter(node -> (!allId.contains(node.getParentId()))).forEach(node -> {
             node.setChildren(buildDirTree(nodes, node.getId()));
             tree.add(node);
         });

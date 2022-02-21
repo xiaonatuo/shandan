@@ -80,7 +80,7 @@ public class DirectoryCommonController {
             // 判断目录的父级是否存在于未审核通过的目录中，如果存在于，则过滤掉
             directoryList = directoryList.stream().filter(item -> !unPassIds.contains(item.getParentId())).collect(Collectors.toList());
         }
-        return Result.of(TreeUtil.buildDirTree(directoryList.stream().map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
+        return Result.of(TreeUtil.buildDirTree(directoryList.stream().filter(dir->dir.getParentId().equals(id)).map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
     }
 
     @GetMapping("/details/{id}")
