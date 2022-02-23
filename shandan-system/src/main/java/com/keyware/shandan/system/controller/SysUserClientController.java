@@ -3,11 +3,13 @@ package com.keyware.shandan.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.common.util.StreamUtil;
 import com.keyware.shandan.frame.config.security.SecurityUtil;
 import com.keyware.shandan.system.entity.SysUserClient;
 import com.keyware.shandan.system.service.OauthClientDetailsService;
 import com.keyware.shandan.system.service.SysUserClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +46,7 @@ public class SysUserClientController extends BaseController<SysUserClientService
         List<String> userClientIds = userClientList.stream().map(SysUserClient::getClientId).collect(Collectors.toList());
         modelAndView.addObject("userId", userId);
         modelAndView.addObject("userClientIds", userClientIds);
-        modelAndView.addObject("clientList", oauthClientDetailsService.list());
+        modelAndView.addObject("clientList", StreamUtil.as(oauthClientDetailsService.list()).filter(item -> !"desktop".equals(item.getId())).toList());
         modelAndView.setViewName("sys/client/clientLayer");
         return modelAndView;
     }
