@@ -51,7 +51,7 @@ layui.use(['layer', 'gtable', 'form', 'element', 'upload'], function () {
                     <div class="layui-form-item">
                         <label class="layui-form-label">展示排序</label>
                         <div class="layui-input-block">
-                            <input type="text" name="sort" lay-verify="required|number" value ="1" placeholder="应用排列顺序" autocomplete="off" class="layui-input">
+                            <input type="text" name="sort" lay-verify="required|number" placeholder="应用排列顺序" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -109,7 +109,6 @@ layui.use(['layer', 'gtable', 'form', 'element', 'upload'], function () {
                             </ul>
                         </div>
                     </div>
-                    <input type="hidden" name="sort"  value ="1" >
                     <button type="submit" lay-submit id="appInfoSubmit" style="border: none; position: absolute"/>
                 </form>
             `,
