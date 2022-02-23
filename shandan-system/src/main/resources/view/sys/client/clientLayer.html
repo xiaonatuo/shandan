@@ -19,7 +19,7 @@
                         <input lay-skin="primary" type="checkbox"
                                th:data-client-id="${client.id}"
                                th:data-user-id="${userId}"
-                               th:text="${client.id}"
+                               th:text="${client.title}"
                                th:checked="${#lists.contains(userClientIds, client.id)}">
                     </p>
                 </div>
