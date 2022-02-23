@@ -39,58 +39,21 @@ layui.use(['layer', 'gtable', 'form', 'element', 'upload'], function () {
                     <div class="layui-form-item">
                         <label class="layui-form-label">访问密匙</label>
                         <div class="layui-input-block">
-                            <input type="text" name="clientSecret" lay-verify="required" autocomplete="off" class="layui-input">
+                            <input type="password" name="clientSecret" lay-verify="required" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">权限范围</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="scope" autocomplete="off" value="all" class="layui-input" lay-verify="required">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">访问模式</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="authorizedGrantTypes" autocomplete="off" value="authorization_code,refresh_token" class="layui-input" lay-verify="required">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">客户端访问地址</label>
+                        <label class="layui-form-label">重定向地址</label>
                         <div class="layui-input-block">
                             <input type="text" name="webServerRedirectUri" autocomplete="off" placeholder="客户端访问地址" class="layui-input" lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">权限值</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="authorities" autocomplete="off" value="ROLE_ADMIN,ROLE_USER" class="layui-input" lay-verify="required">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">访问令牌时效</label>
-                        <div class="layui-input-block">
-                            <input name="accessTokenValidity" autocomplete="off" value="7200" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">刷新令牌时效</label>
-                        <div class="layui-input-block">
-                            <input name="refreshTokenValidity" autocomplete="off" value="7200" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">自动授权</label>
-                        <div class="layui-input-block">
-                            <input type="radio" name="autoapprove"  value="true" title="是" checked="checked">
-                            <input type="radio" name="autoapprove"  value="false" title="否">
-                        </div>
-                    </div>
-                    <!--<div class="layui-form-item">
                         <label class="layui-form-label">展示排序</label>
                         <div class="layui-input-block">
                             <input type="text" name="sort" lay-verify="required|number" value ="1" placeholder="应用排列顺序" autocomplete="off" class="layui-input">
                         </div>
-                    </div>-->
+                    </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">打开方式</label>
                         <div class="layui-input-block">

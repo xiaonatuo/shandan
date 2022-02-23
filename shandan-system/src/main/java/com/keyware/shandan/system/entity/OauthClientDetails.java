@@ -1,9 +1,6 @@
 package com.keyware.shandan.system.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -37,28 +34,28 @@ public class OauthClientDetails implements Serializable {
     private String resourceIds;
 
     @TableField("SCOPE")
-    private String scope;
+    private String scope = "all";
 
     @TableField("AUTHORIZED_GRANT_TYPES")
-    private String authorizedGrantTypes;
+    private String authorizedGrantTypes = "authorization_code,refresh_token";
 
     @TableField("WEB_SERVER_REDIRECT_URI" )
     private String webServerRedirectUri;
 
     @TableField("AUTHORITIES")
-    private String authorities;
+    private String authorities = "all";
 
     @TableField("ACCESS_TOKEN_VALIDITY")
-    private Long accessTokenValidity;
+    private Long accessTokenValidity = 7200L;
 
     @TableField("REFRESH_TOKEN_VALIDITY")
-    private Long refreshTokenValidity;
+    private Long refreshTokenValidity = 7200L;
 
     @TableField("ADDITIONAL_INFORMATION")
     private String additionalInformation;
 
     @TableField("AUTOAPPROVE")
-    private String autoapprove;
+    private String autoapprove = "true";
 
     @TableField("WEB_CLIENT_LOGOUT_URI")
     private String webClientLogoutUri;
@@ -85,6 +82,7 @@ public class OauthClientDetails implements Serializable {
      * 应用排列顺序
      */
     @TableField("SORT")
+    @OrderBy(isDesc = false)
     private String sort;
 
     @Override
