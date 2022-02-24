@@ -1,5 +1,6 @@
 package com.keyware.shandan.desktop.controller;
 
+import com.keyware.shandan.common.constants.SystemConstants;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.util.RsaUtil;
 import com.keyware.shandan.common.util.StringUtils;
@@ -9,6 +10,7 @@ import com.keyware.shandan.system.entity.SysUser;
 import com.keyware.shandan.system.entity.SysUserClient;
 import com.keyware.shandan.system.service.SysUserClientService;
 import com.keyware.shandan.system.service.SysUserService;
+import com.keyware.shandan.system.utils.DictUtil;
 import com.keyware.shandan.system.utils.SysSettingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,9 +53,11 @@ public class DesktopController {
         //后端公钥
         String publicKey = RsaUtil.getPublicKey();
         modelAndView.addObject("publicKey", publicKey);
+        modelAndView.addObject(SystemConstants.DESKTOP_LOGO_TEXT, DictUtil.getPublicDict(SystemConstants.DESKTOP_LOGO_TEXT));
         //登录用户信息
         SysUser user = sysUserService.findByLoginName(SecurityUtil.getLoginUser().getUsername()).getData();
-        user.setPassword(null);//隐藏部分属性
+        assert user != null;
+        user.setPassword(null);
         modelAndView.addObject("loginUser", user);
         modelAndView.addObject("user", user);
         //桌面展示信息
