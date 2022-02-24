@@ -40,7 +40,9 @@ public class OauthController {
         String token = StringUtils.isNotBlank(access_token) ? access_token : Authorization;
         token = token.replaceFirst("Bearer ", "");
         OAuth2Authentication authentication = inMemoryTokenStore.readAuthentication(token);
-        if(authentication == null) return Result.of(null, false, "用户信息未找到");
+        if(authentication == null) {
+            return Result.of(null, false, "用户信息未找到");
+        }
 
         JSONObject result = (JSONObject) JSONObject.toJSON(Result.of(authentication.getUserAuthentication()));
         result.getJSONObject("data").put("principal", authentication.getName());

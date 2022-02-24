@@ -48,9 +48,10 @@ const ReviewEntityType = {
     METADATA: 'METADATA'
 }
 
-const PUBLIC_SETTING_KEY = 'PUBLIC_SETTING';
-const OFFICE_ONLINE_SERVER_KEY = 'OFFICE_ONLINE_SERVER';
-
+const SystemConst = {
+    PUBLIC_SETTING_KEY: 'PUBLIC_SETTING',
+    OFFICE_ONLINE_SERVER_KEY: 'OFFICE_ONLINE_SERVER',
+}
 /**
  * 加解密操作简单封装一下
  */
@@ -549,7 +550,7 @@ const DICT = {
     },
 
     getOfficeServer: function(){
-        return this.get(PUBLIC_SETTING_KEY, OFFICE_ONLINE_SERVER_KEY);
+        return this.get(SystemConst.SystemConst, SystemConst.OFFICE_ONLINE_SERVER_KEY);
     }
 }
 

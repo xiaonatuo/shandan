@@ -33,4 +33,13 @@
 <script type="text/javascript" th:src="@{/assets/js/jquery-2.1.4.min.js}" src="../static/assets/js/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" th:src="@{/assets/bootstrap/js/bootstrap.min.js}" src="../static/assets/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" th:src="@{/assets/js/main.js}" src="../static/assets/js/main.js"></script>
+<script th:inline="javascript">
+    let desktopAddress = /*[[${desktopAddress}]]*/ "";
+    let principal = /*[[${principal}]]*/ {};
+    jQuery(function(){
+        if(desktopAddress && principal){
+            window.location.href = desktopAddress;
+        }
+    });
+</script>
 </html>
