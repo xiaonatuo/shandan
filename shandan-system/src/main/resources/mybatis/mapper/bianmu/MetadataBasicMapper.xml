@@ -3,7 +3,7 @@
 <mapper namespace="com.keyware.shandan.bianmu.mapper.MetadataBasicMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.keyware.shandan.bianmu.entity.MetadataBasicVo" autoMapping="true">
+    <resultMap id="BaseResultMap" type="com.keyware.shandan.bianmu.entity.MetadataBasicVo">
         <id column="ID" property="id" />
         <result column="DATA_SOURCE_ID" property="dataSourceId" />
         <result column="METADATA_NAME" property="metadataName" />
