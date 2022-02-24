@@ -41,7 +41,6 @@
 <script th:src="@{/js/index.js}"></script>
 <script th:inline="javascript">
     const appList = /*[[${appList}]]*/ [];
-    console.info(appList);
     for (const app of appList) {
         let icon = `<div class="app-icon">
                         <img src="${app.icon}" title="${app.title}" alt="${app.title}" />
@@ -60,8 +59,9 @@
             }
         }
 
+        let url = app.url ? app.url.split(',')[0] : '';
         $('#app-list').append(`
-            <div class="app-item" data-target="${app.target}" data-url="${app.url}">
+            <div class="app-item" data-target="${app.target}" data-url="${url}">
                 ${icon}
                 <p>${app.title}</p>
             </div>
@@ -72,6 +72,8 @@
         const target = $(this).data('target');
         if (url) {
             window.open(url, target);
+        } else {
+            showErrorMsg2('应用访问地址未设置')
         }
     })
 
