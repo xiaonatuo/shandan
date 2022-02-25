@@ -50,26 +50,24 @@ public class DirectoryCommonController {
      */
     @GetMapping("/tree")
     public Result<List<TreeVo>> tree(String id, String reviewStatus, boolean browser) {
-        DirectoryVo parent = null;
+        if (StringUtils.isBlank(id)) {id = "-";}
+
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(id) && !"-".equals(id)) {
-            parent = directoryService.getById(id);
+        if (!"-".equals(id)) {
+            // 目录ID存在，则查询该目录节点下的所有目录数据
+            DirectoryVo parent = directoryService.getById(id);
             if (parent == null) {
                 return Result.of(null, false, "目录未找到");
-
             }
-            wrapper.likeRight("DIRECTORY_PATH", parent.getDirectoryPath() + "/");
+            wrapper.likeRight("DIRECTORY_PATH", parent.getDirectoryPath() + "/").ne("ID", id);
         }
+        // 判断审核条件
         if (StringUtils.isNotBlank(reviewStatus)) {
             wrapper.eq("REVIEW_STATUS", reviewStatus);
         }
 
         List<DirectoryVo> directoryList = directoryService.list(wrapper);
 
-        // 如果父目录存在，则从查询到的集合中将自己过滤掉
-        if (parent != null) {
-            directoryList = directoryList.stream().filter(dir -> !id.equals(dir.getId())).collect(Collectors.toList());
-        }
         // 如果是综合浏览的请求，则需要判断每个目录的父级目录总是否有未通过审核的，如果有则过滤掉
         if (browser) {
             // 查询所有未审核通过的目录
@@ -80,7 +78,8 @@ public class DirectoryCommonController {
             // 判断目录的父级是否存在于未审核通过的目录中，如果存在于，则过滤掉
             directoryList = directoryList.stream().filter(item -> !unPassIds.contains(item.getParentId())).collect(Collectors.toList());
         }
-        return Result.of(TreeUtil.buildDirTree(directoryList.stream().filter(dir->dir.getParentId().equals(id)).map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
+        final String finalId = id;
+        return Result.of(TreeUtil.buildDirTree(directoryList.stream().filter(dir -> dir.getParentId().equals(finalId)).map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
     }
 
     @GetMapping("/details/{id}")
