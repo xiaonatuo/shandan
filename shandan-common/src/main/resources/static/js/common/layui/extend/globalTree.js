@@ -9,7 +9,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
     let tree;
     let dtreeObj;
 
-    const GlobalTree = function (options) {
+    const GlobalTree = function () {
         this.id = 'tree';
         this.url = '';
         this.data = undefined;
