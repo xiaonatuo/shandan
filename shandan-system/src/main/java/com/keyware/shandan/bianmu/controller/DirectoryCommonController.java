@@ -12,6 +12,7 @@ import com.keyware.shandan.bianmu.utils.DirectoryUtil;
 import com.keyware.shandan.common.entity.Result;
 import com.keyware.shandan.common.entity.TreeVo;
 import com.keyware.shandan.common.enums.SystemTypes;
+import com.keyware.shandan.common.util.StreamUtil;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.common.util.TreeUtil;
 import com.keyware.shandan.system.entity.SysSetting;
@@ -44,13 +45,19 @@ public class DirectoryCommonController {
 
 
     /**
-     * 获取目录树
+     * 获取树形结构的资源目录数据
      *
-     * @return
+     * @param id           父级目录ID
+     * @param reviewStatus 审核状态
+     * @param browser      是否综合浏览
+     * @param all          是否包含数据资源
+     * @return 结果集
      */
     @GetMapping("/tree")
-    public Result<List<TreeVo>> tree(String id, String reviewStatus, boolean browser) {
-        if (StringUtils.isBlank(id)) {id = "-";}
+    public Result<List<TreeVo>> tree(String id, String reviewStatus, boolean browser, boolean all) {
+        if (StringUtils.isBlank(id)) {
+            id = "-";
+        }
 
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
         if (!"-".equals(id)) {
@@ -79,7 +86,13 @@ public class DirectoryCommonController {
             directoryList = directoryList.stream().filter(item -> !unPassIds.contains(item.getParentId())).collect(Collectors.toList());
         }
         final String finalId = id;
-        return Result.of(TreeUtil.buildDirTree(directoryList.stream().filter(dir -> dir.getParentId().equals(finalId)).map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
+        // 转换为Dtree对象
+        List<TreeVo> treeVoList = StreamUtil.as(directoryList).map(DirectoryUtil::Dir2Tree).toList();
+        // 构建树形结构
+        treeVoList = StreamUtil.as(TreeUtil.buildDirTree(treeVoList))
+                // 过滤根节点的垃圾数据
+                .filter(dir -> dir.getParentId().equals(finalId)).toList();
+        return Result.of(treeVoList);
     }
 
     @GetMapping("/details/{id}")
