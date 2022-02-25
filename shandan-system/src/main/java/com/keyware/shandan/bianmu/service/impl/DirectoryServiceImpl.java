@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -164,6 +165,15 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
             }
         }
         return list;
+    }
+
+    @Override
+    public DirectoryVo getById(Serializable id) {
+        DirectoryVo vo = super.getById(id);
+        if (vo != null && "-".equals(vo.getId())){
+            vo.setDirectoryPath("");
+        }
+        return vo;
     }
 
     @Override

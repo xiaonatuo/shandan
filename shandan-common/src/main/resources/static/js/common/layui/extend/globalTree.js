@@ -19,8 +19,8 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         this.ficon = ["2", "8"];
         this.icon = ['0', '0'];
         this.nodeIconArray = {
-            "0" : {"open": "dtree-icon-weibiaoti5", "close": "dtree-icon-weibiaoti5"}, //文件夹
-            "2" : {"open": "dtree-icon-xiangxia1", "close": "dtree-icon-xiangyou"}  //三角形
+            "0": {"open": "dtree-icon-weibiaoti5", "close": "dtree-icon-weibiaoti5"}, //文件夹
+            "2": {"open": "dtree-icon-xiangxia1", "close": "dtree-icon-xiangyou"}  //三角形
         };
         this.initLevel = 2;
         this.record = true;
@@ -33,6 +33,8 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         }*/
         this.defaultRequest = {nodeId: 'id'};
         this.rootNode = {id: '', title: '', parentId: '0', children: []};
+        this.defaultRequest = {nodeId: 'id', parentId: 'parentId'}
+        this.filterRequest = ["basicData"]
         this.response = {
             statusName: 'flag',
             statusCode: true,
@@ -65,7 +67,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
 
             });
             // 节点双击事件
-            dtree.on(`nodedblclick('${_this.id}')` ,function(obj){
+            dtree.on(`nodedblclick('${_this.id}')`, function (obj) {
                 _this.onDbClick && _this.onDbClick(obj);
             });
             _done && _done(nodes, elem);
@@ -105,7 +107,7 @@ layui.define(['jquery', 'layer', 'dtree'], function (exports) {
         dtree.chooseDataInit(this.id, ids);
     }
 
-    GlobalTree.prototype.getParentParam2 = function(id){
+    GlobalTree.prototype.getParentParam2 = function (id) {
         dtree.getParentParam(this.id, id);
     };
 

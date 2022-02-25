@@ -28,22 +28,16 @@ public class TreeUtil {
      * @return 树形结构数据
      */
     public static List<TreeVo> buildDirTree(@NonNull List<TreeVo> nodes, @Nullable String parentId) {
-        List<TreeVo> tree = new ArrayList<>();
-
-        if (!StringUtils.isEmpty(parentId)) {
-            //根据父级目录的路径查找父级节点
-            Optional<TreeVo> parent = nodes.stream().filter(vo -> parentId.equals(vo.getId())).findFirst();
-            if (parent.isPresent()) {
-                TreeVo parentNode = parent.get();
-                // 将父级节点从nodes中移除
-                List<TreeVo> newNodes = nodes.stream().filter(node -> !node.getId().equals(parentNode.getId())).collect(Collectors.toList());
-                // 根据父级节点ID查找子级节点
-                List<TreeVo> childrenNodes = newNodes.stream().filter(node -> parentNode.getId().equals(node.getParentId())).collect(Collectors.toList());
-
-                tree = childrenNodes.stream().peek(children -> children.setChildren(buildDirTree(newNodes, children.getId()))).collect(Collectors.toList());
-            }
+        if (StringUtils.isEmpty(parentId)) {
+            parentId = "-";
         }
-        return treeCompare(tree);
+        final String pid = parentId;
+        return treeCompare(StreamUtil.as(nodes)
+                // 筛选出子节点
+                .filter(node -> (node.getParentId().equals(pid)))
+                // 给子节点设置子节点
+                .peek(child -> child.setChildren(buildDirTree(nodes, child.getId())))
+                .toList());
     }
 
     /**
@@ -75,6 +69,9 @@ public class TreeUtil {
         return tree.stream().sorted((tree1, tree2) -> {
             Collator collator = Collator.getInstance(Locale.CHINA);
             return collator.compare(tree1.getTitle(), tree2.getTitle());
+        }).sorted((tree1, tree2) -> {
+            Collator collator = Collator.getInstance(Locale.CHINA);
+            return collator.compare(tree1.getType(), tree2.getType());
         }).collect(Collectors.toList());
     }
 }

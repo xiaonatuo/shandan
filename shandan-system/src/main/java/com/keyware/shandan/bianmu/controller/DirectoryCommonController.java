@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
+import com.keyware.shandan.bianmu.entity.MetadataAndFileVo;
+import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
 import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
 import com.keyware.shandan.bianmu.service.DirectoryService;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +50,7 @@ public class DirectoryCommonController {
     /**
      * 获取树形结构的资源目录数据
      *
-     * @param id           父级目录ID
+     * @param id     父级目录ID
      * @param reviewStatus 审核状态
      * @param browser      是否综合浏览
      * @param all          是否包含数据资源
@@ -60,14 +63,13 @@ public class DirectoryCommonController {
         }
 
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
-        if (!"-".equals(id)) {
-            // 目录ID存在，则查询该目录节点下的所有目录数据
-            DirectoryVo parent = directoryService.getById(id);
-            if (parent == null) {
-                return Result.of(null, false, "目录未找到");
-            }
-            wrapper.likeRight("DIRECTORY_PATH", parent.getDirectoryPath() + "/").ne("ID", id);
+        // 目录ID存在，则查询该目录节点下的所有目录数据
+        DirectoryVo parentDir = directoryService.getById(id);
+        if (parentDir == null) {
+            return Result.of(null, false, "目录未找到");
         }
+        wrapper.likeRight("DIRECTORY_PATH", parentDir.getDirectoryPath() + "/");
+
         // 判断审核条件
         if (StringUtils.isNotBlank(reviewStatus)) {
             wrapper.eq("REVIEW_STATUS", reviewStatus);
@@ -85,14 +87,26 @@ public class DirectoryCommonController {
             // 判断目录的父级是否存在于未审核通过的目录中，如果存在于，则过滤掉
             directoryList = directoryList.stream().filter(item -> !unPassIds.contains(item.getParentId())).collect(Collectors.toList());
         }
-        final String finalId = id;
         // 转换为Dtree对象
-        List<TreeVo> treeVoList = StreamUtil.as(directoryList).map(DirectoryUtil::Dir2Tree).toList();
+        List<TreeVo> treeVoList = StreamUtil.as(directoryList).map(DirectoryUtil::dir2Tree).toList();
+
+        // 包含数据资源
+        if (all) {
+            List<MetadataAndFileVo> metadataBasicVoList = directoryMetadataService.getMetadataAndFileListByDir(id);
+            treeVoList.addAll(StreamUtil.as(metadataBasicVoList).map(DirectoryUtil::metaAndFile2Tree).toList());
+        }
+
+        final String finalId = id;
         // 构建树形结构
-        treeVoList = StreamUtil.as(TreeUtil.buildDirTree(treeVoList))
+        treeVoList = StreamUtil.as(TreeUtil.buildDirTree(treeVoList, id))
                 // 过滤根节点的垃圾数据
-                .filter(dir -> dir.getParentId().equals(finalId)).toList();
-        return Result.of(treeVoList);
+                .filter(dir -> (dir.getId().equals(finalId) || dir.getParentId().equals(finalId))).toList();
+
+        List<TreeVo> rootList = new ArrayList<>();
+        TreeVo root = DirectoryUtil.dir2Tree(parentDir);
+        root.setChildren(treeVoList);
+        rootList.add(root);
+        return Result.of(rootList);
     }
 
     @GetMapping("/details/{id}")
@@ -110,45 +124,8 @@ public class DirectoryCommonController {
         dirList.addAll(directoryService.childrenLists(dir));
         dirList.add(dir);
 
-        String[] path = dir.getDirectoryPath().split("/");
-        JSONArray dirArray = new JSONArray();
-        dirList.forEach(item -> {
-            TreeVo tree = DirectoryUtil.Dir2Tree(item);
-        });
-        for (int i = 1; i < path.length; i++) {
-            JSONObject node = new JSONObject();
-            node.put("id", i + "");
-            node.put("title", path[i]);
-            node.put("type", "directory");
-            node.put("spread", true);
-            node.put("parentId", (i - 1) + "");
-            node.put("iconClass", "dtree-icon-wenjianjiazhankai");
-            if (i == 1) {
-                node.put("parentId", "-");
-            }
-            if (i == path.length - 1) {
-                node.put("id", dir.getId());
-                node.put("iconClass", "dtree-icon-wenjianjiazhankai");
-                node.put("type", "metadata");
-                node.put("last", true);
-                node.put("basicData", JSON.toJSON(dir));
-            }
-            dirArray.add(node);
-        }
-
-        //mav.addObject("treeData", buildTree(dirArray, "-"));
-        mav.addObject("treeData", TreeUtil.buildDirTree(dirList.stream().map(DirectoryUtil::Dir2Tree).collect(Collectors.toList())));
+        List<TreeVo> treeVoList = StreamUtil.as(dirList).map(DirectoryUtil::dir2Tree).toList();
+        mav.addObject("treeData", TreeUtil.buildDirTree(treeVoList, id));
         return mav;
-    }
-
-
-    private List<Object> buildTree(JSONArray dirArray, String parentId) {
-        JSONArray children = new JSONArray();
-        children.addAll(dirArray.stream().filter(node -> ((JSONObject) node).getString("parentId").equals(parentId)).collect(Collectors.toList()));
-        return children.stream().map(node -> {
-            JSONObject nodeJson = (JSONObject) node;
-            nodeJson.put("children", buildTree(dirArray, nodeJson.getString("id")));
-            return nodeJson;
-        }).collect(Collectors.toList());
     }
 }

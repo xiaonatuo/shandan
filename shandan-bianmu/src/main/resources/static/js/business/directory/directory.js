@@ -130,7 +130,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             }
         })
         metaListTable.addTableRowEvent('addFile', function (obj) {
-            upload(basicData,`${ctx}/sys/file/layer?directoryId=${basicData.id}`, function(res){
+            upload(basicData, `${ctx}/sys/file/layer?directoryId=${basicData.id}`, function (res) {
                 if (res.success) {
                     metaListTable.reloadTable();
                     if (res.data) {
@@ -141,7 +141,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         });
 
         metaListTable.addTableRowEvent('addDirectory', function (obj) {
-            upload(basicData,`${ctx}/sys/file/layer/dir?directoryId=${basicData.id}`, function(res){
+            upload(basicData, `${ctx}/sys/file/layer/dir?directoryId=${basicData.id}`, function (res) {
                 if (res.success) {
                     refreshDirectoryNode(tempNode, basicData);
                     metaListTable.reloadTable();
@@ -188,9 +188,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
     let treeOps = {
         id: 'directoryTree',
         url: treeChildrenUrl,
-        data: [{id: '-', parentId: '', title: '资源目录', leaf: false, last: false, spread: false}],
-        cache: true,
-        type: 'load',
+        cache: false,
+        type: 'all',
         initLevel: 1, // 默认展开一级
         scroll: '#tree-toobar-div',
         width: 'fit-content',
@@ -341,6 +340,19 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 }
             },
             {
+                toolbarId: "toolbar_dir_copy",
+                icon: "layui-icon layui-icon-link",
+                title: "关联已存在目录",
+                handler: function (node, elem) {
+                    const {basicData, id, parentId, context} = node;
+                    openDirectoryCopyLayer(basicData).then(res => {
+
+                    }).catch(e => {
+
+                    })
+                }
+            },
+            {
                 toolbarId: "toolbar_dir_submit",
                 icon: "layui-icon layui-icon-release",
                 title: "提交审核", handler: function (node, elem) {
@@ -440,9 +452,9 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
     function setLocation(dirNode) {
         let path = '/ 资源目录';
         if (dirNode && dirNode.directoryPath) {
-            try{
+            try {
                 path += dirNode.directoryPath.replaceAll('/', ' / ');
-            }catch (e) {
+            } catch (e) {
                 console.error(e);
             }
         }
@@ -481,5 +493,49 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             layer.close(index);
             callback && callback()
         })
+    }
+
+    function openDirectoryCopyLayer(dirData) {
+        return new Promise(((resolve, reject) => {
+            layer.open({
+                type: 1,
+                title: '选择目录资源',
+                area: ['700px', '90%'],
+                btn: ['保存', '取消'],
+                content: `<div style="width: 100%; height: calc(100% - 1px); border-bottom: 1px solid #eee;" id="copyDirTreeBox"><ul id="copyDirTree"></ul></div>`,
+                success: function (layerObj, index) {
+                    let copyTreeOps = {
+                        id: 'copyDirTree',
+                        url: treeChildrenUrl + '?all=true&reviewStatus=PASS',
+                        type: 'all',
+                        cache: false,
+                        scroll: '#copyDirTreeBox',
+                        width: '100%',
+                        checkbar: true,
+                        checkbarType: 'no-all',
+                        checkbarFun: {
+                            chooseBefore: function ($i, node) {
+                                // 选中前的回调
+                                return true;
+                            },
+                            chooseDone: function (checkbarNodesParam) { //复选框点击事件完毕后，返回该树关于复选框操作的全部信息。
+                                // 选中后的回调
+                            }
+                        },
+                        done: res=>{
+                            console.info(res);}
+                    };
+                    globalTree.init(copyTreeOps);
+                },
+                yes: function (index) {
+                    resolve && resolve();
+                    layer.close(index);
+                },
+                cancel: function (index) {
+                    reject && reject();
+                    layer.close(index);
+                }
+            })
+        }))
     }
 })
