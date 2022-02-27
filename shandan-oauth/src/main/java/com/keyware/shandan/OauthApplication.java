@@ -1,5 +1,6 @@
 package com.keyware.shandan;
 
+import com.keyware.shandan.beans.DictVo;
 import com.keyware.shandan.common.constants.SystemConstants;
 import com.keyware.shandan.service.DictService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,13 @@ public class OauthApplication {
         @RequestMapping(value = "/login", method = {RequestMethod.GET})
         public ModelAndView login(ModelAndView mav) {
             mav.setViewName("login");
-            mav.addObject("logoName", dictService.getDictByTypeAndCode(SystemConstants.DICT_TYPE_PUBLIC_SETTING, SystemConstants.OAUTH_LOGIN_TEXT).getDictValue());
+            DictVo dict = dictService.getDictByTypeAndCode(SystemConstants.DICT_TYPE_PUBLIC_SETTING, SystemConstants.OAUTH_LOGIN_TEXT);
+            if (dict == null) {
+                mav.addObject("logoName", "数据管理系统");
+            } else {
+                mav.addObject("logoName", dict.getDictValue());
+            }
+
             return mav;
         }
     }
