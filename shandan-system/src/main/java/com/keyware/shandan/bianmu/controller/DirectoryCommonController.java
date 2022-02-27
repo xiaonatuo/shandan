@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +51,7 @@ public class DirectoryCommonController {
     /**
      * 获取树形结构的资源目录数据
      *
-     * @param id     父级目录ID
+     * @param id           父级目录ID
      * @param reviewStatus 审核状态
      * @param browser      是否综合浏览
      * @param all          是否包含数据资源
@@ -58,18 +59,13 @@ public class DirectoryCommonController {
      */
     @GetMapping("/tree")
     public Result<List<TreeVo>> tree(String id, String reviewStatus, boolean browser, boolean all) {
-        if (StringUtils.isBlank(id)) {
-            id = "-";
-        }
-
         QueryWrapper<DirectoryVo> wrapper = new QueryWrapper<>();
-        // 目录ID存在，则查询该目录节点下的所有目录数据
-        DirectoryVo parentDir = directoryService.getById(id);
+        final String parentId = StringUtils.isBlank(id) ? "-" : id;
+        DirectoryVo parentDir = directoryService.getById(parentId);
         if (parentDir == null) {
             return Result.of(null, false, "目录未找到");
         }
-        wrapper.likeRight("DIRECTORY_PATH", parentDir.getDirectoryPath() + "/");
-
+        wrapper.likeRight("DIRECTORY_PATH", parentDir.getDirectoryPath() + "/").ne("ID", parentId);
         // 判断审核条件
         if (StringUtils.isNotBlank(reviewStatus)) {
             wrapper.eq("REVIEW_STATUS", reviewStatus);
@@ -92,21 +88,23 @@ public class DirectoryCommonController {
 
         // 包含数据资源
         if (all) {
-            List<MetadataAndFileVo> metadataBasicVoList = directoryMetadataService.getMetadataAndFileListByDir(id);
+            List<MetadataAndFileVo> metadataBasicVoList = directoryMetadataService.getMetadataAndFileListByDir(parentId);
             treeVoList.addAll(StreamUtil.as(metadataBasicVoList).map(DirectoryUtil::metaAndFile2Tree).toList());
         }
 
-        final String finalId = id;
         // 构建树形结构
-        treeVoList = StreamUtil.as(TreeUtil.buildDirTree(treeVoList, id))
+        treeVoList = StreamUtil.as(TreeUtil.buildDirTree(treeVoList, parentId))
                 // 过滤根节点的垃圾数据
-                .filter(dir -> (dir.getId().equals(finalId) || dir.getParentId().equals(finalId))).toList();
+                .filter(dir -> (dir.getParentId().equals(parentId))).toList();
 
-        List<TreeVo> rootList = new ArrayList<>();
-        TreeVo root = DirectoryUtil.dir2Tree(parentDir);
-        root.setChildren(treeVoList);
-        rootList.add(root);
-        return Result.of(rootList);
+        if (StringUtils.isBlank(id)) {
+            List<TreeVo> rootList = new ArrayList<>();
+            TreeVo root = DirectoryUtil.dir2Tree(parentDir);
+            root.setChildren(treeVoList);
+            rootList.add(root);
+            return Result.of(rootList);
+        }
+        return Result.of(treeVoList);
     }
 
     @GetMapping("/details/{id}")
