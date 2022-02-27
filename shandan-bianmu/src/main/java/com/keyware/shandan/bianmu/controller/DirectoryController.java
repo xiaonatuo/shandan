@@ -3,6 +3,7 @@ package com.keyware.shandan.bianmu.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.keyware.shandan.bianmu.dto.DirCopyDTO;
 import com.keyware.shandan.bianmu.entity.DirectoryMetadataVo;
 import com.keyware.shandan.bianmu.entity.DirectoryVo;
 import com.keyware.shandan.bianmu.entity.MetadataBasicVo;
@@ -10,22 +11,18 @@ import com.keyware.shandan.bianmu.enums.DirectoryType;
 import com.keyware.shandan.bianmu.enums.ReviewStatus;
 import com.keyware.shandan.bianmu.service.DirectoryMetadataService;
 import com.keyware.shandan.bianmu.service.DirectoryService;
+import com.keyware.shandan.bianmu.service.ResourceCopyService;
 import com.keyware.shandan.common.controller.BaseController;
 import com.keyware.shandan.common.entity.Result;
+import com.keyware.shandan.common.util.StreamUtil;
 import com.keyware.shandan.common.util.StringUtils;
 import com.keyware.shandan.system.entity.SysFile;
 import com.keyware.shandan.system.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +45,9 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
 
     @Autowired
     private SysFileService sysFileService;
+
+    @Autowired
+    private ResourceCopyService resourceCopyService;
 
     @GetMapping("/")
     public ModelAndView index(ModelAndView modelAndView) {
@@ -235,6 +235,13 @@ public class DirectoryController extends BaseController<DirectoryService, Direct
         }
 
         return Result.of(dir);
+    }
+
+    @PostMapping("/copy")
+    public Result<Object> dirCopy(DirCopyDTO copyDTO){
+        resourceCopyService.initData(copyDTO);
+        resourceCopyService.copy();
+        return Result.of(true);
     }
 
     /**

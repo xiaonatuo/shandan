@@ -242,7 +242,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
             // 显示右键菜单之前的回调，用于设置显示哪些菜单
             loadToolbarBefore: function (buttons, param, $div) {
                 const {basicData} = param;
-                if (basicData) {
+                if (basicData && basicData.id != '-') {
                     switch (basicData.reviewStatus) {
                         case ReviewStatus.SUBMITTED:
                             setDisabledButtons(['toolbar_dir_submit']);
@@ -257,7 +257,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                             setDisabledButtons(['toolbar_dir_add', 'toolbar_dir_rename', 'toolbar_dir_link', 'toolbar_dir_submit']);
                     }
                 } else {
-                    setDisabledButtons(['toolbar_dir_rename', 'toolbar_dir_delete', 'toolbar_dir_link', 'toolbar_dir_submit']);
+                    setDisabledButtons(['toolbar_dir_rename', 'toolbar_dir_delete', 'toolbar_dir_link', 'toolbar_dir_submit', 'toolbar_dir_copy']);
                 }
 
                 /**
@@ -346,7 +346,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 handler: function (node, elem) {
                     const {basicData, id, parentId, context} = node;
                     openDirectoryCopyLayer(basicData).then(res => {
-
+                        dirTree.partialRefreshAdd(elem);
+                        metaListTable.reloadTable();
                     }).catch(e => {
 
                     })
@@ -389,7 +390,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
 
     function formatterTitle(data) {
         let {title, basicData} = data;
-        if (basicData) {
+        if (basicData && basicData.id != '-') {
             const reviewStatus = data.basicData.reviewStatus;
             title = basicData.directoryName + ReviewStatusIcon[reviewStatus].replace('##id##', basicData.id);
         }
@@ -495,6 +496,8 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
         })
     }
 
+    let copyItems = [];
+
     function openDirectoryCopyLayer(dirData) {
         return new Promise(((resolve, reject) => {
             layer.open({
@@ -504,7 +507,7 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                 btn: ['保存', '取消'],
                 content: `<div style="width: 100%; height: calc(100% - 1px); border-bottom: 1px solid #eee;" id="copyDirTreeBox"><ul id="copyDirTree"></ul></div>`,
                 success: function (layerObj, index) {
-                    let copyTreeOps = {
+                    let copyTreeOps = globalTree.init({
                         id: 'copyDirTree',
                         url: treeChildrenUrl + '?all=true&reviewStatus=PASS',
                         type: 'all',
@@ -512,22 +515,50 @@ layui.use(['layer', 'listPage', 'globalTree', 'laytpl', 'gtable', 'form', 'dict'
                         scroll: '#copyDirTreeBox',
                         width: '100%',
                         checkbar: true,
-                        checkbarType: 'no-all',
+                        checkbarType: 'p-casc',
                         checkbarFun: {
                             chooseBefore: function ($i, node) {
+                                if (node.id == '-') {
+                                    showErrorMsg('不能选择根节点！')
+                                    return false;
+                                }
                                 // 选中前的回调
                                 return true;
                             },
-                            chooseDone: function (checkbarNodesParam) { //复选框点击事件完毕后，返回该树关于复选框操作的全部信息。
+                            chooseDone: function (nodes) { //复选框点击事件完毕后，返回该树关于复选框操作的全部信息。
                                 // 选中后的回调
+                                nodes = nodes || [];
+                                copyItems = nodes.map(node => {
+                                    let basicData = node.basicData || {};
+                                    let {id, parentId, directoryId, directoryName, dataSourceId} = basicData;
+                                    let type = getType();
+
+                                    function getType() {
+                                        if (directoryName) {
+                                            return 'directory';
+                                        }
+                                        if (dataSourceId && dataSourceId.startsWith('file_')) {
+                                            return 'file';
+                                        }
+                                        return 'metadata';
+                                    }
+
+                                    return {id, type, parentDirId: type == 'directory' ? parentId : directoryId};
+                                }).filter(id => id != '-');
                             }
                         },
-                        done: res=>{
-                            console.info(res);}
-                    };
-                    globalTree.init(copyTreeOps);
+                        done: res => {
+                        }
+                    });
                 },
                 yes: function (index) {
+                    Util.post('/business/directory/copy', {targetId: dirData.id, items: copyItems}).then(res => {
+                        if(res.flag){
+                            showOkMsg('保存成功');
+                        }else{
+                            showErrorMsg();
+                        }
+                    })
                     resolve && resolve();
                     layer.close(index);
                 },

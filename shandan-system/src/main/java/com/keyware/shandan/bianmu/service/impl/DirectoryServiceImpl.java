@@ -101,7 +101,7 @@ public class DirectoryServiceImpl extends BaseServiceImpl<DirectoryMapper, Direc
             }
             entity.setDirectoryPath(path);
             // 如果修改的目录原本为审核通过状态，则更新为未提交
-            if (oldDir.getReviewStatus() == ReviewStatus.PASS) {
+            if (oldDir != null && oldDir.getReviewStatus() == ReviewStatus.PASS) {
                 entity.setReviewStatus(ReviewStatus.UN_SUBMIT);
             }
             super.updateOrSave(entity);
