@@ -550,7 +550,7 @@ const DICT = {
     },
 
     getOfficeServer: function(){
-        return this.get(SystemConst.SystemConst, SystemConst.OFFICE_ONLINE_SERVER_KEY);
+        return this.get(SystemConst.PUBLIC_SETTING_KEY, SystemConst.OFFICE_ONLINE_SERVER_KEY);
     }
 }
 
